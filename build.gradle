@@ -1,11 +1,13 @@
 buildscript {
     def tomcatGradlePluginVersion = '1.2.4'
 
+    // Repositories for the dependencies used for building the gradle script itself
     repositories {
         mavenCentral()
         jcenter()
     }
 
+    // Dependencies used for building the gradle script itself
     dependencies {
         classpath "org.gradle.api.plugins:gradle-tomcat-plugin:${tomcatGradlePluginVersion}"
     }
@@ -14,7 +16,6 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'tomcat'
-apply plugin: 'wrapper'
 
 // External libs
 def tomcatVersion = '7.0.11'
@@ -23,13 +24,15 @@ def tomcatVersion = '7.0.11'
 version = '0.1'
 
 // Wrapper
-wrapper.gradleVersion = '2.0'
+def wrapperGradleVersion = '2.0'
 
+// Repositories for the dependencies used for building the project
 repositories {
     mavenCentral()
     jcenter()
 }
 
+// Dependencies used for building the project
 dependencies {
     // Shortcut: compile 'org.hibernate:hibernate-core:3.6.7.Final'
     compile group: 'org.hibernate', name: 'hibernate-core', version: '3.6.7.Final'
@@ -50,6 +53,10 @@ tomcat {
     httpPort = 8090
     httpsPort = 8091
     enableSSL = true
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = wrapperGradleVersion
 }
 
 task listJars << {
