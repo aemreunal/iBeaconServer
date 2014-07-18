@@ -19,6 +19,10 @@ apply plugin: 'tomcat'
 
 // External libs
 def tomcatVersion = '7.0.11'
+def hibernateORMVersion = '4.3.6.Final'
+def hibernateEntityManagerVersion = '4.3.6.Final'
+def hibernateValidatorVersion = '5.1.1.Final'
+def springFrameworkVersion = '4.0.6.RELEASE'
 
 // Root Project
 version = '0.1'
@@ -30,12 +34,17 @@ def wrapperGradleVersion = '2.0'
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        url 'https://repository.jboss.org/nexus/content/groups/public/org/hibernate'
+    }
 }
 
 // Dependencies used for building the project
 dependencies {
     // Shortcut: compile 'org.hibernate:hibernate-core:3.6.7.Final'
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '3.6.7.Final'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: hibernateORMVersion
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateEntityManagerVersion
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion
 
     // Tomcat, via https://github.com/bmuschko/gradle-tomcat-plugin
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
@@ -43,6 +52,9 @@ dependencies {
     tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
         exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
     }
+
+    // Spring, via http://projects.spring.io/spring-framework/
+    compile group: 'org.springframework', name: 'spring-context', version: springFrameworkVersion
 
     // Tests
     testCompile group: 'junit', name: 'junit', version: '4.11'
