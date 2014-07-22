@@ -18,11 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableJpaRepositories(basePackages = { "com.dteknoloji.repository" })
 @EnableTransactionManagement
-@ComponentScan(basePackages = {
-        "com.dteknoloji.domain",
-        "com.dteknoloji.service",
-        "com.dteknoloji.repository",
-        "com.dteknoloji.controller" })
+@ComponentScan(basePackages = { "com.dteknoloji" })
 
 public class CoreConfig {
     @Autowired
