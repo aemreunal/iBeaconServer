@@ -46,7 +46,7 @@ public class CoreConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setDriverClassName(GlobalSettings.DB_DRIVER_CLASS_NAME);
         dataSource.setUrl(GlobalSettings.DB_URL);
         dataSource.setUsername(GlobalSettings.DB_USERNAME);
         dataSource.setPassword(GlobalSettings.DB_PASSWORD);
@@ -57,8 +57,8 @@ public class CoreConfig {
     private Properties jpaProperties() {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
-        properties.put("hibernate.show_sql", "true");
-        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.show_sql", GlobalSettings.SHOW_SQL_PROPERTY);
+        properties.put("hibernate.hbm2ddl.auto", GlobalSettings.HBM2DDL_PROPERTY);
         return properties;
     }
 
@@ -68,6 +68,4 @@ public class CoreConfig {
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
     }
-
-
 }
