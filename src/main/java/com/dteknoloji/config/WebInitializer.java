@@ -11,15 +11,14 @@ import org.springframework.web.servlet.DispatcherServlet;
 public class WebInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+        AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
 
-        ctx.register(CoreConfig.class, MVCConfig.class);
-        servletContext.addListener(new ContextLoaderListener(ctx));
+        webApplicationContext.register(CoreConfig.class, MVCConfig.class);
+        servletContext.addListener(new ContextLoaderListener(webApplicationContext));
 
         AnnotationConfigWebApplicationContext dispatchCtx = new AnnotationConfigWebApplicationContext();
-        ServletRegistration.Dynamic dispatcher;
 
-        dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(dispatchCtx));
+        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(dispatchCtx));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
     }

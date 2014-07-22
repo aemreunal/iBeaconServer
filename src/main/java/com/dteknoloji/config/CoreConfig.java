@@ -29,19 +29,7 @@ public class CoreConfig {
     private DataSource dataSource;
 
     @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl(GlobalSettings.DB_URL);
-        dataSource.setUsername(GlobalSettings.DB_USERNAME);
-        dataSource.setPassword(GlobalSettings.DB_PASSWORD);
-
-        return dataSource;
-    }
-
-    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabase(Database.MYSQL);
         vendorAdapter.setGenerateDdl(true);
@@ -52,13 +40,22 @@ public class CoreConfig {
         factory.setPackagesToScan("com.dteknoloji.domain");
         factory.setDataSource(dataSource());
         factory.setJpaProperties(jpaProperties());
-
         return factory;
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl(GlobalSettings.DB_URL);
+        dataSource.setUsername(GlobalSettings.DB_USERNAME);
+        dataSource.setPassword(GlobalSettings.DB_PASSWORD);
+
+        return dataSource;
     }
 
     private Properties jpaProperties() {
         Properties properties = new Properties();
-
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
         properties.put("hibernate.show_sql", "true");
         properties.put("hibernate.hbm2ddl.auto", "update");
@@ -67,9 +64,9 @@ public class CoreConfig {
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        JpaTransactionManager txManager = new JpaTransactionManager();
-        txManager.setEntityManagerFactory(entityManagerFactory().getObject());
-        return txManager;
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        return transactionManager;
     }
 
 
