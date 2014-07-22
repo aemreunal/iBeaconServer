@@ -32,7 +32,7 @@ apply plugin: 'java'
 
 // External libs
 def apnsVersion = '1.0.0.Beta3' // '1.0.0.Beta1'
-def aspectJRTVersion = '1.6.12' // '1.8.1'
+def aspectJRTVersion = '1.8.1'// '1.6.12'
 def aspectJWeaverVersion = '1.6.12' // '1.8.1'
 def cglibVersion = '2.2.2' // '3.1'
 def hibernateEntityManagerVersion = '4.1.5.SP1' // '4.3.6.Final'
