@@ -108,7 +108,6 @@ dependencies {
     testCompile 'junit:junit:4.+'
     testCompile "org.mockito:mockito-all:1.9.5"
 
-
     // Tomcat
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
     tomcat "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
@@ -132,7 +131,7 @@ task copyToLib(type: Copy) {
 }
 
 build.dependsOn copyToLib
-
+tomcatRunWar.dependsOn.add(build)
 tomcatRunWar.contextPath = ''
 
 //export GRADLE_OPTS=-XX:MaxPermSize=256m
