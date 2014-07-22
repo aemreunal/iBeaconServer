@@ -5,14 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.dteknoloji.config.GlobalSettings;
 import com.dteknoloji.domain.Beacon;
 import com.dteknoloji.repository.BeaconRepository;
+import com.dteknoloji.repository.BeaconSpecifications;
 
 @Transactional
 @Service
 public class BeaconService {
     @Autowired
-    BeaconRepository repository;
+    private BeaconRepository repository;
 
     public Beacon save(Beacon beacon) {
         return repository.save(beacon);
@@ -26,6 +28,13 @@ public class BeaconService {
         }
 
         return beaconList;
+    }
+
+    public List<Beacon> findBeaconsBySpecs(String uuid, String major, String minor) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
+        }
+        return repository.findAll(BeaconSpecifications.beaconWithSpecification(uuid, major, minor));
     }
 
     public Beacon findById(Long id) {

@@ -14,22 +14,25 @@ import com.dteknoloji.service.BeaconService;
 @Controller
 @RequestMapping("/beacon")
 public class BeaconController {
-
     @Autowired
     private BeaconService service;
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public ResponseEntity<List<Beacon>> getAllBeacons(@RequestParam(value="uuid", required=false, defaultValue = "") String uuid) {
-        if (uuid.equals("")) {
+    public ResponseEntity<List<Beacon>> getAllBeacons(
+            @RequestParam(value="uuid", required=false, defaultValue = "") String uuid,
+            @RequestParam(value="major", required=false, defaultValue = "") String major,
+            @RequestParam(value="minor", required=false, defaultValue = "") String minor) {
+        if (uuid.equals("") && major.equals("") && minor.equals("")) {
             return new ResponseEntity<List<Beacon>>(service.findAll(), HttpStatus.OK);
         } else {
-            return getBeaconsWithMatchingUuid(uuid);
+            return getBeaconsWithMatchingCriteria(uuid, major, minor);
         }
     }
 
-    private ResponseEntity<List<Beacon>> getBeaconsWithMatchingUuid(String uuid) {
-        List<Beacon> beacons = service.findBeaconByUuid(uuid);
+    private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(String uuid, String major, String minor) {
+        List<Beacon> beacons = service.findBeaconsBySpecs(uuid, major, minor);
+
         if (beacons.size() == 0) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
         }
