@@ -2,3 +2,5 @@
 .idea/
 build/
 src/main/java/com/dteknoloji/config/GlobalSettings.java
+out/
+iBeacon.iml
