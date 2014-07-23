@@ -2,6 +2,7 @@ package com.dteknoloji.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 
 @Entity
@@ -14,23 +15,24 @@ public class Beacon extends ResourceSupport implements Serializable {
     private Long beaconId;
 
     @Column(name = "uuid", nullable = false)
+    @Size(min = 36, max = 36)
     private String uuid;
 
     @Column(name = "major", nullable = false)
+    @Size(min = 4, max = 4)
     private String major;
 
     @Column(name = "minor", nullable = false)
+    @Size(min = 4, max = 4)
     private String minor;
 
-//    @JsonIgnore
-//    @Column(name = "GROUP_ID", nullable = true)
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "GROUP_ID", nullable = true)
-//    private Long groupId;
+    @ManyToOne(targetEntity = BeaconGroup.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
+    @JoinColumn(name = "group_id", referencedColumnName = "beacon_group_id")
+    private Long groupId;
 
     @Column(name = "description", nullable = true)
+    @Size(min = 0, max = 200)
     private String description;
-
 
     public Long getBeaconId() {
         return beaconId;
@@ -64,13 +66,13 @@ public class Beacon extends ResourceSupport implements Serializable {
         this.minor = minor;
     }
 
-//    public Long getGroupId() {
-//        return groupId;
-//    }
-//
-//    public void setGroupId(Long groupId) {
-//        this.groupId = groupId;
-//    }
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
 
     public String getDescription() {
         return description;
