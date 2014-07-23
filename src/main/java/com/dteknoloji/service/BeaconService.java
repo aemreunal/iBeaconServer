@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.dteknoloji.config.GlobalSettings;
 import com.dteknoloji.domain.Beacon;
-import com.dteknoloji.repository.BeaconRepository;
-import com.dteknoloji.repository.BeaconSpecifications;
+import com.dteknoloji.repository.beacon.BeaconRepository;
+import com.dteknoloji.repository.beacon.BeaconSpecifications;
 
 @Transactional
 @Service
@@ -20,7 +20,7 @@ public class BeaconService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving beacon with UUID = \'" + beacon.getUuid() + "\' major = \'" + beacon.getMajor() + "\' minor = \'" + beacon.getMinor() + "\'");
         }
-
+        // TODO Create group if beaconGroup doesn't exist
         return repository.save(beacon);
     }
 

@@ -1,4 +1,4 @@
-package com.dteknoloji.repository;
+package com.dteknoloji.repository.beacon;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;

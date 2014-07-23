@@ -1,4 +1,4 @@
-package com.dteknoloji.repository;
+package com.dteknoloji.repository.beacon;
 
 /*
  * This code belongs to:

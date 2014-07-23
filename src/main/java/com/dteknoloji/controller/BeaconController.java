@@ -52,7 +52,6 @@ public class BeaconController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Beacon> createBeacon(@RequestBody Beacon restBeacon, UriComponentsBuilder builder) {
-
         Beacon newBeacon = service.save(restBeacon);
 
         HttpHeaders headers = new HttpHeaders();

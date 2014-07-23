@@ -18,13 +18,18 @@ public class BeaconGroup {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long beaconGroupId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 50)
     @Size(min = 1, max = 50)
     private String name;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "description", nullable = true, length = 200)
     @Size(min = 0, max = 200)
     private String description;
+
+//    @OneToMany(targetEntity = Beacon.class, mappedBy = "groupId")
+//    // TODO Cascade? When group is deleted, associated beacon group IDs must be updated as well
+//    // TODO Cascade for whole projects: http://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-cascade-example/
+//    private Collection<Beacon> members;
 
     public Long getBeaconGroupId() {
         return beaconGroupId;

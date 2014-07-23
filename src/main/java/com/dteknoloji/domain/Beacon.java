@@ -14,23 +14,26 @@ public class Beacon extends ResourceSupport implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long beaconId;
 
-    @Column(name = "uuid", nullable = false)
+    @Column(name = "uuid", nullable = false, length = 36)
+    // UUID hex string (including dashes) is 36 characters long
     @Size(min = 36, max = 36)
     private String uuid;
 
-    @Column(name = "major", nullable = false)
-    @Size(min = 4, max = 4)
+    @Column(name = "major", nullable = false, length = 4)
+    // Major hex string is 4 characters long
+    @Size(min = 1, max = 4)
     private String major;
 
-    @Column(name = "minor", nullable = false)
-    @Size(min = 4, max = 4)
+    @Column(name = "minor", nullable = false, length = 4)
+    // Major hex string is 4 characters long
+    @Size(min = 1, max = 4)
     private String minor;
 
     @ManyToOne(targetEntity = BeaconGroup.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "group_id", referencedColumnName = "beacon_group_id")
     private Long groupId;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "description", nullable = true, length = 200)
     @Size(min = 0, max = 200)
     private String description;
 
