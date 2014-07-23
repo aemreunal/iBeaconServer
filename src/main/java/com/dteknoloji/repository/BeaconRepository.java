@@ -7,4 +7,5 @@ import com.dteknoloji.domain.Beacon;
 // extends CrudRepository<Object type, Object ID type>
 public interface BeaconRepository extends CrudRepository<Beacon, Long>, JpaSpecificationExecutor {
 //    List<Beacon> findBeaconsByUuid(String uuid);
+//    List<Beacon> findBeaconsByGroupId(Long groupId);
 }

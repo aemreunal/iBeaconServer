@@ -17,10 +17,18 @@ public class BeaconService {
     private BeaconRepository repository;
 
     public Beacon save(Beacon beacon) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Saving beacon with UUID = \'" + beacon.getUuid() + "\' major = \'" + beacon.getMajor() + "\' minor = \'" + beacon.getMinor() + "\'");
+        }
+
         return repository.save(beacon);
     }
 
     public List<Beacon> findAll() {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Finding all beacons");
+        }
+
         List<Beacon> beaconList = new ArrayList<Beacon>();
 
         for (Beacon beacon : repository.findAll()) {
@@ -39,14 +47,24 @@ public class BeaconService {
     }
 
     public Beacon findById(Long id) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Finding beacon with ID = \'" + id + "\'");
+        }
 
         return repository.findOne(id);
     }
 
     public boolean delete(Long id) {
-        repository.delete(id);
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Deleting beacon with ID = \'" + id + "\'");
+        }
 
-        return true;
+        if (id != null) {
+            repository.delete(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
