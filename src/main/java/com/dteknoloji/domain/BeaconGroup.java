@@ -13,17 +13,20 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "beacon_groups")
 public class BeaconGroup {
+    public static final int NAME_MAX_LENGTH = 50;
+    public static final int DESCRIPTION_MAX_LENGTH = 200;
+
     @Id
     @Column(name = "beacon_group_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long beaconGroupId;
 
-    @Column(name = "name", nullable = false, length = 50)
-    @Size(min = 1, max = 50)
+    @Column(name = "name", nullable = false, length = NAME_MAX_LENGTH)
+    @Size(min = 1, max = NAME_MAX_LENGTH)
     private String name;
 
-    @Column(name = "description", nullable = true, length = 200)
-    @Size(min = 0, max = 200)
+    @Column(name = "description", nullable = true, length = DESCRIPTION_MAX_LENGTH)
+    @Size(min = 0, max = DESCRIPTION_MAX_LENGTH)
     private String description;
 
 //    @OneToMany(targetEntity = Beacon.class, mappedBy = "groupId")
