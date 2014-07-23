@@ -17,9 +17,6 @@ public class BeaconService {
     private BeaconRepository repository;
 
     public Beacon save(Beacon beacon) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saving beacon with UUID = \'" + beacon.getUuid() + "\' major = \'" + beacon.getMajor() + "\' minor = \'" + beacon.getMinor() + "\'");
-        }
         // TODO Create group if beaconGroup doesn't exist
         return repository.save(beacon);
     }

@@ -9,9 +9,11 @@ package com.dteknoloji.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Entity
 @Table(name = "beacon_groups")
+@ResponseBody
 public class BeaconGroup {
     public static final int NAME_MAX_LENGTH = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;

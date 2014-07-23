@@ -4,9 +4,11 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Entity
 @Table(name = "beacons")
+@ResponseBody
 public class Beacon extends ResourceSupport implements Serializable {
     public static final int UUID_MAX_LENGTH = 36;
     public static final int MAJOR_MAX_LENGTH = 4;
