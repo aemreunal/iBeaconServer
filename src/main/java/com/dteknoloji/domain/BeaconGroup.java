@@ -1,4 +1,4 @@
-package com.dteknoloji.controller;
+package com.dteknoloji.domain;
 
 /*
  * This code belongs to:
