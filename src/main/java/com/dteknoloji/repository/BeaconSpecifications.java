@@ -7,6 +7,7 @@ package com.dteknoloji.repository;
  * emre.unal@ozu.edu.tr
  */
 
+import java.util.ArrayList;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -18,46 +19,22 @@ public class BeaconSpecifications {
     public static Specification<Beacon> beaconWithSpecification(final String uuid, final String major, final String minor) {
         return new Specification<Beacon>() {
             public Predicate toPredicate(Root<Beacon> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                // TODO MUST ENSURE ALL EMPTY PARAMETERS DON'T REACH HERE
-                // TODO MUST ENSURE ALL EMPTY PARAMETERS DON'T REACH HERE
-                // TODO MUST ENSURE ALL EMPTY PARAMETERS DON'T REACH HERE
-                // TODO MUST ENSURE ALL EMPTY PARAMETERS DON'T REACH HERE
-                Predicate predicate = null;
+                ArrayList<Predicate> predicates = new ArrayList<Predicate>();
 
-                if(!uuid.equals("")) {
-                    if(predicate == null) {
-                        predicate = builder.equal(root.get("uuid"), uuid.toLowerCase());
-                    } else {
-                        predicate = builder.and(builder.equal(root.get("uuid"), uuid.toLowerCase()), predicate);
-                    }
+                if (!uuid.equals("")) {
+                    predicates.add(builder.equal(root.get("uuid"), uuid.toLowerCase()));
                 }
 
-                if(!major.equals("")) {
-                    if(predicate == null) {
-                        predicate = builder.equal(root.get("major"), major);
-                    } else {
-                        predicate = builder.and(builder.equal(root.get("major"), major), predicate);
-                    }
+                if (!major.equals("")) {
+                    predicates.add(builder.equal(root.get("major"), major.toLowerCase()));
                 }
 
-                if(!minor.equals("")) {
-                    if(predicate == null) {
-                        predicate = builder.equal(root.get("minor"), minor);
-                    } else {
-                        predicate = builder.and(builder.equal(root.get("minor"), minor), predicate);
-                    }
+                if (!minor.equals("")) {
+                    predicates.add(builder.equal(root.get("minor"), minor.toLowerCase()));
                 }
 
-                return predicate;
+                return builder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
-
-//            private Predicate mergePredicate(CriteriaBuilder builder, Predicate base, Predicate toAdd) {
-//                if (base == null) {
-//                    return toAdd;
-//                } else {
-//                    return builder.and(base, toAdd);
-//                }
-//            }
         };
     }
 }

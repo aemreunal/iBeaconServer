@@ -34,16 +34,13 @@ public class BeaconService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
         }
+
         return repository.findAll(BeaconSpecifications.beaconWithSpecification(uuid, major, minor));
     }
 
     public Beacon findById(Long id) {
 
         return repository.findOne(id);
-    }
-
-    public List<Beacon> findBeaconByUuid(String uuid) {
-        return repository.findBeaconsByUuid(uuid);
     }
 
     public boolean delete(Long id) {
