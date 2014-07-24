@@ -13,7 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
-import com.dteknoloji.domain.Beacon;
+import com.dteknoloji.domain.beacon.Beacon;
 
 public class BeaconSpecifications {
     public static Specification<Beacon> beaconWithSpecification(final String uuid, final String major, final String minor) {

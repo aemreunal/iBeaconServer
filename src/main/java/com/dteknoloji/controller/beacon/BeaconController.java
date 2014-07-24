@@ -1,4 +1,4 @@
-package com.dteknoloji.controller;
+package com.dteknoloji.controller.beacon;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
@@ -11,11 +11,11 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.dteknoloji.config.GlobalSettings;
-import com.dteknoloji.domain.Beacon;
-import com.dteknoloji.service.BeaconService;
+import com.dteknoloji.domain.beacon.Beacon;
+import com.dteknoloji.service.beacon.BeaconService;
 
 @Controller
-@RequestMapping("/beacon")
+@RequestMapping("/Beacon")
 public class BeaconController {
     @Autowired
     private BeaconService service;
@@ -58,7 +58,7 @@ public class BeaconController {
                 System.out.println("Saved beacon with UUID = \'" + newBeacon.getUuid() + "\' major = \'" + newBeacon.getMajor() + "\' minor = \'" + newBeacon.getMinor() + "\'");
             }
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(builder.path("/beacons/{id}").buildAndExpand(newBeacon.getBeaconId().toString()).toUri());
+            headers.setLocation(builder.path("/Beacon/{id}").buildAndExpand(newBeacon.getBeaconId().toString()).toUri());
             return new ResponseEntity<Beacon>(newBeacon, headers, HttpStatus.CREATED);
         } catch (ConstraintViolationException | TransactionSystemException e) {
             if (GlobalSettings.DEBUGGING) {

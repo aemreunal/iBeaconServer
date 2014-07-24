@@ -1,4 +1,4 @@
-package com.dteknoloji.domain;
+package com.dteknoloji.domain.beaconGroup;
 
 /*
  * This code belongs to:
@@ -7,9 +7,12 @@ package com.dteknoloji.domain;
  * emre.unal@ozu.edu.tr
  */
 
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.dteknoloji.domain.beacon.Beacon;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "beacon_groups")
@@ -31,10 +34,11 @@ public class BeaconGroup {
     @Size(min = 0, max = DESCRIPTION_MAX_LENGTH)
     private String description;
 
-//    @OneToMany(targetEntity = Beacon.class, mappedBy = "groupId")
-//    // TODO Cascade? When group is deleted, associated beacon group IDs must be updated as well
-//    // TODO Cascade for whole projects: http://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-cascade-example/
-//    private Collection<Beacon> members;
+    // TODO Cascade? When group is deleted, associated beacon group IDs must be updated as well
+    // TODO Cascade for whole projects: http://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-cascade-example/
+    @JsonIgnore
+    @OneToMany(targetEntity = Beacon.class, mappedBy = "group")
+    private List<Beacon> beacons;
 
     public Long getBeaconGroupId() {
         return beaconGroupId;
@@ -58,5 +62,13 @@ public class BeaconGroup {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Beacon> getBeacons() {
+        return beacons;
+    }
+
+    public void setBeacons(List<Beacon> beacons) {
+        this.beacons = beacons;
     }
 }
