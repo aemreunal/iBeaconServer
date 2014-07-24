@@ -100,6 +100,8 @@ public class BeaconGroupController {
     /**
      * Add beacon to the specified beacon group
      *
+     * Can return 409 if beacon already has a group.
+     *
      * @param beaconGroupId The ID of the beacon group to add the beacon to
      * @param beaconId      The ID of the beacon to add
      * @return The added beacon group
@@ -114,12 +116,15 @@ public class BeaconGroupController {
             if (beacon == null) {
                 return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
             } else {
-                // TODO return error if beacon is already in a group
-                beacon.setGroup(beaconGroup);
-                beaconGroup.getBeacons().add(beacon);
-                beaconService.save(beacon);
-                beaconGroupService.save(beaconGroup);
-                return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
+                if (beacon.getGroup() != null) {
+                    return new ResponseEntity<BeaconGroup>(HttpStatus.CONFLICT);
+                } else {
+                    beacon.setGroup(beaconGroup);
+                    beaconGroup.getBeacons().add(beacon);
+                    beaconService.save(beacon);
+                    beaconGroupService.save(beaconGroup);
+                    return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
+                }
             }
         }
     }
