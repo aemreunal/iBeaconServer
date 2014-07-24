@@ -20,11 +20,19 @@ public class BeaconController {
     @Autowired
     private BeaconService service;
 
+    /**
+     * Get all beacons (Optionally, all with matching criteria)
+     *
+     * @param uuid (Optional) The UUID of the beacon
+     * @param major (Optional) The major of the beacon
+     * @param minor (Optional) The minor of the beacon
+     * @return All existing beacons (Optionally, all that match the given criteria)
+     */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Beacon>> getAllBeacons(
-            @RequestParam(value="uuid", required=false, defaultValue = "") String uuid,
-            @RequestParam(value="major", required=false, defaultValue = "") String major,
-            @RequestParam(value="minor", required=false, defaultValue = "") String minor) {
+            @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
+            @RequestParam(value = "major", required = false, defaultValue = "") String major,
+            @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
             return new ResponseEntity<List<Beacon>>(service.findAll(), HttpStatus.OK);
         } else {
@@ -32,6 +40,14 @@ public class BeaconController {
         }
     }
 
+    /**
+     * Returns the list of beacons that match a given criteria
+     *
+     * @param uuid (Optional) The UUID of the beacon
+     * @param major (Optional) The major of the beacon
+     * @param minor (Optional) The minor of the beacon
+     * @return The list of beacons that match the given criteria
+     */
     private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(String uuid, String major, String minor) {
         List<Beacon> beacons = service.findBeaconsBySpecs(uuid, major, minor);
 
@@ -41,6 +57,12 @@ public class BeaconController {
         return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
     }
 
+    /**
+     * Get the beacon with the specified ID
+     *
+     * @param id The ID of the beacon
+     * @return The beacon
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application/json")
     public ResponseEntity<Beacon> viewBeacon(@PathVariable String id) {
         Beacon beacon = service.findById(Long.valueOf(id));
@@ -50,6 +72,13 @@ public class BeaconController {
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
 
+    /**
+     * Create a new beacon
+     *
+     * @param restBeacon The beacon as JSON object
+     * @param builder
+     * @return The created beacon
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Beacon> createBeacon(@RequestBody Beacon restBeacon, UriComponentsBuilder builder) {
         try {
@@ -68,7 +97,12 @@ public class BeaconController {
         }
     }
 
-
+    /**
+     * Delete the specified beacon
+     *
+     * @param id The ID of beacon to delete
+     * @return The deleted beacon
+     */
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
     public ResponseEntity<Beacon> deleteBeacon(@PathVariable String id) {
 
@@ -82,7 +116,7 @@ public class BeaconController {
             return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
         }
 
-        return new ResponseEntity<Beacon>(beacon, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<Beacon>(HttpStatus.FORBIDDEN);
     }
 
 }

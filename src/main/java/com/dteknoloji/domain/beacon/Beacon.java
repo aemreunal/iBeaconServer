@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "beacons")
 @ResponseBody
+@JsonIgnoreProperties(value = {"links"})
 public class Beacon extends ResourceSupport implements Serializable {
     // UUID hex string (including dashes) is 36 characters long
     public static final int UUID_MAX_LENGTH = 36;
@@ -42,7 +43,7 @@ public class Beacon extends ResourceSupport implements Serializable {
     private String description;
 
     @ManyToOne(targetEntity = BeaconGroup.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
-    @JsonIgnoreProperties(value = {"name", "description"})
+    @JsonIgnoreProperties(value = {"name", "description", "beacons"})
     private BeaconGroup group;
 
     public Long getBeaconId() {

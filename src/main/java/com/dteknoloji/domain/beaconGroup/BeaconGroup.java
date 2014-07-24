@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.dteknoloji.domain.beacon.Beacon;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "beacon_groups")
@@ -37,7 +38,8 @@ public class BeaconGroup {
     // TODO Cascade? When group is deleted, associated beacon group IDs must be updated as well
     // TODO Cascade for whole projects: http://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-cascade-example/
     @JsonIgnore
-    @OneToMany(targetEntity = Beacon.class, mappedBy = "group")
+    @OneToMany(targetEntity = Beacon.class, mappedBy = "group", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = {"uuid", "major", "minor", "description", "group", "links"})
     private List<Beacon> beacons;
 
     public Long getBeaconGroupId() {
