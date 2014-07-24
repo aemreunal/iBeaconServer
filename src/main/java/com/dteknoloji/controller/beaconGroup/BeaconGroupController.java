@@ -98,9 +98,11 @@ public class BeaconGroupController {
     }
 
     /**
-     * Add beacon to the specified beacon group
-     *
+     * Add beacon to the specified beacon group.
+     * <p/>
      * Can return 409 if beacon already has a group.
+     * <p/>
+     * Ex: "/BeaconGroup/1/add?beaconId=12"
      *
      * @param beaconGroupId The ID of the beacon group to add the beacon to
      * @param beaconId      The ID of the beacon to add
@@ -121,6 +123,40 @@ public class BeaconGroupController {
                 } else {
                     beacon.setGroup(beaconGroup);
                     beaconGroup.getBeacons().add(beacon);
+                    beaconService.save(beacon);
+                    beaconGroupService.save(beaconGroup);
+                    return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
+                }
+            }
+        }
+    }
+
+    /**
+     * Delete beacon from the specified beacon group.
+     * <p/>
+     * Can return 400 if beacon does not have a group.
+     * <p/>
+     * Ex: "/BeaconGroup/1/remove?beaconId=12"
+     *
+     * @param beaconGroupId The ID of the beacon group to remove the beacon from
+     * @param beaconId      The ID of the beacon to remove
+     * @return The removed beacon group
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/{beaconGroupId}/remove")
+    public ResponseEntity<BeaconGroup> removeBeaconFromGroup(@PathVariable String beaconGroupId, @RequestParam(value = "beaconId", required = true) String beaconId) {
+        BeaconGroup beaconGroup = beaconGroupService.findById(Long.valueOf(beaconGroupId));
+        if (beaconGroup == null) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
+        } else {
+            Beacon beacon = beaconService.findById(Long.valueOf(beaconId));
+            if (beacon == null) {
+                return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
+            } else {
+                if (beacon.getGroup() == null) {
+                    return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
+                } else {
+                    beacon.setGroup(null);
+                    beaconGroup.getBeacons().remove(beacon);
                     beaconService.save(beacon);
                     beaconGroupService.save(beaconGroup);
                     return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
