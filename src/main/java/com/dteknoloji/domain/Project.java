@@ -123,8 +123,10 @@ public class Project extends ResourceSupport implements Serializable {
      * BEGIN: Project 'beacons list' attribute
      */
     @OneToMany(targetEntity = Beacon.class, mappedBy = "project", fetch = FetchType.EAGER)
-//    @JsonIgnoreProperties(value = {"uuid", "major", "minor", "description", "group"})
+    // MUST BE IMPLEMENTED
+    // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
     @JsonIgnore
+    // MUST BE IMPLEMENTED
     private List<Beacon> beacons;
 
     public List<Beacon> getBeacons() {
@@ -144,8 +146,10 @@ public class Project extends ResourceSupport implements Serializable {
      * BEGIN: Project 'beacon groups list' attribute
      */
     @OneToMany(targetEntity = BeaconGroup.class, mappedBy = "project", fetch = FetchType.EAGER)
-//    @JsonIgnoreProperties(value = {"uuid", "major", "minor", "description", "group"})
+    // MUST BE IMPLEMENTED
+    // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
     @JsonIgnore
+    // MUST BE IMPLEMENTED
     private List<BeaconGroup> beaconGroups;
 
     public List<BeaconGroup> getBeaconGroups() {
