@@ -24,5 +24,5 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 @ComponentScan(basePackages = { "com.dteknoloji.controller" })
 public class MVCConfig {
-
+    // TODO find out what this class is used for
 }
