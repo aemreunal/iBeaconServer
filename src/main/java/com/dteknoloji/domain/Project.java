@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.dteknoloji.domain.TODO.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -145,7 +146,7 @@ public class Project extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Project 'beacon groups list' attribute
      */
-    @OneToMany(targetEntity = BeaconGroup.class, mappedBy = "project", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = BeaconGroup.class, mappedBy = "project", fetch = FetchType.LAZY)
     // MUST BE IMPLEMENTED
     // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
     @JsonIgnore
