@@ -1,8 +1,14 @@
 <?php
-// require the Faker autoloader
+
+/*
+Ths script requires the PHP Faker library by fzaninotto.
+You can obtain it from https://github.com/fzaninotto/Faker
+*/
+
+// Require the Faker autoloader, point it to your own Faker code
 require_once '/Users/aemreunal/Documents/GitHub/fzaninotto-Faker/src/autoload.php';
 
-// use the factory to create a Faker\Generator instance
+// Use the factory to create a Faker\Generator instance
 $faker = Faker\Factory::create();
 
 // Parse command-line arguments
@@ -10,7 +16,6 @@ $options = getopt('n:');
 if (count($options) == 0) {
   exit("Please specify number of beacons to generate. Ex: \"... -n100\" for 100 beacons.\n");
 }
-
 $NUM_BEACONS = intval($options["n"]);
 
 $file = 'generated_beacons.txt';
@@ -28,16 +33,15 @@ $generateDescriptions = 1;
 
  * As a list:
 [{
-  "uuid":"HelloWorld11111111111111111111111111",
-  "major":"1",
-  "minor":"1",
-  "description":"testasd1"
-},
-{
-  "uuid":"HelloWorld11111111111111111111111111",
-  "major":"1",
-  "minor":"1",
-  "description":"testasd1"
+  "uuid":"",
+  "major":"",
+  "minor":"",
+  "description":""
+},{
+  "uuid":"",
+  "major":"",
+  "minor":"",
+  "description":""
 }]
 */
 
