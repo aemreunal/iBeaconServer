@@ -25,13 +25,21 @@ import org.springframework.data.jpa.domain.Specification;
 import com.dteknoloji.domain.Beacon;
 
 public class BeaconSpecifications {
+    /**
+     * Creates the Beacon search specification from the given attributes
+     *
+     * @param uuid  The UUID attribute to search for
+     * @param major The major attribute to search for
+     * @param minor The minor attribute to search for
+     * @return The specification of the beacon
+     */
     public static Specification<Beacon> beaconWithSpecification(final String uuid, final String major, final String minor) {
         return new Specification<Beacon>() {
             public Predicate toPredicate(Root<Beacon> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
                 ArrayList<Predicate> predicates = new ArrayList<Predicate>();
 
                 if (!uuid.equals("")) {
-                    if(uuid.length() == Beacon.UUID_MAX_LENGTH) {
+                    if (uuid.length() == Beacon.UUID_MAX_LENGTH) {
                         predicates.add(builder.equal(root.get("uuid"), uuid.toUpperCase()));
                     } else {
                         predicates.add(builder.like(root.get("uuid").as(String.class), "%" + uuid.toUpperCase() + "%"));
