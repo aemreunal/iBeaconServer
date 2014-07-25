@@ -31,15 +31,15 @@ public class BeaconSpecifications {
                 ArrayList<Predicate> predicates = new ArrayList<Predicate>();
 
                 if (!uuid.equals("")) {
-                    predicates.add(builder.equal(root.get("uuid"), uuid.toLowerCase()));
+                        predicates.add(builder.equal(root.get("uuid"), uuid.toUpperCase()));
                 }
 
                 if (!major.equals("")) {
-                    predicates.add(builder.equal(root.get("major"), major.toLowerCase()));
+                    predicates.add(builder.equal(root.get("major"), major.toUpperCase()));
                 }
 
                 if (!minor.equals("")) {
-                    predicates.add(builder.equal(root.get("minor"), minor.toLowerCase()));
+                    predicates.add(builder.equal(root.get("minor"), minor.toUpperCase()));
                 }
 
                 return builder.and(predicates.toArray(new Predicate[predicates.size()]));
