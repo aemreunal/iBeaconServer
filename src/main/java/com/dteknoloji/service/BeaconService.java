@@ -32,10 +32,21 @@ public class BeaconService {
     @Autowired
     private BeaconRepository repository;
 
+    /**
+     * Saves/updates the given beacon
+     *
+     * @param beacon The beacon to save/update
+     * @return The saved/updated beacon
+     */
     public Beacon save(Beacon beacon) {
         return repository.save(beacon);
     }
 
+    /**
+     * Returns the list of all the beacons
+     *
+     * @return A list of all beacons
+     */
     public List<Beacon> findAll() {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding all beacons");
@@ -50,6 +61,14 @@ public class BeaconService {
         return beaconList;
     }
 
+    /**
+     * Finds beacons conforming to given specifications
+     *
+     * @param uuid  The UUID field constraint
+     * @param major The Major field constraint
+     * @param minor The Minor field constraint
+     * @return The list of beacons conforming to given constraints
+     */
     public List<Beacon> findBeaconsBySpecs(String uuid, String major, String minor) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
@@ -58,6 +77,12 @@ public class BeaconService {
         return repository.findAll(BeaconSpecifications.beaconWithSpecification(uuid, major, minor));
     }
 
+    /**
+     * Finds the beacon with the given ID
+     *
+     * @param id The ID of the beacon to search for
+     * @return The beacon with that ID
+     */
     public Beacon findById(Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacon with ID = \'" + id + "\'");
@@ -66,6 +91,12 @@ public class BeaconService {
         return repository.findOne(id);
     }
 
+    /**
+     * Deletes the beacon with the given ID
+     *
+     * @param id The ID of the beacon to delete
+     * @return Whether the beacon was deleted or not
+     */
     public boolean delete(Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon with ID = \'" + id + "\'");
