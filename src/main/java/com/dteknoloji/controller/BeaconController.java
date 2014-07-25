@@ -14,6 +14,22 @@ import com.dteknoloji.config.GlobalSettings;
 import com.dteknoloji.domain.Beacon;
 import com.dteknoloji.service.BeaconService;
 
+/*
+ **************************
+ * Copyright (c) 2014     *
+ *                        *
+ * This code belongs to:  *
+ *                        *
+ * Ahmet Emre Ünal        *
+ * S001974                *
+ *                        *
+ * aemreunal@gmail.com    *
+ * emre.unal@ozu.edu.tr   *
+ *                        *
+ * aemreunal.com          *
+ **************************
+ */
+
 @Controller
 @RequestMapping("/Beacon")
 public class BeaconController {

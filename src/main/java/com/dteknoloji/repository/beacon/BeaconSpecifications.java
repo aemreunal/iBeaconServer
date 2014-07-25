@@ -1,10 +1,19 @@
 package com.dteknoloji.repository.beacon;
 
 /*
- * This code belongs to:
- * Ahmet Emre Unal
- * S001974
- * emre.unal@ozu.edu.tr
+ **************************
+ * Copyright (c) 2014     *
+ *                        *
+ * This code belongs to:  *
+ *                        *
+ * Ahmet Emre Ünal        *
+ * S001974                *
+ *                        *
+ * aemreunal@gmail.com    *
+ * emre.unal@ozu.edu.tr   *
+ *                        *
+ * aemreunal.com          *
+ **************************
  */
 
 import java.util.ArrayList;

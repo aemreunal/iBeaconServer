@@ -11,17 +11,19 @@ import com.dteknoloji.repository.beacon.BeaconRepository;
 import com.dteknoloji.repository.beacon.BeaconSpecifications;
 
 /*
- *************************
- * This code belongs to: *
- *                       *
- * Ahmet Emre Unal       *
- * S001974               *
- *                       *
- * aemreunal@gmail.com   *
- * emre.unal@ozu.edu.tr  *
- *                       *
- * aemreunal.com         *
- *************************
+ **************************
+ * Copyright (c) 2014     *
+ *                        *
+ * This code belongs to:  *
+ *                        *
+ * Ahmet Emre Ünal        *
+ * S001974                *
+ *                        *
+ * aemreunal@gmail.com    *
+ * emre.unal@ozu.edu.tr   *
+ *                        *
+ * aemreunal.com          *
+ **************************
  */
 
 @Transactional

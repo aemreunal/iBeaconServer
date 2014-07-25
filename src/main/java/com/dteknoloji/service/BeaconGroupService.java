@@ -9,6 +9,22 @@ import com.dteknoloji.config.GlobalSettings;
 import com.dteknoloji.domain.BeaconGroup;
 import com.dteknoloji.repository.beaconGroup.BeaconGroupRepository;
 
+/*
+ **************************
+ * Copyright (c) 2014     *
+ *                        *
+ * This code belongs to:  *
+ *                        *
+ * Ahmet Emre Ünal        *
+ * S001974                *
+ *                        *
+ * aemreunal@gmail.com    *
+ * emre.unal@ozu.edu.tr   *
+ *                        *
+ * aemreunal.com          *
+ **************************
+ */
+
 @Transactional
 @Service
 public class BeaconGroupService {

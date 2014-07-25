@@ -15,6 +15,22 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/*
+ **************************
+ * Copyright (c) 2014     *
+ *                        *
+ * This code belongs to:  *
+ *                        *
+ * Ahmet Emre Ünal        *
+ * S001974                *
+ *                        *
+ * aemreunal@gmail.com    *
+ * emre.unal@ozu.edu.tr   *
+ *                        *
+ * aemreunal.com          *
+ **************************
+ */
+
 @Configuration
 @EnableJpaRepositories(basePackages = { "com.dteknoloji.repository" })
 @EnableTransactionManagement
