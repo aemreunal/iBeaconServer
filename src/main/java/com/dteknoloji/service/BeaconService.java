@@ -39,6 +39,10 @@ public class BeaconService {
      * @return The saved/updated beacon
      */
     public Beacon save(Beacon beacon) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
+        }
+
         return repository.save(beacon);
     }
 
