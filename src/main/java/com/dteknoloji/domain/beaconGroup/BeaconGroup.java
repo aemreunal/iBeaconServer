@@ -30,11 +30,11 @@ public class BeaconGroup {
 
     @Column(name = "name", nullable = false, length = NAME_MAX_LENGTH)
     @Size(min = 1, max = NAME_MAX_LENGTH)
-    private String name;
+    private String name = "";
 
-    @Column(name = "description", nullable = true, length = DESCRIPTION_MAX_LENGTH)
+    @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
     @Size(min = 0, max = DESCRIPTION_MAX_LENGTH)
-    private String description;
+    private String description = "";
 
     // TODO Cascade? When group is deleted, associated beacon group IDs must be updated as well
     // TODO Cascade for whole projects: http://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-cascade-example/
