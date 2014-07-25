@@ -1,4 +1,4 @@
-package com.dteknoloji.service.beaconGroup;
+package com.dteknoloji.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.dteknoloji.config.GlobalSettings;
-import com.dteknoloji.domain.beaconGroup.BeaconGroup;
+import com.dteknoloji.domain.BeaconGroup;
 import com.dteknoloji.repository.beaconGroup.BeaconGroupRepository;
 
 @Transactional

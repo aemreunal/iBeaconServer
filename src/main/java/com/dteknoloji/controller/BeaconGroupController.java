@@ -1,4 +1,4 @@
-package com.dteknoloji.controller.beaconGroup;
+package com.dteknoloji.controller;
 
 /*
  * This code belongs to:
@@ -18,10 +18,10 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.dteknoloji.config.GlobalSettings;
-import com.dteknoloji.domain.beacon.Beacon;
-import com.dteknoloji.domain.beaconGroup.BeaconGroup;
-import com.dteknoloji.service.beacon.BeaconService;
-import com.dteknoloji.service.beaconGroup.BeaconGroupService;
+import com.dteknoloji.domain.Beacon;
+import com.dteknoloji.domain.BeaconGroup;
+import com.dteknoloji.service.BeaconService;
+import com.dteknoloji.service.BeaconGroupService;
 
 @Controller
 @RequestMapping("/BeaconGroup")

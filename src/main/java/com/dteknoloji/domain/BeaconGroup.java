@@ -1,4 +1,4 @@
-package com.dteknoloji.domain.beaconGroup;
+package com.dteknoloji.domain;
 
 /*
  * This code belongs to:
@@ -11,7 +11,6 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.dteknoloji.domain.beacon.Beacon;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity

@@ -1,4 +1,4 @@
-package com.dteknoloji.controller.beacon;
+package com.dteknoloji.controller;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
@@ -11,8 +11,8 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.dteknoloji.config.GlobalSettings;
-import com.dteknoloji.domain.beacon.Beacon;
-import com.dteknoloji.service.beacon.BeaconService;
+import com.dteknoloji.domain.Beacon;
+import com.dteknoloji.service.BeaconService;
 
 @Controller
 @RequestMapping("/Beacon")

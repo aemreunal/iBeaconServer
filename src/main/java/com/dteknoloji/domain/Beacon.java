@@ -1,11 +1,10 @@
-package com.dteknoloji.domain.beacon;
+package com.dteknoloji.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.dteknoloji.domain.beaconGroup.BeaconGroup;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
