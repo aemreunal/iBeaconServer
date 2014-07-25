@@ -173,12 +173,16 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
     public ResponseEntity<BeaconGroup> deleteBeaconGroup(@PathVariable String id) {
-
         BeaconGroup beaconGroup = beaconGroupService.findById(Long.valueOf(id));
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
-
+        // Delete group associations of beacons in group
+        for (Beacon beacon : beaconGroup.getBeacons()) {
+            beacon.setGroup(null);
+            beaconService.save(beacon);
+        }
+        // Delete the group
         boolean deleted = beaconGroupService.delete(Long.valueOf(id));
         if (deleted) {
             return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
