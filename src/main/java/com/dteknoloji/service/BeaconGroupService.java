@@ -32,6 +32,12 @@ public class BeaconGroupService {
     @Autowired
     private BeaconGroupRepository repository;
 
+    /**
+     * Saves/updates the given beacon group
+     *
+     * @param beaconGroup The beacon group to save/update
+     * @return The saved/updated beacon group
+     */
     public BeaconGroup save(BeaconGroup beaconGroup) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving beacon group with ID = \'" + beaconGroup.getBeaconGroupId() + "\'");
@@ -40,6 +46,11 @@ public class BeaconGroupService {
         return repository.save(beaconGroup);
     }
 
+    /**
+     * Returns the list of all the beacon groups
+     *
+     * @return A list of all beacon groups
+     */
     public List<BeaconGroup> findAll() {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding all beacon groups");
@@ -54,6 +65,12 @@ public class BeaconGroupService {
         return beaconGroupList;
     }
 
+    /**
+     * Finds the beacon group with the given ID
+     *
+     * @param id The ID of the beacon group to search for
+     * @return The beacon group with that ID
+     */
     public BeaconGroup findById(Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacon group with ID = \'" + id + "\'");
@@ -62,6 +79,12 @@ public class BeaconGroupService {
         return repository.findOne(id);
     }
 
+    /**
+     * Deletes the beacon group with the given ID
+     *
+     * @param id The ID of the beacon group to delete
+     * @return Whether the beacon group was deleted or not
+     */
     public boolean delete(Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon group with ID = \'" + id + "\'");
