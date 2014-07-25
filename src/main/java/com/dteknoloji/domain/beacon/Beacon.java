@@ -16,8 +16,10 @@ public class Beacon extends ResourceSupport implements Serializable {
     // UUID hex string (including dashes) is 36 characters long
     public static final int UUID_MAX_LENGTH = 36;
     // Major hex string is 4 characters long
+    public static final int MAJOR_MIN_LENGTH = 1;
     public static final int MAJOR_MAX_LENGTH = 4;
     // Minor hex string is 4 characters long
+    public static final int MINOR_MIN_LENGTH = 1;
     public static final int MINOR_MAX_LENGTH = 4;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
 
@@ -31,15 +33,15 @@ public class Beacon extends ResourceSupport implements Serializable {
     private String uuid = "";
 
     @Column(name = "major", nullable = false, length = MAJOR_MAX_LENGTH)
-    @Size(min = 1, max = MAJOR_MAX_LENGTH)
+    @Size(min = MAJOR_MIN_LENGTH, max = MAJOR_MAX_LENGTH)
     private String major = "";
 
     @Column(name = "minor", nullable = false, length = MINOR_MAX_LENGTH)
-    @Size(min = 1, max = MINOR_MAX_LENGTH)
+    @Size(min = MINOR_MIN_LENGTH, max = MINOR_MAX_LENGTH)
     private String minor = "";
 
     @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
-    @Size(min = 0, max = DESCRIPTION_MAX_LENGTH)
+    @Size(max = DESCRIPTION_MAX_LENGTH)
     private String description = "";
 
     @ManyToOne(targetEntity = BeaconGroup.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
