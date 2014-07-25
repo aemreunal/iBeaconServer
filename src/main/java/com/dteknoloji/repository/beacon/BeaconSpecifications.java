@@ -31,7 +31,11 @@ public class BeaconSpecifications {
                 ArrayList<Predicate> predicates = new ArrayList<Predicate>();
 
                 if (!uuid.equals("")) {
+                    if(uuid.length() == Beacon.UUID_MAX_LENGTH) {
                         predicates.add(builder.equal(root.get("uuid"), uuid.toUpperCase()));
+                    } else {
+                        predicates.add(builder.like(root.get("uuid").as(String.class), "%" + uuid.toUpperCase() + "%"));
+                    }
                 }
 
                 if (!major.equals("")) {
