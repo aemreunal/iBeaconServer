@@ -12,7 +12,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.dteknoloji.domain.beacon.Beacon;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -36,7 +35,7 @@ public class BeaconGroup {
     @Size(max = DESCRIPTION_MAX_LENGTH)
     private String description = "";
 
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(targetEntity = Beacon.class, mappedBy = "group", fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = {"uuid", "major", "minor", "description", "group"})
     private List<Beacon> beacons;
