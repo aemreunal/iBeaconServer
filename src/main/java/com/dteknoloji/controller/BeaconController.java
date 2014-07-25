@@ -34,7 +34,7 @@ import com.dteknoloji.service.BeaconService;
 @RequestMapping("/Beacon")
 public class BeaconController {
     @Autowired
-    private BeaconService service;
+    private BeaconService beaconService;
 
     /**
      * Get all beacons (Optionally, all with matching criteria)
@@ -50,7 +50,7 @@ public class BeaconController {
             @RequestParam(value = "major", required = false, defaultValue = "") String major,
             @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
-            return new ResponseEntity<List<Beacon>>(service.findAll(), HttpStatus.OK);
+            return new ResponseEntity<List<Beacon>>(beaconService.findAll(), HttpStatus.OK);
         } else {
             return getBeaconsWithMatchingCriteria(uuid, major, minor);
         }
@@ -65,7 +65,7 @@ public class BeaconController {
      * @return The list of beacons that match the given criteria
      */
     private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(String uuid, String major, String minor) {
-        List<Beacon> beacons = service.findBeaconsBySpecs(uuid, major, minor);
+        List<Beacon> beacons = beaconService.findBeaconsBySpecs(uuid, major, minor);
 
         if (beacons.size() == 0) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
@@ -81,7 +81,7 @@ public class BeaconController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application/json")
     public ResponseEntity<Beacon> viewBeacon(@PathVariable String id) {
-        Beacon beacon = service.findById(Long.valueOf(id));
+        Beacon beacon = beaconService.findById(Long.valueOf(id));
         if (beacon == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
@@ -92,13 +92,13 @@ public class BeaconController {
      * Create a new beacon
      *
      * @param restBeacon The beacon as JSON object
-     * @param builder
+     * @param builder The URI builder
      * @return The created beacon
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Beacon> createBeacon(@RequestBody Beacon restBeacon, UriComponentsBuilder builder) {
         try {
-            Beacon newBeacon = service.save(restBeacon);
+            Beacon newBeacon = beaconService.save(restBeacon);
             if (GlobalSettings.DEBUGGING) {
                 System.out.println("Saved beacon with UUID = \'" + newBeacon.getUuid() + "\' major = \'" + newBeacon.getMajor() + "\' minor = \'" + newBeacon.getMinor() + "\'");
             }
@@ -117,14 +117,13 @@ public class BeaconController {
      * Create a multiple new beacons
      *
      * @param restBeacons The beacon list as JSON object
-     * @param builder
      * @return The created beacons
      */
     @RequestMapping(method = RequestMethod.POST, value = "/import")
-    public ResponseEntity<List<Beacon>> createMultipleBeacon(@RequestBody List<Beacon> restBeacons, UriComponentsBuilder builder) {
+    public ResponseEntity<List<Beacon>> createMultipleBeacon(@RequestBody List<Beacon> restBeacons) {
         for (Beacon restBeacon : restBeacons) {
             try {
-                Beacon newBeacon = service.save(restBeacon);
+                Beacon newBeacon = beaconService.save(restBeacon);
                 if (GlobalSettings.DEBUGGING) {
                     System.out.println("Saved beacon with UUID = \'" + newBeacon.getUuid() + "\' major = \'" + newBeacon.getMajor() + "\' minor = \'" + newBeacon.getMinor() + "\'");
                 }
@@ -147,12 +146,12 @@ public class BeaconController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
     public ResponseEntity<Beacon> deleteBeacon(@PathVariable String id) {
 
-        Beacon beacon = service.findById(Long.valueOf(id));
+        Beacon beacon = beaconService.findById(Long.valueOf(id));
         if (beacon == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
 
-        boolean deleted = service.delete(Long.valueOf(id));
+        boolean deleted = beaconService.delete(Long.valueOf(id));
         if (deleted) {
             return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
         }
