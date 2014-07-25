@@ -98,6 +98,31 @@ public class BeaconController {
     }
 
     /**
+     * Create a multiple new beacons
+     *
+     * @param restBeacons The beacon list as JSON object
+     * @param builder
+     * @return The created beacons
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/import")
+    public ResponseEntity<List<Beacon>> createMultipleBeacon(@RequestBody List<Beacon> restBeacons, UriComponentsBuilder builder) {
+        for (Beacon restBeacon : restBeacons) {
+            try {
+                Beacon newBeacon = service.save(restBeacon);
+                if (GlobalSettings.DEBUGGING) {
+                    System.out.println("Saved beacon with UUID = \'" + newBeacon.getUuid() + "\' major = \'" + newBeacon.getMajor() + "\' minor = \'" + newBeacon.getMinor() + "\'");
+                }
+            } catch (ConstraintViolationException | TransactionSystemException e) {
+                if (GlobalSettings.DEBUGGING) {
+                    System.err.println("Unable to save beacon! Constraint violation detected!");
+                }
+                return new ResponseEntity<List<Beacon>>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        return new ResponseEntity<List<Beacon>>(restBeacons, HttpStatus.CREATED);
+    }
+
+    /**
      * Delete the specified beacon
      *
      * @param id The ID of beacon to delete
