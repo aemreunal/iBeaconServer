@@ -1,4 +1,4 @@
-package com.dteknoloji.domain;
+package com.dteknoloji.domain.TODO;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -23,12 +23,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 
 @Entity
-@Table(name = "users")
+@Table(name = "scenarios")
 @ResponseBody
-@JsonIgnoreProperties(value = { "links" })
-public class User extends ResourceSupport implements Serializable {
+@JsonIgnoreProperties(value = {"links"})
+public class Scenario extends ResourceSupport implements Serializable {
     @Id
-    @Column(name = "user_id")
+    @Column(name = "scenario_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userId;
+    private Long scenarioId;
 }
