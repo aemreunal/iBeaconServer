@@ -1,17 +1,26 @@
 package com.dteknoloji.domain;
 
-/*
- * This code belongs to:
- * Ahmet Emre Unal
- * S001974
- * emre.unal@ozu.edu.tr
- */
-
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+/*
+ **************************
+ * Copyright (c) 2014     *
+ *                        *
+ * This code belongs to:  *
+ *                        *
+ * Ahmet Emre Ünal        *
+ * S001974                *
+ *                        *
+ * aemreunal@gmail.com    *
+ * emre.unal@ozu.edu.tr   *
+ *                        *
+ * aemreunal.com          *
+ **************************
+ */
 
 @Entity
 @Table(name = "beacon_groups")

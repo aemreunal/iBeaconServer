@@ -23,12 +23,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 
 @Entity
-@Table(name = "scenarios")
+@Table(name = "projects")
 @ResponseBody
-@JsonIgnoreProperties(value = {"links"})
-public class Scenario extends ResourceSupport implements Serializable {
+@JsonIgnoreProperties(value = { "links" })
+public class Project extends ResourceSupport implements Serializable {
     @Id
-    @Column(name = "scenario_id")
+    @Column(name = "project_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long scenarioId;
+    private Long projectId;
 }
