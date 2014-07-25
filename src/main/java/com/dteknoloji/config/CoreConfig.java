@@ -2,7 +2,6 @@ package com.dteknoloji.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -34,11 +33,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = { "com.dteknoloji.repository" })
 @EnableTransactionManagement
 @ComponentScan(basePackages = { "com.dteknoloji" })
-
 public class CoreConfig {
-    @Autowired
-    private DataSource dataSource;
-
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
