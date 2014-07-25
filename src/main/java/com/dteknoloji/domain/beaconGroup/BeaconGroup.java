@@ -33,11 +33,9 @@ public class BeaconGroup {
     private String name = "";
 
     @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
-    @Size(min = 0, max = DESCRIPTION_MAX_LENGTH)
+    @Size(max = DESCRIPTION_MAX_LENGTH)
     private String description = "";
 
-    // TODO Cascade? When group is deleted, associated beacon group IDs must be updated as well
-    // TODO Cascade for whole projects: http://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-cascade-example/
     @JsonIgnore
     @OneToMany(targetEntity = Beacon.class, mappedBy = "group", fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = {"uuid", "major", "minor", "description", "group"})

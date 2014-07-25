@@ -17,7 +17,6 @@ public class BeaconService {
     private BeaconRepository repository;
 
     public Beacon save(Beacon beacon) {
-        // TODO Create group if beaconGroup doesn't exist
         return repository.save(beacon);
     }
 
