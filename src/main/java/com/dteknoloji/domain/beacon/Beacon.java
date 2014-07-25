@@ -28,19 +28,19 @@ public class Beacon extends ResourceSupport implements Serializable {
 
     @Column(name = "uuid", nullable = false, length = UUID_MAX_LENGTH)
     @Size(min = UUID_MAX_LENGTH, max = UUID_MAX_LENGTH)
-    private String uuid;
+    private String uuid = "";
 
     @Column(name = "major", nullable = false, length = MAJOR_MAX_LENGTH)
     @Size(min = 1, max = MAJOR_MAX_LENGTH)
-    private String major;
+    private String major = "";
 
     @Column(name = "minor", nullable = false, length = MINOR_MAX_LENGTH)
     @Size(min = 1, max = MINOR_MAX_LENGTH)
-    private String minor;
+    private String minor = "";
 
-    @Column(name = "description", nullable = true, length = DESCRIPTION_MAX_LENGTH)
+    @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
     @Size(min = 0, max = DESCRIPTION_MAX_LENGTH)
-    private String description;
+    private String description = "";
 
     @ManyToOne(targetEntity = BeaconGroup.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
     @JsonIgnoreProperties(value = {"name", "description", "beacons"})
