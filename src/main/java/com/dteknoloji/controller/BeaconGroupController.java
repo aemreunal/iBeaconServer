@@ -29,8 +29,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.dteknoloji.config.GlobalSettings;
 import com.dteknoloji.domain.Beacon;
 import com.dteknoloji.domain.BeaconGroup;
-import com.dteknoloji.service.BeaconService;
 import com.dteknoloji.service.BeaconGroupService;
+import com.dteknoloji.service.BeaconService;
 
 @Controller
 @RequestMapping("/BeaconGroup")
@@ -151,7 +151,7 @@ public class BeaconGroupController {
      * @param beaconId      The ID of the beacon to remove
      * @return The removed beacon group
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/{beaconGroupId}/remove")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconGroupId}/remove")
     public ResponseEntity<BeaconGroup> removeBeaconFromGroup(@PathVariable String beaconGroupId, @RequestParam(value = "beaconId", required = true) String beaconId) {
         BeaconGroup beaconGroup = beaconGroupService.findById(Long.valueOf(beaconGroupId));
         if (beaconGroup == null) {
@@ -186,17 +186,11 @@ public class BeaconGroupController {
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
-        // Delete group associations of beacons in group
-        for (Beacon beacon : beaconGroup.getBeacons()) {
-            beacon.setGroup(null);
-            beaconService.save(beacon);
-        }
-        // Delete the group
         boolean deleted = beaconGroupService.delete(Long.valueOf(id));
         if (deleted) {
             return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.FORBIDDEN);
         }
-
-        return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.FORBIDDEN);
     }
 }

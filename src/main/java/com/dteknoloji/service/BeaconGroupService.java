@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.dteknoloji.config.GlobalSettings;
+import com.dteknoloji.domain.Beacon;
 import com.dteknoloji.domain.BeaconGroup;
 import com.dteknoloji.repository.beaconGroup.BeaconGroupRepository;
 
@@ -31,6 +32,9 @@ public class BeaconGroupService {
 
     @Autowired
     private BeaconGroupRepository repository;
+
+    @Autowired
+    private BeaconService beaconService;
 
     /**
      * Saves/updates the given beacon group
@@ -80,7 +84,8 @@ public class BeaconGroupService {
     }
 
     /**
-     * Deletes the beacon group with the given ID
+     * Deletes the beacon group with the given ID and updates the beacons
+     * in the group.
      *
      * @param id The ID of the beacon group to delete
      * @return Whether the beacon group was deleted or not
@@ -89,13 +94,15 @@ public class BeaconGroupService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon group with ID = \'" + id + "\'");
         }
-
-        if (id != null) {
+        if(repository.exists(id)) {
+            for (Beacon beacon : repository.findOne(id).getBeacons()) {
+                beacon.setGroup(null);
+                beaconService.save(beacon);
+            }
             repository.delete(id);
             return true;
         } else {
             return false;
         }
     }
-
 }
