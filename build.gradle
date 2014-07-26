@@ -100,7 +100,7 @@ dependencies {
 //    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.0-api', version: hibernateJPAAPI20Version
 
     // MySQL
-    compile group:'mysql', name: 'mysql-connector-java', version: mysqlConnectorJDBCVersion
+    compile group: 'mysql', name: 'mysql-connector-java', version: mysqlConnectorJDBCVersion
 
     // Test
     testCompile 'org.springframework:spring-test:3.2.3.RELEASE'
