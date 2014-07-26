@@ -39,7 +39,9 @@ public class BeaconGroupService {
     /**
      * Saves/updates the given beacon group
      *
-     * @param beaconGroup The beacon group to save/update
+     * @param beaconGroup
+     *         The beacon group to save/update
+     *
      * @return The saved/updated beacon group
      */
     public BeaconGroup save(BeaconGroup beaconGroup) {
@@ -72,37 +74,49 @@ public class BeaconGroupService {
     /**
      * Finds the beacon group with the given ID
      *
-     * @param id The ID of the beacon group to search for
+     * @param id
+     *         The ID of the beacon group to search for
+     *
      * @return The beacon group with that ID
      */
     public BeaconGroup findById(Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacon group with ID = \'" + id + "\'");
         }
-
         return repository.findOne(id);
     }
 
     /**
-     * Deletes the beacon group with the given ID and updates the beacons
-     * in the group.
+     * Deletes the beacon group with the given ID and updates the beacons in the group.
      *
-     * @param id The ID of the beacon group to delete
+     * @param id
+     *         The ID of the beacon group to delete
+     *
      * @return Whether the beacon group was deleted or not
      */
     public boolean delete(Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon group with ID = \'" + id + "\'");
         }
-        if(repository.exists(id)) {
-            for (Beacon beacon : repository.findOne(id).getBeacons()) {
-                beacon.setGroup(null);
-                beaconService.save(beacon);
-            }
+        if (repository.exists(id)) {
+            updateBeaconsInGroup(id);
             repository.delete(id);
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Removes the association between a group and the beacons in the group
+     *
+     * @param id
+     *         The ID of the group
+     */
+    private void updateBeaconsInGroup(Long id) {
+        for (Beacon beacon : repository.findOne(id).getBeacons()) {
+            beacon.setGroup(null);
+            beaconService.save(beacon);
         }
     }
 }
