@@ -139,7 +139,7 @@ public class BeaconGroupController {
         } catch (NumberFormatException e) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
         }
-        
+
         BeaconGroup beaconGroup = beaconGroupService.findById(beaconGroupIDAsLong);
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
