@@ -96,7 +96,7 @@ public class BeaconGroup {
      * BEGIN: Beacon group 'beacon list' attribute
      */
     @OneToMany(targetEntity = Beacon.class, mappedBy = "group", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group" })
+    @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project" })
     private List<Beacon> beacons;
 
     public List<Beacon> getBeacons() {
