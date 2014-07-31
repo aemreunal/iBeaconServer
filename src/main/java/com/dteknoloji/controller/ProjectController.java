@@ -255,8 +255,8 @@ public class ProjectController {
                 "\' name = \'" + newBeaconGroup.getName() +
                 "\' in project with ID = \'" + projectIDAsLong + "\'");
         }
-        project.addBeaconGroup(newBeaconGroup);
-        projectService.save(project);
+//        project.addBeaconGroup(newBeaconGroup);
+//        projectService.save(project);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/BeaconGroup/{id}").buildAndExpand(newBeaconGroup.getBeaconGroupId().toString()).toUri());
