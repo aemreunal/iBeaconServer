@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.dteknoloji.domain.TODO.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -100,20 +99,20 @@ public class Project extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Project 'owner' attribute
      */
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
-    // MUST BE IMPLEMENTED
-    // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
-    @JsonIgnore
-    // MUST BE IMPLEMENTED
-    private User owner;
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
+//    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
+//    // MUST BE IMPLEMENTED
+//    // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
+//    @JsonIgnore
+//    // MUST BE IMPLEMENTED
+//    private User owner;
+//
+//    public User getOwner() {
+//        return owner;
+//    }
+//
+//    public void setOwner(User owner) {
+//        this.owner = owner;
+//    }
     /*
      * END: Project 'owner' attribute
      *------------------------------------------------------------
