@@ -112,7 +112,7 @@ public class BeaconController {
      * @param restBeacon
      *     The beacon as JSON object
      * @param builder
-     *     The URI builder
+     *     The URI builder for post-creation redirect
      *
      * @return The created beacon
      */
