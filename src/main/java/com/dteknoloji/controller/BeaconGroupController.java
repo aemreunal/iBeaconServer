@@ -96,31 +96,6 @@ public class BeaconGroupController {
     }
 
     /**
-     * Create a new beacon group
-     *
-     * @param restBeaconGroup The beacon group as JSON object
-     * @param builder
-     * @return The created beacon group
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<BeaconGroup> createBeaconGroup(@RequestBody BeaconGroup restBeaconGroup, UriComponentsBuilder builder) {
-        try {
-            BeaconGroup newBeaconGroup = beaconGroupService.save(restBeaconGroup);
-            if (GlobalSettings.DEBUGGING) {
-                System.out.println("Saved beacon group with ID = \'" + newBeaconGroup.getBeaconGroupId() + "\' name = \'" + newBeaconGroup.getName() + "\'");
-            }
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(builder.path("/BeaconGroup/{id}").buildAndExpand(newBeaconGroup.getBeaconGroupId().toString()).toUri());
-            return new ResponseEntity<BeaconGroup>(newBeaconGroup, headers, HttpStatus.CREATED);
-        } catch (ConstraintViolationException | TransactionSystemException e) {
-            if (GlobalSettings.DEBUGGING) {
-                System.err.println("Unable to save beacon group! Constraint violation detected!");
-            }
-            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
      * Add beacon to the specified beacon group.
      * <p/>
      * Can return 409 if beacon already has a group.
