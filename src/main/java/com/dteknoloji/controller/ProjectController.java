@@ -201,7 +201,6 @@ public class ProjectController {
                 "\' minor = \'" + newBeacon.getMinor() +
                 "\' in project with ID = \'" + projectIDAsLong + "\'");
         }
-        // TODO Convert all .getBeacons.add() calls to direct adding
         project.addBeacon(newBeacon);
         projectService.save(project);
 
@@ -256,7 +255,6 @@ public class ProjectController {
                 "\' name = \'" + newBeaconGroup.getName() +
                 "\' in project with ID = \'" + projectIDAsLong + "\'");
         }
-        // TODO Convert all .getBeaconGroups.add() calls to direct adding
         project.addBeaconGroup(newBeaconGroup);
         projectService.save(project);
 
