@@ -17,16 +17,14 @@ package com.dteknoloji.controller;
  */
 
 import java.util.List;
-import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-import com.dteknoloji.config.GlobalSettings;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.dteknoloji.domain.Beacon;
 import com.dteknoloji.domain.BeaconGroup;
 import com.dteknoloji.service.BeaconGroupService;
@@ -54,7 +52,9 @@ public class BeaconGroupController {
     /**
      * Get the beacon group with specified ID
      *
-     * @param id The ID of the group
+     * @param id
+     *     The ID of the group
+     *
      * @return The beacon group
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application/json")
@@ -76,7 +76,9 @@ public class BeaconGroupController {
     /**
      * Get beacon objects that belong to a group.
      *
-     * @param id The ID of the group
+     * @param id
+     *     The ID of the group
+     *
      * @return The list of beacons that belong to the group with the specified ID
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/beacons", produces = "application/json")
@@ -102,8 +104,11 @@ public class BeaconGroupController {
      * <p/>
      * Ex: "/BeaconGroup/1/add?beaconId=12"
      *
-     * @param beaconGroupId The ID of the beacon group to add the beacon to
-     * @param beaconId      The ID of the beacon to add
+     * @param beaconGroupId
+     *     The ID of the beacon group to add the beacon to
+     * @param beaconId
+     *     The ID of the beacon to add
+     *
      * @return The added beacon group
      */
     @RequestMapping(method = RequestMethod.POST, value = "/{beaconGroupId}/add")
@@ -118,21 +123,21 @@ public class BeaconGroupController {
         BeaconGroup beaconGroup = beaconGroupService.findById(beaconGroupIDAsLong);
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
+        }
+
+        Beacon beacon = beaconService.findById(Long.valueOf(beaconId));
+        if (beacon == null) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
+        }
+
+        if (beacon.getGroup() != null) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.CONFLICT);
         } else {
-            Beacon beacon = beaconService.findById(Long.valueOf(beaconId));
-            if (beacon == null) {
-                return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
-            } else {
-                if (beacon.getGroup() != null) {
-                    return new ResponseEntity<BeaconGroup>(HttpStatus.CONFLICT);
-                } else {
-                    beacon.setGroup(beaconGroup);
-                    beaconGroup.getBeacons().add(beacon);
-                    beaconService.save(beacon);
-                    beaconGroupService.save(beaconGroup);
-                    return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
-                }
-            }
+            beacon.setGroup(beaconGroup);
+            beaconGroup.addBeacon(beacon);
+            beaconService.save(beacon);
+            beaconGroupService.save(beaconGroup);
+            return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
         }
     }
 
@@ -143,8 +148,11 @@ public class BeaconGroupController {
      * <p/>
      * Ex: "/BeaconGroup/1/remove?beaconId=12"
      *
-     * @param beaconGroupId The ID of the beacon group to remove the beacon from
-     * @param beaconId      The ID of the beacon to remove
+     * @param beaconGroupId
+     *     The ID of the beacon group to remove the beacon from
+     * @param beaconId
+     *     The ID of the beacon to remove
+     *
      * @return The removed beacon group
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconGroupId}/remove")
@@ -173,7 +181,9 @@ public class BeaconGroupController {
     /**
      * Delete the specified beacon group
      *
-     * @param id The ID of the beacon group to delete
+     * @param id
+     *     The ID of the beacon group to delete
+     *
      * @return The deleted beacon group
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
