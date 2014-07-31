@@ -59,7 +59,14 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application/json")
     public ResponseEntity<BeaconGroup> viewBeaconGroup(@PathVariable String id) {
-        BeaconGroup beaconGroup = beaconGroupService.findById(Long.valueOf(id));
+        Long beaconGroupIDAsLong;
+        try {
+            beaconGroupIDAsLong = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
+        }
+
+        BeaconGroup beaconGroup = beaconGroupService.findById(beaconGroupIDAsLong);
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
@@ -74,7 +81,14 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/beacons", produces = "application/json")
     public ResponseEntity<List<Beacon>> viewBeaconGroupMembers(@PathVariable String id) {
-        BeaconGroup beaconGroup = beaconGroupService.findById(Long.valueOf(id));
+        Long beaconGroupIDAsLong;
+        try {
+            beaconGroupIDAsLong = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<List<Beacon>>(HttpStatus.BAD_REQUEST);
+        }
+
+        BeaconGroup beaconGroup = beaconGroupService.findById(beaconGroupIDAsLong);
         if (beaconGroup == null) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
         }
@@ -119,7 +133,14 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/{beaconGroupId}/add")
     public ResponseEntity<BeaconGroup> addBeaconToGroup(@PathVariable String beaconGroupId, @RequestParam(value = "beaconId", required = true) String beaconId) {
-        BeaconGroup beaconGroup = beaconGroupService.findById(Long.valueOf(beaconGroupId));
+        Long beaconGroupIDAsLong;
+        try {
+            beaconGroupIDAsLong = Long.valueOf(beaconGroupId);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
+        }
+        
+        BeaconGroup beaconGroup = beaconGroupService.findById(beaconGroupIDAsLong);
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         } else {
