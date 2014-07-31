@@ -82,10 +82,14 @@ public class ProjectController {
      */
     private ResponseEntity<List<Project>> getProjectsWithMatchingCriteria(String projectName, String ownerName, String ownerID) {
         Long ownerIDAsLong;
-        try {
-            ownerIDAsLong = Long.valueOf(ownerID);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<List<Project>>(HttpStatus.BAD_REQUEST);
+        if (ownerID.equals("")) {
+            ownerIDAsLong = null;
+        } else {
+            try {
+                ownerIDAsLong = Long.valueOf(ownerID);
+            } catch (NumberFormatException e) {
+                return new ResponseEntity<List<Project>>(HttpStatus.BAD_REQUEST);
+            }
         }
 
         List<Project> projects = projectService.findProjectsBySpecs(projectName, ownerName, ownerIDAsLong);
