@@ -106,6 +106,10 @@ public class BeaconGroup {
     public void setBeacons(List<Beacon> beacons) {
         this.beacons = beacons;
     }
+
+    public void addBeacon(Beacon beacon) {
+        this.beacons.add(beacon);
+    }
     /*
      * END: Beacon group 'beacon list' attribute
      *------------------------------------------------------------
