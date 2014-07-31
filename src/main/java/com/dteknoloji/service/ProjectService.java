@@ -10,6 +10,7 @@ import com.dteknoloji.domain.Beacon;
 import com.dteknoloji.domain.BeaconGroup;
 import com.dteknoloji.domain.Project;
 import com.dteknoloji.repository.project.ProjectRepository;
+import com.dteknoloji.repository.project.ProjectSpecifications;
 
 /*
  **************************
@@ -43,7 +44,7 @@ public class ProjectService {
      * Saves/updates the given project
      *
      * @param project
-     *         The project to save/update
+     *     The project to save/update
      *
      * @return The saved/updated project
      */
@@ -75,10 +76,30 @@ public class ProjectService {
     }
 
     /**
+     * Find projects conforming to specifications
+     *
+     * @param projectName
+     *     The project Name field constraint
+     * @param ownerName
+     *     The project Owner's Name field constraint
+     * @param ownerID
+     *     The project Owner's ID field constraint
+     *
+     * @return The list of projects conforming to given constraints
+     */
+    public List<Project> findProjectsBySpecs(String projectName, String ownerName, Long ownerID) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Finding projects with Project Name = \'" + projectName + "\' Owner Name = \'" + ownerName + "\' ownerID = \'" + ownerID + "\'");
+        }
+
+        return projectRepository.findAll(ProjectSpecifications.projectWithSpecification(projectName, ownerName, ownerID));
+    }
+
+    /**
      * Finds the project with the given ID
      *
      * @param id
-     *         The ID of the project to search for
+     *     The ID of the project to search for
      *
      * @return The project the given ID
      */
@@ -95,7 +116,7 @@ public class ProjectService {
      * the group.
      *
      * @param id
-     *         The ID of the project to delete
+     *     The ID of the project to delete
      *
      * @return Whether the project was deleted or not
      */
@@ -118,7 +139,7 @@ public class ProjectService {
      * Deletes the beacon groups in a project
      *
      * @param project
-     *         The project to delete the beacon groups in
+     *     The project to delete the beacon groups in
      */
     private void deleteBeaconGroups(Project project) {
         for (BeaconGroup beaconGroup : project.getBeaconGroups()) {
@@ -130,7 +151,7 @@ public class ProjectService {
      * Deletes the beacons in a project
      *
      * @param project
-     *         The project to delete the beacons in
+     *     The project to delete the beacons in
      */
     private void deleteBeacons(Project project) {
         for (Beacon beacon : project.getBeacons()) {
