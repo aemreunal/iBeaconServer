@@ -101,7 +101,7 @@ public class ProjectController {
      *
      * @return The project
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application(json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application/json")
     public ResponseEntity<Project> viewProject(@PathVariable String id) {
         Long projectIDAsLong;
         try {
