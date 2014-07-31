@@ -6,3 +6,5 @@ out/
 iBeacon.iml
 
 *.log
+
+generated_beacons.txt
