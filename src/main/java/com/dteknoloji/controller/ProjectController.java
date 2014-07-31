@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -88,8 +89,32 @@ public class ProjectController {
         List<Project> projects = projectService.findProjectsBySpecs(projectName, ownerName, ownerIDAsLong);
         if (projects.size() == 0) {
             return new ResponseEntity<List<Project>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);
+    }
+
+    /**
+     * Get the project with the specified ID
+     *
+     * @param id
+     *     The ID of the project
+     *
+     * @return The project
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application(json")
+    public ResponseEntity<Project> viewProject(@PathVariable String id) {
+        Long projectIDAsLong;
+        try {
+            projectIDAsLong = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
+        }
+
+        Project project = projectService.findById(projectIDAsLong);
+        if (project == null) {
+            return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);
+            return new ResponseEntity<Project>(project, HttpStatus.OK);
         }
     }
 }
