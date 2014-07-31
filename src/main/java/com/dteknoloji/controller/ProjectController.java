@@ -113,8 +113,38 @@ public class ProjectController {
         Project project = projectService.findById(projectIDAsLong);
         if (project == null) {
             return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
-        } else {
+        }
+        return new ResponseEntity<Project>(project, HttpStatus.OK);
+    }
+
+    /**
+     * Delete the specified project
+     *
+     * @param id
+     *     The ID of the project to delete
+     *
+     * @return The deleted project
+     */
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
+    public ResponseEntity<Project> deleteProject(@PathVariable String id) {
+        Long projectIDAsLong;
+        try {
+            projectIDAsLong = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
+        }
+
+        Project project = projectService.findById(projectIDAsLong);
+
+        if (project == null) {
+            return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
+        }
+
+        boolean deleted = projectService.delete(projectIDAsLong);
+        if (deleted) {
             return new ResponseEntity<Project>(project, HttpStatus.OK);
         }
+
+        return new ResponseEntity<Project>(HttpStatus.FORBIDDEN);
     }
 }
