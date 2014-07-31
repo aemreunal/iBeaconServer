@@ -201,8 +201,8 @@ public class ProjectController {
                 "\' minor = \'" + newBeacon.getMinor() +
                 "\' in project with ID = \'" + projectIDAsLong + "\'");
         }
-        project.addBeacon(newBeacon);
-        projectService.save(project);
+//        project.addBeacon(newBeacon);
+//        projectService.save(project);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/Beacon/{id}").buildAndExpand(newBeacon.getBeaconId().toString()).toUri());
