@@ -1,14 +1,16 @@
 package com.dteknoloji.controller;
 
 import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+import com.dteknoloji.config.GlobalSettings;
 import com.dteknoloji.domain.Project;
 import com.dteknoloji.service.BeaconGroupService;
 import com.dteknoloji.service.BeaconService;
@@ -115,6 +117,34 @@ public class ProjectController {
             return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Project>(project, HttpStatus.OK);
+    }
+
+    /**
+     * Create a new project
+     *
+     * @param project
+     *     The project as JSON object
+     * @param builder
+     *     The URI builder for post-creation redirect
+     *
+     * @return The created project
+     */
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Project> createProject(@RequestBody Project project, UriComponentsBuilder builder) {
+        try {
+            Project newProject = projectService.save(project);
+            if (GlobalSettings.DEBUGGING) {
+                System.out.println("Saved project with Name = \'" + newProject.getName() + "\' ID = \'" + newProject.getProjectId() + "\'");
+            }
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(builder.path("/Project/{id}").buildAndExpand(newProject.getProjectId().toString()).toUri());
+            return new ResponseEntity<Project>(newProject, headers, HttpStatus.CREATED);
+        } catch (ConstraintViolationException | TransactionSystemException e) {
+            if (GlobalSettings.DEBUGGING) {
+                System.err.println("Unable to save project! Constraint violation detected!");
+            }
+            return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
