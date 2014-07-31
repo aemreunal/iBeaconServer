@@ -192,11 +192,10 @@ public class BeaconGroupController {
         }
         if (beacon.getGroup() == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
-        } else {
-            beacon.setGroup(null);
-            beaconService.save(beacon);
-            return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
         }
+        beacon.setGroup(null);
+        beaconService.save(beacon);
+        return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
     }
 
     /**
@@ -220,11 +219,12 @@ public class BeaconGroupController {
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
-        boolean deleted = beaconGroupService.delete(Long.valueOf(id));
-        if (deleted) {
-            return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
-        } else {
+
+        boolean deleted = beaconGroupService.delete(beaconGroupIDAsLong);
+        if (!deleted) {
             return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.FORBIDDEN);
         }
+
+        return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
     }
 }
