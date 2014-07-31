@@ -209,7 +209,14 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
     public ResponseEntity<BeaconGroup> deleteBeaconGroup(@PathVariable String id) {
-        BeaconGroup beaconGroup = beaconGroupService.findById(Long.valueOf(id));
+        Long beaconGroupIDAsLong;
+        try {
+            beaconGroupIDAsLong = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
+        }
+
+        BeaconGroup beaconGroup = beaconGroupService.findById(beaconGroupIDAsLong);
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
