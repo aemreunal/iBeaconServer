@@ -28,9 +28,13 @@ public class BeaconSpecifications {
     /**
      * Creates the Beacon search specification from the given attributes
      *
-     * @param uuid  The UUID attribute to search for
-     * @param major The major attribute to search for
-     * @param minor The minor attribute to search for
+     * @param uuid
+     *     The UUID attribute to search for
+     * @param major
+     *     The major attribute to search for
+     * @param minor
+     *     The minor attribute to search for
+     *
      * @return The specification of the beacon
      */
     public static Specification<Beacon> beaconWithSpecification(final String uuid, final String major, final String minor) {

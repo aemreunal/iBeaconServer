@@ -30,12 +30,14 @@ import com.dteknoloji.repository.beacon.BeaconSpecifications;
 @Service
 public class BeaconService {
     @Autowired
-    private BeaconRepository repository;
+    private BeaconRepository beaconRepository;
 
     /**
      * Saves/updates the given beacon
      *
-     * @param beacon The beacon to save/update
+     * @param beacon
+     *     The beacon to save/update
+     *
      * @return The saved/updated beacon
      */
     public Beacon save(Beacon beacon) {
@@ -43,7 +45,7 @@ public class BeaconService {
             System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         }
 
-        return repository.save(beacon);
+        return beaconRepository.save(beacon);
     }
 
     /**
@@ -58,7 +60,7 @@ public class BeaconService {
 
         List<Beacon> beaconList = new ArrayList<Beacon>();
 
-        for (Beacon beacon : repository.findAll()) {
+        for (Beacon beacon : beaconRepository.findAll()) {
             beaconList.add(beacon);
         }
 
@@ -68,9 +70,13 @@ public class BeaconService {
     /**
      * Finds beacons conforming to given specifications
      *
-     * @param uuid  The UUID field constraint
-     * @param major The Major field constraint
-     * @param minor The Minor field constraint
+     * @param uuid
+     *     The UUID field constraint
+     * @param major
+     *     The Major field constraint
+     * @param minor
+     *     The Minor field constraint
+     *
      * @return The list of beacons conforming to given constraints
      */
     public List<Beacon> findBeaconsBySpecs(String uuid, String major, String minor) {
@@ -78,13 +84,15 @@ public class BeaconService {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
         }
 
-        return repository.findAll(BeaconSpecifications.beaconWithSpecification(uuid, major, minor));
+        return beaconRepository.findAll(BeaconSpecifications.beaconWithSpecification(uuid, major, minor));
     }
 
     /**
      * Finds the beacon with the given ID
      *
-     * @param id The ID of the beacon to search for
+     * @param id
+     *     The ID of the beacon to search for
+     *
      * @return The beacon with that ID
      */
     public Beacon findById(Long id) {
@@ -92,13 +100,15 @@ public class BeaconService {
             System.out.println("Finding beacon with ID = \'" + id + "\'");
         }
 
-        return repository.findOne(id);
+        return beaconRepository.findOne(id);
     }
 
     /**
      * Deletes the beacon with the given ID
      *
-     * @param id The ID of the beacon to delete
+     * @param id
+     *     The ID of the beacon to delete
+     *
      * @return Whether the beacon was deleted or not
      */
     public boolean delete(Long id) {
@@ -107,7 +117,7 @@ public class BeaconService {
         }
 
         if (id != null) {
-            repository.delete(id);
+            beaconRepository.delete(id);
             return true;
         } else {
             return false;

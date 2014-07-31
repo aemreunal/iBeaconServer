@@ -39,16 +39,20 @@ public class BeaconController {
     /**
      * Get all beacons (Optionally, all with matching criteria)
      *
-     * @param uuid (Optional) The UUID of the beacon
-     * @param major (Optional) The major of the beacon
-     * @param minor (Optional) The minor of the beacon
+     * @param uuid
+     *     (Optional) The UUID of the beacon
+     * @param major
+     *     (Optional) The major of the beacon
+     * @param minor
+     *     (Optional) The minor of the beacon
+     *
      * @return All existing beacons (Optionally, all that match the given criteria)
      */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Beacon>> getAllBeacons(
-            @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
-            @RequestParam(value = "major", required = false, defaultValue = "") String major,
-            @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
+        @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
+        @RequestParam(value = "major", required = false, defaultValue = "") String major,
+        @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
             return new ResponseEntity<List<Beacon>>(beaconService.findAll(), HttpStatus.OK);
         } else {
@@ -59,9 +63,13 @@ public class BeaconController {
     /**
      * Returns the list of beacons that match a given criteria
      *
-     * @param uuid (Optional) The UUID of the beacon
-     * @param major (Optional) The major of the beacon
-     * @param minor (Optional) The minor of the beacon
+     * @param uuid
+     *     (Optional) The UUID of the beacon
+     * @param major
+     *     (Optional) The major of the beacon
+     * @param minor
+     *     (Optional) The minor of the beacon
+     *
      * @return The list of beacons that match the given criteria
      */
     private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(String uuid, String major, String minor) {
@@ -69,14 +77,17 @@ public class BeaconController {
 
         if (beacons.size() == 0) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
         }
-        return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
     }
 
     /**
      * Get the beacon with the specified ID
      *
-     * @param id The ID of the beacon
+     * @param id
+     *     The ID of the beacon
+     *
      * @return The beacon
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application/json")
@@ -91,8 +102,11 @@ public class BeaconController {
     /**
      * Create a new beacon
      *
-     * @param restBeacon The beacon as JSON object
-     * @param builder The URI builder
+     * @param restBeacon
+     *     The beacon as JSON object
+     * @param builder
+     *     The URI builder
+     *
      * @return The created beacon
      */
     @RequestMapping(method = RequestMethod.POST)
@@ -116,7 +130,9 @@ public class BeaconController {
     /**
      * Create a multiple new beacons
      *
-     * @param restBeacons The beacon list as JSON object
+     * @param restBeacons
+     *     The beacon list as JSON object
+     *
      * @return The created beacons
      */
     @RequestMapping(method = RequestMethod.POST, value = "/import")
@@ -140,7 +156,9 @@ public class BeaconController {
     /**
      * Delete the specified beacon
      *
-     * @param id The ID of beacon to delete
+     * @param id
+     *     The ID of beacon to delete
+     *
      * @return The deleted beacon
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
