@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -111,6 +112,7 @@ public class BeaconGroupController {
      *
      * @return The added beacon group
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.POST, value = "/{beaconGroupId}/add")
     public ResponseEntity<BeaconGroup> addBeaconToGroup(@PathVariable String beaconGroupId, @RequestParam(value = "beaconId", required = true) String beaconId) {
         Long beaconGroupIDAsLong;
@@ -125,7 +127,14 @@ public class BeaconGroupController {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
 
-        Beacon beacon = beaconService.findById(Long.valueOf(beaconId));
+        Long beaconIDAsLong;
+        try {
+            beaconIDAsLong = Long.valueOf(beaconId);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
+        }
+
+        Beacon beacon = beaconService.findById(beaconIDAsLong);
         if (beacon == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
@@ -133,10 +142,9 @@ public class BeaconGroupController {
         if (beacon.getGroup() != null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.CONFLICT);
         } else {
+
             beacon.setGroup(beaconGroup);
-            beaconGroup.addBeacon(beacon);
             beaconService.save(beacon);
-            beaconGroupService.save(beaconGroup);
             return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
         }
     }
@@ -155,26 +163,39 @@ public class BeaconGroupController {
      *
      * @return The removed beacon group
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconGroupId}/remove")
     public ResponseEntity<BeaconGroup> removeBeaconFromGroup(@PathVariable String beaconGroupId, @RequestParam(value = "beaconId", required = true) String beaconId) {
-        BeaconGroup beaconGroup = beaconGroupService.findById(Long.valueOf(beaconGroupId));
+        // TODO possible project association bug
+        Long beaconGroupIDAsLong;
+        try {
+            beaconGroupIDAsLong = Long.valueOf(beaconGroupId);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
+        }
+
+        BeaconGroup beaconGroup = beaconGroupService.findById(beaconGroupIDAsLong);
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
+        }
+
+        Long beaconIDAsLong;
+        try {
+            beaconIDAsLong = Long.valueOf(beaconId);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
+        }
+
+        Beacon beacon = beaconService.findById(beaconIDAsLong);
+        if (beacon == null) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
+        }
+        if (beacon.getGroup() == null) {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
         } else {
-            Beacon beacon = beaconService.findById(Long.valueOf(beaconId));
-            if (beacon == null) {
-                return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
-            } else {
-                if (beacon.getGroup() == null) {
-                    return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
-                } else {
-                    beacon.setGroup(null);
-                    beaconGroup.removeBeacon(beacon);
-                    beaconService.save(beacon);
-                    beaconGroupService.save(beaconGroup);
-                    return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
-                }
-            }
+            beacon.setGroup(null);
+            beaconService.save(beacon);
+            return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
         }
     }
 
