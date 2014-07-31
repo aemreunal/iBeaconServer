@@ -92,7 +92,14 @@ public class BeaconController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application/json")
     public ResponseEntity<Beacon> viewBeacon(@PathVariable String id) {
-        Beacon beacon = beaconService.findById(Long.valueOf(id));
+        Long beaconIDAsLong;
+        try {
+            beaconIDAsLong = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
+        }
+
+        Beacon beacon = beaconService.findById(beaconIDAsLong);
         if (beacon == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
