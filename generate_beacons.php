@@ -14,7 +14,7 @@ $faker = Faker\Factory::create();
 // Parse command-line arguments
 $options = getopt('n:');
 if (count($options) == 0) {
-  exit("Please specify number of beacons to generate. Ex: \"... -n100\" for 100 beacons.\n");
+  exit("Usage: \"php generate_beacons.php -n100\" for 100 beacons.\n");
 }
 $NUM_BEACONS = intval($options["n"]);
 
