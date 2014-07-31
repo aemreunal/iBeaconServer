@@ -264,6 +264,32 @@ public class ProjectController {
     }
 
     /**
+     * Get beacon objects that belong to a project.
+     *
+     * @param id
+     *     The ID of the project
+     *
+     * @return The list of beacons that belong to the project with the specified ID
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/beacons", produces = "application/json")
+    public ResponseEntity<List<Beacon>> viewBeaconsOfProject(@PathVariable String id) {
+        Long projectIDAsLong;
+        try {
+            projectIDAsLong = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<List<Beacon>>(HttpStatus.BAD_REQUEST);
+        }
+
+        Project project = projectService.findById(projectIDAsLong);
+        if (project == null) {
+            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<List<Beacon>>(project.getBeacons(), HttpStatus.OK);
+    }
+
+
+
+    /**
      * Delete the specified project
      *
      * @param id
