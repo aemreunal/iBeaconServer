@@ -110,6 +110,10 @@ public class BeaconGroup {
     public void addBeacon(Beacon beacon) {
         this.beacons.add(beacon);
     }
+
+    public void removeBeacon(Beacon beacon) {
+        this.beacons.remove(beacon);
+    }
     /*
      * END: Beacon group 'beacon list' attribute
      *------------------------------------------------------------

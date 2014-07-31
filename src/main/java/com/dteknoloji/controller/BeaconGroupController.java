@@ -169,7 +169,7 @@ public class BeaconGroupController {
                     return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
                 } else {
                     beacon.setGroup(null);
-                    beaconGroup.getBeacons().remove(beacon);
+                    beaconGroup.removeBeacon(beacon);
                     beaconService.save(beacon);
                     beaconGroupService.save(beaconGroup);
                     return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
