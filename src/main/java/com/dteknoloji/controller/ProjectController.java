@@ -78,10 +78,10 @@ public class ProjectController {
      * @return The list of projects that match the given criteria
      */
     private ResponseEntity<List<Project>> getProjectsWithMatchingCriteria(String projectName, String ownerName, String ownerID) {
-        Long ownerIDAsLong = Long.getLong(ownerID);
-
-        // Check if ownerID has the proper format, return error otherwise
-        if (ownerIDAsLong == null) {
+        Long ownerIDAsLong;
+        try {
+            ownerIDAsLong = Long.valueOf(ownerID);
+        } catch (NumberFormatException e) {
             return new ResponseEntity<List<Project>>(HttpStatus.BAD_REQUEST);
         }
 
