@@ -5,6 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -163,17 +164,17 @@ public class Beacon extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Beacon 'project' attribute
      */
-//    @ManyToOne(targetEntity = Project.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-//    @JsonIgnore
-//    private Project project;
-//
-//    public Project getProject() {
-//        return project;
-//    }
-//
-//    public void setProject(Project project) {
-//        this.project = project;
-//    }
+    @ManyToOne(targetEntity = Project.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @JsonIgnore
+    private Project project;
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
     /*
      * END: Beacon 'project' attribute
      *------------------------------------------------------------
