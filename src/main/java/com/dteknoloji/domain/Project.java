@@ -136,6 +136,10 @@ public class Project extends ResourceSupport implements Serializable {
     public void setBeacons(List<Beacon> beacons) {
         this.beacons = beacons;
     }
+
+    public void addBeacon(Beacon beacon) {
+        this.beacons.add(beacon);
+    }
     /*
      * END: Project 'beacons list' attribute
      *------------------------------------------------------------
@@ -158,6 +162,10 @@ public class Project extends ResourceSupport implements Serializable {
 
     public void setBeaconGroups(List<BeaconGroup> beaconGroups) {
         this.beaconGroups = beaconGroups;
+    }
+
+    public void addBeaconGroup(BeaconGroup beaconGroup) {
+        this.beaconGroups.add(beaconGroup);
     }
     /*
      * END: Project 'beacon groups list' attribute
