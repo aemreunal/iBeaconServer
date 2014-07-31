@@ -170,13 +170,20 @@ public class BeaconController {
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
     public ResponseEntity<Beacon> deleteBeacon(@PathVariable String id) {
+        Long beaconIDAsLong;
+        try {
+            beaconIDAsLong = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
+        }
 
-        Beacon beacon = beaconService.findById(Long.valueOf(id));
+        Beacon beacon = beaconService.findById(Long.valueOf(beaconIDAsLong));
+
         if (beacon == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
 
-        boolean deleted = beaconService.delete(Long.valueOf(id));
+        boolean deleted = beaconService.delete(beaconIDAsLong);
         if (deleted) {
             return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
         }
