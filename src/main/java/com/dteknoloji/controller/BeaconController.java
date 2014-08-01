@@ -149,18 +149,20 @@ public class BeaconController {
             return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
         }
 
-        Beacon beacon = beaconService.findById(Long.valueOf(beaconIDAsLong));
+        DeleteResponse response = beaconService.delete(beaconIDAsLong);
 
-        if (beacon == null) {
-            return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
+        switch (response) {
+            case DELETED:
+                return new ResponseEntity<Beacon>(HttpStatus.OK);
+            case FORBIDDEN:
+                return new ResponseEntity<Beacon>(HttpStatus.FORBIDDEN);
+            case NOT_FOUND:
+                return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
+            case NOT_DELETED:
+                return new ResponseEntity<Beacon>(HttpStatus.NOT_ACCEPTABLE);
+            default:
+                return new ResponseEntity<Beacon>(HttpStatus.I_AM_A_TEAPOT);
         }
-
-        boolean deleted = beaconService.delete(beaconIDAsLong);
-        if (deleted) {
-            return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<Beacon>(HttpStatus.FORBIDDEN);
     }
 
 }

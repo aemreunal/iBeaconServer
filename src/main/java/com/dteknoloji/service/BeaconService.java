@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.dteknoloji.config.GlobalSettings;
+import com.dteknoloji.controller.DeleteResponse;
 import com.dteknoloji.domain.Beacon;
 import com.dteknoloji.repository.beacon.BeaconRepository;
 import com.dteknoloji.repository.beacon.BeaconSpecifications;
@@ -111,16 +112,16 @@ public class BeaconService {
      *
      * @return Whether the beacon was deleted or not
      */
-    public boolean delete(Long id) {
+    public DeleteResponse delete(Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon with ID = \'" + id + "\'");
         }
 
-        if (id != null) {
+        if (beaconRepository.exists(id)) {
             beaconRepository.delete(id);
-            return true;
+            return DeleteResponse.DELETED;
         } else {
-            return false;
+            return DeleteResponse.NOT_FOUND;
         }
     }
 

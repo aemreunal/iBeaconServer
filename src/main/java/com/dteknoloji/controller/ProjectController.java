@@ -307,17 +307,19 @@ public class ProjectController {
             return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
         }
 
-        Project project = projectService.findById(projectIDAsLong);
+        DeleteResponse response = projectService.delete(projectIDAsLong);
 
-        if (project == null) {
-            return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
+        switch (response) {
+            case DELETED:
+                return new ResponseEntity<Project>(HttpStatus.OK);
+            case FORBIDDEN:
+                return new ResponseEntity<Project>(HttpStatus.FORBIDDEN);
+            case NOT_FOUND:
+                return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
+            case NOT_DELETED:
+                return new ResponseEntity<Project>(HttpStatus.NOT_ACCEPTABLE);
+            default:
+                return new ResponseEntity<Project>(HttpStatus.I_AM_A_TEAPOT);
         }
-
-        boolean deleted = projectService.delete(projectIDAsLong);
-        if (deleted) {
-            return new ResponseEntity<Project>(project, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<Project>(HttpStatus.FORBIDDEN);
     }
 }

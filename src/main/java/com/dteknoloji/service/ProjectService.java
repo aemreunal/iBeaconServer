@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.dteknoloji.config.GlobalSettings;
+import com.dteknoloji.controller.DeleteResponse;
 import com.dteknoloji.domain.Beacon;
 import com.dteknoloji.domain.BeaconGroup;
 import com.dteknoloji.domain.Project;
@@ -120,18 +121,23 @@ public class ProjectService {
      *
      * @return Whether the project was deleted or not
      */
-    public boolean delete(Long id) {
+    public DeleteResponse delete(Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting project with ID = \'" + id + "\'");
         }
         if (projectRepository.exists(id)) {
+            // TODO fix cascading removing beacons
+            // https://www.google.com/search?q=spring%20hibernate%20prevent%20delete%20cascade&gws_rd=ssl
+            // http://outbottle.com/hibernate-manytomany-delete-non-owner-prevent-owner-being-deleted/
+            // http://www.mkyong.com/hibernate/cascade-jpa-hibernate-annotation-common-mistake/
+            // http://stackoverflow.com/questions/23829716/spring-roo-and-hibernate-how-to-prevent-deletion
             Project project = projectRepository.findOne(id);
-            deleteBeaconGroups(project);
-            deleteBeacons(project);
+//            deleteBeaconGroups(project);
+//            deleteBeacons(project);
             projectRepository.delete(id);
-            return true;
+            return DeleteResponse.DELETED;
         } else {
-            return false;
+            return DeleteResponse.NOT_FOUND;
         }
     }
 

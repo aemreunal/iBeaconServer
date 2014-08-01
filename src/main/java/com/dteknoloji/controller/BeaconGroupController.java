@@ -216,16 +216,19 @@ public class BeaconGroupController {
             return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
         }
 
-        BeaconGroup beaconGroup = beaconGroupService.findById(beaconGroupIDAsLong);
-        if (beaconGroup == null) {
-            return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
-        }
+        DeleteResponse response = beaconGroupService.delete(beaconGroupIDAsLong);
 
-        boolean deleted = beaconGroupService.delete(beaconGroupIDAsLong);
-        if (!deleted) {
-            return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.FORBIDDEN);
+        switch (response) {
+            case DELETED:
+                return new ResponseEntity<BeaconGroup>(HttpStatus.OK);
+            case FORBIDDEN:
+                return new ResponseEntity<BeaconGroup>(HttpStatus.FORBIDDEN);
+            case NOT_FOUND:
+                return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
+            case NOT_DELETED:
+                return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_ACCEPTABLE);
+            default:
+                return new ResponseEntity<BeaconGroup>(HttpStatus.I_AM_A_TEAPOT);
         }
-
-        return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
     }
 }
