@@ -52,6 +52,7 @@ def slf4jSimpleVersion = '1.7.7'
 def springDataJPAVersion = '1.6.2.RELEASE'
 def springFrameworkVersion = '4.0.6.RELEASE'
 def springHateoasVersion = '0.15.0.RELEASE'
+def springSecurityOAuth2Version = '2.0.2.RELEASE'
 //def springSecurityVersion =  // '3.2.4.RELEASE'
 def tomcatVersion = '7.0.42'
 def wrapperGradleVersion = '2.0'
@@ -86,6 +87,7 @@ dependencies {
     compile group: "org.springframework", name: "spring-webmvc", version: springFrameworkVersion
     compile group: "org.springframework", name: "spring-oxm", version: springFrameworkVersion
 //    compile group: 'org.springframework.security', name: 'spring-security-web', version: springSecurityVersion
+    compile  group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: springSecurityOAuth2Version
     compile group: 'org.springframework.hateoas', name: 'spring-hateoas', version: springHateoasVersion
 
     // Annotation support
