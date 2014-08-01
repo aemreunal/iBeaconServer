@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.dteknoloji.config.GlobalSettings;
 import com.dteknoloji.controller.DeleteResponse;
-import com.dteknoloji.domain.Beacon;
-import com.dteknoloji.domain.BeaconGroup;
 import com.dteknoloji.domain.Project;
 import com.dteknoloji.repository.project.ProjectRepository;
 import com.dteknoloji.repository.project.ProjectSpecifications;
@@ -126,42 +124,10 @@ public class ProjectService {
             System.out.println("Deleting project with ID = \'" + id + "\'");
         }
         if (projectRepository.exists(id)) {
-            // TODO fix cascading removing beacons
-            // https://www.google.com/search?q=spring%20hibernate%20prevent%20delete%20cascade&gws_rd=ssl
-            // http://outbottle.com/hibernate-manytomany-delete-non-owner-prevent-owner-being-deleted/
-            // http://www.mkyong.com/hibernate/cascade-jpa-hibernate-annotation-common-mistake/
-            // http://stackoverflow.com/questions/23829716/spring-roo-and-hibernate-how-to-prevent-deletion
-            Project project = projectRepository.findOne(id);
-//            deleteBeaconGroups(project);
-//            deleteBeacons(project);
             projectRepository.delete(id);
             return DeleteResponse.DELETED;
         } else {
             return DeleteResponse.NOT_FOUND;
-        }
-    }
-
-    /**
-     * Deletes the beacon groups in a project
-     *
-     * @param project
-     *     The project to delete the beacon groups in
-     */
-    private void deleteBeaconGroups(Project project) {
-        for (BeaconGroup beaconGroup : project.getBeaconGroups()) {
-            beaconGroupService.delete(beaconGroup.getBeaconGroupId());
-        }
-    }
-
-    /**
-     * Deletes the beacons in a project
-     *
-     * @param project
-     *     The project to delete the beacons in
-     */
-    private void deleteBeacons(Project project) {
-        for (Beacon beacon : project.getBeacons()) {
-            beaconService.delete(beacon.getBeaconId());
         }
     }
 }
