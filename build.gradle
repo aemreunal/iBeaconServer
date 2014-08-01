@@ -47,6 +47,7 @@ def jsonPathVersion = '0.9.1'
 def logbackCoreVersion = '1.1.2'
 def mysqlConnectorJDBCVersion = '5.1.31'
 def slf4jAPIVersion = '1.7.7'
+def slf4jLog4jVersion = '1.7.7'
 def slf4jSimpleVersion = '1.7.7'
 def springDataJPAVersion = '1.6.2.RELEASE'
 def springFrameworkVersion = '4.0.6.RELEASE'
@@ -70,11 +71,11 @@ dependencies {
     // slf4j, used by Hibernate for logging
     compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jAPIVersion
     compile group: 'org.slf4j', name: 'slf4j-simple', version: slf4jSimpleVersion
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jLog4jVersion
 
     compile group: 'ch.qos.logback', name: 'logback-core', version: logbackCoreVersion
 
     providedCompile "javax.servlet:javax.servlet-api:${javaxServletAPIVersion}"
-//    compile "javax.servlet:javax.servlet-api:${javaxServletAPIVersion}"
 
     // Spring
     compile group: "org.springframework.data", name: "spring-data-jpa", version: springDataJPAVersion

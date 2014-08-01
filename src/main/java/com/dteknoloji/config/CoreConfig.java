@@ -64,6 +64,7 @@ public class CoreConfig {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", GlobalSettings.DB_DIALECT_PROPERTY);
         properties.put("hibernate.show_sql", GlobalSettings.SHOW_SQL_PROPERTY);
+        properties.put("hibernate.format_sql", GlobalSettings.FORMAT_SQL_PROPERTY);
         properties.put("hibernate.hbm2ddl.auto", GlobalSettings.HBM2DDL_PROPERTY);
 //        properties.put("hibernate.event.merge.entity_copy_observer", GlobalSettings.ENTITY_COPY_OBSERVER_PROPERTY);
         return properties;
