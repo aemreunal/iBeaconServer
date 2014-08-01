@@ -123,8 +123,8 @@ public class Project extends ResourceSupport implements Serializable {
      */
     @OneToMany(targetEntity = Beacon.class,
         mappedBy = "project",
-        /*cascade = CascadeType.ALL,
-        orphanRemoval = true,*/
+//        cascade = CascadeType.REMOVE,
+        orphanRemoval = true,
         fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project" })
     private List<Beacon> beacons;
