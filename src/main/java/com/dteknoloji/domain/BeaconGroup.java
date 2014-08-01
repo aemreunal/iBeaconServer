@@ -95,7 +95,10 @@ public class BeaconGroup {
      *------------------------------------------------------------
      * BEGIN: Beacon group 'beacon list' attribute
      */
-    @OneToMany(targetEntity = Beacon.class, mappedBy = "group", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Beacon.class,
+        mappedBy = "group",
+        /*cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},*/
+        fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project" })
     private List<Beacon> beacons;
 
@@ -123,7 +126,10 @@ public class BeaconGroup {
      *------------------------------------------------------------
      * BEGIN: Beacon group 'project' attribute
      */
-    @ManyToOne(targetEntity = Project.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(targetEntity = Project.class,
+        fetch = FetchType.EAGER,
+        /*cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},*/
+        optional = false)
     @JsonIgnoreProperties(value = { "name", "description", "beacons", "beaconGroups", "scenarios", "secret" })
     private Project project;
 

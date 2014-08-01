@@ -297,6 +297,7 @@ public class ProjectController {
      *
      * @return The deleted project
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
     public ResponseEntity<Project> deleteProject(@PathVariable String id) {
         Long projectIDAsLong;

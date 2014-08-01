@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.dteknoloji.config.GlobalSettings;
 import com.dteknoloji.domain.Beacon;
@@ -138,6 +139,7 @@ public class BeaconController {
      *
      * @return The deleted beacon
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
     public ResponseEntity<Beacon> deleteBeacon(@PathVariable String id) {
         Long beaconIDAsLong;

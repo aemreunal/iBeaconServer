@@ -206,6 +206,7 @@ public class BeaconGroupController {
      *
      * @return The deleted beacon group
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
     public ResponseEntity<BeaconGroup> deleteBeaconGroup(@PathVariable String id) {
         Long beaconGroupIDAsLong;
