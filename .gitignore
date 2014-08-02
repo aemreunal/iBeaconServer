@@ -10,3 +10,7 @@ iBeacon.iml
 generated_beacons.txt
 
 hibernate-log.txt
+
+*.ipr
+
+*.iws
