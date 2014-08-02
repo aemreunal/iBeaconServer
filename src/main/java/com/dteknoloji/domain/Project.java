@@ -2,6 +2,7 @@ package com.dteknoloji.domain;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
@@ -9,19 +10,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
- **************************
- * Copyright (c) 2014     *
- *                        *
- * This code belongs to:  *
- *                        *
- * Ahmet Emre Ünal        *
- * S001974                *
- *                        *
- * aemreunal@gmail.com    *
- * emre.unal@ozu.edu.tr   *
- *                        *
- * aemreunal.com          *
- **************************
+ ***************************
+ * Copyright (c) 2014      *
+ *                         *
+ * This code belongs to:   *
+ *                         *
+ * @author Ahmet Emre Ünal *
+ * S001974                 *
+ *                         *
+ * aemreunal@gmail.com     *
+ * emre.unal@ozu.edu.tr    *
+ *                         *
+ * aemreunal.com           *
+ ***************************
  */
 
 @Entity
@@ -199,7 +200,21 @@ public class Project extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Project 'secret' attribute
      */
-    // TODO private String secret;
+    @Column(name = "project_secret", nullable = false, unique = false)
+    private String projectSecret;
+
+    public String getProjectSecret() {
+        return projectSecret;
+    }
+
+    public void setProjectSecret(String projectSecret) {
+        this.projectSecret = projectSecret;
+    }
+
+    @PrePersist
+    private void generateSecret(){
+        this.setProjectSecret(UUID.randomUUID().toString());
+    }
     /*
      * END: Project 'secret' attribute
      *------------------------------------------------------------
