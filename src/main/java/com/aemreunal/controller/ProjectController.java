@@ -295,7 +295,8 @@ public class ProjectController {
      */
     @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
-    public ResponseEntity<Project> deleteProject(@PathVariable String id) {
+    public ResponseEntity<Project> deleteProject(@PathVariable String id,
+                                                 @RequestParam(value = "confirm", required = true, defaultValue = "no") String confirmation) {
         Long projectIDAsLong;
         try {
             projectIDAsLong = Long.valueOf(id);
@@ -303,7 +304,10 @@ public class ProjectController {
             return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
         }
 
-        DeleteResponse response = projectService.delete(projectIDAsLong);
+        DeleteResponse response = DeleteResponse.NOT_DELETED;
+        if(confirmation.toLowerCase().equals("yes")) {
+            response = projectService.delete(projectIDAsLong);
+        }
 
         switch (response) {
             case DELETED:
@@ -313,7 +317,7 @@ public class ProjectController {
             case NOT_FOUND:
                 return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
             case NOT_DELETED:
-                return new ResponseEntity<Project>(HttpStatus.NOT_ACCEPTABLE);
+                return new ResponseEntity<Project>(HttpStatus.PRECONDITION_FAILED);
             default:
                 return new ResponseEntity<Project>(HttpStatus.I_AM_A_TEAPOT);
         }
