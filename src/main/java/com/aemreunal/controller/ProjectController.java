@@ -48,7 +48,7 @@ public class ProjectController {
     private BeaconGroupService beaconGroupService;
 
     /**
-     * Get all project (Optionally, all with matching criteria)
+     * Get all projects (Optionally, all with matching criteria)
      *
      * @param projectName
      *     (Optional) The name of the project
