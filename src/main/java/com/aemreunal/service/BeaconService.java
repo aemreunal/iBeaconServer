@@ -1,6 +1,5 @@
 package com.aemreunal.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Beacon;
+import com.aemreunal.domain.Project;
 import com.aemreunal.repository.beacon.BeaconRepository;
 import com.aemreunal.repository.beacon.BeaconSpecifications;
 
@@ -50,25 +50,6 @@ public class BeaconService {
     }
 
     /**
-     * Returns the list of all the beacons
-     *
-     * @return A list of all beacons
-     */
-    public List<Beacon> findAll() {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding all beacons");
-        }
-
-        List<Beacon> beaconList = new ArrayList<Beacon>();
-
-        for (Beacon beacon : beaconRepository.findAll()) {
-            beaconList.add(beacon);
-        }
-
-        return beaconList;
-    }
-
-    /**
      * Finds beacons conforming to given specifications
      *
      * @param projectId
@@ -98,6 +79,7 @@ public class BeaconService {
      *
      * @return The beacon with that ID
      */
+    @Deprecated
     public Beacon findById(Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacon with ID = \'" + id + "\'");
@@ -107,24 +89,54 @@ public class BeaconService {
     }
 
     /**
+     * Finds the beacon with the given ID
+     *
+     * @param beaconId
+     *     The ID of the beacon to search for
+     * @param project
+     *     The project to search in
+     *
+     * @return The beacon with that ID
+     */
+    public Beacon findByBeaconIdAndProject(Long beaconId, Project project) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + project.getProjectId() + "\'");
+        }
+
+        return beaconRepository.findByBeaconIdAndProject(beaconId, project);
+    }
+
+    /**
      * Deletes the beacon with the given ID
      *
-     * @param id
+     * @param projectId
+     *     The ID of the project to delete the beacon from
+     * @param beaconId
      *     The ID of the beacon to delete
      *
      * @return Whether the beacon was deleted or not
      */
-    public DeleteResponse delete(Long id) {
+    public DeleteResponse delete(Long projectId, Long beaconId) {
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Deleting beacon with ID = \'" + id + "\'");
+            System.out.println("Deleting beacon with ID = \'" + beaconId + "\'");
         }
 
-        if (beaconRepository.exists(id)) {
-            beaconRepository.delete(id);
+        if (isMember(projectId, beaconId)) {
+            if (GlobalSettings.DEBUGGING) {
+                System.out.println("Project " + projectId + " has beacon " + beaconId + ", deleting.");
+            }
+            beaconRepository.delete(beaconId);
             return DeleteResponse.DELETED;
         } else {
+            if (GlobalSettings.DEBUGGING) {
+                System.out.println("Project " + projectId + " does not have beacon " + beaconId + ".");
+            }
             return DeleteResponse.NOT_FOUND;
         }
     }
 
+    public boolean isMember(Long projectId, Long beaconId) {
+        List<Beacon> beacons = beaconRepository.findAll(BeaconSpecifications.beaconExistsSpecification(projectId, beaconId));
+        return beacons.size() >= 1;
+    }
 }
