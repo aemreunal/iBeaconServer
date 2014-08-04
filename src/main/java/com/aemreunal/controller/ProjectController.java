@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.BeaconGroupService;
@@ -155,115 +154,6 @@ public class ProjectController {
     }
 
     /**
-     * Create a new beacon in project
-     * <p/>
-     * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
-     *
-     * @param id
-     *     The ID of the project to create the beacon in
-     * @param restBeacon
-     *     The beacon as JSON object
-     * @param builder
-     *     The URI builder for post-creation redirect
-     *
-     * @return The created beacon
-     */
-    @Transactional
-    @RequestMapping(method = RequestMethod.POST, value = "/{id}/CreateBeacon", produces = "application/json")
-    public ResponseEntity<Beacon> createBeaconInProject(@PathVariable String id, @RequestBody Beacon restBeacon, UriComponentsBuilder builder) {
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(id);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
-        }
-
-        Project project = projectService.findById(projectIDAsLong);
-        if (project == null) {
-            return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
-        }
-
-        restBeacon.setProject(project);
-
-        Beacon newBeacon;
-        try {
-            newBeacon = beaconService.save(restBeacon);
-        } catch (ConstraintViolationException | TransactionSystemException e) {
-            if (GlobalSettings.DEBUGGING) {
-                System.err.println("Unable to save beacon! Constraint violation detected!");
-            }
-            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
-        }
-
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved beacon with UUID = \'" + newBeacon.getUuid() +
-                "\' major = \'" + newBeacon.getMajor() +
-                "\' minor = \'" + newBeacon.getMinor() +
-                "\' in project with ID = \'" + projectIDAsLong + "\'");
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/Beacon/{id}").buildAndExpand(newBeacon.getBeaconId().toString()).toUri());
-        return new ResponseEntity<Beacon>(newBeacon, headers, HttpStatus.CREATED);
-    }
-
-    /**
-     * Get beacon objects that belong to a project.
-     *
-     * @param id
-     *     The ID of the project
-     *
-     * @return The list of beacons that belong to the project with the specified ID
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}/Beacons", produces = "application/json")
-    public ResponseEntity<List<Beacon>> viewBeaconsOfProject(@PathVariable String id,
-                                                             @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
-                                                             @RequestParam(value = "major", required = false, defaultValue = "") String major,
-                                                             @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(id);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<List<Beacon>>(HttpStatus.BAD_REQUEST);
-        }
-
-        Project project = projectService.findById(projectIDAsLong);
-        if (project == null) {
-            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
-        }
-
-        if (uuid.equals("") && major.equals("") && minor.equals("")) {
-            return new ResponseEntity<List<Beacon>>(project.getBeacons(), HttpStatus.OK);
-        } else {
-            return getBeaconsWithMatchingCriteria(projectIDAsLong, uuid, major, minor);
-        }
-    }
-
-    /**
-     * Returns the list of beacons that match a given criteria
-     *
-     * @param projectId
-     *     The project ID to search
-     * @param uuid
-     *     (Optional) The UUID of the beacon
-     * @param major
-     *     (Optional) The major of the beacon
-     * @param minor
-     *     (Optional) The minor of the beacon
-     *
-     * @return The list of beacons that match the given criteria
-     */
-    private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(Long projectId, String uuid, String major, String minor) {
-        List<Beacon> beacons = beaconService.findBeaconsBySpecs(projectId, uuid, major, minor);
-
-        if (beacons.size() == 0) {
-            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
-        }
-    }
-
-    /**
      * Create a new beacon group in project
      * <p/>
      * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
@@ -279,7 +169,10 @@ public class ProjectController {
      */
     @Transactional
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/CreateBeaconGroup", produces = "application/json")
-    public ResponseEntity<BeaconGroup> createBeaconGroupInProject(@PathVariable String id, @RequestBody BeaconGroup restBeaconGroup, UriComponentsBuilder builder) {
+    public ResponseEntity<BeaconGroup> createBeaconGroupInProject(
+        @PathVariable String id,
+        @RequestBody BeaconGroup restBeaconGroup, UriComponentsBuilder builder) {
+
         Long projectIDAsLong;
         try {
             projectIDAsLong = Long.valueOf(id);
@@ -369,6 +262,7 @@ public class ProjectController {
         if (confirmation.toLowerCase().equals("yes")) {
             response = projectService.delete(projectIDAsLong);
         }
+
 
         switch (response) {
             case DELETED:
