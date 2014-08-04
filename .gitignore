@@ -14,3 +14,4 @@ hibernate-log.txt
 *.ipr
 
 *.iws
+src/main/java/com/aemreunal/config/DatabaseSettings.java
