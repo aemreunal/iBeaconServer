@@ -1,15 +1,15 @@
-package com.dteknoloji.service;
+package com.aemreunal.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.dteknoloji.config.GlobalSettings;
-import com.dteknoloji.controller.DeleteResponse;
-import com.dteknoloji.domain.Project;
-import com.dteknoloji.repository.project.ProjectRepository;
-import com.dteknoloji.repository.project.ProjectSpecifications;
+import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.controller.DeleteResponse;
+import com.aemreunal.domain.Project;
+import com.aemreunal.repository.project.ProjectRepository;
+import com.aemreunal.repository.project.ProjectSpecifications;
 
 /*
  **************************

@@ -1,4 +1,4 @@
-package com.dteknoloji.controller;
+package com.aemreunal.controller;
 
 /*
  **************************

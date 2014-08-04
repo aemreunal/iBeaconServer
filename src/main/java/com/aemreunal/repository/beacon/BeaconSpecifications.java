@@ -1,4 +1,4 @@
-package com.dteknoloji.repository.beacon;
+package com.aemreunal.repository.beacon;
 
 /*
  **************************
@@ -22,7 +22,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
-import com.dteknoloji.domain.Beacon;
+import com.aemreunal.domain.Beacon;
 
 public class BeaconSpecifications {
     /**

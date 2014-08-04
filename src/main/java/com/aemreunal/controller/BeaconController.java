@@ -1,4 +1,4 @@
-package com.dteknoloji.controller;
+package com.aemreunal.controller;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import com.dteknoloji.config.GlobalSettings;
-import com.dteknoloji.domain.Beacon;
-import com.dteknoloji.service.BeaconService;
+import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.domain.Beacon;
+import com.aemreunal.service.BeaconService;
 
 /*
  **************************

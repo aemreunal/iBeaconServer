@@ -1,4 +1,4 @@
-package com.dteknoloji.config;
+package com.aemreunal.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "com.dteknoloji.controller" })
+@ComponentScan(basePackages = { "com.aemreunal.controller" })
 public class MVCConfig {
     // TODO find out what this class is used for
 }

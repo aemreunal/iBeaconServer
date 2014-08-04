@@ -1,4 +1,4 @@
-package com.dteknoloji.domain;
+package com.aemreunal.domain;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Project extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
+    public static final int SECRET_LENGTH = 36;
 
     /*
      *------------------------------------------------------------
@@ -61,7 +62,6 @@ public class Project extends ResourceSupport implements Serializable {
     @Column(name = "name", nullable = false, length = NAME_MAX_LENGTH)
     @Size(min = 1, max = NAME_MAX_LENGTH)
     private String name = "";
-
 
     public String getName() {
         return name;
@@ -113,6 +113,8 @@ public class Project extends ResourceSupport implements Serializable {
 //    public void setOwner(User owner) {
 //        this.owner = owner;
 //    }
+
+    // TODO other users
     /*
      * END: Project 'owner' attribute
      *------------------------------------------------------------
@@ -124,7 +126,6 @@ public class Project extends ResourceSupport implements Serializable {
      */
     @OneToMany(targetEntity = Beacon.class,
         mappedBy = "project",
-//        cascade = CascadeType.REMOVE,
         orphanRemoval = true,
         fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project" })
@@ -201,6 +202,7 @@ public class Project extends ResourceSupport implements Serializable {
      * BEGIN: Project 'secret' attribute
      */
     @Column(name = "project_secret", nullable = false, unique = false)
+    @Size(min = SECRET_LENGTH, max = SECRET_LENGTH)
     private String projectSecret;
 
     public String getProjectSecret() {

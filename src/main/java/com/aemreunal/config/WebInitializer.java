@@ -1,4 +1,4 @@
-package com.dteknoloji.config;
+package com.aemreunal.config;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

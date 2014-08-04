@@ -1,4 +1,4 @@
-package com.dteknoloji.repository.project;
+package com.aemreunal.repository.project;
 
 /*
  **************************
@@ -22,7 +22,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
-import com.dteknoloji.domain.Project;
+import com.aemreunal.domain.Project;
 
 public class ProjectSpecifications {
 

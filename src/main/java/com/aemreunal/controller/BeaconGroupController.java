@@ -1,4 +1,4 @@
-package com.dteknoloji.controller;
+package com.aemreunal.controller;
 
 /*
  **************************
@@ -26,10 +26,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.dteknoloji.domain.Beacon;
-import com.dteknoloji.domain.BeaconGroup;
-import com.dteknoloji.service.BeaconGroupService;
-import com.dteknoloji.service.BeaconService;
+import com.aemreunal.domain.Beacon;
+import com.aemreunal.domain.BeaconGroup;
+import com.aemreunal.service.BeaconGroupService;
+import com.aemreunal.service.BeaconService;
 
 @Controller
 @RequestMapping("/BeaconGroup")

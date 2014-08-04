@@ -1,8 +1,8 @@
-package com.dteknoloji.repository.beacon;
+package com.aemreunal.repository.project;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
-import com.dteknoloji.domain.Beacon;
+import com.aemreunal.domain.Project;
 
 /*
  **************************
@@ -20,9 +20,6 @@ import com.dteknoloji.domain.Beacon;
  **************************
  */
 
-// extends CrudRepository<Object type, Object ID type>
-public interface BeaconRepository extends CrudRepository<Beacon, Long>, JpaSpecificationExecutor {
-//    List<Beacon> findBeaconsByUuid(String uuid);
-//    List<Beacon> findBeaconsByGroupId(Long groupId);
+public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpecificationExecutor {
 
 }

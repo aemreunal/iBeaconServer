@@ -1,4 +1,4 @@
-package com.dteknoloji.config;
+package com.aemreunal.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -30,20 +30,20 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 
 @Configuration
-@EnableJpaRepositories(basePackages = { "com.dteknoloji.repository" })
+@EnableJpaRepositories(basePackages = { "com.aemreunal.repository" })
 @EnableTransactionManagement
-@ComponentScan(basePackages = { "com.dteknoloji" })
+@ComponentScan(basePackages = { "com.aemreunal" })
 public class CoreConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setDatabase(GlobalSettings.DB_TYPE);
+        vendorAdapter.setDatabase(DatabaseSettings.DB_TYPE);
         vendorAdapter.setGenerateDdl(true);
         vendorAdapter.setShowSql(GlobalSettings.SHOW_SQL);
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan("com.dteknoloji.domain");
+        factory.setPackagesToScan("com.aemreunal.domain");
         factory.setDataSource(dataSource());
         factory.setJpaProperties(jpaProperties());
         return factory;
@@ -52,10 +52,10 @@ public class CoreConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(GlobalSettings.DB_DRIVER_CLASS_NAME);
-        dataSource.setUrl(GlobalSettings.DB_URL);
-        dataSource.setUsername(GlobalSettings.DB_USERNAME);
-        dataSource.setPassword(GlobalSettings.DB_PASSWORD);
+        dataSource.setDriverClassName(DatabaseSettings.DB_DRIVER_CLASS_NAME);
+        dataSource.setUrl(DatabaseSettings.DB_URL);
+        dataSource.setUsername(DatabaseSettings.DB_USERNAME);
+        dataSource.setPassword(DatabaseSettings.DB_PASSWORD);
 
         return dataSource;
     }

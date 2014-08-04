@@ -1,4 +1,4 @@
-package com.dteknoloji.domain;
+package com.aemreunal.domain;
 
 import java.io.Serializable;
 import javax.persistence.*;

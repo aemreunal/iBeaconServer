@@ -1,4 +1,4 @@
-package com.dteknoloji.controller;
+package com.aemreunal.controller;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
@@ -11,13 +11,13 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import com.dteknoloji.config.GlobalSettings;
-import com.dteknoloji.domain.Beacon;
-import com.dteknoloji.domain.BeaconGroup;
-import com.dteknoloji.domain.Project;
-import com.dteknoloji.service.BeaconGroupService;
-import com.dteknoloji.service.BeaconService;
-import com.dteknoloji.service.ProjectService;
+import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.domain.Beacon;
+import com.aemreunal.domain.BeaconGroup;
+import com.aemreunal.domain.Project;
+import com.aemreunal.service.BeaconGroupService;
+import com.aemreunal.service.BeaconService;
+import com.aemreunal.service.ProjectService;
 
 /*
  **************************
@@ -201,8 +201,6 @@ public class ProjectController {
                 "\' minor = \'" + newBeacon.getMinor() +
                 "\' in project with ID = \'" + projectIDAsLong + "\'");
         }
-//        project.addBeacon(newBeacon);
-//        projectService.save(project);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/Beacon/{id}").buildAndExpand(newBeacon.getBeaconId().toString()).toUri());
@@ -255,8 +253,6 @@ public class ProjectController {
                 "\' name = \'" + newBeaconGroup.getName() +
                 "\' in project with ID = \'" + projectIDAsLong + "\'");
         }
-//        project.addBeaconGroup(newBeaconGroup);
-//        projectService.save(project);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/BeaconGroup/{id}").buildAndExpand(newBeaconGroup.getBeaconGroupId().toString()).toUri());
