@@ -153,7 +153,7 @@ public class BeaconController {
      * @return The created beacon
      */
     @Transactional
-    @RequestMapping(method = RequestMethod.POST, value = "/Create", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Beacon> createBeaconInProject(
         @PathVariable String projectId,
         @RequestBody Beacon restBeacon, UriComponentsBuilder builder) {
@@ -233,7 +233,7 @@ public class BeaconController {
      * @return The status of deletion action
      */
     @Transactional
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconId}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconId}")
     public ResponseEntity<Beacon> deleteBeacon(@PathVariable String projectId, @PathVariable String beaconId) {
         Long projectIDAsLong;
         try {
