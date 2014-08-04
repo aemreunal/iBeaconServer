@@ -52,19 +52,12 @@ public class BeaconController {
      */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Beacon>> viewBeaconsOfProject(
-        @PathVariable String projectId,
+        @PathVariable Long projectId,
         @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
         @RequestParam(value = "major", required = false, defaultValue = "") String major,
         @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
 
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(projectId);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<List<Beacon>>(HttpStatus.BAD_REQUEST);
-        }
-
-        Project project = projectService.findById(projectIDAsLong);
+        Project project = projectService.findById(projectId);
         if (project == null) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
         }
@@ -72,7 +65,7 @@ public class BeaconController {
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
             return new ResponseEntity<List<Beacon>>(project.getBeacons(), HttpStatus.OK);
         } else {
-            return getBeaconsWithMatchingCriteria(projectIDAsLong, uuid, major, minor);
+            return getBeaconsWithMatchingCriteria(projectId, uuid, major, minor);
         }
     }
 
@@ -111,30 +104,19 @@ public class BeaconController {
      * @return The beacon
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{beaconId}", produces = "application/json")
-    public ResponseEntity<Beacon> viewBeacon(@PathVariable String projectId, @PathVariable String beaconId) {
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(projectId);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
-        }
-
-        Long beaconIDAsLong;
-        try {
-            beaconIDAsLong = Long.valueOf(beaconId);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
-        }
-
-        Project project = projectService.findById(projectIDAsLong);
+    public ResponseEntity<Beacon> viewBeacon(
+        @PathVariable Long projectId,
+        @PathVariable Long beaconId) {
+        Project project = projectService.findById(projectId);
         if (project == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
 
-        Beacon beacon = beaconService.findById(beaconIDAsLong);
+        Beacon beacon = beaconService.findByBeaconIdAndProject(beaconId, project);
         if (beacon == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
+
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
 
@@ -155,16 +137,10 @@ public class BeaconController {
     @Transactional
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Beacon> createBeaconInProject(
-        @PathVariable String projectId,
+        @PathVariable Long projectId,
         @RequestBody Beacon restBeacon, UriComponentsBuilder builder) {
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(projectId);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
-        }
 
-        Project project = projectService.findById(projectIDAsLong);
+        Project project = projectService.findById(projectId);
         if (project == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
@@ -185,39 +161,13 @@ public class BeaconController {
             System.out.println("Saved beacon with UUID = \'" + newBeacon.getUuid() +
                 "\' major = \'" + newBeacon.getMajor() +
                 "\' minor = \'" + newBeacon.getMinor() +
-                "\' in project with ID = \'" + projectIDAsLong + "\'");
+                "\' in project with ID = \'" + projectId + "\'");
         }
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/Beacon/{id}").buildAndExpand(newBeacon.getBeaconId().toString()).toUri());
         return new ResponseEntity<Beacon>(newBeacon, headers, HttpStatus.CREATED);
     }
-//
-//    /**
-//     * Create a multiple new beacons
-//     *
-//     * @param restBeacons
-//     *     The beacon list as JSON object
-//     *
-//     * @return The created beacons
-//     */
-//    @RequestMapping(method = RequestMethod.POST, value = "/import")
-//    public ResponseEntity<List<Beacon>> createMultipleBeacon(@RequestBody List<Beacon> restBeacons) {
-//        for (Beacon restBeacon : restBeacons) {
-//            try {
-//                Beacon newBeacon = beaconService.save(restBeacon);
-//                if (GlobalSettings.DEBUGGING) {
-//                    System.out.println("Saved beacon with UUID = \'" + newBeacon.getUuid() + "\' major = \'" + newBeacon.getMajor() + "\' minor = \'" + newBeacon.getMinor() + "\'");
-//                }
-//            } catch (ConstraintViolationException | TransactionSystemException e) {
-//                if (GlobalSettings.DEBUGGING) {
-//                    System.err.println("Unable to save beacon! Constraint violation detected!");
-//                }
-//                return new ResponseEntity<List<Beacon>>(HttpStatus.BAD_REQUEST);
-//            }
-//        }
-//        return new ResponseEntity<List<Beacon>>(restBeacons, HttpStatus.CREATED);
-//    }
 
     /**
      * Delete the specified beacon
@@ -234,27 +184,15 @@ public class BeaconController {
      */
     @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconId}")
-    public ResponseEntity<Beacon> deleteBeacon(@PathVariable String projectId, @PathVariable String beaconId) {
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(projectId);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Beacon> deleteBeacon(
+        @PathVariable Long projectId,
+        @PathVariable Long beaconId,
+        @RequestParam(value = "confirm", required = true) String confirmation) {
 
-        Long beaconIDAsLong;
-        try {
-            beaconIDAsLong = Long.valueOf(beaconId);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
+        DeleteResponse response = DeleteResponse.NOT_DELETED;
+        if (confirmation.toLowerCase().equals("yes")) {
+            response = beaconService.delete(projectId, beaconId);
         }
-
-        Project project = projectService.findById(projectIDAsLong);
-        if (project == null) {
-            return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
-        }
-
-        DeleteResponse response = beaconService.delete(beaconIDAsLong);
 
         switch (response) {
             case DELETED:

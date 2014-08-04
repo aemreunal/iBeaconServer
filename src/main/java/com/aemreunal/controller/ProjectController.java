@@ -15,7 +15,6 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.BeaconGroupService;
-import com.aemreunal.service.BeaconService;
 import com.aemreunal.service.ProjectService;
 
 /*
@@ -41,9 +40,6 @@ public class ProjectController {
     private ProjectService projectService;
 
     @Autowired
-    private BeaconService beaconService;
-
-    @Autowired
     private BeaconGroupService beaconGroupService;
 
     /**
@@ -53,7 +49,7 @@ public class ProjectController {
      *     (Optional) The name of the project
      * @param ownerName
      *     (Optional) The name of the owner
-     * @param ownerID
+     * @param ownerId
      *     (Optional) The ID of the owner
      *
      * @return All existing projects (Optionally, all that match the given criteria)
@@ -62,11 +58,11 @@ public class ProjectController {
     public ResponseEntity<List<Project>> getAllProjects(
         @RequestParam(value = "name", required = false, defaultValue = "") String projectName,
         @RequestParam(value = "ownerName", required = false, defaultValue = "") String ownerName,
-        @RequestParam(value = "ownerID", required = false, defaultValue = "") String ownerID) {
-        if (projectName.equals("") && ownerName.equals("") && ownerID.equals("")) {
+        @RequestParam(value = "ownerId", required = false, defaultValue = "") Long ownerId) {
+        if (projectName.equals("") && ownerName.equals("") && ownerId.equals("")) {
             return new ResponseEntity<List<Project>>(projectService.findAll(), HttpStatus.OK);
         } else {
-            return getProjectsWithMatchingCriteria(projectName, ownerName, ownerID);
+            return getProjectsWithMatchingCriteria(projectName, ownerName, ownerId);
         }
     }
 
@@ -77,24 +73,13 @@ public class ProjectController {
      *     (Optional) The name of the project
      * @param ownerName
      *     (Optional) The name of the owner
-     * @param ownerID
+     * @param ownerId
      *     (Optional) The ID of the owner
      *
      * @return The list of projects that match the given criteria
      */
-    private ResponseEntity<List<Project>> getProjectsWithMatchingCriteria(String projectName, String ownerName, String ownerID) {
-        Long ownerIDAsLong;
-        if (ownerID.equals("")) {
-            ownerIDAsLong = null;
-        } else {
-            try {
-                ownerIDAsLong = Long.valueOf(ownerID);
-            } catch (NumberFormatException e) {
-                return new ResponseEntity<List<Project>>(HttpStatus.BAD_REQUEST);
-            }
-        }
-
-        List<Project> projects = projectService.findProjectsBySpecs(projectName, ownerName, ownerIDAsLong);
+    private ResponseEntity<List<Project>> getProjectsWithMatchingCriteria(String projectName, String ownerName, Long ownerId) {
+        List<Project> projects = projectService.findProjectsBySpecs(projectName, ownerName, ownerId);
         if (projects.size() == 0) {
             return new ResponseEntity<List<Project>>(HttpStatus.NOT_FOUND);
         }
@@ -104,21 +89,14 @@ public class ProjectController {
     /**
      * Get the project with the specified ID
      *
-     * @param id
+     * @param projectId
      *     The ID of the project
      *
      * @return The project
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = "application/json")
-    public ResponseEntity<Project> viewProject(@PathVariable String id) {
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(id);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
-        }
-
-        Project project = projectService.findById(projectIDAsLong);
+    @RequestMapping(method = RequestMethod.GET, value = "/{projectId}", produces = "application/json")
+    public ResponseEntity<Project> viewProject(@PathVariable Long projectId) {
+        Project project = projectService.findById(projectId);
         if (project == null) {
             return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
         }
@@ -136,7 +114,9 @@ public class ProjectController {
      * @return The created project
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Project> createProject(@RequestBody Project project, UriComponentsBuilder builder) {
+    public ResponseEntity<Project> createProject(
+        @RequestBody Project project,
+        UriComponentsBuilder builder) {
         try {
             Project newProject = projectService.save(project);
             if (GlobalSettings.DEBUGGING) {
@@ -158,7 +138,7 @@ public class ProjectController {
      * <p/>
      * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
      *
-     * @param id
+     * @param projectId
      *     The ID of the project to create the beacon group in
      * @param restBeaconGroup
      *     The beacon group as JSON object
@@ -168,19 +148,13 @@ public class ProjectController {
      * @return The created beacon group
      */
     @Transactional
-    @RequestMapping(method = RequestMethod.POST, value = "/{id}/CreateBeaconGroup", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, value = "/{projectId}/BeaconGroup", produces = "application/json")
     public ResponseEntity<BeaconGroup> createBeaconGroupInProject(
-        @PathVariable String id,
-        @RequestBody BeaconGroup restBeaconGroup, UriComponentsBuilder builder) {
+        @PathVariable Long projectId,
+        @RequestBody BeaconGroup restBeaconGroup,
+        UriComponentsBuilder builder) {
 
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(id);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
-        }
-
-        Project project = projectService.findById(projectIDAsLong);
+        Project project = projectService.findById(projectId);
         if (project == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
@@ -200,7 +174,7 @@ public class ProjectController {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon group with ID = \'" + newBeaconGroup.getBeaconGroupId() +
                 "\' name = \'" + newBeaconGroup.getName() +
-                "\' in project with ID = \'" + projectIDAsLong + "\'");
+                "\' in project with ID = \'" + projectId + "\'");
         }
 
         HttpHeaders headers = new HttpHeaders();
@@ -211,21 +185,14 @@ public class ProjectController {
     /**
      * Get beacon groups that belong to a project.
      *
-     * @param id
+     * @param projectId
      *     The ID of the project
      *
      * @return The list of beacon groups that belong to the project with the specified ID
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}/BeaconGroups", produces = "application/json")
-    public ResponseEntity<List<BeaconGroup>> viewBeaconGroupsOfProject(@PathVariable String id) {
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(id);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<List<BeaconGroup>>(HttpStatus.BAD_REQUEST);
-        }
-
-        Project project = projectService.findById(projectIDAsLong);
+    @RequestMapping(method = RequestMethod.GET, value = "/{projectId}/BeaconGroup", produces = "application/json")
+    public ResponseEntity<List<BeaconGroup>> viewBeaconGroupsOfProject(@PathVariable Long projectId) {
+        Project project = projectService.findById(projectId);
         if (project == null) {
             return new ResponseEntity<List<BeaconGroup>>(HttpStatus.NOT_FOUND);
         }
@@ -240,7 +207,7 @@ public class ProjectController {
      * To delete the project, confirmation must be supplied as a URI parameter, in the
      * form of "?confirm=yes". If not supplied, the project will not be deleted.
      *
-     * @param id
+     * @param projectId
      *     The ID of the project to delete
      * @param confirmation
      *     The confirmation parameter
@@ -248,21 +215,15 @@ public class ProjectController {
      * @return The status of deletion action
      */
     @Transactional
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
-    public ResponseEntity<Project> deleteProject(@PathVariable String id,
-                                                 @RequestParam(value = "confirm", required = true, defaultValue = "no") String confirmation) {
-        Long projectIDAsLong;
-        try {
-            projectIDAsLong = Long.valueOf(id);
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
-        }
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{projectId}", produces = "application/json")
+    public ResponseEntity<Project> deleteProject(
+        @PathVariable Long projectId,
+        @RequestParam(value = "confirm", required = true) String confirmation) {
 
         DeleteResponse response = DeleteResponse.NOT_DELETED;
         if (confirmation.toLowerCase().equals("yes")) {
-            response = projectService.delete(projectIDAsLong);
+            response = projectService.delete(projectId);
         }
-
 
         switch (response) {
             case DELETED:
