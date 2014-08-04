@@ -41,16 +41,6 @@ public class BeaconGroupController {
     private BeaconService beaconService;
 
     /**
-     * Get all beacon groups
-     *
-     * @return All existing beacon groups
-     */
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<BeaconGroup>> getAllBeaconGroups() {
-        return new ResponseEntity<List<BeaconGroup>>(beaconGroupService.findAll(), HttpStatus.OK);
-    }
-
-    /**
      * Get the beacon group with specified ID
      *
      * @param id
