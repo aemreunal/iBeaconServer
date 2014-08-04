@@ -36,52 +36,6 @@ public class BeaconController {
     private BeaconService beaconService;
 
     /**
-     * Get all beacons (Optionally, all with matching criteria)
-     *
-     * @param uuid
-     *     (Optional) The UUID of the beacon
-     * @param major
-     *     (Optional) The major of the beacon
-     * @param minor
-     *     (Optional) The minor of the beacon
-     *
-     * @return All existing beacons (Optionally, all that match the given criteria)
-     */
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Beacon>> getAllBeacons(
-        @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
-        @RequestParam(value = "major", required = false, defaultValue = "") String major,
-        @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
-        if (uuid.equals("") && major.equals("") && minor.equals("")) {
-            return new ResponseEntity<List<Beacon>>(beaconService.findAll(), HttpStatus.OK);
-        } else {
-            return getBeaconsWithMatchingCriteria(uuid, major, minor);
-        }
-    }
-
-    /**
-     * Returns the list of beacons that match a given criteria
-     *
-     * @param uuid
-     *     (Optional) The UUID of the beacon
-     * @param major
-     *     (Optional) The major of the beacon
-     * @param minor
-     *     (Optional) The minor of the beacon
-     *
-     * @return The list of beacons that match the given criteria
-     */
-    private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(String uuid, String major, String minor) {
-        List<Beacon> beacons = beaconService.findBeaconsBySpecs(uuid, major, minor);
-
-        if (beacons.size() == 0) {
-            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
-        }
-    }
-
-    /**
      * Get the beacon with the specified ID
      *
      * @param id

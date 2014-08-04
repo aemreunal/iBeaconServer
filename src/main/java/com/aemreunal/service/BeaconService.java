@@ -71,6 +71,8 @@ public class BeaconService {
     /**
      * Finds beacons conforming to given specifications
      *
+     * @param projectId
+     *     The project ID constraint
      * @param uuid
      *     The UUID field constraint
      * @param major
@@ -80,12 +82,12 @@ public class BeaconService {
      *
      * @return The list of beacons conforming to given constraints
      */
-    public List<Beacon> findBeaconsBySpecs(String uuid, String major, String minor) {
+    public List<Beacon> findBeaconsBySpecs(Long projectId, String uuid, String major, String minor) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
         }
 
-        return beaconRepository.findAll(BeaconSpecifications.beaconWithSpecification(uuid, major, minor));
+        return beaconRepository.findAll(BeaconSpecifications.beaconWithSpecification(projectId, uuid, major, minor));
     }
 
     /**

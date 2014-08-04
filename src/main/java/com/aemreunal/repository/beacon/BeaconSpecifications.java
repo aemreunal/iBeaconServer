@@ -28,6 +28,8 @@ public class BeaconSpecifications {
     /**
      * Creates the Beacon search specification from the given attributes
      *
+     * @param projectId
+     *     The project ID to search in
      * @param uuid
      *     The UUID attribute to search for
      * @param major
@@ -37,10 +39,12 @@ public class BeaconSpecifications {
      *
      * @return The specification of the beacon
      */
-    public static Specification<Beacon> beaconWithSpecification(final String uuid, final String major, final String minor) {
+    public static Specification<Beacon> beaconWithSpecification(final Long projectId, final String uuid, final String major, final String minor) {
         return new Specification<Beacon>() {
             public Predicate toPredicate(Root<Beacon> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
                 ArrayList<Predicate> predicates = new ArrayList<Predicate>();
+                // Project specification
+                predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
 
                 if (!uuid.equals("")) {
                     if (uuid.length() == Beacon.UUID_MAX_LENGTH) {

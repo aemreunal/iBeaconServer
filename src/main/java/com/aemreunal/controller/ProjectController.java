@@ -208,6 +208,62 @@ public class ProjectController {
     }
 
     /**
+     * Get beacon objects that belong to a project.
+     *
+     * @param id
+     *     The ID of the project
+     *
+     * @return The list of beacons that belong to the project with the specified ID
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/Beacons", produces = "application/json")
+    public ResponseEntity<List<Beacon>> viewBeaconsOfProject(@PathVariable String id,
+                                                             @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
+                                                             @RequestParam(value = "major", required = false, defaultValue = "") String major,
+                                                             @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
+        Long projectIDAsLong;
+        try {
+            projectIDAsLong = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<List<Beacon>>(HttpStatus.BAD_REQUEST);
+        }
+
+        Project project = projectService.findById(projectIDAsLong);
+        if (project == null) {
+            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
+        }
+
+        if (uuid.equals("") && major.equals("") && minor.equals("")) {
+            return new ResponseEntity<List<Beacon>>(project.getBeacons(), HttpStatus.OK);
+        } else {
+            return getBeaconsWithMatchingCriteria(projectIDAsLong, uuid, major, minor);
+        }
+    }
+
+    /**
+     * Returns the list of beacons that match a given criteria
+     *
+     * @param projectId
+     *     The project ID to search
+     * @param uuid
+     *     (Optional) The UUID of the beacon
+     * @param major
+     *     (Optional) The major of the beacon
+     * @param minor
+     *     (Optional) The minor of the beacon
+     *
+     * @return The list of beacons that match the given criteria
+     */
+    private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(Long projectId, String uuid, String major, String minor) {
+        List<Beacon> beacons = beaconService.findBeaconsBySpecs(projectId, uuid, major, minor);
+
+        if (beacons.size() == 0) {
+            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
+        }
+    }
+
+    /**
      * Create a new beacon group in project
      * <p/>
      * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
