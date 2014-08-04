@@ -1,6 +1,7 @@
 package com.aemreunal.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
@@ -147,7 +148,7 @@ public class Beacon extends ResourceSupport implements Serializable {
         fetch = FetchType.EAGER,
         /*cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},*/
         optional = true)
-    @JsonIgnoreProperties(value = { "name", "description", "beacons", "project" })
+    @JsonIgnoreProperties(value = { "name", "description", "beacons", "project", "creationDate" })
     private BeaconGroup group;
 
     public BeaconGroup getGroup() {
@@ -168,9 +169,8 @@ public class Beacon extends ResourceSupport implements Serializable {
      */
     @ManyToOne(targetEntity = Project.class,
         fetch = FetchType.EAGER,
-        /*cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},*/
         optional = false)
-    @JsonIgnoreProperties(value = { "name", "description", "beacons", "beaconGroups", "scenarios", "secret" })
+    @JsonIgnoreProperties(value = { "name", "description", "beacons", "beaconGroups", "scenarios", "projectSecret", "creationDate" })
     private Project project;
 
     public Project getProject() {
@@ -184,4 +184,33 @@ public class Beacon extends ResourceSupport implements Serializable {
      * END: Beacon 'project' attribute
      *------------------------------------------------------------
      */
+
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Beacon 'creationDate' attribute
+     */
+    @Column(name = "creation_date", nullable = false)
+    private Date creationDate = null;
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    /*
+     * END: Beacon 'creationDate' attribute
+     *------------------------------------------------------------
+     */
+
+    @PrePersist
+    private void setInitialProperties() {
+        // Set beacon creation date
+        if (creationDate == null) {
+            setCreationDate(new Date());
+        }
+    }
 }

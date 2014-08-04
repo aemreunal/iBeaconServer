@@ -1,6 +1,7 @@
 package com.aemreunal.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
@@ -97,6 +98,26 @@ public class Project extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
+     * BEGIN: Project 'creationDate' attribute
+     */
+    @Column(name = "creation_date", nullable = false)
+    private Date creationDate = null;
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    /*
+     * END: Project 'creationDate' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
      * BEGIN: Project 'owner' attribute
      */
 //    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
@@ -128,7 +149,7 @@ public class Project extends ResourceSupport implements Serializable {
         mappedBy = "project",
         orphanRemoval = true,
         fetch = FetchType.EAGER)
-    @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project" })
+    @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project", "creationDate" })
     private List<Beacon> beacons;
 
     public List<Beacon> getBeacons() {
@@ -154,7 +175,7 @@ public class Project extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = BeaconGroup.class,
         mappedBy = "project",
         fetch = FetchType.EAGER)
-    @JsonIgnoreProperties(value = { "name", "description", "beacons", "project" })
+    @JsonIgnoreProperties(value = { "name", "description", "beacons", "project", "creationDate" })
     private List<BeaconGroup> beaconGroups;
 
     public List<BeaconGroup> getBeaconGroups() {
@@ -203,7 +224,7 @@ public class Project extends ResourceSupport implements Serializable {
      */
     @Column(name = "project_secret", nullable = false, unique = false)
     @Size(min = SECRET_LENGTH, max = SECRET_LENGTH)
-    private String projectSecret;
+    private String projectSecret = "";
 
     public String getProjectSecret() {
         return projectSecret;
@@ -212,14 +233,22 @@ public class Project extends ResourceSupport implements Serializable {
     public void setProjectSecret(String projectSecret) {
         this.projectSecret = projectSecret;
     }
-
-    @PrePersist
-    private void generateSecret(){
-        this.setProjectSecret(UUID.randomUUID().toString());
-    }
     /*
      * END: Project 'secret' attribute
      *------------------------------------------------------------
      */
 
+    @PrePersist
+    private void setInitialProperties() {
+        // Generate project secret key
+        if (projectSecret.equals("")) {
+            this.setProjectSecret(UUID.randomUUID().toString());
+        }
+        // Set project creation date
+        if (creationDate == null) {
+            setCreationDate(new Date());
+        }
+    }
+
 }
+

@@ -1,5 +1,6 @@
 package com.aemreunal.domain;
 
+import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -99,7 +100,7 @@ public class BeaconGroup {
         mappedBy = "group",
         /*cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},*/
         fetch = FetchType.EAGER)
-    @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project" })
+    @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project", "creationDate" })
     private List<Beacon> beacons;
 
     public List<Beacon> getBeacons() {
@@ -130,7 +131,7 @@ public class BeaconGroup {
         fetch = FetchType.EAGER,
         /*cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},*/
         optional = false)
-    @JsonIgnoreProperties(value = { "name", "description", "beacons", "beaconGroups", "scenarios", "secret" })
+    @JsonIgnoreProperties(value = { "name", "description", "beacons", "beaconGroups", "scenarios", "projectSecret", "creationDate" })
     private Project project;
 
     public Project getProject() {
@@ -144,4 +145,33 @@ public class BeaconGroup {
      * END: Beacon group 'project' attribute
      *------------------------------------------------------------
      */
+
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Beacon group 'creationDate' attribute
+     */
+    @Column(name = "creation_date", nullable = false)
+    private Date creationDate = null;
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    /*
+     * END: Beacon group 'creationDate' attribute
+     *------------------------------------------------------------
+     */
+
+    @PrePersist
+    private void setInitialProperties() {
+        // Set beacon creation date
+        if (creationDate == null) {
+            setCreationDate(new Date());
+        }
+    }
 }
