@@ -18,7 +18,6 @@ package com.aemreunal.config;
 
 public class GlobalSettings {
     public static final boolean DEBUGGING = true;
-    public static final boolean SHOW_SQL = true;
 
     /*
     hibernate.hbm2ddl.auto: Automatically validates or exports schema DDL to the
@@ -41,7 +40,8 @@ public class GlobalSettings {
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.show_sql"
     //----------------------------------------
-    public static final String SHOW_SQL_PROPERTY = "false";
+    public static final String SHOW_SQL_PROPERTY = "true";
+    public static final boolean SHOW_SQL = true;
     //-------------------------------------------------------------------------------------------
 
     //-------------------------------------------------------------------------------------------
