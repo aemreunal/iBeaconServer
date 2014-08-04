@@ -66,4 +66,29 @@ public class BeaconSpecifications {
             }
         };
     }
+
+    /**
+     * Creates the 'Beacon exists' search specification from the given attributes
+     *
+     * @param projectId
+     *     The project ID to search in
+     * @param beaconId
+     *     The ID of the beacon to find
+     *
+     * @return The specification of the beacon
+     */
+    public static Specification<Beacon> beaconExistsSpecification(final Long projectId, final Long beaconId) {
+        return new Specification<Beacon>() {
+            public Predicate toPredicate(Root<Beacon> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+                ArrayList<Predicate> predicates = new ArrayList<Predicate>();
+                // Project specification
+                predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
+
+                // Beacon specification
+                predicates.add(builder.equal(root.get("beaconId"), beaconId));
+
+                return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+    }
 }
