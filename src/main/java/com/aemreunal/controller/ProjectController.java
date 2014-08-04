@@ -340,14 +340,19 @@ public class ProjectController {
     }
 
 
-
     /**
-     * Delete the specified project
+     * Delete the specified project, along with all the beacons, beacon groups and
+     * scenarios in the project.
+     * <p/>
+     * To delete the project, confirmation must be supplied as a URI parameter, in the
+     * form of "?confirm=yes". If not supplied, the project will not be deleted.
      *
      * @param id
      *     The ID of the project to delete
+     * @param confirmation
+     *     The confirmation parameter
      *
-     * @return The deleted project
+     * @return The status of deletion action
      */
     @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = "application/json")
@@ -361,7 +366,7 @@ public class ProjectController {
         }
 
         DeleteResponse response = DeleteResponse.NOT_DELETED;
-        if(confirmation.toLowerCase().equals("yes")) {
+        if (confirmation.toLowerCase().equals("yes")) {
             response = projectService.delete(projectIDAsLong);
         }
 
