@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
-import com.aemreunal.service.BeaconGroupService;
 import com.aemreunal.service.ProjectService;
 
 /*
@@ -38,9 +36,6 @@ import com.aemreunal.service.ProjectService;
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private BeaconGroupService beaconGroupService;
 
     /**
      * Get all projects (Optionally, all with matching criteria)
@@ -117,88 +112,22 @@ public class ProjectController {
     public ResponseEntity<Project> createProject(
         @RequestBody Project project,
         UriComponentsBuilder builder) {
+        Project newProject;
         try {
-            Project newProject = projectService.save(project);
-            if (GlobalSettings.DEBUGGING) {
-                System.out.println("Saved project with Name = \'" + newProject.getName() + "\' ID = \'" + newProject.getProjectId() + "\'");
-            }
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(builder.path("/Project/{id}").buildAndExpand(newProject.getProjectId().toString()).toUri());
-            return new ResponseEntity<Project>(newProject, headers, HttpStatus.CREATED);
+            newProject = projectService.save(project);
         } catch (ConstraintViolationException | TransactionSystemException e) {
             if (GlobalSettings.DEBUGGING) {
                 System.err.println("Unable to save project! Constraint violation detected!");
             }
             return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
         }
-    }
-
-    /**
-     * Create a new beacon group in project
-     * <p/>
-     * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
-     *
-     * @param projectId
-     *     The ID of the project to create the beacon group in
-     * @param restBeaconGroup
-     *     The beacon group as JSON object
-     * @param builder
-     *     The URI builder for post-creation redirect
-     *
-     * @return The created beacon group
-     */
-    @Transactional
-    @RequestMapping(method = RequestMethod.POST, value = "/{projectId}/BeaconGroup", produces = "application/json")
-    public ResponseEntity<BeaconGroup> createBeaconGroupInProject(
-        @PathVariable Long projectId,
-        @RequestBody BeaconGroup restBeaconGroup,
-        UriComponentsBuilder builder) {
-
-        Project project = projectService.findById(projectId);
-        if (project == null) {
-            return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
-        }
-
-        restBeaconGroup.setProject(project);
-
-        BeaconGroup newBeaconGroup;
-        try {
-            newBeaconGroup = beaconGroupService.save(restBeaconGroup);
-        } catch (ConstraintViolationException | TransactionSystemException e) {
-            if (GlobalSettings.DEBUGGING) {
-                System.err.println("Unable to save beacon group! Constraint violation detected!");
-            }
-            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
-        }
-
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved beacon group with ID = \'" + newBeaconGroup.getBeaconGroupId() +
-                "\' name = \'" + newBeaconGroup.getName() +
-                "\' in project with ID = \'" + projectId + "\'");
+            System.out.println("Saved project with Name = \'" + newProject.getName() + "\' ID = \'" + newProject.getProjectId() + "\'");
         }
-
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/BeaconGroup/{id}").buildAndExpand(newBeaconGroup.getBeaconGroupId().toString()).toUri());
-        return new ResponseEntity<BeaconGroup>(newBeaconGroup, headers, HttpStatus.CREATED);
+        headers.setLocation(builder.path("/Project/{id}").buildAndExpand(newProject.getProjectId().toString()).toUri());
+        return new ResponseEntity<Project>(newProject, headers, HttpStatus.CREATED);
     }
-
-    /**
-     * Get beacon groups that belong to a project.
-     *
-     * @param projectId
-     *     The ID of the project
-     *
-     * @return The list of beacon groups that belong to the project with the specified ID
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/{projectId}/BeaconGroup", produces = "application/json")
-    public ResponseEntity<List<BeaconGroup>> viewBeaconGroupsOfProject(@PathVariable Long projectId) {
-        Project project = projectService.findById(projectId);
-        if (project == null) {
-            return new ResponseEntity<List<BeaconGroup>>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<List<BeaconGroup>>(project.getBeaconGroups(), HttpStatus.OK);
-    }
-
 
     /**
      * Delete the specified project, along with all the beacons, beacon groups and
