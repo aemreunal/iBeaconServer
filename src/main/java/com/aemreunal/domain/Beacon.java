@@ -46,6 +46,7 @@ public class Beacon extends ResourceSupport implements Serializable {
     @Id
     @Column(name = "beacon_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @OrderColumn
     private Long beaconId;
 
     public Long getBeaconId() {

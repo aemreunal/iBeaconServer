@@ -1,7 +1,10 @@
 package com.aemreunal.domain;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
@@ -49,6 +52,7 @@ public class Project extends ResourceSupport implements Serializable {
     @Id
     @Column(name = "project_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @OrderColumn
     private Long projectId;
 
     public Long getProjectId() {
@@ -155,9 +159,14 @@ public class Project extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = Beacon.class,
         mappedBy = "project",
         orphanRemoval = true,
-        /*cascade = {CascadeType.MERGE},*/
         fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project", "creationDate" })
+    /*
+     * To eliminate duplicates without using Sets, use:
+     * @Fetch(FetchMode.SUBSELECT)
+     * via: http://doctorjw.wordpress.com/2012/01/11/hibernate-collections-and-duplicate-objects/
+     */
+    @OrderBy("beaconId")
     private Set<Beacon> beacons = new LinkedHashSet<>();
 
     public Set<Beacon> getBeacons() {
@@ -170,7 +179,6 @@ public class Project extends ResourceSupport implements Serializable {
 
     public void addBeacon(Beacon beacon) {
         this.beacons.add(beacon);
-//        beacon.setProject(this);
     }
     /*
      * END: Project 'beacons list' attribute
@@ -184,9 +192,9 @@ public class Project extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = BeaconGroup.class,
         mappedBy = "project",
         orphanRemoval = true,
-        /*cascade = {CascadeType.MERGE},*/
         fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "name", "description", "beacons", "project", "creationDate" })
+    @OrderBy(value = "beaconGroupId")
     private Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
 
     public Set<BeaconGroup> getBeaconGroups() {
@@ -199,7 +207,6 @@ public class Project extends ResourceSupport implements Serializable {
 
     public void addBeaconGroup(BeaconGroup beaconGroup) {
         this.beaconGroups.add(beaconGroup);
-//        beaconGroup.setProject(this);
     }
     /*
      * END: Project 'beacon groups list' attribute
@@ -264,7 +271,7 @@ public class Project extends ResourceSupport implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof Project)) {
+        if (!(obj instanceof Project)) {
             return false;
         } else {
             return ((Project) obj).getProjectId().equals(this.getProjectId());

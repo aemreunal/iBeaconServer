@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
@@ -50,6 +51,7 @@ public class BeaconController {
      *
      * @return The list of beacons that belong to the project with the specified ID
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Beacon>> viewBeaconsOfProject(
         @PathVariable Long projectId,
@@ -61,6 +63,13 @@ public class BeaconController {
         if (project == null) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
         }
+
+        /*
+        // TODO Lazy?
+        if(!Hibernate.isInitialized(project.getBeacons())) {
+            Hibernate.initialize(project.getBeacons());
+        }
+        */
 
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
             List<Beacon> beaconList = new ArrayList<Beacon>();
