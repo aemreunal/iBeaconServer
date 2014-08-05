@@ -174,6 +174,7 @@ public class Project extends ResourceSupport implements Serializable {
      */
     @OneToMany(targetEntity = BeaconGroup.class,
         mappedBy = "project",
+        orphanRemoval = true,
         fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "name", "description", "beacons", "project", "creationDate" })
     private List<BeaconGroup> beaconGroups;
