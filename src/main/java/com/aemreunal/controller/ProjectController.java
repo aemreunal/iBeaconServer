@@ -59,7 +59,7 @@ public class ProjectController {
         @RequestParam(value = "name", required = false, defaultValue = "") String projectName,
         @RequestParam(value = "ownerName", required = false, defaultValue = "") String ownerName,
         @RequestParam(value = "ownerId", required = false, defaultValue = "") Long ownerId) {
-        if (projectName.equals("") && ownerName.equals("") && ownerId.equals("")) {
+        if (projectName.equals("") && ownerName.equals("") && ownerId == null) {
             return new ResponseEntity<List<Project>>(projectService.findAll(), HttpStatus.OK);
         } else {
             return getProjectsWithMatchingCriteria(projectName, ownerName, ownerId);
