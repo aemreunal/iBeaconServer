@@ -174,4 +174,13 @@ public class BeaconGroup {
             setCreationDate(new Date());
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof BeaconGroup)) {
+            return false;
+        } else {
+            return ((BeaconGroup) obj).getBeaconGroupId().equals(this.getBeaconGroupId());
+        }
+    }
 }

@@ -213,4 +213,13 @@ public class Beacon extends ResourceSupport implements Serializable {
             setCreationDate(new Date());
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Beacon)) {
+            return false;
+        } else {
+            return ((Beacon) obj).getBeaconId() == this.getBeaconId();
+        }
+    }
 }

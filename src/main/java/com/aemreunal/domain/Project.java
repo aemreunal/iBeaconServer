@@ -250,5 +250,14 @@ public class Project extends ResourceSupport implements Serializable {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Project)) {
+            return false;
+        } else {
+            return ((Project) obj).getProjectId().equals(this.getProjectId());
+        }
+    }
+
 }
 
