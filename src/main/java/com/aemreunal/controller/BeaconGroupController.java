@@ -131,7 +131,11 @@ public class BeaconGroupController {
         if (beaconGroup == null) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<List<Beacon>>(beaconGroup.getBeacons(), HttpStatus.OK);
+        List<Beacon> beaconList = new ArrayList<Beacon>();
+        for (Beacon beacon : beaconGroup.getBeacons()) {
+            beaconList.add(beacon);
+        }
+        return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
     }
 
     /**

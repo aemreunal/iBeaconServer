@@ -1,7 +1,8 @@
 package com.aemreunal.domain;
 
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -100,13 +101,13 @@ public class BeaconGroup {
         mappedBy = "group",
         fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project", "creationDate" })
-    private List<Beacon> beacons;
+    private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
 
-    public List<Beacon> getBeacons() {
+    public Set<Beacon> getBeacons() {
         return beacons;
     }
 
-    public void setBeacons(List<Beacon> beacons) {
+    public void setBeacons(Set<Beacon> beacons) {
         this.beacons = beacons;
     }
 
