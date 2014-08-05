@@ -98,7 +98,6 @@ public class BeaconGroup {
      */
     @OneToMany(targetEntity = Beacon.class,
         mappedBy = "group",
-        /*cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},*/
         fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project", "creationDate" })
     private List<Beacon> beacons;
@@ -129,7 +128,6 @@ public class BeaconGroup {
      */
     @ManyToOne(targetEntity = Project.class,
         fetch = FetchType.EAGER,
-        /*cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},*/
         optional = false)
     @JsonIgnoreProperties(value = { "name", "description", "beacons", "beaconGroups", "scenarios", "projectSecret", "creationDate" })
     private Project project;

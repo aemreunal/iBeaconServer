@@ -146,7 +146,6 @@ public class Beacon extends ResourceSupport implements Serializable {
      */
     @ManyToOne(targetEntity = BeaconGroup.class,
         fetch = FetchType.EAGER,
-        /*cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},*/
         optional = true)
     @JsonIgnoreProperties(value = { "name", "description", "beacons", "project", "creationDate" })
     private BeaconGroup group;
