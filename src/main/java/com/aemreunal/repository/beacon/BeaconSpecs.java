@@ -24,7 +24,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import com.aemreunal.domain.Beacon;
 
-public class BeaconSpecifications {
+public class BeaconSpecs {
     /**
      * Creates the Beacon search specification from the given attributes
      *
