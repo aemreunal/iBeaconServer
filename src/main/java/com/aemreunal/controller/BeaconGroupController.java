@@ -16,6 +16,7 @@ package com.aemreunal.controller;
  **************************
  */
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionSystemException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
@@ -66,7 +66,11 @@ public class BeaconGroupController {
         }
 
         if (name.equals("")) {
-            return new ResponseEntity<List<BeaconGroup>>(project.getBeaconGroups(), HttpStatus.OK);
+            List<BeaconGroup> beaconGroupsList = new ArrayList<BeaconGroup>();
+            for (BeaconGroup beaconGroup : project.getBeaconGroups()) {
+                beaconGroupsList.add(beaconGroup);
+            }
+            return new ResponseEntity<List<BeaconGroup>>(beaconGroupsList, HttpStatus.OK);
         }
 
         List<BeaconGroup> beaconGroups = beaconGroupService.findBeaconGroupsBySpecs(projectId, name);
@@ -144,7 +148,6 @@ public class BeaconGroupController {
      *
      * @return The created beacon group
      */
-    @Transactional
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<BeaconGroup> createBeaconGroupInProject(
         @PathVariable Long projectId,
@@ -194,7 +197,6 @@ public class BeaconGroupController {
      *
      * @return The added beacon group
      */
-    @Transactional
     @RequestMapping(method = RequestMethod.POST, value = "/{beaconGroupId}/AddBeaconToGroup", produces = "application/json")
     public ResponseEntity<BeaconGroup> addBeaconToGroup(
         @PathVariable Long projectId,
@@ -241,7 +243,6 @@ public class BeaconGroupController {
      *
      * @return The removed beacon group
      */
-    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconGroupId}/RemoveBeaconFromGroup", produces = "application/json")
     public ResponseEntity<BeaconGroup> removeBeaconFromGroup(
         @PathVariable Long projectId,
@@ -282,7 +283,6 @@ public class BeaconGroupController {
      *
      * @return The deleted beacon group
      */
-    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconGroupId}", produces = "application/json")
     public ResponseEntity<BeaconGroup> deleteBeaconGroup(
         @PathVariable Long projectId,

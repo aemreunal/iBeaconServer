@@ -1,5 +1,6 @@
 package com.aemreunal.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionSystemException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
@@ -63,7 +63,11 @@ public class BeaconController {
         }
 
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
-            return new ResponseEntity<List<Beacon>>(project.getBeacons(), HttpStatus.OK);
+            List<Beacon> beaconList = new ArrayList<Beacon>();
+            for (Beacon beacon : project.getBeacons()) {
+                beaconList.add(beacon);
+            }
+            return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
         } else {
             return getBeaconsWithMatchingCriteria(projectId, uuid, major, minor);
         }
@@ -133,7 +137,6 @@ public class BeaconController {
      *
      * @return The created beacon
      */
-    @Transactional
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Beacon> createBeaconInProject(
         @PathVariable Long projectId,
@@ -182,7 +185,6 @@ public class BeaconController {
      *
      * @return The status of deletion action
      */
-    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconId}")
     public ResponseEntity<Beacon> deleteBeacon(
         @PathVariable Long projectId,

@@ -1,9 +1,7 @@
 package com.aemreunal.domain;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
@@ -148,20 +146,22 @@ public class Project extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = Beacon.class,
         mappedBy = "project",
         orphanRemoval = true,
+        /*cascade = {CascadeType.MERGE},*/
         fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project", "creationDate" })
-    private List<Beacon> beacons;
+    private Set<Beacon> beacons = new LinkedHashSet<>();
 
-    public List<Beacon> getBeacons() {
+    public Set<Beacon> getBeacons() {
         return beacons;
     }
 
-    public void setBeacons(List<Beacon> beacons) {
+    public void setBeacons(Set<Beacon> beacons) {
         this.beacons = beacons;
     }
 
     public void addBeacon(Beacon beacon) {
         this.beacons.add(beacon);
+//        beacon.setProject(this);
     }
     /*
      * END: Project 'beacons list' attribute
@@ -175,20 +175,22 @@ public class Project extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = BeaconGroup.class,
         mappedBy = "project",
         orphanRemoval = true,
+        /*cascade = {CascadeType.MERGE},*/
         fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "name", "description", "beacons", "project", "creationDate" })
-    private List<BeaconGroup> beaconGroups;
+    private Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
 
-    public List<BeaconGroup> getBeaconGroups() {
+    public Set<BeaconGroup> getBeaconGroups() {
         return beaconGroups;
     }
 
-    public void setBeaconGroups(List<BeaconGroup> beaconGroups) {
+    public void setBeaconGroups(Set<BeaconGroup> beaconGroups) {
         this.beaconGroups = beaconGroups;
     }
 
     public void addBeaconGroup(BeaconGroup beaconGroup) {
         this.beaconGroups.add(beaconGroup);
+//        beaconGroup.setProject(this);
     }
     /*
      * END: Project 'beacon groups list' attribute

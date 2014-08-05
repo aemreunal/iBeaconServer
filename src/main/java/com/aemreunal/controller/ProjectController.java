@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionSystemException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
@@ -143,7 +142,6 @@ public class ProjectController {
      *
      * @return The status of deletion action
      */
-    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{projectId}", produces = "application/json")
     public ResponseEntity<Project> deleteProject(
         @PathVariable Long projectId,
