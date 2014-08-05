@@ -3,6 +3,7 @@ package com.aemreunal.repository.beaconGroup;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import com.aemreunal.domain.BeaconGroup;
+import com.aemreunal.domain.Project;
 
 /*
  **************************
@@ -22,5 +23,5 @@ import com.aemreunal.domain.BeaconGroup;
 
 // extends CrudRepository<Object type, Object ID type>
 public interface BeaconGroupRepository extends CrudRepository<BeaconGroup, Long>, JpaSpecificationExecutor {
-
+    BeaconGroup findByBeaconGroupIdAndProject(Long beaconGroupId, Project project);
 }
