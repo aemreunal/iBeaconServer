@@ -9,7 +9,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Project;
 import com.aemreunal.repository.project.ProjectRepository;
-import com.aemreunal.repository.project.ProjectSpecifications;
+import com.aemreunal.repository.project.ProjectSpecs;
 
 /*
  **************************
@@ -91,7 +91,7 @@ public class ProjectService {
             System.out.println("Finding projects with Project Name = \'" + projectName + "\' Owner Name = \'" + ownerName + "\' ownerID = \'" + ownerID + "\'");
         }
 
-        return projectRepository.findAll(ProjectSpecifications.projectWithSpecification(projectName, ownerName, ownerID));
+        return projectRepository.findAll(ProjectSpecs.projectWithSpecification(projectName, ownerName, ownerID));
     }
 
     /**

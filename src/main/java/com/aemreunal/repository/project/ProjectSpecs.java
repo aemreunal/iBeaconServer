@@ -24,7 +24,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import com.aemreunal.domain.Project;
 
-public class ProjectSpecifications {
+public class ProjectSpecs {
 
     /**
      * Creates the Project search specification from the given attributes
