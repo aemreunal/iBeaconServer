@@ -56,7 +56,7 @@ public class BeaconController {
         @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
         @RequestParam(value = "major", required = false, defaultValue = "") String major,
         @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
-
+        // First check if project exists
         Project project = projectService.findById(projectId);
         if (project == null) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
@@ -88,9 +88,8 @@ public class BeaconController {
 
         if (beacons.size() == 0) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
         }
+        return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
     }
 
     /**
@@ -138,7 +137,8 @@ public class BeaconController {
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Beacon> createBeaconInProject(
         @PathVariable Long projectId,
-        @RequestBody Beacon restBeacon, UriComponentsBuilder builder) {
+        @RequestBody Beacon restBeacon,
+        UriComponentsBuilder builder) {
 
         Project project = projectService.findById(projectId);
         if (project == null) {
