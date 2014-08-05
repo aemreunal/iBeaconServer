@@ -24,6 +24,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  ***************************
  */
 
+/*
+ * List bug:
+ * https://hibernate.atlassian.net/browse/HHH-6776
+ * https://hibernate.atlassian.net/browse/HHH-5855
+ * http://vladmihalcea.com/2013/10/16/hibernate-facts-favoring-sets-vs-bags/
+ * https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/4.3/html/Hibernate_Reference_Guide/Persistent_Classes-Implementing_equals_and_hashCode.html
+ * http://stackoverflow.com/questions/7903800/hibernate-inserts-duplicates-into-a-onetomany-collection
+ */
+
 @Entity
 @Table(name = "projects")
 @ResponseBody
