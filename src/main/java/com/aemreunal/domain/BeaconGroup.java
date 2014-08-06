@@ -111,10 +111,6 @@ public class BeaconGroup {
         return beacons;
     }
 
-    public void setBeacons(Set<Beacon> beacons) {
-        this.beacons = beacons;
-    }
-
     public void addBeacon(Beacon beacon) {
         this.beacons.add(beacon);
     }
