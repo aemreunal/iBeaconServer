@@ -49,6 +49,7 @@ public class Beacon extends ResourceSupport implements Serializable {
     @Column(name = "beacon_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     @OrderColumn
+    @Access(AccessType.PROPERTY)
     private Long beaconId;
 
     public Long getBeaconId() {
@@ -69,6 +70,7 @@ public class Beacon extends ResourceSupport implements Serializable {
      */
     @Column(name = "uuid", nullable = false, length = UUID_MAX_LENGTH)
     @Size(min = UUID_MAX_LENGTH, max = UUID_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String uuid = "";
 
     public String getUuid() {
@@ -89,6 +91,7 @@ public class Beacon extends ResourceSupport implements Serializable {
      */
     @Column(name = "major", nullable = false, length = MAJOR_MAX_LENGTH)
     @Size(min = MAJOR_MIN_LENGTH, max = MAJOR_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String major = "";
 
     public String getMajor() {
@@ -109,6 +112,7 @@ public class Beacon extends ResourceSupport implements Serializable {
      */
     @Column(name = "minor", nullable = false, length = MINOR_MAX_LENGTH)
     @Size(min = MINOR_MIN_LENGTH, max = MINOR_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String minor = "";
 
     public String getMinor() {
@@ -151,6 +155,7 @@ public class Beacon extends ResourceSupport implements Serializable {
         fetch = FetchType.LAZY,
         optional = true)
     @JsonIgnore
+    @Access(AccessType.PROPERTY)
     private BeaconGroup group;
 
     public BeaconGroup getGroup() {
@@ -162,17 +167,6 @@ public class Beacon extends ResourceSupport implements Serializable {
         CoreConfig.initLazily(group);
         this.group = group;
     }
-/*
-    @Basic(optional = false)
-    public Long getGroupId() {
-        BeaconGroup group = getGroup();
-        if(group == null) {
-            return null;
-        } else {
-            return group.getBeaconGroupId();
-        }
-    }
-*/
     /*
      * END: Beacon 'group' attribute
      *------------------------------------------------------------
@@ -186,6 +180,7 @@ public class Beacon extends ResourceSupport implements Serializable {
         fetch = FetchType.LAZY,
         optional = false)
     @JsonIgnore
+    @Access(AccessType.PROPERTY)
     private Project project;
 
     public Project getProject() {

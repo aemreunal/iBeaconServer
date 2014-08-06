@@ -121,7 +121,6 @@ public class BeaconController {
         if (beacon == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
-
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
 
