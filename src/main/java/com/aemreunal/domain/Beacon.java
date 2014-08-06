@@ -162,6 +162,17 @@ public class Beacon extends ResourceSupport implements Serializable {
         CoreConfig.initLazily(group);
         this.group = group;
     }
+/*
+    @Basic(optional = false)
+    public Long getGroupId() {
+        BeaconGroup group = getGroup();
+        if(group == null) {
+            return null;
+        } else {
+            return group.getBeaconGroupId();
+        }
+    }
+*/
     /*
      * END: Beacon 'group' attribute
      *------------------------------------------------------------
