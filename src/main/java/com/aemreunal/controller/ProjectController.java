@@ -48,7 +48,7 @@ public class ProjectController {
      *
      * @return All existing projects (Optionally, all that match the given criteria)
      */
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Project>> getAllProjects(
         @RequestParam(value = "name", required = false, defaultValue = "") String projectName,
         @RequestParam(value = "ownerName", required = false, defaultValue = "") String ownerName,
@@ -88,7 +88,7 @@ public class ProjectController {
      *
      * @return The project
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{projectId}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{projectId}", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Project> viewProject(@PathVariable Long projectId) {
         Project project = projectService.findById(projectId);
         if (project == null) {
