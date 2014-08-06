@@ -10,7 +10,6 @@ import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
-import com.aemreunal.repository.beacon.BeaconSpecs;
 import com.aemreunal.repository.beaconGroup.BeaconGroupRepository;
 import com.aemreunal.repository.beaconGroup.BeaconGroupSpecs;
 
@@ -150,7 +149,7 @@ public class BeaconGroupService {
      * @return Whether the beacon group belongs to the project
      */
     public boolean isMember(Long projectId, Long beaconGroupId) {
-        List<BeaconGroup> beaconGroups = beaconGroupRepository.findAll(BeaconSpecs.beaconExistsSpecification(projectId, beaconGroupId));
+        List<BeaconGroup> beaconGroups = beaconGroupRepository.findAll(BeaconGroupSpecs.beaconExistsSpecification(projectId, beaconGroupId));
         return beaconGroups.size() >= 1;
     }
 
