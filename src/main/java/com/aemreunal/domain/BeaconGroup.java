@@ -106,6 +106,8 @@ public class BeaconGroup {
     * Currently, Beacon is the owner of its relationship to BeaconGroup.
     * ManyToOne are (almost) always the owner side of a bidirectional relationship in the JPA spec
     *
+    * Should Beacon even know/care about which group(s) it belongs to?
+    *
     * Correct mapping: 2.2.5.3.1.1. Bidirectional
     * http://docs.jboss.org/hibernate/stable/annotations/reference/en/html/entity.html
     *
