@@ -42,6 +42,7 @@ public class BeaconGroup {
     @Column(name = "beacon_group_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     @OrderColumn
+    @Access(AccessType.PROPERTY)
     private Long beaconGroupId;
 
     public Long getBeaconGroupId() {
