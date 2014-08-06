@@ -241,6 +241,12 @@ public class Project extends ResourceSupport implements Serializable {
      */
     @Column(name = "project_secret", nullable = false, unique = false)
     @Size(min = SECRET_LENGTH, max = SECRET_LENGTH)
+    /*
+     * TODO JsonIgnore this and only show it once
+     * TODO add resetting secret
+     *
+     * @JsonIgnore
+     */
     private String projectSecret = "";
 
     public String getProjectSecret() {
