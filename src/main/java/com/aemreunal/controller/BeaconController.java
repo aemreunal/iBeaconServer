@@ -89,6 +89,7 @@ public class BeaconController {
      *
      * @return The list of beacons that match the given criteria
      */
+    @Transactional
     private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(Long projectId, String uuid, String major, String minor) {
         List<Beacon> beacons = beaconService.findBeaconsBySpecs(projectId, uuid, major, minor);
 
