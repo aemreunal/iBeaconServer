@@ -97,13 +97,24 @@ public class BeaconGroup {
     /*
      *------------------------------------------------------------
      * BEGIN: Beacon group 'beacon list' attribute
-     *
-     * Correct mapping: 2.2.5.3.1.1. Bidirectional
-     * http://docs.jboss.org/hibernate/stable/annotations/reference/en/html/entity.html
      */
     @OneToMany(targetEntity = Beacon.class,
-        mappedBy = "group",
-        fetch = FetchType.EAGER)
+               mappedBy = "group",
+               fetch = FetchType.EAGER)
+   /*
+    *
+    * Currently, Beacon is the owner of its relationship to BeaconGroup.
+    * ManyToOne are (almost) always the owner side of a bidirectional relationship in the JPA spec
+    *
+    * Correct mapping: 2.2.5.3.1.1. Bidirectional
+    * http://docs.jboss.org/hibernate/stable/annotations/reference/en/html/entity.html
+    *
+    @JoinTable(name="beacon_group_members",
+               joinColumns = @JoinColumn(name="beacon_group_id"),
+               inverseJoinColumns = @JoinColumn(name="beacon_id")
+    )
+    // TODO:XNYLXIWD determine who should own this relationship
+    */
     @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project", "creationDate" })
     private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
 
@@ -128,8 +139,8 @@ public class BeaconGroup {
      * BEGIN: Beacon group 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
-        fetch = FetchType.EAGER,
-        optional = false)
+               fetch = FetchType.EAGER,
+               optional = false)
     @JsonIgnoreProperties(value = { "name", "description", "beacons", "beaconGroups", "scenarios", "projectSecret", "creationDate" })
     private Project project;
 
@@ -176,7 +187,7 @@ public class BeaconGroup {
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof BeaconGroup)) {
+        if (!(obj instanceof BeaconGroup)) {
             return false;
         } else {
             return ((BeaconGroup) obj).getBeaconGroupId().equals(this.getBeaconGroupId());

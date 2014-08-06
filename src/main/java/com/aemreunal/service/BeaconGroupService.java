@@ -123,8 +123,11 @@ public class BeaconGroupService {
             System.out.println("Deleting beacon group with ID = \'" + beaconGroupId + "\'");
         }
         if (isMember(projectId, beaconGroupId)) {
-            // TODO is updating required?
-//            updateBeaconsInGroup(beaconGroupId);
+            /*
+             * Because beacons own the relationship to their beaconGroups, they must be updated first.
+             * For more info, refer to To-Do ID:XNYLXIWD
+             */
+            updateBeaconsInGroup(beaconGroupId);
             if (GlobalSettings.DEBUGGING) {
                 System.out.println("Project " + projectId + " has beacon group " + beaconGroupId + ", deleting.");
             }
