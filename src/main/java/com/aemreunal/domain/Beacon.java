@@ -7,7 +7,6 @@ import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.config.CoreConfig;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -29,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "beacons")
 @ResponseBody
-@JsonIgnoreProperties(value = { "links" })
+@JsonIgnoreProperties(value = { "links", "group", "project" })
 public class Beacon extends ResourceSupport implements Serializable {
     // UUID hex string (including dashes) is 36 characters long
     public static final int UUID_MAX_LENGTH = 36;
@@ -154,7 +153,6 @@ public class Beacon extends ResourceSupport implements Serializable {
     @ManyToOne(targetEntity = BeaconGroup.class,
         fetch = FetchType.LAZY,
         optional = true)
-    @JsonIgnore
     @Access(AccessType.PROPERTY)
     private BeaconGroup group;
 
@@ -179,7 +177,6 @@ public class Beacon extends ResourceSupport implements Serializable {
     @ManyToOne(targetEntity = Project.class,
         fetch = FetchType.LAZY,
         optional = false)
-    @JsonIgnore
     @Access(AccessType.PROPERTY)
     private Project project;
 

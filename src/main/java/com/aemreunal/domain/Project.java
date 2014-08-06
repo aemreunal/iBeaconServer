@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.config.CoreConfig;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -41,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "projects")
 @ResponseBody
-@JsonIgnoreProperties(value = { "links" })
+@JsonIgnoreProperties(value = { "links", "beacons", "beaconGroups", "projectSecret" })
 public class Project extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -162,7 +161,6 @@ public class Project extends ResourceSupport implements Serializable {
         mappedBy = "project",
         orphanRemoval = true,
         fetch = FetchType.LAZY)
-    @JsonIgnore
     /*
      * To eliminate duplicates without using Sets, use:
      * @Fetch(FetchMode.SUBSELECT)
@@ -193,7 +191,6 @@ public class Project extends ResourceSupport implements Serializable {
         mappedBy = "project",
         orphanRemoval = true,
         fetch = FetchType.LAZY)
-    @JsonIgnore
     @OrderBy(value = "beaconGroupId")
     private Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
 
@@ -245,7 +242,6 @@ public class Project extends ResourceSupport implements Serializable {
      * TODO JsonIgnore this and only show it once
      * TODO add resetting secret
      *
-     * @JsonIgnore
      */
     private String projectSecret = "";
 

@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.config.CoreConfig;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -29,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "beacon_groups")
 @ResponseBody
-@JsonIgnoreProperties(value = { "links" })
+@JsonIgnoreProperties(value = { "links", "beacons", "project" })
 public class BeaconGroup {
     public static final int NAME_MAX_LENGTH = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -101,9 +100,6 @@ public class BeaconGroup {
      *------------------------------------------------------------
      * BEGIN: Beacon group 'beacon list' attribute
      */
-    @OneToMany(targetEntity = Beacon.class,
-               mappedBy = "group",
-               fetch = FetchType.LAZY)
    /*
     *
     * Currently, Beacon is the owner of its relationship to BeaconGroup.
@@ -120,7 +116,10 @@ public class BeaconGroup {
     )
     // TODO:XNYLXIWD determine who should own this relationship
     */
-    @JsonIgnore
+    @OneToMany(targetEntity = Beacon.class,
+               mappedBy = "group",
+               fetch = FetchType.LAZY)
+    // TODO @JsonIgnoreProperties(value = {})
     private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
 
     public Set<Beacon> getBeacons() {
@@ -149,7 +148,7 @@ public class BeaconGroup {
     @ManyToOne(targetEntity = Project.class,
                optional = false,
                fetch = FetchType.LAZY)
-    @JsonIgnore
+    // TODO @JsonIgnoreProperties(value = {})
     private Project project;
 
     public Project getProject() {
