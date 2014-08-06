@@ -97,6 +97,9 @@ public class BeaconGroup {
     /*
      *------------------------------------------------------------
      * BEGIN: Beacon group 'beacon list' attribute
+     *
+     * Correct mapping: 2.2.5.3.1.1. Bidirectional
+     * http://docs.jboss.org/hibernate/stable/annotations/reference/en/html/entity.html
      */
     @OneToMany(targetEntity = Beacon.class,
         mappedBy = "group",
