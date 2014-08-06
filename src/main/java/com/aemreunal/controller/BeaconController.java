@@ -64,6 +64,13 @@ public class BeaconController {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
         }
 
+        /*
+        // TODO Lazy?
+        if(!Hibernate.isInitialized(project.getBeacons())) {
+            Hibernate.initialize(project.getBeacons());
+        }
+        */
+
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
             List<Beacon> beaconList = new ArrayList<Beacon>();
             for (Beacon beacon : project.getBeacons()) {

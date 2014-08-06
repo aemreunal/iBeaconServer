@@ -6,8 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.config.CoreConfig;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -148,31 +146,18 @@ public class Beacon extends ResourceSupport implements Serializable {
      * BEGIN: Beacon 'group' attribute
      */
     @ManyToOne(targetEntity = BeaconGroup.class,
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
         optional = true)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = { "name", "description", "beacons", "project", "creationDate" })
     private BeaconGroup group;
 
     public BeaconGroup getGroup() {
-        CoreConfig.initLazily(group);
         return group;
     }
 
     public void setGroup(BeaconGroup group) {
-        CoreConfig.initLazily(group);
         this.group = group;
     }
-/*
-    @Basic(optional = false)
-    public Long getGroupId() {
-        BeaconGroup group = getGroup();
-        if(group == null) {
-            return null;
-        } else {
-            return group.getBeaconGroupId();
-        }
-    }
-*/
     /*
      * END: Beacon 'group' attribute
      *------------------------------------------------------------
@@ -183,18 +168,16 @@ public class Beacon extends ResourceSupport implements Serializable {
      * BEGIN: Beacon 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
         optional = false)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = { "name", "description", "beacons", "beaconGroups", "scenarios", "projectSecret", "creationDate" })
     private Project project;
 
     public Project getProject() {
-        CoreConfig.initLazily(project);
         return project;
     }
 
     public void setProject(Project project) {
-        CoreConfig.initLazily(project);
         this.project = project;
     }
     /*

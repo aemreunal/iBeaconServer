@@ -9,8 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.config.CoreConfig;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -161,8 +159,8 @@ public class Project extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = Beacon.class,
         mappedBy = "project",
         orphanRemoval = true,
-        fetch = FetchType.LAZY)
-    @JsonIgnore
+        fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project", "creationDate" })
     /*
      * To eliminate duplicates without using Sets, use:
      * @Fetch(FetchMode.SUBSELECT)
@@ -172,12 +170,10 @@ public class Project extends ResourceSupport implements Serializable {
     private Set<Beacon> beacons = new LinkedHashSet<>();
 
     public Set<Beacon> getBeacons() {
-        CoreConfig.initLazily(beacons);
         return beacons;
     }
 
     public void addBeacon(Beacon beacon) {
-        CoreConfig.initLazily(beacons);
         this.beacons.add(beacon);
     }
     /*
@@ -192,18 +188,16 @@ public class Project extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = BeaconGroup.class,
         mappedBy = "project",
         orphanRemoval = true,
-        fetch = FetchType.LAZY)
-    @JsonIgnore
+        fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = { "name", "description", "beacons", "project", "creationDate" })
     @OrderBy(value = "beaconGroupId")
     private Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
 
     public Set<BeaconGroup> getBeaconGroups() {
-        CoreConfig.initLazily(beaconGroups);
         return beaconGroups;
     }
 
     public void addBeaconGroup(BeaconGroup beaconGroup) {
-        CoreConfig.initLazily(beaconGroups);
         this.beaconGroups.add(beaconGroup);
     }
     /*
