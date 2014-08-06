@@ -2,6 +2,7 @@ package com.aemreunal.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;
+import org.hibernate.Hibernate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -75,5 +76,11 @@ public class CoreConfig {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
+    }
+
+    public static void initLazily(Object proxy) {
+        if(!Hibernate.isInitialized(proxy)) {
+            Hibernate.initialize(proxy);
+        }
     }
 }

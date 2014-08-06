@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.aemreunal.config.CoreConfig;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -100,7 +102,7 @@ public class BeaconGroup {
      */
     @OneToMany(targetEntity = Beacon.class,
                mappedBy = "group",
-               fetch = FetchType.EAGER)
+               fetch = FetchType.LAZY)
    /*
     *
     * Currently, Beacon is the owner of its relationship to BeaconGroup.
@@ -117,18 +119,21 @@ public class BeaconGroup {
     )
     // TODO:XNYLXIWD determine who should own this relationship
     */
-    @JsonIgnoreProperties(value = { "uuid", "major", "minor", "description", "group", "project", "creationDate" })
+    @JsonIgnore
     private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
 
     public Set<Beacon> getBeacons() {
+        CoreConfig.initLazily(beacons);
         return beacons;
     }
 
     public void addBeacon(Beacon beacon) {
+        CoreConfig.initLazily(beacons);
         this.beacons.add(beacon);
     }
 
     public void removeBeacon(Beacon beacon) {
+        CoreConfig.initLazily(beacons);
         this.beacons.remove(beacon);
     }
     /*
@@ -141,16 +146,18 @@ public class BeaconGroup {
      * BEGIN: Beacon group 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
-               fetch = FetchType.EAGER,
-               optional = false)
-    @JsonIgnoreProperties(value = { "name", "description", "beacons", "beaconGroups", "scenarios", "projectSecret", "creationDate" })
+               optional = false,
+               fetch = FetchType.LAZY)
+    @JsonIgnore
     private Project project;
 
     public Project getProject() {
+        CoreConfig.initLazily(project);
         return project;
     }
 
     public void setProject(Project project) {
+        CoreConfig.initLazily(project);
         this.project = project;
     }
     /*
