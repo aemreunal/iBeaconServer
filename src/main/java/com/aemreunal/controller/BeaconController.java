@@ -52,7 +52,7 @@ public class BeaconController {
      * @return The list of beacons that belong to the project with the specified ID
      */
     @Transactional
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Beacon>> viewBeaconsOfProject(
         @PathVariable Long projectId,
         @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
@@ -109,7 +109,7 @@ public class BeaconController {
      *
      * @return The beacon
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{beaconId}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{beaconId}", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Beacon> viewBeacon(
         @PathVariable Long projectId,
         @PathVariable Long beaconId) {
@@ -139,7 +139,7 @@ public class BeaconController {
      *
      * @return The created beacon
      */
-    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Beacon> createBeaconInProject(
         @PathVariable Long projectId,
         @RequestBody Beacon restBeacon,
