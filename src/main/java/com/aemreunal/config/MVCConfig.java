@@ -3,6 +3,7 @@ package com.aemreunal.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /*
  **************************
@@ -20,9 +21,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  **************************
  */
 
+/*
+ * http://www.petrikainulainen.net/programming/spring-framework/unit-testing-of-spring-mvc-controllers-configuration/
+ */
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "com.aemreunal.controller" })
-public class MVCConfig {
+public class MVCConfig extends WebMvcConfigurerAdapter {
     // TODO find out what this class is used for
+
 }
