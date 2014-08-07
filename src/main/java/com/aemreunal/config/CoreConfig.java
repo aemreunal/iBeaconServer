@@ -37,17 +37,20 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class CoreConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setDatabase(DatabaseSettings.DB_TYPE);
-        vendorAdapter.setGenerateDdl(true);
-        vendorAdapter.setShowSql(GlobalSettings.SHOW_SQL);
-
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setJpaVendorAdapter(vendorAdapter());
         factory.setPackagesToScan("com.aemreunal.domain");
         factory.setDataSource(dataSource());
         factory.setJpaProperties(jpaProperties());
         return factory;
+    }
+
+    private HibernateJpaVendorAdapter vendorAdapter() {
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setDatabase(DatabaseSettings.DB_TYPE);
+        vendorAdapter.setGenerateDdl(true);
+        vendorAdapter.setShowSql(GlobalSettings.SHOW_SQL);
+        return vendorAdapter;
     }
 
     @Bean
@@ -57,7 +60,6 @@ public class CoreConfig {
         dataSource.setUrl(DatabaseSettings.DB_URL);
         dataSource.setUsername(DatabaseSettings.DB_USERNAME);
         dataSource.setPassword(DatabaseSettings.DB_PASSWORD);
-
         return dataSource;
     }
 
@@ -67,7 +69,6 @@ public class CoreConfig {
         properties.put("hibernate.show_sql", GlobalSettings.SHOW_SQL_PROPERTY);
         properties.put("hibernate.format_sql", GlobalSettings.FORMAT_SQL_PROPERTY);
         properties.put("hibernate.hbm2ddl.auto", GlobalSettings.HBM2DDL_PROPERTY);
-//        properties.put("hibernate.event.merge.entity_copy_observer", GlobalSettings.ENTITY_COPY_OBSERVER_PROPERTY);
         return properties;
     }
 
