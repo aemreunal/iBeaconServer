@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.BeaconService;
 import com.aemreunal.service.ProjectService;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /*
  **************************
@@ -68,6 +71,7 @@ public class BeaconController {
             List<Beacon> beaconList = new ArrayList<Beacon>();
             for (Beacon beacon : project.getBeacons()) {
                 beaconList.add(beacon);
+                beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeacon(projectId, beacon.getBeaconId())).withSelfRel());
             }
             return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
         } else {
@@ -122,6 +126,8 @@ public class BeaconController {
         if (beacon == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
+        // For HATEOAS
+        beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeacon(projectId, beaconId)).withSelfRel());
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
 
