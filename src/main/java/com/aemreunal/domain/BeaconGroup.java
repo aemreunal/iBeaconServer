@@ -1,10 +1,12 @@
 package com.aemreunal.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.config.CoreConfig;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "beacon_groups")
 @ResponseBody
 @JsonIgnoreProperties(value = { "links", "beacons", "project" })
-public class BeaconGroup {
+public class BeaconGroup extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
 
