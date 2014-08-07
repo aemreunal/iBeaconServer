@@ -33,12 +33,6 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    @Autowired
-    private BeaconGroupService beaconGroupService;
-
-    @Autowired
-    private BeaconService beaconService;
-
     /**
      * Saves/updates the given project
      *
