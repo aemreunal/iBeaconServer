@@ -137,10 +137,6 @@ task copyToLib(type: Copy) {
     from configurations.runtime
 }
 
-build.dependsOn copyToLib
-tomcatRunWar.dependsOn.add(build)
-tomcatRunWar.contextPath = ''
-
 //export GRADLE_OPTS=-XX:MaxPermSize=256m
 
 // Tomcat configuration, via https://github.com/bmuschko/gradle-tomcat-plugin
@@ -157,5 +153,9 @@ task wrapper(type: Wrapper) {
 task listJars << {
     configurations.compile.each { File file -> println file.name }
 }
+
+build.dependsOn copyToLib
+//tomcatRunWar.dependsOn.add(build)
+tomcatRunWar.contextPath = ''
 
 println "Project is located in: " + projectDir
