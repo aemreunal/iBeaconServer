@@ -174,6 +174,10 @@ public class Project extends ResourceSupport implements Serializable {
         return beacons;
     }
 
+    public void setBeacons(Set<Beacon> beacons) {
+        this.beacons = beacons;
+    }
+
     public void addBeacon(Beacon beacon) {
         CoreConfig.initLazily(beacons);
         this.beacons.add(beacon);
@@ -197,6 +201,10 @@ public class Project extends ResourceSupport implements Serializable {
     public Set<BeaconGroup> getBeaconGroups() {
         CoreConfig.initLazily(beaconGroups);
         return beaconGroups;
+    }
+
+    public void setBeaconGroups(Set<BeaconGroup> beaconGroups) {
+        this.beaconGroups = beaconGroups;
     }
 
     public void addBeaconGroup(BeaconGroup beaconGroup) {
@@ -277,6 +285,5 @@ public class Project extends ResourceSupport implements Serializable {
             return ((Project) obj).getProjectId().equals(this.getProjectId());
         }
     }
-
 }
 
