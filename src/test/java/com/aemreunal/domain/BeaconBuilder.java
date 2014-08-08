@@ -17,6 +17,7 @@ package com.aemreunal.domain;
  */
 
 import java.util.Date;
+import javax.json.JsonObject;
 
 public class BeaconBuilder {
     private Beacon beacon;
@@ -62,6 +63,15 @@ public class BeaconBuilder {
 
     public BeaconBuilder withCreationDate(Date creationDate) {
         this.beacon.setCreationDate(creationDate);
+        return this;
+    }
+
+    public BeaconBuilder withJson(JsonObject beaconJson) {
+        this.beacon.setUuid(beaconJson.getString("uuid"));
+        this.beacon.setMajor(beaconJson.getString("major"));
+        this.beacon.setMinor(beaconJson.getString("minor"));
+        this.beacon.setDescription(beaconJson.getString("description"));
+        this.beacon.setCreationDate(new Date());
         return this;
     }
 
