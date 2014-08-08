@@ -40,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "projects")
 @ResponseBody
-@JsonIgnoreProperties(value = { "links", "beacons", "beaconGroups", "projectSecret" })
+@JsonIgnoreProperties(value = { "beacons", "beaconGroups", "projectSecret" })
 public class Project extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
