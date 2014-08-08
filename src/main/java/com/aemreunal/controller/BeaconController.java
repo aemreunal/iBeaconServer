@@ -158,9 +158,9 @@ public class BeaconController {
 
         restBeacon.setProject(project);
 
-        Beacon newBeacon;
+        Beacon savedBeacon;
         try {
-            newBeacon = beaconService.save(restBeacon);
+            savedBeacon = beaconService.save(restBeacon);
         } catch (ConstraintViolationException | TransactionSystemException e) {
             if (GlobalSettings.DEBUGGING) {
                 System.err.println("Unable to save beacon! Constraint violation detected!");
@@ -169,15 +169,15 @@ public class BeaconController {
         }
 
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved beacon with UUID = \'" + newBeacon.getUuid() +
-                "\' major = \'" + newBeacon.getMajor() +
-                "\' minor = \'" + newBeacon.getMinor() +
+            System.out.println("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
+                "\' major = \'" + savedBeacon.getMajor() +
+                "\' minor = \'" + savedBeacon.getMinor() +
                 "\' in project with ID = \'" + projectId + "\'");
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/Beacon/{id}").buildAndExpand(newBeacon.getBeaconId().toString()).toUri());
-        return new ResponseEntity<Beacon>(newBeacon, headers, HttpStatus.CREATED);
+        headers.setLocation(builder.path("/Beacon/{id}").buildAndExpand(savedBeacon.getBeaconId().toString()).toUri());
+        return new ResponseEntity<Beacon>(savedBeacon, headers, HttpStatus.CREATED);
     }
 
     /**
