@@ -155,7 +155,10 @@ task listJars << {
 }
 
 build.dependsOn copyToLib
-//tomcatRunWar.dependsOn.add(build)
+
+// To run without testing, execute command:
+// ./gradlew tomcatRunWar -x test -x compileTestJava
+tomcatRunWar.dependsOn.add(build)
 tomcatRunWar.contextPath = ''
 
 println "Project is located in: " + projectDir
