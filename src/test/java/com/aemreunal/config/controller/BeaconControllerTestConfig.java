@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.aemreunal.controller.BeaconController;
+import com.aemreunal.service.BeaconService;
 
 @Configuration
 @EnableWebMvc
@@ -35,7 +36,12 @@ public class BeaconControllerTestConfig {
                                                                         Charset.forName("utf8"));
 
     @Bean
-    public BeaconController projectController() {
+    public BeaconController beaconController() {
         return new BeaconController();
+    }
+
+    @Bean
+    public BeaconService beaconService() {
+        return new BeaconService();
     }
 }
