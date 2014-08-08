@@ -14,6 +14,9 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.ProjectService;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 /*
  **************************
  * Copyright (c) 2014     *
@@ -100,8 +103,8 @@ public class ProjectController {
     /**
      * Create a new project
      *
-     * @param project
      *     The project as JSON object
+     * @param projectJson
      * @param builder
      *     The URI builder for post-creation redirect
      *
@@ -109,11 +112,12 @@ public class ProjectController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Project> createProject(
-        @RequestBody Project project,
+        @RequestBody Project projectJson,
         UriComponentsBuilder builder) {
-        Project newProject;
+        Project savedProject;
         try {
-            newProject = projectService.save(project);
+            savedProject = projectService.save(projectJson);
+            projectService.save(addLinks(savedProject));
         } catch (ConstraintViolationException | TransactionSystemException e) {
             if (GlobalSettings.DEBUGGING) {
                 System.err.println("Unable to save project! Constraint violation detected!");
@@ -121,11 +125,18 @@ public class ProjectController {
             return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
         }
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved project with Name = \'" + newProject.getName() + "\' ID = \'" + newProject.getProjectId() + "\'");
+            System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/Project/{id}").buildAndExpand(newProject.getProjectId().toString()).toUri());
-        return new ResponseEntity<Project>(newProject, headers, HttpStatus.CREATED);
+        headers.setLocation(builder.path("/Project/{id}").buildAndExpand(savedProject.getProjectId().toString()).toUri());
+        return new ResponseEntity<Project>(savedProject, headers, HttpStatus.CREATED);
+    }
+
+    private Project addLinks(Project project) {
+        project.getLinks().add(linkTo(methodOn(ProjectController.class).viewProject(project.getProjectId())).withSelfRel());
+        project.getLinks().add(linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(project.getProjectId(), "", "", "")).withRel("beacons"));
+        project.getLinks().add(linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(project.getProjectId(), "")).withRel("groups"));
+        return project;
     }
 
     /**
