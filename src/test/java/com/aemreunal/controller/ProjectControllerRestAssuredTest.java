@@ -17,7 +17,9 @@ package com.aemreunal.controller;
  */
 
 /*
- * Rest Assured Doc: http://code.google.com/p/rest-assured/wiki/Usage#Static_imports
+ * https://code.google.com/p/rest-assured/
+ *
+ * Documentation: http://code.google.com/p/rest-assured/wiki/Usage
  */
 
 import org.junit.Before;
