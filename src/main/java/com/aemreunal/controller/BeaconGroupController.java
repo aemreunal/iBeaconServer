@@ -232,7 +232,7 @@ public class BeaconGroupController {
     }
 
     /**
-     * Delete beacon from the specified beacon group.
+     * Remove beacon from the specified beacon group.
      * <p/>
      * Can return 400 if beacon does not have a group.
      * <p/>
