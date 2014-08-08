@@ -66,12 +66,14 @@ public class BeaconControllerTest {
 
     private MockMvc realMvc;
 
+    private static final Long PROJECT_ID = (long) 1;
+
     @Before
     public void setUp() {
         this.realMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
     }
 
-    @Test
+    @Test(timeout = 2000)
     public void getProjects() throws Exception {
         List<Project> projects = projectService.findAll();
 
@@ -84,21 +86,20 @@ public class BeaconControllerTest {
         ;
     }
 
-    @Test
+    @Test(timeout = 2000)
     @Transactional
     public void checkBeaconsInProject1() throws Exception {
-        Long projectId = (long) 1;
-        Project project = projectService.findById(projectId);
+        Project project = projectService.findById(PROJECT_ID);
         Beacon[] beacons = project.getBeacons().toArray(new Beacon[1]);
 
-        realMvc.perform(get("/Project/{projectId}/Beacon", projectId).accept(MediaType.APPLICATION_JSON))
+        realMvc.perform(get("/Project/{projectId}/Beacon", PROJECT_ID).accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(content().contentType("application/json;charset=UTF-8"))
                .andExpect(jsonPath("$", hasSize(beacons.length)))
         ;
 
         for (int i = 0; i < beacons.length; i++) {
-            realMvc.perform(get("/Project/{projectId}/Beacon", projectId).accept(MediaType.APPLICATION_JSON))
+            realMvc.perform(get("/Project/{projectId}/Beacon", PROJECT_ID).accept(MediaType.APPLICATION_JSON))
                    .andExpect(status().isOk())
                    .andExpect(content().contentType("application/json;charset=UTF-8"))
                    .andExpect(jsonPath("$", hasSize(beacons.length)))
