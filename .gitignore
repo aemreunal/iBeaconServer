@@ -17,3 +17,5 @@ hibernate-log.txt
 src/main/java/com/aemreunal/config/DatabaseSettings.java
 
 hibernate-log.txt.1
+
+data/
