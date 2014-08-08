@@ -103,8 +103,8 @@ public class ProjectController {
     /**
      * Create a new project
      *
-     *     The project as JSON object
      * @param projectJson
+     *     The project as JSON object
      * @param builder
      *     The URI builder for post-creation redirect
      *
@@ -132,6 +132,16 @@ public class ProjectController {
         return new ResponseEntity<Project>(savedProject, headers, HttpStatus.CREATED);
     }
 
+    /**
+     * Adds the HATEOAS links to the project object. Object must be saved afterwards to
+     * ensure persistance of added links.
+     *
+     * @param project
+     *     Project to add the links to
+     *
+     * @return The project with links added
+     */
+    // TODO https://github.com/spring-projects/spring-hateoas#link-builder
     private Project addLinks(Project project) {
         project.getLinks().add(linkTo(methodOn(ProjectController.class).viewProject(project.getProjectId())).withSelfRel());
         project.getLinks().add(linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(project.getProjectId(), "", "", "")).withRel("beacons"));
