@@ -150,6 +150,11 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
     @ManyToOne(targetEntity = Project.class,
                optional = false,
                fetch = FetchType.LAZY)
+    // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
+    @JoinTable(name="projects_to_beacon_groups",
+               joinColumns = @JoinColumn(name="beacon_group_id"),
+               inverseJoinColumns = @JoinColumn(name="project_id")
+    )
     // TODO @JsonIgnoreProperties(value = {})
     private Project project;
 
