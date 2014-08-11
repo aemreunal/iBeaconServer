@@ -22,6 +22,7 @@ package com.aemreunal.controller;
  * Documentation: http://code.google.com/p/rest-assured/wiki/Usage
  */
 
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import com.jayway.restassured.RestAssured;
@@ -52,12 +53,16 @@ public class ProjectControllerRestAssuredTest {
     public void testGetProjects() {
         JsonPath response = given()
             .contentType(ContentType.JSON)
+            .log().ifValidationFails()
 
             .when()
             .get("/Project")
 
             .then()
-            .spec(this.responseSpec)
+            .log().ifValidationFails()
+            .statusCode(HttpStatus.SC_CREATED)
+            .contentType(ContentType.JSON)
+//            .spec(this.responseSpec)
 //            .body("$", arrayWithSize(4))
 
             .extract().body().jsonPath();
