@@ -948,7 +948,7 @@
     </object>
     <object type="LMREQUEST" id="z195">
         <attribute name="uuid" type="string">4F3625E9-1D93-4732-B53F-DA5EF0EE2EB3</attribute>
-        <attribute name="url" type="string">http://localhost:8080/Project/1/BeaconGroup/3/AddBeaconToGroup?beaconId=2</attribute>
+        <attribute name="url" type="string">http://localhost:8080/Project/1/BeaconGroup/1/AddBeaconToGroup?beaconId=2</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
