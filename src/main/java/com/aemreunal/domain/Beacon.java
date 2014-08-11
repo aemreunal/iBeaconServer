@@ -177,6 +177,11 @@ public class Beacon extends ResourceSupport implements Serializable {
     @ManyToOne(targetEntity = Project.class,
         fetch = FetchType.LAZY,
         optional = false)
+    // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
+    @JoinTable(name="projects_to_beacons",
+               joinColumns = @JoinColumn(name="beacon_id"),
+               inverseJoinColumns = @JoinColumn(name="project_id")
+    )
     @Access(AccessType.PROPERTY)
     private Project project;
 
