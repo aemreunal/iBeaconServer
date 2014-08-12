@@ -73,6 +73,7 @@ public class ProjectControllerRestAssuredTest {
 
     @Test
     public void testDumpDB() {
+        // http://www.dbunit.org/howto.html
         DatabaseHelper dbHelper = new DatabaseHelper();
         assertTrue("Failure to dump database!", dbHelper.extractFromDB());
     }
