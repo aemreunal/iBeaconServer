@@ -25,6 +25,7 @@ package com.aemreunal.controller;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
+import com.aemreunal.helper.DatabaseHelper;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.ResponseSpecBuilder;
 import com.jayway.restassured.filter.log.LogDetail;
@@ -68,5 +69,11 @@ public class ProjectControllerRestAssuredTest {
             .extract().body().jsonPath();
 
         assertTrue(response.getList("").size() == 4);
+    }
+
+    @Test
+    public void testDumpDB() {
+        DatabaseHelper dbHelper = new DatabaseHelper();
+        assertTrue("Failure to dump database!", dbHelper.extractFromDB());
     }
 }
