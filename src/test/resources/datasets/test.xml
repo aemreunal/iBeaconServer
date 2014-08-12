@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <beacon_groups beacon_group_id="1" creation_date="2014-08-12 15:51:50.0" description="This is the first test beacon group." name="Group1"/>
+  <beacon_groups beacon_group_id="2" creation_date="2014-08-12 15:51:50.0" description="This is the second test beacon group." name="Group2"/>
+  <beacon_groups beacon_group_id="3" creation_date="2014-08-12 15:51:50.0" description="This is the third test beacon group." name="G3"/>
+  <beacon_groups beacon_group_id="4" creation_date="2014-08-12 15:51:50.0" description="Believe it or not, this is the fourth test beacon group." name="What the group?"/>
+  <beacon_groups beacon_group_id="5" creation_date="2014-08-12 15:51:50.0" description="This is the first test beacon group." name="Group1"/>
+  <beacon_groups beacon_group_id="6" creation_date="2014-08-12 15:51:50.0" description="This is the second test beacon group." name="Group2"/>
+  <beacon_groups beacon_group_id="7" creation_date="2014-08-12 15:51:50.0" description="This is the third test beacon group." name="G3"/>
+  <beacon_groups beacon_group_id="8" creation_date="2014-08-12 15:51:50.0" description="Believe it or not, this is the fourth test beacon group." name="What the group?"/>
+  <beacon_groups_to_beacons beacon_group_id="1" beacon_id="1"/>
+  <beacon_groups_to_beacons beacon_group_id="1" beacon_id="2"/>
+  <beacon_groups_to_beacons beacon_group_id="2" beacon_id="3"/>
+  <beacon_groups_to_beacons beacon_group_id="5" beacon_id="5"/>
+  <beacon_groups_to_beacons beacon_group_id="5" beacon_id="6"/>
+  <beacon_groups_to_beacons beacon_group_id="6" beacon_id="7"/>
+  <beacons beacon_id="1" creation_date="2014-08-12 15:51:43.0" description="Nesciunt optio suscipit excepturi esse quo doloremque. Dolor doloribus tenetur quia error maxime qui qui quo. Consequatur itaque architecto sint vel consequatur perspiciatis." major="1" minor="0" uuid="5FE05684-3DE7-3837-BD74-9E3F90BBEC93"/>
+  <beacons beacon_id="2" creation_date="2014-08-12 15:51:43.0" description="Lorem ipsum." major="0" minor="1" uuid="5FE05684-3DE7-3837-BD74-9E3F90BBEC93"/>
+  <beacons beacon_id="3" creation_date="2014-08-12 15:51:43.0" description="Cogito, ergo sum." major="1" minor="0" uuid="6FE05684-3DE7-3837-BD74-9E3F90BBEC93"/>
+  <beacons beacon_id="4" creation_date="2014-08-12 15:51:43.0" description="Nesciunt optio?" major="1" minor="0" uuid="9FE05684-3DE7-3837-BD74-9E3F90BBEC93"/>
+  <beacons beacon_id="5" creation_date="2014-08-12 15:51:43.0" description="Nesciunt optio suscipit excepturi esse quo doloremque. Dolor doloribus tenetur quia error maxime qui qui quo. Consequatur itaque architecto sint vel consequatur perspiciatis." major="1" minor="0" uuid="5FE05684-3DE7-3837-BD74-9E3F90BBEC93"/>
+  <beacons beacon_id="6" creation_date="2014-08-12 15:51:43.0" description="Lorem ipsum." major="0" minor="1" uuid="5FE05684-3DE7-3837-BD74-9E3F90BBEC93"/>
+  <beacons beacon_id="7" creation_date="2014-08-12 15:51:43.0" description="Cogito, ergo sum." major="1" minor="0" uuid="6FE05684-3DE7-3837-BD74-9E3F90BBEC93"/>
+  <beacons beacon_id="8" creation_date="2014-08-12 15:51:43.0" description="Nesciunt optio?" major="1" minor="0" uuid="9FE05684-3DE7-3837-BD74-9E3F90BBEC93"/>
+  <projects project_id="1" creation_date="2014-08-12 15:51:38.0" description="This is the first test project." name="Hello world project 1" project_secret="ffdbb0e0-e66f-4e39-a131-3ebbe3e53397"/>
+  <projects project_id="2" creation_date="2014-08-12 15:51:39.0" description="This is the second test project." name="Hello World project 2" project_secret="c1c85522-b2fe-499f-9295-98e2d6178ded"/>
+  <projects project_id="3" creation_date="2014-08-12 15:51:39.0" description="This is the third test project." name="Hello world 3" project_secret="0c7ec1f6-e20e-42c0-a43f-ff4bd3be6d12"/>
+  <projects project_id="4" creation_date="2014-08-12 15:51:39.0" description="This is just a test project." name="Test Project" project_secret="8140a9c7-3b2b-415a-9075-a0114b242b3f"/>
+  <projects_to_beacon_groups project_id="1" beacon_group_id="1"/>
+  <projects_to_beacon_groups project_id="1" beacon_group_id="2"/>
+  <projects_to_beacon_groups project_id="1" beacon_group_id="3"/>
+  <projects_to_beacon_groups project_id="1" beacon_group_id="4"/>
+  <projects_to_beacon_groups project_id="2" beacon_group_id="5"/>
+  <projects_to_beacon_groups project_id="2" beacon_group_id="6"/>
+  <projects_to_beacon_groups project_id="2" beacon_group_id="7"/>
+  <projects_to_beacon_groups project_id="2" beacon_group_id="8"/>
+  <projects_to_beacons project_id="1" beacon_id="1"/>
+  <projects_to_beacons project_id="1" beacon_id="2"/>
+  <projects_to_beacons project_id="1" beacon_id="3"/>
+  <projects_to_beacons project_id="1" beacon_id="4"/>
+  <projects_to_beacons project_id="2" beacon_id="5"/>
+  <projects_to_beacons project_id="2" beacon_id="6"/>
+  <projects_to_beacons project_id="2" beacon_id="7"/>
+  <projects_to_beacons project_id="2" beacon_id="8"/>
+  <scenarios/>
+  <users/>
+</dataset>
