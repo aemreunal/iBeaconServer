@@ -10,4 +10,4 @@ fi
 ACCOUNT=root
 
 echo "'$ACCOUNT' account password required."
-mysqldump -u $ACCOUNT -p --databases ibeacon_db --single-transaction --master-data > ../dbDumps/ibeacon_db-$1.sql
+mysqldump -u $ACCOUNT -p --databases ibeacon_db --single-transaction --master-data > ibeacon_db-$1.sql
