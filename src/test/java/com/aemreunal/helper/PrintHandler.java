@@ -1,4 +1,4 @@
-package com.aemreunal.helper.handler;
+package com.aemreunal.helper;
 
 /*
  ***************************

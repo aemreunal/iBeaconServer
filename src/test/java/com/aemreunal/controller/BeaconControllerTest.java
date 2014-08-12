@@ -24,7 +24,7 @@ import com.aemreunal.config.controller.ProjectControllerTestConfig;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.BeaconBuilder;
 import com.aemreunal.domain.Project;
-import com.aemreunal.helper.handler.PrintHandler;
+import com.aemreunal.helper.PrintHandler;
 import com.aemreunal.service.BeaconService;
 import com.aemreunal.service.ProjectService;
 
