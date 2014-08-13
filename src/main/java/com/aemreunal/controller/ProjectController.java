@@ -110,7 +110,7 @@ public class ProjectController {
      *
      * @return The created project
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Project> createProject(
         @RequestBody Project projectJson,
         UriComponentsBuilder builder) {
