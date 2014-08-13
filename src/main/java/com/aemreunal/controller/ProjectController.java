@@ -75,6 +75,12 @@ public class ProjectController {
      *
      * @return The list of projects that match the given criteria
      */
+    // TODO Fix project criteria search
+    // TODO Fix project criteria search
+    // TODO Fix project criteria search
+    // TODO Fix project criteria search
+    // TODO Fix project criteria search
+    // TODO Fix project criteria search
     private ResponseEntity<List<Project>> getProjectsWithMatchingCriteria(String projectName, String ownerName, Long ownerId) {
         List<Project> projects = projectService.findProjectsBySpecs(projectName, ownerName, ownerId);
         if (projects.size() == 0) {
