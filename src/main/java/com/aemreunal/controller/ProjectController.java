@@ -162,7 +162,7 @@ public class ProjectController {
      *
      * @return The status of deletion action
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{projectId}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{projectId}")
     public ResponseEntity<Project> deleteProject(
         @PathVariable Long projectId,
         @RequestParam(value = "confirm", required = true) String confirmation) {
