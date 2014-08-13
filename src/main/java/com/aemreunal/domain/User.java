@@ -62,6 +62,7 @@ public class User extends ResourceSupport implements Serializable {
      */
     @Column(name = "username", nullable = false, length = USERNAME_MAX_LENGTH, unique = true)
     // TODO check if user with that username exists
+    // TODO check if username starts with a letter
     @Size(min = USERNAME_MIN_LENGTH, max = USERNAME_MAX_LENGTH)
     private String username = "";
 
