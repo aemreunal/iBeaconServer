@@ -21,5 +21,5 @@ import org.springframework.data.repository.CrudRepository;
 import com.aemreunal.domain.User;
 
 public interface UserRepo extends CrudRepository<User, Long>, JpaSpecificationExecutor {
-//    Beacon findByBeaconIdAndProject(Long beaconId, Project project);
+    User findByUsername(String username);
 }
