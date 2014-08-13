@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Project;
-import com.aemreunal.repository.project.ProjectRepository;
+import com.aemreunal.repository.project.ProjectRepo;
 import com.aemreunal.repository.project.ProjectSpecs;
 
 /*
@@ -31,7 +31,7 @@ import com.aemreunal.repository.project.ProjectSpecs;
 @Service
 public class ProjectService {
     @Autowired
-    private ProjectRepository projectRepository;
+    private ProjectRepo projectRepo;
 
     /**
      * Saves/updates the given project
@@ -46,7 +46,7 @@ public class ProjectService {
             System.out.println("Saving project with ID = \'" + project.getProjectId() + "\'");
         }
 
-        return projectRepository.save(project);
+        return projectRepo.save(project);
     }
 
     /**
@@ -61,7 +61,7 @@ public class ProjectService {
 
         List<Project> projectList = new ArrayList<Project>();
 
-        for (Project project : projectRepository.findAll()) {
+        for (Project project : projectRepo.findAll()) {
             projectList.add(project);
         }
 
@@ -85,7 +85,7 @@ public class ProjectService {
             System.out.println("Finding projects with Project Name = \'" + projectName + "\' Owner Name = \'" + ownerName + "\' ownerID = \'" + ownerID + "\'");
         }
 
-        return projectRepository.findAll(ProjectSpecs.projectWithSpecification(projectName, ownerName, ownerID));
+        return projectRepo.findAll(ProjectSpecs.projectWithSpecification(projectName, ownerName, ownerID));
     }
 
     /**
@@ -101,7 +101,7 @@ public class ProjectService {
             System.out.println("Finding project with ID = \'" + id + "\'");
         }
 
-        return projectRepository.findOne(id);
+        return projectRepo.findOne(id);
     }
 
     /**
@@ -117,8 +117,8 @@ public class ProjectService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting project with ID = \'" + id + "\'");
         }
-        if (projectRepository.exists(id)) {
-            projectRepository.delete(id);
+        if (projectRepo.exists(id)) {
+            projectRepo.delete(id);
             return DeleteResponse.DELETED;
         } else {
             return DeleteResponse.NOT_FOUND;

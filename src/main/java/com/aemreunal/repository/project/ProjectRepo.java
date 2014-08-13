@@ -20,6 +20,6 @@ import com.aemreunal.domain.Project;
  **************************
  */
 
-public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpecificationExecutor {
+public interface ProjectRepo extends CrudRepository<Project, Long>, JpaSpecificationExecutor {
 
 }
