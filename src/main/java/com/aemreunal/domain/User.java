@@ -60,7 +60,8 @@ public class User extends ResourceSupport implements Serializable {
      * BEGIN: User 'username' attribute
      * This is the username of the user, used for authentication
      */
-    @Column(name = "username", nullable = false, length = USERNAME_MAX_LENGTH)
+    @Column(name = "username", nullable = false, length = USERNAME_MAX_LENGTH, unique = true)
+    // TODO check if user with that username exists
     @Size(min = USERNAME_MIN_LENGTH, max = USERNAME_MAX_LENGTH)
     private String username = "";
 
@@ -80,6 +81,7 @@ public class User extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: User 'password' attribute
      * This is the BCrypt hashed password of the user
+     * org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
      */
     @Column(name = "password", nullable = false)
     private String password = "";
