@@ -8,7 +8,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
-import com.aemreunal.repository.beacon.BeaconRepository;
+import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
 
 /*
@@ -31,7 +31,7 @@ import com.aemreunal.repository.beacon.BeaconSpecs;
 @Service
 public class BeaconService {
     @Autowired
-    private BeaconRepository beaconRepository;
+    private BeaconRepo beaconRepo;
 
     /**
      * Saves/updates the given beacon
@@ -46,7 +46,7 @@ public class BeaconService {
             System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         }
 
-        return beaconRepository.save(beacon);
+        return beaconRepo.save(beacon);
     }
 
     /**
@@ -68,7 +68,7 @@ public class BeaconService {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
         }
 
-        return beaconRepository.findAll(BeaconSpecs.beaconWithSpecification(projectId, uuid, major, minor));
+        return beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(projectId, uuid, major, minor));
     }
 
     /**
@@ -86,7 +86,7 @@ public class BeaconService {
             System.out.println("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + project.getProjectId() + "\'");
         }
 
-        return beaconRepository.findByBeaconIdAndProject(beaconId, project);
+        return beaconRepo.findByBeaconIdAndProject(beaconId, project);
     }
 
     /**
@@ -108,7 +108,7 @@ public class BeaconService {
             if (GlobalSettings.DEBUGGING) {
                 System.out.println("Project " + projectId + " has beacon " + beaconId + ", deleting.");
             }
-            beaconRepository.delete(beaconId);
+            beaconRepo.delete(beaconId);
             return DeleteResponse.DELETED;
         } else {
             if (GlobalSettings.DEBUGGING) {
@@ -129,7 +129,7 @@ public class BeaconService {
      * @return Whether the beacon belongs to the project
      */
     public boolean isMember(Long projectId, Long beaconId) {
-        List<Beacon> beacons = beaconRepository.findAll(BeaconSpecs.beaconExistsSpecification(projectId, beaconId));
+        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconExistsSpecification(projectId, beaconId));
         return beacons.size() >= 1;
     }
 }

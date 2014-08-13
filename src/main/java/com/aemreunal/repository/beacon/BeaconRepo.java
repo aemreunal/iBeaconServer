@@ -22,6 +22,6 @@ import com.aemreunal.domain.Project;
  */
 
 // extends CrudRepository<Object type, Object ID type>
-public interface BeaconRepository extends CrudRepository<Beacon, Long>, JpaSpecificationExecutor {
+public interface BeaconRepo extends CrudRepository<Beacon, Long>, JpaSpecificationExecutor {
     Beacon findByBeaconIdAndProject(Long beaconId, Project project);
 }
