@@ -98,4 +98,26 @@ public class UserService {
             return DeleteResponse.NOT_FOUND;
         }
     }
+
+    /**
+     * Deletes the user with the given username and deletes everything (projects, etc.)
+     * associated with the user
+     *
+     * @param username
+     *     The username of the user to delete
+     *
+     * @return Whether the user was deleted or not
+     */
+    public DeleteResponse delete(String username) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Deleting user with username = \'" + username + "\'");
+        }
+        User userToDelete = userRepo.findByUsername(username);
+        if (userToDelete != null) {
+            userRepo.delete(userToDelete);
+            return DeleteResponse.DELETED;
+        } else {
+            return DeleteResponse.NOT_FOUND;
+        }
+    }
 }
