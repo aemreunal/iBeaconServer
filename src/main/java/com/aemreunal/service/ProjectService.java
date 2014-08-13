@@ -106,7 +106,7 @@ public class ProjectService {
 
     /**
      * Deletes the project with the given ID and deletes the beacons and beacon groups in
-     * the group.
+     * the project
      *
      * @param id
      *     The ID of the project to delete
