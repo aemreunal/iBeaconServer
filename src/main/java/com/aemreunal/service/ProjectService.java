@@ -50,7 +50,8 @@ public class ProjectService {
     }
 
     /**
-     * Returns the list of all the projects
+     * Returns the list of all the projects. Will only work in debug mode. Otherwise, will
+     * only return an empty list.
      *
      * @return A list of all projects
      */
@@ -61,8 +62,10 @@ public class ProjectService {
 
         List<Project> projectList = new ArrayList<Project>();
 
-        for (Project project : projectRepo.findAll()) {
-            projectList.add(project);
+        if (GlobalSettings.DEBUGGING) {
+            for (Project project : projectRepo.findAll()) {
+                projectList.add(project);
+            }
         }
 
         return projectList;
