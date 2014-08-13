@@ -163,6 +163,24 @@ task listJars << {
     configurations.compile.each { File file -> println file.name }
 }
 
+/*
+task setProductionConfig(type: Copy) {
+    from "src/main/java/com/aemreunal/config"
+    into "../."
+    rename { String fileName ->
+        fileName.replace("Production", "CoreConfig")
+    }
+}
+
+task setTestConfig(type: Copy) {
+    from "src/main/java/com/aemreunal/config"
+    into "../."
+    rename { String fileName ->
+        fileName.replace("Test", "CoreConfig")
+    }
+}
+*/
+
 build.dependsOn copyToLib
 
 // To run without testing, execute command:
