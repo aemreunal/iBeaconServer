@@ -62,11 +62,11 @@ public class ProjectService {
 
         List<Project> projectList = new ArrayList<Project>();
 
-        if (GlobalSettings.DEBUGGING) {
-            for (Project project : projectRepo.findAll()) {
-                projectList.add(project);
-            }
+// TODO        if (GlobalSettings.DEBUGGING) {
+        for (Project project : projectRepo.findAll()) {
+            projectList.add(project);
         }
+//        }
 
         return projectList;
     }
@@ -88,7 +88,13 @@ public class ProjectService {
             System.out.println("Finding projects with Project Name = \'" + projectName + "\' Owner Name = \'" + ownerName + "\' ownerID = \'" + ownerID + "\'");
         }
 
-        return projectRepo.findAll(ProjectSpecs.projectWithSpecification(projectName, ownerName, ownerID));
+        List<Project> projectList = new ArrayList<Project>();
+
+        for (Object projectObject : projectRepo.findAll(ProjectSpecs.projectWithSpecification(projectName, ownerName, ownerID))) {
+            projectList.add((Project) projectObject);
+        }
+
+        return projectList;
     }
 
     /**
