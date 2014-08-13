@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "users")
 @ResponseBody
-@JsonIgnoreProperties(value = { "projects" })
+@JsonIgnoreProperties(value = { "password", "projects" })
 public class User extends ResourceSupport implements Serializable {
     public static final int USERNAME_MIN_LENGTH = 4;
     public static final int USERNAME_MAX_LENGTH = 50;
@@ -123,4 +123,16 @@ public class User extends ResourceSupport implements Serializable {
      * END: User 'projects' attribute
      *------------------------------------------------------------
      */
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof User)) {
+            return false;
+        } else {
+            User otherUser = (User) obj;
+            boolean idsAreEqual = this.getUserId() == otherUser.getUserId();
+            boolean usernamesAreEqual = this.getUsername().equals(otherUser.getUsername());
+            return idsAreEqual && usernamesAreEqual;
+        }
+    }
 }

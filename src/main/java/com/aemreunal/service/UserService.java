@@ -1,6 +1,7 @@
 package com.aemreunal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
@@ -30,6 +31,9 @@ public class UserService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     /**
      * Saves/updates the given user
      *
@@ -42,7 +46,11 @@ public class UserService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving user with ID = \'" + user.getUserId() + "\'");
         }
-
+        // Encrypt the password if a new user is persisted.
+        // TODO check possible password re-hashing bug when user is updated
+        if (user.getUserId() == null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return userRepo.save(user);
     }
 
@@ -76,6 +84,47 @@ public class UserService {
         }
 
         return userRepo.findByUsername(username);
+    }
+
+    /**
+     * Check whether the given username is already taken or not
+     *
+     * @param username
+     *     The username of the user to check
+     *
+     * @return True if username is taken, false otherwise
+     */
+    public boolean isUsernameTaken(String username) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Checking whether username = \'" + username + "\' is taken");
+        }
+
+        return userRepo.findByUsername(username) != null;
+    }
+
+    /**
+     * Checks whether the specified user exists and if so, authenticates this user. If the
+     * authentication fails either because the user is not found or the password is
+     * incorrect, 'null' will be returned.
+     *
+     * @param username
+     *     The username of the user to authenticate
+     * @param rawPassword
+     *     The raw password of the user to authenticate
+     *
+     * @return If authentication is successful, the user is returned
+     */
+    // TODO Should we specify whether the username or password was wrong or not? Would it cause a possible security breach?
+    public User authenticateAndFindUser(String username, String rawPassword) {
+        User user = findByUsername(username);
+        if (user == null) {
+            return null;
+        }
+        if (passwordEncoder.matches(rawPassword, user.getPassword())) {
+            return user;
+        } else {
+            return null;
+        }
     }
 
     /**
