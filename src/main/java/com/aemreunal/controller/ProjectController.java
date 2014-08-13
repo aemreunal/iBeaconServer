@@ -117,7 +117,7 @@ public class ProjectController {
         Project savedProject;
         try {
             savedProject = projectService.save(projectJson);
-            projectService.save(addLinks(savedProject));
+//            projectService.save(addLinks(savedProject));
         } catch (ConstraintViolationException | TransactionSystemException e) {
             if (GlobalSettings.DEBUGGING) {
                 System.err.println("Unable to save project! Constraint violation detected!");
