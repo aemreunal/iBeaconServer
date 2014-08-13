@@ -92,7 +92,7 @@ public class ProjectController {
      * @return The project
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{projectId}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Project> viewProject(@PathVariable Long projectId) {
+    public ResponseEntity<Project> getProjectById(@PathVariable Long projectId) {
         Project project = projectService.findById(projectId);
         if (project == null) {
             return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
@@ -143,7 +143,7 @@ public class ProjectController {
      */
     // TODO https://github.com/spring-projects/spring-hateoas#link-builder
     private Project addLinks(Project project) {
-        project.getLinks().add(linkTo(methodOn(ProjectController.class).viewProject(project.getProjectId())).withSelfRel());
+        project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(project.getProjectId())).withSelfRel());
         project.getLinks().add(linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(project.getProjectId(), "", "", "")).withRel("beacons"));
         project.getLinks().add(linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(project.getProjectId(), "")).withRel("groups"));
         return project;
