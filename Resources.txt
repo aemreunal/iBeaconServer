@@ -1,3 +1,5 @@
 https://developer.apple.com/ibeacon/
 http://www.liquibase.org
 http://dbunit.sourceforge.net
+https://github.com/andreassimon/gradle-mysql-plugin
+https://bitbucket.org/coherentsoftware/gradle-databaseplugin
