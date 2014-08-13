@@ -34,7 +34,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 
 @Controller
-@RequestMapping("/Project")
+@RequestMapping("/project")
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
@@ -128,7 +128,7 @@ public class ProjectController {
             System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/Project/{id}").buildAndExpand(savedProject.getProjectId().toString()).toUri());
+        headers.setLocation(builder.path("/project/{id}").buildAndExpand(savedProject.getProjectId().toString()).toUri());
         return new ResponseEntity<Project>(savedProject, headers, HttpStatus.CREATED);
     }
 

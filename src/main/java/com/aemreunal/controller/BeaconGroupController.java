@@ -36,7 +36,7 @@ import com.aemreunal.service.BeaconService;
 import com.aemreunal.service.ProjectService;
 
 @Controller
-@RequestMapping("/Project/{projectId}/BeaconGroup")
+@RequestMapping("/project/{projectId}/beacongroup")
 public class BeaconGroupController {
     @Autowired
     private ProjectService projectService;
@@ -117,7 +117,7 @@ public class BeaconGroupController {
      *
      * @return The list of beacons that belong to the group
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{beaconGroupId}/Beacons", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{beaconGroupId}/beacons", produces = "application/json")
     public ResponseEntity<List<Beacon>> viewBeaconGroupMembers(
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId) {
@@ -163,10 +163,10 @@ public class BeaconGroupController {
         }
 
         restBeaconGroup.setProject(project);
-        BeaconGroup newBeaconGroup;
+        BeaconGroup savedBeaconGroup;
 
         try {
-            newBeaconGroup = beaconGroupService.save(restBeaconGroup);
+            savedBeaconGroup = beaconGroupService.save(restBeaconGroup);
         } catch (ConstraintViolationException | TransactionSystemException e) {
             if (GlobalSettings.DEBUGGING) {
                 System.err.println("Unable to save beacon group! Constraint violation detected!");
@@ -175,14 +175,15 @@ public class BeaconGroupController {
         }
 
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved beacon group with ID = \'" + newBeaconGroup.getBeaconGroupId() +
-                "\' name = \'" + newBeaconGroup.getName() +
+            System.out.println("Saved beacon group with ID = \'" + savedBeaconGroup.getBeaconGroupId() +
+                "\' name = \'" + savedBeaconGroup.getName() +
                 "\' in project with ID = \'" + projectId + "\'");
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/BeaconGroup/{id}").buildAndExpand(newBeaconGroup.getBeaconGroupId().toString()).toUri());
-        return new ResponseEntity<BeaconGroup>(newBeaconGroup, headers, HttpStatus.CREATED);
+        // TODO Check redirect location
+        headers.setLocation(builder.path("/project/{projectId}/beacongroup/{id}").buildAndExpand(project.getProjectId().toString(), savedBeaconGroup.getBeaconGroupId().toString()).toUri());
+        return new ResponseEntity<BeaconGroup>(savedBeaconGroup, headers, HttpStatus.CREATED);
     }
 
     /**

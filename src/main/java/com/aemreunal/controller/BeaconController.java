@@ -38,7 +38,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 
 @Controller
-@RequestMapping("/Project/{projectId}/Beacon")
+@RequestMapping("/project/{projectId}/beacon")
 public class BeaconController {
     @Autowired
     private ProjectService projectService;
@@ -176,7 +176,7 @@ public class BeaconController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/Beacon/{id}").buildAndExpand(savedBeacon.getBeaconId().toString()).toUri());
+        headers.setLocation(builder.path("/project/{projectId}/beacon/{id}").buildAndExpand(project.getProjectId().toString(), savedBeacon.getBeaconId().toString()).toUri());
         return new ResponseEntity<Beacon>(savedBeacon, headers, HttpStatus.CREATED);
     }
 
