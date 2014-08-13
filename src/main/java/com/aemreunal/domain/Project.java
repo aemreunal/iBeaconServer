@@ -40,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "projects")
 @ResponseBody
-@JsonIgnoreProperties(value = { "beacons", "beaconGroups", "projectSecret" })
+@JsonIgnoreProperties(value = { "beacons", "beaconGroups", "projectSecret", "owner" })
 public class Project extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -132,20 +132,23 @@ public class Project extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Project 'owner' attribute
      */
-//    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
-//    // MUST BE IMPLEMENTED
-//    // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
-//    @JsonIgnore
-//    // MUST BE IMPLEMENTED
-//    private User owner;
-//
-//    public User getOwner() {
-//        return owner;
-//    }
-//
-//    public void setOwner(User owner) {
-//        this.owner = owner;
-//    }
+    @ManyToOne(targetEntity = User.class,
+               fetch = FetchType.LAZY,
+               optional = false)
+    // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
+    @JoinTable(name="users_to_projects",
+               joinColumns = @JoinColumn(name="project_id"),
+               inverseJoinColumns = @JoinColumn(name="user_id")
+    )
+    private User owner;
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 
     // TODO other users
     /*
@@ -158,9 +161,9 @@ public class Project extends ResourceSupport implements Serializable {
      * BEGIN: Project 'beacons list' attribute
      */
     @OneToMany(targetEntity = Beacon.class,
-        mappedBy = "project",
-        orphanRemoval = true,
-        fetch = FetchType.LAZY)
+               mappedBy = "project",
+               orphanRemoval = true,
+               fetch = FetchType.LAZY)
     /*
      * To eliminate duplicates without using Sets, use:
      * @Fetch(FetchMode.SUBSELECT)
@@ -192,9 +195,9 @@ public class Project extends ResourceSupport implements Serializable {
      * BEGIN: Project 'beacon groups list' attribute
      */
     @OneToMany(targetEntity = BeaconGroup.class,
-        mappedBy = "project",
-        orphanRemoval = true,
-        fetch = FetchType.LAZY)
+               mappedBy = "project",
+               orphanRemoval = true,
+               fetch = FetchType.LAZY)
     @OrderBy(value = "beaconGroupId")
     private Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
 
@@ -249,7 +252,8 @@ public class Project extends ResourceSupport implements Serializable {
     /*
      * TODO JsonIgnore this and only show it once
      * TODO add resetting secret
-     *
+     * TODO send secret by email?
+     * TODO or send proect ID & secret by JSON when it's created
      */
     private String projectSecret = "";
 
