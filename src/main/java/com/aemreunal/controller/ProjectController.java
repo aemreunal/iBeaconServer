@@ -97,7 +97,7 @@ public class ProjectController {
         if (project == null) {
             return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Project>(project, HttpStatus.OK);
+        return new ResponseEntity<Project>(addLinks(project), HttpStatus.OK);
     }
 
     /**
@@ -117,7 +117,6 @@ public class ProjectController {
         Project savedProject;
         try {
             savedProject = projectService.save(projectJson);
-//            projectService.save(addLinks(savedProject));
         } catch (ConstraintViolationException | TransactionSystemException e) {
             if (GlobalSettings.DEBUGGING) {
                 System.err.println("Unable to save project! Constraint violation detected!");
