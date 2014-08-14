@@ -33,6 +33,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class User extends ResourceSupport implements Serializable {
     public static final int USERNAME_MIN_LENGTH = 4;
     public static final int USERNAME_MAX_LENGTH = 50;
+    // The BCrypt-hashed password field length is assumed to be 60 with a
+    // 2-digit log factor. For example, in '$2a$10$...', the '10' is the log
+    // factor. If it ever gets a 3-digit log factor (highly unlikely), the
+    // length of this field must become 61.
+    public static final int BCRYPT_HASH_LENGTH = 60;
+
 
     /*
      *------------------------------------------------------------
@@ -85,6 +91,7 @@ public class User extends ResourceSupport implements Serializable {
      * org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
      */
     @Column(name = "password", nullable = false)
+    @Size(min = BCRYPT_HASH_LENGTH, max = BCRYPT_HASH_LENGTH)
     private String password = "";
 
     public String getPassword() {
