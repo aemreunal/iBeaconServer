@@ -116,6 +116,8 @@ public class User extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      */
 
+    // TODO add users' real name, surname, email, secret questions
+
     /*
      *------------------------------------------------------------
      * BEGIN: User 'projects' attribute
