@@ -1225,7 +1225,7 @@
     </object>
     <object type="LMREQUEST" id="z220">
         <attribute name="uuid" type="string">622C7184-7619-4B8C-A1A8-C7EE724414CE</attribute>
-        <attribute name="url" type="string">https://localhost:8081/user/hello</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1475,7 +1475,7 @@
     </object>
     <object type="LMREQUEST" id="z245">
         <attribute name="uuid" type="string">9ACF8471-A229-4403-99A7-AF932E7A567D</attribute>
-        <attribute name="url" type="string">https://localhost:8081/user/hello1</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello1</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1499,7 +1499,7 @@
     </object>
     <object type="LMREQUEST" id="z247">
         <attribute name="uuid" type="string">A924D9FF-AB70-4B79-B335-F144961BE595</attribute>
-        <attribute name="url" type="string">https://localhost:8081/user/hello2</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello2</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>

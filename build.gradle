@@ -147,12 +147,14 @@ task copyToLib(type: Copy) {
     from configurations.runtime
 }
 
+/*
 // Tomcat configuration, via https://github.com/bmuschko/gradle-tomcat-plugin
 tomcat {
 //    httpPort = 8080 // Default: 8080
 //    httpsPort = 8081 // Default: 8443
     enableSSL = true
 }
+*/
 
 task wrapper(type: Wrapper) {
     gradleVersion = wrapperGradleVersion

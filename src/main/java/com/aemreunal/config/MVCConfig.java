@@ -37,7 +37,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         super.addInterceptors(registry);
         // TODO Add security interceptor for HTTP to HTTPS redirect
         // http://docs.spring.io/spring/docs/4.0.0.RELEASE/spring-framework-reference/htmlsingle/#mvc-container-config
-
+        // http://docs.spring.io/autorepo/docs/spring-framework/3.1.x/javadoc-api/org/springframework/web/WebApplicationInitializer.html
 //        registry.addInterceptor(new FilterSecurityInterceptor()).addPathPatterns("/secure/*");
 //        registry.addInterceptor().addPathPatterns("/secure/*");
     }
