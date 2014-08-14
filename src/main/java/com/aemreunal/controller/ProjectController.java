@@ -9,7 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
@@ -121,17 +120,9 @@ public class ProjectController {
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<JSONObject> createProject(
         @RequestBody Project projectJson,
-        UriComponentsBuilder builder) {
+        UriComponentsBuilder builder) throws ConstraintViolationException {
         Project savedProject;
-        try {
-            savedProject = projectService.save(projectJson);
-        } catch (ConstraintViolationException | TransactionSystemException e) {
-            // TODO move catch body to projectService.save, handle/throw exception there
-            if (GlobalSettings.DEBUGGING) {
-                System.err.println("Unable to save project! Constraint violation detected!");
-            }
-            return new ResponseEntity<JSONObject>(HttpStatus.BAD_REQUEST);
-        }
+        savedProject = projectService.save(projectJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
         }

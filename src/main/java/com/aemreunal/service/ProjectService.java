@@ -3,6 +3,7 @@ package com.aemreunal.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,12 +48,10 @@ public class ProjectService {
      *
      * @return The saved/updated project
      */
-    public Project save(Project project) {
+    public Project save(Project project) throws ConstraintViolationException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving project with ID = \'" + project.getProjectId() + "\'");
         }
-
-
         return projectRepo.save(project);
     }
 
