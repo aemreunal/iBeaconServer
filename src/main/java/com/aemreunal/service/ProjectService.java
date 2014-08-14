@@ -2,12 +2,15 @@ package com.aemreunal.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Project;
+import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.repository.project.ProjectRepo;
 import com.aemreunal.repository.project.ProjectSpecs;
 
@@ -33,6 +36,9 @@ public class ProjectService {
     @Autowired
     private ProjectRepo projectRepo;
 
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
     /**
      * Saves/updates the given project
      *
@@ -46,7 +52,27 @@ public class ProjectService {
             System.out.println("Saving project with ID = \'" + project.getProjectId() + "\'");
         }
 
+
         return projectRepo.save(project);
+    }
+
+    /**
+     * Resets the project secret.
+     * <p/>
+     * Generates a new secret UUID, encodes it with BCrypt and stores it encoded but
+     * returns the plaintext, so that it can be shown to the user.
+     *
+     * @return The plain-text project secret
+     */
+    public String resetSecret(Long projectId) throws ProjectNotFoundException {
+        String secret = UUID.randomUUID().toString().toUpperCase();
+        Project project = this.findById(projectId);
+        if (project == null) {
+            throw new ProjectNotFoundException();
+        }
+        project.setProjectSecret(encoder.encode(secret));
+        this.save(project);
+        return secret;
     }
 
     /**

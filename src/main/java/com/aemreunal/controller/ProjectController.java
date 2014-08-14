@@ -1,5 +1,7 @@
 package com.aemreunal.controller;
 
+import net.minidev.json.JSONObject;
+
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,24 +119,26 @@ public class ProjectController {
      * @return The created project
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Project> createProject(
+    public ResponseEntity<JSONObject> createProject(
         @RequestBody Project projectJson,
         UriComponentsBuilder builder) {
         Project savedProject;
         try {
             savedProject = projectService.save(projectJson);
         } catch (ConstraintViolationException | TransactionSystemException e) {
+            // TODO move catch body to projectService.save, handle/throw exception there
             if (GlobalSettings.DEBUGGING) {
                 System.err.println("Unable to save project! Constraint violation detected!");
             }
-            return new ResponseEntity<Project>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<JSONObject>(HttpStatus.BAD_REQUEST);
         }
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
         }
+        String projectSecret = projectService.resetSecret(savedProject.getProjectId());
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/project/{id}").buildAndExpand(savedProject.getProjectId().toString()).toUri());
-        return new ResponseEntity<Project>(savedProject, headers, HttpStatus.CREATED);
+        return new ResponseEntity<JSONObject>(savedProject.getCreateResponse(projectSecret), headers, HttpStatus.CREATED);
     }
 
     /**
@@ -147,8 +151,25 @@ public class ProjectController {
      * @return The project with links added
      */
     // TODO https://github.com/spring-projects/spring-hateoas#link-builder
+    /*
+    Produces:
+        "links": [
+            {
+              "rel": "self",
+              "href": "http://localhost:8080/project/2"
+            },
+            {
+              "rel": "beacons",
+              "href": "http://localhost:8080/project/2/beacon?uuid=&major=&minor="
+            },
+            {
+              "rel": "groups",
+              "href": "http://localhost:8080/project/2/beacongroup?name="
+            }
+        ]
+     */
     private Project addLinks(Project project) {
-        project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(project.getProjectId())).withSelfRel());
+        project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(project.getProjectId(), "<Project secret>")).withSelfRel());
         project.getLinks().add(linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(project.getProjectId(), "", "", "")).withRel("beacons"));
         project.getLinks().add(linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(project.getProjectId(), "")).withRel("groups"));
         return project;

@@ -1,10 +1,9 @@
 package com.aemreunal.domain;
 
+import net.minidev.json.JSONObject;
+
 import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
@@ -40,11 +39,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "projects")
 @ResponseBody
-@JsonIgnoreProperties(value = { "beacons", "beaconGroups", "projectSecret", "owner" })
+@JsonIgnoreProperties(value = { "beacons", "beaconGroups", "projectSecret", "owner", "creationDate" })
 public class Project extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
-    public static final int SECRET_LENGTH = 36;
+    // The BCrypt-hashed secret field length is assumed to be 60 with a
+    // 2-digit log factor. For example, in '$2a$10$...', the '10' is the log
+    // factor. If it ever gets a 3-digit log factor (highly unlikely), the
+    // length of this field must become 61.
+    public static final int BCRYPT_HASH_LENGTH = 60;
 
     /*
      *------------------------------------------------------------
@@ -248,14 +251,14 @@ public class Project extends ResourceSupport implements Serializable {
      * BEGIN: Project 'secret' attribute
      */
     @Column(name = "project_secret", nullable = false, unique = false)
-    @Size(min = SECRET_LENGTH, max = SECRET_LENGTH)
+    @Size(min = BCRYPT_HASH_LENGTH, max = BCRYPT_HASH_LENGTH)
     /*
      * TODO JsonIgnore this and only show it once
      * TODO add resetting secret
      * TODO send secret by email?
-     * TODO or send proect ID & secret by JSON when it's created
+     * TODO or send project ID & secret by JSON when it's created
      */
-    private String projectSecret = "";
+    private String projectSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
     public String getProjectSecret() {
         return projectSecret;
@@ -271,10 +274,12 @@ public class Project extends ResourceSupport implements Serializable {
 
     @PrePersist
     private void setInitialProperties() {
+        /*
         // Generate project secret key
         if (projectSecret.equals("")) {
             this.setProjectSecret(UUID.randomUUID().toString());
         }
+        */
         // Set project creation date
         if (creationDate == null) {
             setCreationDate(new Date());
@@ -288,6 +293,15 @@ public class Project extends ResourceSupport implements Serializable {
         } else {
             return ((Project) obj).getProjectId().equals(this.getProjectId());
         }
+    }
+
+    public JSONObject getCreateResponse(String projectSecret) {
+        Map<String, String> jsonMap = new HashMap<>(4);
+        jsonMap.put("projectId", getProjectId().toString());
+        jsonMap.put("name", getName());
+        jsonMap.put("description", getDescription());
+        jsonMap.put("secret", projectSecret);
+        return new JSONObject(jsonMap);
     }
 }
 
