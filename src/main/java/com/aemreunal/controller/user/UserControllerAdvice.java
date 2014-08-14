@@ -29,7 +29,7 @@ import com.aemreunal.exception.user.UsernameClashException;
 @ControllerAdvice
 public class UserControllerAdvice {
     @ExceptionHandler(UsernameClashException.class)
-    ResponseEntity<JSONObject> usernameClashExceptionHandler(UsernameClashException ex) {
+    public ResponseEntity<JSONObject> usernameClashExceptionHandler(UsernameClashException ex) {
         Map<String, String> errorMessage = new HashMap<>(2);
         errorMessage.put("reason", "username");
         errorMessage.put("error", ex.getLocalizedMessage());
