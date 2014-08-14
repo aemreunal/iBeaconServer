@@ -1,4 +1,4 @@
-package com.aemreunal.domain.user;
+package com.aemreunal.exception.user;
 
 /*
  ***************************

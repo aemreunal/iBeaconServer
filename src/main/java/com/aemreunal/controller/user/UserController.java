@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.User;
-import com.aemreunal.domain.user.UsernameClashException;
+import com.aemreunal.exception.user.UsernameClashException;
 import com.aemreunal.service.UserService;
 
 /*
