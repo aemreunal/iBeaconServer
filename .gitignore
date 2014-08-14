@@ -21,3 +21,4 @@ hibernate-log.txt.1
 data/
 
 src/test/resources/datasets/
+log.txt
