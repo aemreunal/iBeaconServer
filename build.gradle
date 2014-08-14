@@ -61,7 +61,8 @@ def springFrameworkVersion = '4.0.6.RELEASE'
 def springHateoasVersion = '0.15.0.RELEASE'
 def springSecurityOAuth2Version = '2.0.2.RELEASE'
 def springTestVersion = '4.0.6.RELEASE'
-//def springSecurityVersion =  // '3.2.4.RELEASE'
+def springSecurityCoreVersion = '3.2.4.RELEASE'
+def springSecurityWebVersion = '3.2.4.RELEASE'
 def tomcatVersion = '7.0.42'
 def wrapperGradleVersion = '2.0'
 
@@ -87,14 +88,15 @@ dependencies {
     providedCompile "javax.servlet:javax.servlet-api:${javaxServletAPIVersion}"
 
     // Spring
-    compile group: "org.springframework.data", name: "spring-data-jpa", version: springDataJPAVersion
-    compile group: "org.springframework", name: "spring-jdbc", version: springFrameworkVersion
-    compile group: "org.springframework", name: "spring-tx", version: springFrameworkVersion
-    compile group: "org.springframework", name: "spring-orm", version: springFrameworkVersion
-    compile group: "org.springframework", name: "spring-aop", version: springFrameworkVersion
-    compile group: "org.springframework", name: "spring-webmvc", version: springFrameworkVersion
-    compile group: "org.springframework", name: "spring-oxm", version: springFrameworkVersion
-//    compile group: 'org.springframework.security', name: 'spring-security-web', version: springSecurityVersion
+    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: springDataJPAVersion
+    compile group: 'org.springframework', name: 'spring-jdbc', version: springFrameworkVersion
+    compile group: 'org.springframework', name: 'spring-tx', version: springFrameworkVersion
+    compile group: 'org.springframework', name: 'spring-orm', version: springFrameworkVersion
+    compile group: 'org.springframework', name: 'spring-aop', version: springFrameworkVersion
+    compile group: 'org.springframework', name: 'spring-webmvc', version: springFrameworkVersion
+    compile group: 'org.springframework', name: 'spring-oxm', version: springFrameworkVersion
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: springSecurityCoreVersion
+    compile group: 'org.springframework.security', name: 'spring-security-web', version: springSecurityWebVersion
     compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: springSecurityOAuth2Version
     compile group: 'org.springframework.hateoas', name: 'spring-hateoas', version: springHateoasVersion
 
@@ -149,11 +151,11 @@ task copyToLib(type: Copy) {
 //export GRADLE_OPTS=-XX:MaxPermSize=256m
 
 // Tomcat configuration, via https://github.com/bmuschko/gradle-tomcat-plugin
-//tomcat {
-//    httpPort = 8090
-//    httpsPort = 8091
-//    enableSSL = true
-//}
+tomcat {
+//    httpPort = 8080 // Default: 8080
+//    httpsPort = 8081 // Default: 8443
+    enableSSL = true
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = wrapperGradleVersion
@@ -185,6 +187,7 @@ build.dependsOn copyToLib
 
 // To run without testing, execute command:
 // ./gradlew tomcatRunWar -x test -x compileTestJava
+
 tomcatRunWar.dependsOn.add(build)
 tomcatRunWar.contextPath = ''
 
