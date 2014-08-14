@@ -19,6 +19,12 @@ package com.aemreunal.config;
 public class GlobalSettings {
     public static final boolean DEBUGGING = true;
 
+    // The BCrypt-hashed password field length (in User.class) is assumed to
+    // be 60 with a 2-digit log factor. For example, in '$2a$10$...', the '10'
+    // is the log factor. If it ever gets a 3-digit log factor (highly
+    // unlikely), the length of that field must become 61.
+    public static final int BCRYPT_LOG_FACTOR = 10;
+
     /*
     hibernate.hbm2ddl.auto: Automatically validates or exports schema DDL to the
     database when the SessionFactory is created. With create-drop, the database

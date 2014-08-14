@@ -82,7 +82,7 @@ public class CoreConfig {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(GlobalSettings.BCRYPT_LOG_FACTOR);
     }
 
     public static void initLazily(Object proxy) {
