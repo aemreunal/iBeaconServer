@@ -110,7 +110,6 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateEntityManagerVersion
     compile group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion
     compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: hibernateJPAAPI21Version
-//    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.0-api', version: hibernateJPAAPI20Version
 
     // MySQL
     compile group: 'mysql', name: 'mysql-connector-java', version: mysqlConnectorJDBCVersion
@@ -147,8 +146,6 @@ task copyToLib(type: Copy) {
     into "$buildDir/output/lib"
     from configurations.runtime
 }
-
-//export GRADLE_OPTS=-XX:MaxPermSize=256m
 
 // Tomcat configuration, via https://github.com/bmuschko/gradle-tomcat-plugin
 tomcat {
@@ -190,5 +187,9 @@ build.dependsOn copyToLib
 
 tomcatRunWar.dependsOn.add(build)
 tomcatRunWar.contextPath = ''
+tomcatRunWar.outputFile = new File("log.txt")
+
+// To use as backgrounds service. Use stop port to stop Tomcat in that case.
+// tomcatRunWar.daemon = true // Default: false
 
 println "Project is located in: " + projectDir
