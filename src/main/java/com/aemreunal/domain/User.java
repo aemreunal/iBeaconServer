@@ -1,5 +1,7 @@
 package com.aemreunal.domain;
 
+import net.minidev.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -39,6 +41,14 @@ public class User extends ResourceSupport implements Serializable {
     // length of this field must become 61.
     public static final int BCRYPT_HASH_LENGTH = 60;
 
+    public User() {
+        // Empty constructor for Spring & Hibernate
+    }
+
+    public User(JSONObject userJson) {
+        setUsername(userJson.get("username").toString());
+        setPassword(userJson.get("password").toString());
+    }
 
     /*
      *------------------------------------------------------------
