@@ -25,20 +25,39 @@ public class GlobalSettings {
     // unlikely), the length of that field must become 61.
     public static final int BCRYPT_LOG_FACTOR = 10;
 
-    /*
-    hibernate.hbm2ddl.auto: Automatically validates or exports schema DDL to the
-    database when the SessionFactory is created. With create-drop, the database
-    schema will be dropped when the SessionFactory is closed explicitly.
+    public static final String USER_PATH_MAPPING     = "/user";
+    public static final String USER_USERNAME_MAPPING = "/{username}";
+    public static final String USER_SPECIFIC_MAPPING = USER_PATH_MAPPING + USER_USERNAME_MAPPING;
 
-    Values: "validate" | "update" | "create" | "create-drop"
+    public static final String PROJECT_PATH_MAPPING     = "/project";
+    public static final String PROJECT_ID_MAPPING       = "/{projectId}";
+    public static final String PROJECT_SPECIFIC_MAPPING = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
 
-    validate: validate the schema, makes no changes to the database.
-    update: update the schema.
-    create: creates the schema, destroying previous data.
-    create-drop: drop the schema at the end of the session.
-     */
+    public static final String BEACON_PATH_MAPPING     = PROJECT_SPECIFIC_MAPPING + "/beacon";
+    public static final String BEACON_ID_MAPPING       = "/{beaconId}";
+    public static final String BEACON_SPECIFIC_MAPPING = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
+
+    public static final String BEACONGROUP_PATH_MAPPING     = PROJECT_SPECIFIC_MAPPING + "/beacongroup";
+    public static final String BEACONGROUP_ID_MAPPING       = "/{beaconGroupId}";
+    public static final String BEACONGROUP_SPECIFIC_MAPPING = BEACONGROUP_PATH_MAPPING + BEACONGROUP_ID_MAPPING;
+    public static final String BEACONGROUP_MEMBERS_MAPPING  = BEACONGROUP_SPECIFIC_MAPPING + "/beacons";
+    public static final String BEACONGROUP_ADD_MEMBER_MAPPING  = BEACONGROUP_SPECIFIC_MAPPING + "/addbeacontogroup";
+    public static final String BEACONGROUP_REMOVE_MEMBER_MAPPING  = BEACONGROUP_SPECIFIC_MAPPING + "/removebeaconfromgroup";
+
+
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.hbm2ddl.auto"
+    //
+    // hibernate.hbm2ddl.auto: Automatically validates or exports schema DDL to the
+    // database when the SessionFactory is created. With create-drop, the database
+    // schema will be dropped when the SessionFactory is closed explicitly.
+    //
+    // Values: "validate" | "update" | "create" | "create-drop"
+    //
+    // validate: validate the schema, makes no changes to the database.
+    // update: update the schema.
+    // create: creates the schema, destroying previous data.
+    // create-drop: drop the schema at the end of the session.
     //----------------------------------------
     public static final String HBM2DDL_PROPERTY = "update";
     //-------------------------------------------------------------------------------------------
@@ -46,8 +65,8 @@ public class GlobalSettings {
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.show_sql"
     //----------------------------------------
-    public static final String SHOW_SQL_PROPERTY = "true";
-    public static final boolean SHOW_SQL = true;
+    public static final String  SHOW_SQL_PROPERTY = "true";
+    public static final boolean SHOW_SQL          = true;
     //-------------------------------------------------------------------------------------------
 
     //-------------------------------------------------------------------------------------------
@@ -60,12 +79,5 @@ public class GlobalSettings {
     // Property name: "hibernate.dialect"
     //----------------------------------------
     public static final String DB_DIALECT_PROPERTY = "org.hibernate.dialect.MySQL5InnoDBDialect";
-    //-------------------------------------------------------------------------------------------
-
-    //-------------------------------------------------------------------------------------------
-    // Property name: "hibernate.event.merge.entity_copy_observer"
-    // Via: https://hibernate.atlassian.net/browse/HHH-9106
-    //----------------------------------------
-    public static final Object ENTITY_COPY_OBSERVER_PROPERTY = "allow";
     //-------------------------------------------------------------------------------------------
 }

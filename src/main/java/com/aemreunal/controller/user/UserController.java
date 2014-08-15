@@ -34,7 +34,7 @@ import com.aemreunal.service.UserService;
  */
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping(GlobalSettings.USER_PATH_MAPPING)
 public class UserController {
     @Autowired
     private UserService userService;
@@ -65,7 +65,7 @@ public class UserController {
      * @return The user
      */
     // TODO require authentication to get details
-    @RequestMapping(method = RequestMethod.GET, value = "/{username}", produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.USER_USERNAME_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username);
         if (user == null) {
@@ -102,7 +102,7 @@ public class UserController {
             System.out.println("Saved user with username = \'" + savedUser.getUsername() + "\' ID = \'" + savedUser.getUserId() + "\'");
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/user/{username}").buildAndExpand(savedUser.getUsername()).toUri());
+        headers.setLocation(builder.path(GlobalSettings.USER_SPECIFIC_MAPPING).buildAndExpand(savedUser.getUsername()).toUri());
         return new ResponseEntity<User>(savedUser, headers, HttpStatus.CREATED);
     }
 
@@ -132,7 +132,7 @@ public class UserController {
      *
      * @return The status of the deletion action
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{username}")
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.USER_USERNAME_MAPPING)
     public ResponseEntity<User> deleteUser(
         @PathVariable String username,
         @RequestParam(value = "confirm", required = true) String confirmation,

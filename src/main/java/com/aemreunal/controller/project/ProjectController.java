@@ -39,7 +39,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 
 @Controller
-@RequestMapping("/project")
+@RequestMapping(GlobalSettings.PROJECT_PATH_MAPPING)
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
@@ -102,7 +102,7 @@ public class ProjectController {
      *
      * @return The project
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{projectId}", produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.PROJECT_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Project> getProjectById(
         @PathVariable Long projectId/*,
         @RequestHeader(value = "Authorization") String projectSecret*/) {
@@ -147,7 +147,7 @@ public class ProjectController {
         }
         String projectSecret = projectService.resetSecret(savedProject.getProjectId());
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/project/{id}").buildAndExpand(savedProject.getProjectId().toString()).toUri());
+        headers.setLocation(builder.path(GlobalSettings.PROJECT_SPECIFIC_MAPPING).buildAndExpand(savedProject.getProjectId().toString()).toUri());
         return new ResponseEntity<JSONObject>(savedProject.getCreateResponse(projectSecret), headers, HttpStatus.CREATED);
     }
 
@@ -199,7 +199,7 @@ public class ProjectController {
      *
      * @return The status of deletion action
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{projectId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.PROJECT_ID_MAPPING)
     public ResponseEntity<Project> deleteProject(
         @PathVariable Long projectId,
         @RequestParam(value = "confirm", required = true) String confirmation) {

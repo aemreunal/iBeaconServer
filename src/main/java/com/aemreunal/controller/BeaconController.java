@@ -38,7 +38,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 
 @Controller
-@RequestMapping("/project/{projectId}/beacon")
+@RequestMapping(GlobalSettings.BEACON_PATH_MAPPING)
 public class BeaconController {
     @Autowired
     private ProjectService projectService;
@@ -113,7 +113,7 @@ public class BeaconController {
      *
      * @return The beacon
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{beaconId}", produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACON_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Beacon> viewBeacon(
         @PathVariable Long projectId,
         @PathVariable Long beaconId) {
@@ -176,7 +176,7 @@ public class BeaconController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/project/{projectId}/beacon/{id}").buildAndExpand(project.getProjectId().toString(), savedBeacon.getBeaconId().toString()).toUri());
+        headers.setLocation(builder.path(GlobalSettings.BEACON_SPECIFIC_MAPPING).buildAndExpand(project.getProjectId().toString(), savedBeacon.getBeaconId().toString()).toUri());
         return new ResponseEntity<Beacon>(savedBeacon, headers, HttpStatus.CREATED);
     }
 
@@ -193,7 +193,7 @@ public class BeaconController {
      *
      * @return The status of deletion action
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACON_ID_MAPPING)
     public ResponseEntity<Beacon> deleteBeacon(
         @PathVariable Long projectId,
         @PathVariable Long beaconId,

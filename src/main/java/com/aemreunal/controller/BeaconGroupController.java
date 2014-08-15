@@ -36,7 +36,7 @@ import com.aemreunal.service.BeaconService;
 import com.aemreunal.service.ProjectService;
 
 @Controller
-@RequestMapping("/project/{projectId}/beacongroup")
+@RequestMapping(GlobalSettings.BEACONGROUP_PATH_MAPPING)
 public class BeaconGroupController {
     @Autowired
     private ProjectService projectService;
@@ -90,7 +90,7 @@ public class BeaconGroupController {
      *
      * @return The beacon group
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{beaconGroupId}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACONGROUP_ID_MAPPING, produces = "application/json")
     public ResponseEntity<BeaconGroup> viewBeaconGroup(
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId) {
@@ -117,7 +117,7 @@ public class BeaconGroupController {
      *
      * @return The list of beacons that belong to the group
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{beaconGroupId}/beacons", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACONGROUP_MEMBERS_MAPPING, produces = "application/json")
     public ResponseEntity<List<Beacon>> viewBeaconGroupMembers(
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId) {
@@ -182,7 +182,7 @@ public class BeaconGroupController {
 
         HttpHeaders headers = new HttpHeaders();
         // TODO Check redirect location
-        headers.setLocation(builder.path("/project/{projectId}/beacongroup/{id}").buildAndExpand(project.getProjectId().toString(), savedBeaconGroup.getBeaconGroupId().toString()).toUri());
+        headers.setLocation(builder.path(GlobalSettings.BEACONGROUP_SPECIFIC_MAPPING).buildAndExpand(project.getProjectId().toString(), savedBeaconGroup.getBeaconGroupId().toString()).toUri());
         return new ResponseEntity<BeaconGroup>(savedBeaconGroup, headers, HttpStatus.CREATED);
     }
 
@@ -202,7 +202,7 @@ public class BeaconGroupController {
      *
      * @return The added beacon group
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/{beaconGroupId}/AddBeaconToGroup", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.BEACONGROUP_ADD_MEMBER_MAPPING, produces = "application/json")
     public ResponseEntity<BeaconGroup> addBeaconToGroup(
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId,
@@ -248,7 +248,7 @@ public class BeaconGroupController {
      *
      * @return The removed beacon group
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconGroupId}/RemoveBeaconFromGroup", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACONGROUP_REMOVE_MEMBER_MAPPING, produces = "application/json")
     public ResponseEntity<BeaconGroup> removeBeaconFromGroup(
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId,
@@ -288,7 +288,7 @@ public class BeaconGroupController {
      *
      * @return The deleted beacon group
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{beaconGroupId}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACONGROUP_ID_MAPPING, produces = "application/json")
     public ResponseEntity<BeaconGroup> deleteBeaconGroup(
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId,
