@@ -1608,7 +1608,7 @@
     </object>
     <object type="LMREQUESTGROUP" id="z283">
         <attribute name="order" type="int64">0</attribute>
-        <attribute name="name" type="string">Add Beacons</attribute>
+        <attribute name="name" type="string">b - Add Beacons</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z162"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z264 z193"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
@@ -1631,7 +1631,7 @@
     </object>
     <object type="LMREQUESTGROUP" id="z285">
         <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string">Delete</attribute>
+        <attribute name="name" type="string">d - Delete</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z162"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z284 z287"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
@@ -1664,7 +1664,7 @@
     </object>
     <object type="LMREQUESTGROUP" id="z288">
         <attribute name="order" type="int64">1</attribute>
-        <attribute name="name" type="string">Create</attribute>
+        <attribute name="name" type="string">a - Create</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z162"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z272 z148"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>

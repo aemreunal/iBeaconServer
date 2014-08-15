@@ -121,6 +121,7 @@ public class BeaconGroupController {
      *
      * @return The list of beacons that belong to the group
      */
+    // TODO maybe return just the list of Beacon IDs, queried from beacon_groups_to_beacon
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACONGROUP_MEMBERS_MAPPING, produces = "application/json")
     public ResponseEntity<List<Beacon>> viewBeaconGroupMembers(
         // TODO Handle username
