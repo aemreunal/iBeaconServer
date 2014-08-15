@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,6 @@ import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.BeaconService;
 import com.aemreunal.service.ProjectService;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /*
  **************************
@@ -57,6 +54,8 @@ public class BeaconController {
     @Transactional
     @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Beacon>> viewBeaconsOfProject(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
         @RequestParam(value = "major", required = false, defaultValue = "") String major,
@@ -71,7 +70,7 @@ public class BeaconController {
             List<Beacon> beaconList = new ArrayList<Beacon>();
             for (Beacon beacon : project.getBeacons()) {
                 beaconList.add(beacon);
-                beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeacon(projectId, beacon.getBeaconId())).withSelfRel());
+//                beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeacon(projectId, beacon.getBeaconId())).withSelfRel());
             }
             return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
         } else {
@@ -93,7 +92,7 @@ public class BeaconController {
      *
      * @return The list of beacons that match the given criteria
      */
-    @Transactional
+//    @Transactional // TODO required?
     private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(Long projectId, String uuid, String major, String minor) {
         List<Beacon> beacons = beaconService.findBeaconsBySpecs(projectId, uuid, major, minor);
 
@@ -115,6 +114,8 @@ public class BeaconController {
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACON_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Beacon> viewBeacon(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @PathVariable Long beaconId) {
         Project project = projectService.findById(projectId);
@@ -127,7 +128,7 @@ public class BeaconController {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
         // For HATEOAS
-        beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeacon(projectId, beaconId)).withSelfRel());
+//        beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeacon(projectId, beaconId)).withSelfRel());
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
 
@@ -147,6 +148,8 @@ public class BeaconController {
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Beacon> createBeaconInProject(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @RequestBody Beacon restBeacon,
         UriComponentsBuilder builder) {
@@ -176,7 +179,12 @@ public class BeaconController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path(GlobalSettings.BEACON_SPECIFIC_MAPPING).buildAndExpand(project.getProjectId().toString(), savedBeacon.getBeaconId().toString()).toUri());
+        headers.setLocation(builder.path(GlobalSettings.BEACON_SPECIFIC_MAPPING)
+                                   .buildAndExpand(
+                                       username,
+                                       project.getProjectId().toString(),
+                                       savedBeacon.getBeaconId().toString())
+                                   .toUri());
         return new ResponseEntity<Beacon>(savedBeacon, headers, HttpStatus.CREATED);
     }
 
@@ -195,6 +203,8 @@ public class BeaconController {
      */
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACON_ID_MAPPING)
     public ResponseEntity<Beacon> deleteBeacon(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @PathVariable Long beaconId,
         @RequestParam(value = "confirm", required = true) String confirmation) {

@@ -5,7 +5,7 @@
     <databaseInfo>
         <version>134481920</version>
         <UUID>A16AC595-1CB5-4B5E-823F-D2E2B2BDE080</UUID>
-        <nextObjectID>258</nextObjectID>
+        <nextObjectID>279</nextObjectID>
         <metadata>
             <plist version="1.0">
                 <dict>
@@ -84,7 +84,7 @@
     </object>
     <object type="LMREQUEST" id="z105">
         <attribute name="uuid" type="string">1C6EA7EB-765A-40A3-A19F-274434F295B4</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacon</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacon</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -152,7 +152,7 @@
     </object>
     <object type="LMREQUEST" id="z112">
         <attribute name="uuid" type="string">C65CA6D2-7209-42BC-83E4-F71DCF4C81D4</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacon</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacon</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -176,7 +176,7 @@
     </object>
     <object type="LMREQUEST" id="z114">
         <attribute name="uuid" type="string">1803544C-1723-41D0-98EF-93CB99A94BF4</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacon</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacon</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -221,7 +221,7 @@
     </object>
     <object type="LMREQUEST" id="z118">
         <attribute name="uuid" type="string">4ED1344A-F84B-4E5A-8A8E-2C6DF9CF3D0C</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -232,7 +232,7 @@
         <attribute name="name" type="string">Create project 2</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z209"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z143 z121"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z121 z143"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z119">
         <attribute name="value" type="string">application/json</attribute>
@@ -246,7 +246,7 @@
     </object>
     <object type="LMREQUEST" id="z120">
         <attribute name="uuid" type="string">EBF087DC-3F73-4A26-9591-50EE34378004</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacon</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacon</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -291,7 +291,7 @@
     </object>
     <object type="LMREQUEST" id="z124">
         <attribute name="uuid" type="string">D7C68ACA-3CBF-4571-9276-6535E174E11A</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -302,7 +302,7 @@
         <attribute name="name" type="string">Create project 1</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z209"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z107 z104"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z104 z107"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z125">
         <attribute name="value" type="string">application/json</attribute>
@@ -316,7 +316,7 @@
     </object>
     <object type="LMREQUEST" id="z126">
         <attribute name="uuid" type="string">4EBB7AD4-B28C-44EB-BC73-9B25D849CEE8</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -327,7 +327,7 @@
         <attribute name="name" type="string">Create project 3</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z209"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z134 z127"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z127 z134"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z127">
         <attribute name="value" type="string"></attribute>
@@ -351,7 +351,7 @@
     </object>
     <object type="LMREQUEST" id="z129">
         <attribute name="uuid" type="string">8FCF4CE7-1CDA-4A5D-BF3C-2B4405224151</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacon</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacon</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -362,11 +362,11 @@
         <attribute name="name" type="string">Create Beacon 3</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z109"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z115 z139"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z139 z115"></relationship>
     </object>
     <object type="LMREQUEST" id="z130">
         <attribute name="uuid" type="string">E2D4D4FC-40FC-4AA8-93A8-DE4AA548A858</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -395,7 +395,7 @@
     </object>
     <object type="LMREQUEST" id="z133">
         <attribute name="uuid" type="string">17C6E3CE-DC6C-48EC-A56D-B32F64FDEC67</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacon</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacon</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -449,7 +449,7 @@
     </object>
     <object type="LMREQUEST" id="z138">
         <attribute name="uuid" type="string">27503EB1-3D5D-4E6D-B86A-5DC7DA467981</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacon</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacon</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -493,7 +493,7 @@
     </object>
     <object type="LMREQUEST" id="z142">
         <attribute name="uuid" type="string">45D4BB2B-A0FA-4082-86A6-0E50E3E63616</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacon</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacon</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -504,7 +504,7 @@
         <attribute name="name" type="string">Create Beacon 1</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z109"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z125 z103"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z103 z125"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z143">
         <attribute name="value" type="string"></attribute>
@@ -528,7 +528,7 @@
     </object>
     <object type="LMREQUEST" id="z145">
         <attribute name="uuid" type="string">EBF087DC-3F73-4A26-9591-50EE34378004</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacongroup</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacongroup</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -539,22 +539,13 @@
         <attribute name="name" type="string">Create beacon group 3</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z148"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z144 z152"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z152 z144"></relationship>
     </object>
     <object type="LMREQUESTGROUP" id="z148">
         <attribute name="order" type="int64">0</attribute>
         <attribute name="name" type="string">Project 1</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z162"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z169 z167 z163 z145"></relationship>
-        <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
-        <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
-    </object>
-    <object type="LMREQUESTGROUP" id="z149">
-        <attribute name="order" type="int64">1</attribute>
-        <attribute name="name" type="string">Project 2</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z162"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z182 z172 z177 z180"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z145 z163 z167 z169"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
@@ -603,14 +594,14 @@
         <attribute name="order" type="int64">1</attribute>
         <attribute name="name" type="string">Create beacon groups</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z149 z148"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z148 z272"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
     </object>
     <object type="LMREQUEST" id="z163">
         <attribute name="uuid" type="string">17C6E3CE-DC6C-48EC-A56D-B32F64FDEC67</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacongroup</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacongroup</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -621,7 +612,7 @@
         <attribute name="name" type="string">Create beacon group 1</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z148"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z170 z158"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z158 z170"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z165">
         <attribute name="value" type="string"></attribute>
@@ -645,7 +636,7 @@
     </object>
     <object type="LMREQUEST" id="z167">
         <attribute name="uuid" type="string">C65CA6D2-7209-42BC-83E4-F71DCF4C81D4</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacongroup</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacongroup</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -660,7 +651,7 @@
     </object>
     <object type="LMREQUEST" id="z169">
         <attribute name="uuid" type="string">1C6EA7EB-765A-40A3-A19F-274434F295B4</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacongroup</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacongroup</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -683,255 +674,34 @@
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z163"></relationship>
     </object>
-    <object type="LMKEYVALUE" id="z171">
-        <attribute name="value" type="string">application/json</attribute>
-        <attribute name="order" type="int64">0</attribute>
-        <attribute name="name" type="string">Content-Type</attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z182"></relationship>
-    </object>
-    <object type="LMREQUEST" id="z172">
-        <attribute name="uuid" type="string">B5702B97-615C-4027-94B3-BF8DB3999B00</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacongroup</attribute>
-        <attribute name="timeoutinterval" type="float">30</attribute>
-        <attribute name="redirectmethod" type="bool">0</attribute>
-        <attribute name="redirectauthorization" type="bool">0</attribute>
-        <attribute name="method" type="string">POST</attribute>
-        <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="body" type="string">["{\\n  \\"name\\":\\"Group2\\", \\n  \\"description\\":\\"This is the second test beacon group.\\"\\n}"]</attribute>
-        <attribute name="order" type="int64">1</attribute>
-        <attribute name="name" type="string">Create beacon group 2</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z149"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z176 z175"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z173">
-        <attribute name="value" type="string">application/json</attribute>
-        <attribute name="order" type="int64">0</attribute>
-        <attribute name="name" type="string">Content-Type</attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z180"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z174">
-        <attribute name="value" type="string"></attribute>
-        <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z182"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z175">
-        <attribute name="value" type="string"></attribute>
-        <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z172"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z176">
-        <attribute name="value" type="string">application/json</attribute>
-        <attribute name="order" type="int64">0</attribute>
-        <attribute name="name" type="string">Content-Type</attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z172"></relationship>
-    </object>
-    <object type="LMREQUEST" id="z177">
-        <attribute name="uuid" type="string">4F3218C7-8F7F-4016-A3DC-267E9AAF51DF</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacongroup</attribute>
-        <attribute name="timeoutinterval" type="float">30</attribute>
-        <attribute name="redirectmethod" type="bool">0</attribute>
-        <attribute name="redirectauthorization" type="bool">0</attribute>
-        <attribute name="method" type="string">POST</attribute>
-        <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="body" type="string">["{\\n  \\"name\\":\\"What the group?\\", \\n  \\"description\\":\\"Believe it or not, this is the fourth test beacon group.\\"\\n}"]</attribute>
-        <attribute name="order" type="int64">3</attribute>
-        <attribute name="name" type="string">Create beacon group 4</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z149"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z181 z178"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z178">
-        <attribute name="value" type="string"></attribute>
-        <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z177"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z179">
-        <attribute name="value" type="string"></attribute>
-        <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z180"></relationship>
-    </object>
-    <object type="LMREQUEST" id="z180">
-        <attribute name="uuid" type="string">7A26F3E7-36F7-4783-B4E3-C86BCFE0FC87</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacongroup</attribute>
-        <attribute name="timeoutinterval" type="float">30</attribute>
-        <attribute name="redirectmethod" type="bool">0</attribute>
-        <attribute name="redirectauthorization" type="bool">0</attribute>
-        <attribute name="method" type="string">POST</attribute>
-        <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="body" type="string">["{\\n  \\"name\\":\\"G3\\", \\n  \\"description\\":\\"This is the third test beacon group.\\"\\n}"]</attribute>
-        <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string">Create beacon group 3</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z149"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z179 z173"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z181">
-        <attribute name="value" type="string">application/json</attribute>
-        <attribute name="order" type="int64">0</attribute>
-        <attribute name="name" type="string">Content-Type</attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z177"></relationship>
-    </object>
-    <object type="LMREQUEST" id="z182">
-        <attribute name="uuid" type="string">3EC17843-7BBD-485A-A834-6A555793A604</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacongroup</attribute>
-        <attribute name="timeoutinterval" type="float">30</attribute>
-        <attribute name="redirectmethod" type="bool">0</attribute>
-        <attribute name="redirectauthorization" type="bool">0</attribute>
-        <attribute name="method" type="string">POST</attribute>
-        <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="body" type="string">["{\\n  \\"name\\":\\"Group1\\", \\n  \\"description\\":\\"This is the first test beacon group.\\"\\n}"]</attribute>
-        <attribute name="order" type="int64">0</attribute>
-        <attribute name="name" type="string">Create beacon group 1</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z149"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z174 z171"></relationship>
-    </object>
     <object type="LMREQUESTGROUP" id="z184">
         <attribute name="order" type="int64">0</attribute>
         <attribute name="name" type="string">Add beacons to groups</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z185 z193"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z193 z264"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
-    </object>
-    <object type="LMREQUESTGROUP" id="z185">
-        <attribute name="order" type="int64">1</attribute>
-        <attribute name="name" type="string">Project 2</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z184"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z190 z186 z191"></relationship>
-        <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
-        <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
-    </object>
-    <object type="LMREQUEST" id="z186">
-        <attribute name="uuid" type="string">F36505A9-89B5-4756-8032-53F1D3941F36</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacongroup/5/AddBeaconToGroup?beaconId=5</attribute>
-        <attribute name="timeoutinterval" type="float">30</attribute>
-        <attribute name="redirectmethod" type="bool">0</attribute>
-        <attribute name="redirectauthorization" type="bool">0</attribute>
-        <attribute name="method" type="string">POST</attribute>
-        <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">1</attribute>
-        <attribute name="name" type="string">Group 5 \u3c00- Beacon 5</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z185"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z187"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z187">
-        <attribute name="value" type="string"></attribute>
-        <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z186"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z188">
-        <attribute name="value" type="string"></attribute>
-        <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z190"></relationship>
-    </object>
-    <object type="LMKEYVALUE" id="z189">
-        <attribute name="value" type="string"></attribute>
-        <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string"></attribute>
-        <attribute name="enabled" type="bool">1</attribute>
-        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
-        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z191"></relationship>
-    </object>
-    <object type="LMREQUEST" id="z190">
-        <attribute name="uuid" type="string">AE992528-D5E2-4E41-83CE-B77511CBE852</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacongroup/6/AddBeaconToGroup?beaconId=7</attribute>
-        <attribute name="timeoutinterval" type="float">30</attribute>
-        <attribute name="redirectmethod" type="bool">0</attribute>
-        <attribute name="redirectauthorization" type="bool">0</attribute>
-        <attribute name="method" type="string">POST</attribute>
-        <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">2</attribute>
-        <attribute name="name" type="string">Group 6 \u3c00- Beacon 7</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z185"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z188"></relationship>
-    </object>
-    <object type="LMREQUEST" id="z191">
-        <attribute name="uuid" type="string">4F3625E9-1D93-4732-B53F-DA5EF0EE2EB3</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2/beacongroup/5/AddBeaconToGroup?beaconId=6</attribute>
-        <attribute name="timeoutinterval" type="float">30</attribute>
-        <attribute name="redirectmethod" type="bool">0</attribute>
-        <attribute name="redirectauthorization" type="bool">0</attribute>
-        <attribute name="method" type="string">POST</attribute>
-        <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">3</attribute>
-        <attribute name="name" type="string">Group 5 \u3c00- Beacon 6</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z185"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z189"></relationship>
     </object>
     <object type="LMREQUEST" id="z192">
         <attribute name="uuid" type="string">F36505A9-89B5-4756-8032-53F1D3941F36</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacongroup/1/AddBeaconToGroup?beaconId=1</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacongroup/1/addbeacontogroup?beaconId=1</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">POST</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">1</attribute>
+        <attribute name="order" type="int64">0</attribute>
         <attribute name="name" type="string">Group 1 \u3c00- Beacon 1</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z193"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z194"></relationship>
     </object>
     <object type="LMREQUESTGROUP" id="z193">
-        <attribute name="order" type="int64">0</attribute>
+        <attribute name="order" type="int64">1</attribute>
         <attribute name="name" type="string">Project 1</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z184"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z198 z195 z192"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z192 z195 z198"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
@@ -948,13 +718,13 @@
     </object>
     <object type="LMREQUEST" id="z195">
         <attribute name="uuid" type="string">4F3625E9-1D93-4732-B53F-DA5EF0EE2EB3</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacongroup/1/AddBeaconToGroup?beaconId=2</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacongroup/1/addbeacontogroup?beaconId=2</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">POST</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">3</attribute>
+        <attribute name="order" type="int64">1</attribute>
         <attribute name="name" type="string">Group 1 \u3c00- Beacon 2</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z193"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
@@ -982,7 +752,7 @@
     </object>
     <object type="LMREQUEST" id="z198">
         <attribute name="uuid" type="string">AE992528-D5E2-4E41-83CE-B77511CBE852</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1/beacongroup/2/AddBeaconToGroup?beaconId=3</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacongroup/2/addbeacontogroup?beaconId=3</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -996,7 +766,7 @@
     </object>
     <object type="LMREQUEST" id="z199">
         <attribute name="uuid" type="string">763165BA-02CA-4625-AF5F-B4D834FB94D5</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1006,11 +776,11 @@
         <attribute name="name" type="string">Get Project 2</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z206"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z202 z257 z258"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z257 z202 z258"></relationship>
     </object>
     <object type="LMREQUEST" id="z200">
         <attribute name="uuid" type="string">28F889AD-3E70-4D57-B9A4-FEC11B9FFB43</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1044,7 +814,7 @@
     </object>
     <object type="LMREQUEST" id="z203">
         <attribute name="uuid" type="string">B74CD3B9-1DD1-4E38-8DA5-DC925E21E665</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/4</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/4</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1058,7 +828,7 @@
     </object>
     <object type="LMREQUEST" id="z204">
         <attribute name="uuid" type="string">49873DAD-5385-4F13-B48D-751D35C37F35</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/3</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/3</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1119,7 +889,7 @@
     </object>
     <object type="LMREQUEST" id="z210">
         <attribute name="uuid" type="string">EEE1E5F7-AE4B-4A17-8751-1A0DDF75DF4F</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/1?confirm=yes</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1?confirm=yes</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1143,7 +913,7 @@
     </object>
     <object type="LMREQUEST" id="z212">
         <attribute name="uuid" type="string">95FC161F-54B2-4A09-9A0E-AC4C5970C7FA</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/3?confirm=yes</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/3?confirm=yes</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1177,7 +947,7 @@
     </object>
     <object type="LMREQUEST" id="z215">
         <attribute name="uuid" type="string">86452C3F-9D7C-4D9C-A122-496101B6FAFF</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/4?confirm=yes</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/4?confirm=yes</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1201,7 +971,7 @@
     </object>
     <object type="LMREQUEST" id="z217">
         <attribute name="uuid" type="string">E46A98CA-B20F-433B-B9FE-08EEE8D96EEF</attribute>
-        <attribute name="url" type="string">http://localhost:8080/project/2?confirm=yes</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2?confirm=yes</attribute>
         <attribute name="timeoutinterval" type="float">30</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
@@ -1296,7 +1066,7 @@
         <attribute name="name" type="string">Create user 'hello2'</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z226"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z229 z228"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z229 z228 z259"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z228">
         <attribute name="value" type="string">application/json</attribute>
@@ -1309,10 +1079,10 @@
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z227"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z229">
-        <attribute name="value" type="string"></attribute>
+        <attribute name="value" type="string">Basic dXNlcjpwYXNzd29yZA==</attribute>
         <attribute name="order" type="int64">1</attribute>
-        <attribute name="name" type="string"></attribute>
-        <attribute name="enabled" type="bool">1</attribute>
+        <attribute name="name" type="string">Authorization</attribute>
+        <attribute name="enabled" type="bool">0</attribute>
         <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
@@ -1594,5 +1364,245 @@
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z199"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z259">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z227"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z260">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z266"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z261">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z262"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z262">
+        <attribute name="uuid" type="string">5EF5384C-AE0D-4215-B2C1-45EB81226F78</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacongroup/5/addbeacontogroup?beaconId=5</attribute>
+        <attribute name="timeoutinterval" type="float">30</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string">Group 5 \u3c00- Beacon 5</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z264"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z261"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z263">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z265"></relationship>
+    </object>
+    <object type="LMREQUESTGROUP" id="z264">
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Project 2</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z184"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z266 z265 z262"></relationship>
+        <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z265">
+        <attribute name="uuid" type="string">7FBB4F05-5222-4BF3-A4B4-811548AD879F</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacongroup/6/addbeacontogroup?beaconId=7</attribute>
+        <attribute name="timeoutinterval" type="float">30</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Group 6 \u3c00- Beacon 7</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z264"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z263"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z266">
+        <attribute name="uuid" type="string">B5A28ED3-5E40-4E19-89FA-DFBDBB621749</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacongroup/5/addbeacontogroup?beaconId=6</attribute>
+        <attribute name="timeoutinterval" type="float">30</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string">Group 5 \u3c00- Beacon 6</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z264"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z260"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z267">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z270"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z268">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z271"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z269">
+        <attribute name="value" type="string">application/json</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Content-Type</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z271"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z270">
+        <attribute name="uuid" type="string">32F25B33-D715-41EC-9C0D-2FF358964ED7</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacongroup</attribute>
+        <attribute name="timeoutinterval" type="float">30</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">["{\\n  \\"name\\":\\"What the group?\\", \\n  \\"description\\":\\"Believe it or not, this is the fourth test beacon group.\\"\\n}"]</attribute>
+        <attribute name="order" type="int64">3</attribute>
+        <attribute name="name" type="string">Create beacon group 4</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z272"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z267 z277"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z271">
+        <attribute name="uuid" type="string">6B343C0C-90CD-49D8-96B2-D36FAF6552FA</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacongroup</attribute>
+        <attribute name="timeoutinterval" type="float">30</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">["{\\n  \\"name\\":\\"Group2\\", \\n  \\"description\\":\\"This is the second test beacon group.\\"\\n}"]</attribute>
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string">Create beacon group 2</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z272"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z269 z268"></relationship>
+    </object>
+    <object type="LMREQUESTGROUP" id="z272">
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string">Project 2</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z162"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z273 z271 z270 z274"></relationship>
+        <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z273">
+        <attribute name="uuid" type="string">2865572E-231B-4568-B828-089710F0CCC3</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacongroup</attribute>
+        <attribute name="timeoutinterval" type="float">30</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">["{\\n  \\"name\\":\\"Group1\\", \\n  \\"description\\":\\"This is the first test beacon group.\\"\\n}"]</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Create beacon group 1</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z272"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z278 z276"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z274">
+        <attribute name="uuid" type="string">F56BD8C1-1C7F-40B6-9654-96D0DCB8D027</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/2/beacongroup</attribute>
+        <attribute name="timeoutinterval" type="float">30</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">["{\\n  \\"name\\":\\"G3\\", \\n  \\"description\\":\\"This is the third test beacon group.\\"\\n}"]</attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string">Create beacon group 3</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z272"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z275 z279"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z275">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z274"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z276">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z273"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z277">
+        <attribute name="value" type="string">application/json</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Content-Type</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z270"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z278">
+        <attribute name="value" type="string">application/json</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Content-Type</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z273"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z279">
+        <attribute name="value" type="string">application/json</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Content-Type</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z274"></relationship>
     </object>
 </database>

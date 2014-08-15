@@ -5,7 +5,6 @@ import net.minidev.json.JSONObject;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.BeaconController;
-import com.aemreunal.controller.BeaconGroupController;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.ProjectService;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /*
  **************************
@@ -58,6 +52,8 @@ public class ProjectController {
      */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Project>> getAllProjects(
+        // TODO Handle username
+        @PathVariable String username,
         @RequestParam(value = "name", required = false, defaultValue = "") String projectName,
         @RequestParam(value = "ownerName", required = false, defaultValue = "") String ownerName,
         @RequestParam(value = "ownerId", required = false, defaultValue = "") Long ownerId) {
@@ -104,6 +100,8 @@ public class ProjectController {
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.PROJECT_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Project> getProjectById(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId/*,
         @RequestHeader(value = "Authorization") String projectSecret*/) {
         // TODO search with secret
@@ -111,7 +109,8 @@ public class ProjectController {
         if (project == null) {
             return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Project>(addLinks(project), HttpStatus.OK);
+        // TODO add links
+        return new ResponseEntity<Project>(project, HttpStatus.OK);
     }
 
     /**
@@ -137,6 +136,8 @@ public class ProjectController {
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<JSONObject> createProject(
+        // TODO Handle username
+        @PathVariable String username,
         @RequestBody Project projectJson,
         UriComponentsBuilder builder)
         throws ConstraintViolationException {
@@ -147,7 +148,11 @@ public class ProjectController {
         }
         String projectSecret = projectService.resetSecret(savedProject.getProjectId());
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path(GlobalSettings.PROJECT_SPECIFIC_MAPPING).buildAndExpand(savedProject.getProjectId().toString()).toUri());
+        headers.setLocation(builder.path(GlobalSettings.PROJECT_SPECIFIC_MAPPING)
+                                   .buildAndExpand(
+                                       username,
+                                       savedProject.getProjectId().toString())
+                                   .toUri());
         return new ResponseEntity<JSONObject>(savedProject.getCreateResponse(projectSecret), headers, HttpStatus.CREATED);
     }
 
@@ -177,13 +182,13 @@ public class ProjectController {
               "href": "http://localhost:8080/project/2/beacongroup?name="
             }
         ]
-     */
     private Project addLinks(Project project) {
-        project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(project.getProjectId()/*, "<Project secret>"*/)).withSelfRel());
+        project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(project.getProjectId(), "<Project secret>")).withSelfRel());
         project.getLinks().add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(project.getProjectId(), "", "", "")).withRel("beacons"));
         project.getLinks().add(ControllerLinkBuilder.linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(project.getProjectId(), "")).withRel("groups"));
         return project;
     }
+    */
 
     /**
      * Delete the specified project, along with all the beacons, beacon groups and
@@ -199,8 +204,11 @@ public class ProjectController {
      *
      * @return The status of deletion action
      */
+    // TODO add confirmation
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.PROJECT_ID_MAPPING)
     public ResponseEntity<Project> deleteProject(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @RequestParam(value = "confirm", required = true) String confirmation) {
 

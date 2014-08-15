@@ -102,7 +102,10 @@ public class UserController {
             System.out.println("Saved user with username = \'" + savedUser.getUsername() + "\' ID = \'" + savedUser.getUserId() + "\'");
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path(GlobalSettings.USER_SPECIFIC_MAPPING).buildAndExpand(savedUser.getUsername()).toUri());
+        headers.setLocation(builder.path(GlobalSettings.USER_SPECIFIC_MAPPING)
+                                   .buildAndExpand(
+                                       savedUser.getUsername())
+                                   .toUri());
         return new ResponseEntity<User>(savedUser, headers, HttpStatus.CREATED);
     }
 
@@ -140,7 +143,7 @@ public class UserController {
 
         DeleteResponse response = DeleteResponse.NOT_DELETED;
         if (confirmation.toLowerCase().equals("yes")) {
-            if(userService.authenticateAndFindUser(username, password) == null) {
+            if (userService.authenticateAndFindUser(username, password) == null) {
                 // TODO throw new authentication exception
                 response = DeleteResponse.FORBIDDEN;
             } else {

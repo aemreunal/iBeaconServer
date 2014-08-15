@@ -57,6 +57,8 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<BeaconGroup>> viewBeaconGroupsOfProject(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @RequestParam(value = "name", required = false, defaultValue = "") String name) {
         // First check if project exists
@@ -92,6 +94,8 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACONGROUP_ID_MAPPING, produces = "application/json")
     public ResponseEntity<BeaconGroup> viewBeaconGroup(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId) {
         // First check if project exists
@@ -119,6 +123,8 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACONGROUP_MEMBERS_MAPPING, produces = "application/json")
     public ResponseEntity<List<Beacon>> viewBeaconGroupMembers(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId) {
         // First check if project exists
@@ -154,6 +160,8 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<BeaconGroup> createBeaconGroupInProject(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @RequestBody BeaconGroup restBeaconGroup,
         UriComponentsBuilder builder) {
@@ -182,7 +190,12 @@ public class BeaconGroupController {
 
         HttpHeaders headers = new HttpHeaders();
         // TODO Check redirect location
-        headers.setLocation(builder.path(GlobalSettings.BEACONGROUP_SPECIFIC_MAPPING).buildAndExpand(project.getProjectId().toString(), savedBeaconGroup.getBeaconGroupId().toString()).toUri());
+        headers.setLocation(builder.path(GlobalSettings.BEACONGROUP_SPECIFIC_MAPPING)
+                                   .buildAndExpand(
+                                       username,
+                                       project.getProjectId().toString(),
+                                       savedBeaconGroup.getBeaconGroupId().toString())
+                                   .toUri());
         return new ResponseEntity<BeaconGroup>(savedBeaconGroup, headers, HttpStatus.CREATED);
     }
 
@@ -204,6 +217,8 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.BEACONGROUP_ADD_MEMBER_MAPPING, produces = "application/json")
     public ResponseEntity<BeaconGroup> addBeaconToGroup(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId,
         @RequestParam(value = "beaconId", required = true) Long beaconId) {
@@ -250,6 +265,8 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACONGROUP_REMOVE_MEMBER_MAPPING, produces = "application/json")
     public ResponseEntity<BeaconGroup> removeBeaconFromGroup(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId,
         @RequestParam(value = "beaconId", required = true) Long beaconId) {
@@ -290,6 +307,8 @@ public class BeaconGroupController {
      */
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACONGROUP_ID_MAPPING, produces = "application/json")
     public ResponseEntity<BeaconGroup> deleteBeaconGroup(
+        // TODO Handle username
+        @PathVariable String username,
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId,
         @RequestParam(value = "confirm", required = true) String confirmation) {
