@@ -141,8 +141,7 @@ public class Project extends ResourceSupport implements Serializable {
     // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
     @JoinTable(name="users_to_projects",
                joinColumns = @JoinColumn(name="project_id"),
-               inverseJoinColumns = @JoinColumn(name="user_id")
-    )
+               inverseJoinColumns = @JoinColumn(name="user_id"))
     private User owner;
 
     public User getOwner() {
