@@ -8,6 +8,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.User;
 import com.aemreunal.repository.user.UserRepo;
+import com.aemreunal.repository.user.UserSpecs;
 
 /*
  ***************************
@@ -82,7 +83,7 @@ public class UserService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding user with username = \'" + username + "\'");
         }
-        // TODO throw not found ? 
+        // TODO throw not found ?
         return userRepo.findByUsername(username);
     }
 
@@ -99,7 +100,7 @@ public class UserService {
             System.out.println("Checking whether username = \'" + username + "\' is taken");
         }
 
-        return userRepo.findByUsername(username) != null;
+        return userRepo.count(UserSpecs.usernameSpecification(username)) != 0;
     }
 
     /**
