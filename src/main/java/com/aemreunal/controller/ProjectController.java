@@ -99,7 +99,10 @@ public class ProjectController {
      * @return The project
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{projectId}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Project> getProjectById(@PathVariable Long projectId) {
+    public ResponseEntity<Project> getProjectById(
+        @PathVariable Long projectId/*,
+        @RequestHeader(value = "Authorization") String projectSecret*/) {
+        // TODO search with secret
         Project project = projectService.findById(projectId);
         if (project == null) {
             return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
