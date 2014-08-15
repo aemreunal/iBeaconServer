@@ -146,7 +146,7 @@ public class ProjectController {
         UriComponentsBuilder builder)
         throws ConstraintViolationException {
         Project savedProject;
-//        projectJson.setOwner(userService.findByUsername(username));
+        projectJson.setOwner(userService.findByUsername(username));
         savedProject = projectService.save(projectJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
