@@ -138,17 +138,20 @@ public class UserController {
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.USER_USERNAME_MAPPING)
     public ResponseEntity<User> deleteUser(
         @PathVariable String username,
-        @RequestParam(value = "confirm", required = true) String confirmation,
-        @RequestParam(value = "password", required = true) String password) {
+        @RequestParam(value = "confirm", required = true) String confirmation/*,
+        TODO Instead of getting password via a parameter, just authenticate user with oauth:
+        Define: "/user/XXX has access to everyting beyond XXX/... if it authenticates with the
+        credentials of XXX" -> variable authentication.
+        @RequestParam(value = "password", required = true) String password*/) {
 
         DeleteResponse response = DeleteResponse.NOT_DELETED;
         if (confirmation.toLowerCase().equals("yes")) {
-            if (userService.authenticateAndFindUser(username, password) == null) {
-                // TODO throw new authentication exception
-                response = DeleteResponse.FORBIDDEN;
-            } else {
-                response = userService.delete(username);
-            }
+//            if (userService.authenticateAndFindUser(username, password) == null) {
+//            TODO throw new authentication exception
+//                response = DeleteResponse.FORBIDDEN;
+//            } else {
+            response = userService.delete(username);
+//            }
         }
 
         switch (response) {
