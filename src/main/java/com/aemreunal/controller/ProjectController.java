@@ -108,7 +108,16 @@ public class ProjectController {
     }
 
     /**
-     * Create a new project
+     * Creates a new project from the submitted JSON object in the request body.
+     * <p/>
+     * In the case of a constraint violation occurring during the save operation, a {@link
+     * ConstraintViolationException} will be thrown from the {@link
+     * com.aemreunal.service.ProjectService#save(com.aemreunal.domain.Project) save()}
+     * method of {@link com.aemreunal.service.ProjectService}, propagated to this method
+     * and then thrown from this one. This exception will be caught by the {@link
+     * com.aemreunal.controller.project.ProjectControllerAdvice#constraintViolationExceptionHandler(javax.validation.ConstraintViolationException)
+     * constraintViolationExceptionHandler()} of the {@link com.aemreunal.controller.project.ProjectControllerAdvice
+     * ProjectControllerAdvice} class.
      *
      * @param projectJson
      *     The project as JSON object
@@ -116,11 +125,14 @@ public class ProjectController {
      *     The URI builder for post-creation redirect
      *
      * @return The created project
+     *
+     * @throws ConstraintViolationException
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<JSONObject> createProject(
         @RequestBody Project projectJson,
-        UriComponentsBuilder builder) throws ConstraintViolationException {
+        UriComponentsBuilder builder)
+        throws ConstraintViolationException {
         Project savedProject;
         savedProject = projectService.save(projectJson);
         if (GlobalSettings.DEBUGGING) {
