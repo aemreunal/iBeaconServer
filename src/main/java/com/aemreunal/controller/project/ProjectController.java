@@ -15,6 +15,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.ProjectService;
+import com.aemreunal.service.UserService;
 
 /*
  **************************
@@ -35,6 +36,9 @@ import com.aemreunal.service.ProjectService;
 @Controller
 @RequestMapping(GlobalSettings.PROJECT_PATH_MAPPING)
 public class ProjectController {
+    @Autowired
+    private UserService userService;
+
     @Autowired
     private ProjectService projectService;
 
@@ -142,6 +146,7 @@ public class ProjectController {
         UriComponentsBuilder builder)
         throws ConstraintViolationException {
         Project savedProject;
+//        projectJson.setOwner(userService.findByUsername(username));
         savedProject = projectService.save(projectJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
