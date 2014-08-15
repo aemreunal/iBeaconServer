@@ -122,10 +122,13 @@ public class BeaconGroupService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon group with ID = \'" + beaconGroupId + "\'");
         }
+        // TODO better membership checking
         if (isMember(projectId, beaconGroupId)) {
             /*
              * Because beacons own the relationship to their beaconGroups, they must be updated first.
              * For more info, refer to To-Do ID:XNYLXIWD
+             *
+             * orphanRemoval on BeaconGroup leads to deletion of Beacons, undesirable!
              */
             updateBeaconsInGroup(beaconGroupId);
             if (GlobalSettings.DEBUGGING) {
