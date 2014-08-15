@@ -5,7 +5,7 @@
     <databaseInfo>
         <version>134481920</version>
         <UUID>A16AC595-1CB5-4B5E-823F-D2E2B2BDE080</UUID>
-        <nextObjectID>279</nextObjectID>
+        <nextObjectID>287</nextObjectID>
         <metadata>
             <plist version="1.0">
                 <dict>
@@ -676,9 +676,9 @@
     </object>
     <object type="LMREQUESTGROUP" id="z184">
         <attribute name="order" type="int64">0</attribute>
-        <attribute name="name" type="string">Add beacons to groups</attribute>
+        <attribute name="name" type="string">Beacon groups</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z193 z264"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z285 z283"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
@@ -698,10 +698,10 @@
         <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z194"></relationship>
     </object>
     <object type="LMREQUESTGROUP" id="z193">
-        <attribute name="order" type="int64">1</attribute>
+        <attribute name="order" type="int64">0</attribute>
         <attribute name="name" type="string">Project 1</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z184"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z192 z195 z198"></relationship>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z283"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z195 z192 z198"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
@@ -1403,7 +1403,7 @@
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">POST</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">2</attribute>
+        <attribute name="order" type="int64">0</attribute>
         <attribute name="name" type="string">Group 5 \u3c00- Beacon 5</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z264"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
@@ -1420,10 +1420,10 @@
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z265"></relationship>
     </object>
     <object type="LMREQUESTGROUP" id="z264">
-        <attribute name="order" type="int64">0</attribute>
+        <attribute name="order" type="int64">1</attribute>
         <attribute name="name" type="string">Project 2</attribute>
-        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z184"></relationship>
-        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z266 z265 z262"></relationship>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z283"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z266 z262 z265"></relationship>
         <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
         <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
@@ -1436,7 +1436,7 @@
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">POST</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">0</attribute>
+        <attribute name="order" type="int64">2</attribute>
         <attribute name="name" type="string">Group 6 \u3c00- Beacon 7</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z264"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
@@ -1604,5 +1604,71 @@
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z274"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z282">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z287"></relationship>
+    </object>
+    <object type="LMREQUESTGROUP" id="z283">
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string">Create</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z184"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z264 z193"></relationship>
+        <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z284">
+        <attribute name="uuid" type="string">0B911418-8142-4F95-B3D9-8DDD2185F2AC</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacongroup/1?confirm=yes</attribute>
+        <attribute name="timeoutinterval" type="float">30</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">DELETE</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string">Group 1</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z285"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z286"></relationship>
+    </object>
+    <object type="LMREQUESTGROUP" id="z285">
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Delete</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z184"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM" idrefs="z284 z287"></relationship>
+        <relationship name="bodyparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE"></relationship>
+        <relationship name="urlparameters" type="0/0" destination="LMKEYVALUE"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z286">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z284"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z287">
+        <attribute name="uuid" type="string">9126B8FB-9172-4323-9A8F-A2A40C17C238</attribute>
+        <attribute name="url" type="string">http://localhost:8080/user/hello/project/1/beacongroup/3?confirm=yes</attribute>
+        <attribute name="timeoutinterval" type="float">30</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">DELETE</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="order" type="int64">3</attribute>
+        <attribute name="name" type="string">Group 3</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM" idrefs="z285"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z282"></relationship>
     </object>
 </database>
