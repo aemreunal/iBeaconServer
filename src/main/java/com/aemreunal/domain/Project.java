@@ -146,10 +146,12 @@ public class Project extends ResourceSupport implements Serializable {
     private User owner;
 
     public User getOwner() {
+        CoreConfig.initLazily(owner);
         return owner;
     }
 
     public void setOwner(User owner) {
+        CoreConfig.initLazily(owner);
         this.owner = owner;
     }
 
