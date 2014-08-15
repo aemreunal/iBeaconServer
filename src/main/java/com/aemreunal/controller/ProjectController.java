@@ -175,7 +175,7 @@ public class ProjectController {
         ]
      */
     private Project addLinks(Project project) {
-        project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(project.getProjectId(), "<Project secret>")).withSelfRel());
+        project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(project.getProjectId()/*, "<Project secret>"*/)).withSelfRel());
         project.getLinks().add(linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(project.getProjectId(), "", "", "")).withRel("beacons"));
         project.getLinks().add(linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(project.getProjectId(), "")).withRel("groups"));
         return project;
