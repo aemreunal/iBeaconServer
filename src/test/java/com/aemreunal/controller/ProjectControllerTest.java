@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import com.aemreunal.config.controller.ProjectControllerTestConfig;
+import com.aemreunal.controller.project.ProjectController;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.ProjectBuilder;
 import com.aemreunal.helper.PrintHandler;

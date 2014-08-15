@@ -1,10 +1,11 @@
-package com.aemreunal.controller;
+package com.aemreunal.controller.project;
 
 import net.minidev.json.JSONObject;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.controller.BeaconController;
+import com.aemreunal.controller.BeaconGroupController;
+import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.ProjectService;
 
@@ -176,8 +180,8 @@ public class ProjectController {
      */
     private Project addLinks(Project project) {
         project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(project.getProjectId()/*, "<Project secret>"*/)).withSelfRel());
-        project.getLinks().add(linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(project.getProjectId(), "", "", "")).withRel("beacons"));
-        project.getLinks().add(linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(project.getProjectId(), "")).withRel("groups"));
+        project.getLinks().add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(project.getProjectId(), "", "", "")).withRel("beacons"));
+        project.getLinks().add(ControllerLinkBuilder.linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(project.getProjectId(), "")).withRel("groups"));
         return project;
     }
 

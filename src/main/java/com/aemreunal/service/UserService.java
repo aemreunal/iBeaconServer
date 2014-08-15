@@ -82,7 +82,7 @@ public class UserService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding user with username = \'" + username + "\'");
         }
-
+        // TODO throw not found ? 
         return userRepo.findByUsername(username);
     }
 
