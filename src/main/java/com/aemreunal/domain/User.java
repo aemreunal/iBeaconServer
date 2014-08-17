@@ -46,7 +46,7 @@ public class User extends ResourceSupport implements Serializable {
     }
 
     public User(JSONObject userJson) {
-        setUsername(userJson.get("username").toString());
+        setUsername(userJson.get("username").toString().toLowerCase());
         setPassword(userJson.get("password").toString());
     }
 

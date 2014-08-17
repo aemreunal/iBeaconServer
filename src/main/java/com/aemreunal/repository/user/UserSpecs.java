@@ -35,7 +35,7 @@ public class UserSpecs {
     public static Specification<User> usernameSpecification(final String username) {
         return new Specification<User>() {
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                return builder.equal(root.get("username").as(String.class), username);
+                return builder.equal(builder.upper(root.get("username").as(String.class)), username.toUpperCase());
             }
         };
     }
