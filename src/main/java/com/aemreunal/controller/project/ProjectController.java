@@ -208,6 +208,7 @@ public class ProjectController {
             response = projectService.delete(username, projectId);
         }
 
+        // TODO clear up responses
         switch (response) {
             case DELETED:
                 return new ResponseEntity<Project>(HttpStatus.OK);
