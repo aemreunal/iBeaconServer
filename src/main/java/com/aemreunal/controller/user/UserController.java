@@ -83,13 +83,15 @@ public class UserController {
      *     The URI builder for post-creation redirect
      *
      * @return The created project
+     *
+     * @throws UsernameClashException
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<User> createUser(
         @RequestBody JSONObject userJson,
         UriComponentsBuilder builder) throws UsernameClashException {
         User savedUser = new User(userJson);
-        checkIfUserExists(savedUser.getUsername());
+        verifyUsernameUniqueness(savedUser.getUsername());
         try {
             savedUser = userService.save(savedUser);
         } catch (ConstraintViolationException | TransactionSystemException e) {
@@ -115,8 +117,10 @@ public class UserController {
      *
      * @param username
      *     The username to check
+     *
+     * @throws UsernameClashException
      */
-    private void checkIfUserExists(String username) {
+    private void verifyUsernameUniqueness(String username) throws UsernameClashException {
         if (userService.isUsernameTaken(username)) {
             throw new UsernameClashException(username);
         }
