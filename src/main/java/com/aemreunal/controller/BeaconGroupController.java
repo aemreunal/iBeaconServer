@@ -62,7 +62,7 @@ public class BeaconGroupController {
         @PathVariable Long projectId,
         @RequestParam(value = "name", required = false, defaultValue = "") String name) {
         // First check if project exists
-        Project project = projectService.findById(projectId);
+        Project project = projectService.findById(username, projectId);
         if (project == null) {
             return new ResponseEntity<List<BeaconGroup>>(HttpStatus.NOT_FOUND);
         }
@@ -99,7 +99,7 @@ public class BeaconGroupController {
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId) {
         // First check if project exists
-        Project project = projectService.findById(projectId);
+        Project project = projectService.findById(username, projectId);
         if (project == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
@@ -129,7 +129,7 @@ public class BeaconGroupController {
         @PathVariable Long projectId,
         @PathVariable Long beaconGroupId) {
         // First check if project exists
-        Project project = projectService.findById(projectId);
+        Project project = projectService.findById(username, projectId);
         if (project == null) {
             return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
         }
@@ -166,7 +166,7 @@ public class BeaconGroupController {
         @PathVariable Long projectId,
         @RequestBody BeaconGroup restBeaconGroup,
         UriComponentsBuilder builder) {
-        Project project = projectService.findById(projectId);
+        Project project = projectService.findById(username, projectId);
         if (project == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
@@ -224,7 +224,7 @@ public class BeaconGroupController {
         @PathVariable Long beaconGroupId,
         @RequestParam(value = "beaconId", required = true) Long beaconId) {
         // First check if project exists
-        Project project = projectService.findById(projectId);
+        Project project = projectService.findById(username, projectId);
         if (project == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
@@ -272,7 +272,7 @@ public class BeaconGroupController {
         @PathVariable Long beaconGroupId,
         @RequestParam(value = "beaconId", required = true) Long beaconId) {
         // First check if project exists
-        Project project = projectService.findById(projectId);
+        Project project = projectService.findById(username, projectId);
         if (project == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }

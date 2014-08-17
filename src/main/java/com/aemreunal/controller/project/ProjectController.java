@@ -43,51 +43,38 @@ public class ProjectController {
     private ProjectService projectService;
 
     /**
-     * Get all projects (Optionally, all with matching criteria)
+     * Get all projects of the user. Optionally the user may search their projects by name
      *
+     * @param username
+     *     The username of the owner of the projects
      * @param projectName
      *     (Optional) The name of the project
-     * @param ownerName
-     *     (Optional) The name of the owner
-     * @param ownerId
-     *     (Optional) The ID of the owner
      *
      * @return All existing projects (Optionally, all that match the given criteria)
      */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Project>> getAllProjects(
-        // TODO Handle username
         @PathVariable String username,
-        @RequestParam(value = "name", required = false, defaultValue = "") String projectName,
-        @RequestParam(value = "ownerName", required = false, defaultValue = "") String ownerName,
-        @RequestParam(value = "ownerId", required = false, defaultValue = "") Long ownerId) {
-        if (projectName.equals("") && ownerName.equals("") && ownerId == null) {
-            return new ResponseEntity<List<Project>>(projectService.findAll(), HttpStatus.OK);
+        @RequestParam(value = "name", required = false, defaultValue = "") String projectName) {
+        if (projectName.equals("")) {
+            return new ResponseEntity<List<Project>>(projectService.findAllBelongingTo(username), HttpStatus.OK);
         } else {
-            return getProjectsWithMatchingCriteria(projectName, ownerName, ownerId);
+            return getProjectsWithMatchingCriteria(username, projectName);
         }
     }
 
     /**
      * Returns the list of projects that match a given criteria
      *
+     * @param username
+     *     The username of the owner of the projects
      * @param projectName
      *     (Optional) The name of the project
-     * @param ownerName
-     *     (Optional) The name of the owner
-     * @param ownerId
-     *     (Optional) The ID of the owner
      *
      * @return The list of projects that match the given criteria
      */
-    // TODO Fix project criteria search
-    // TODO Fix project criteria search
-    // TODO Fix project criteria search
-    // TODO Fix project criteria search
-    // TODO Fix project criteria search
-    // TODO Fix project criteria search
-    private ResponseEntity<List<Project>> getProjectsWithMatchingCriteria(String projectName, String ownerName, Long ownerId) {
-        List<Project> projects = projectService.findProjectsBySpecs(projectName, ownerName, ownerId);
+    private ResponseEntity<List<Project>> getProjectsWithMatchingCriteria(String username, String projectName) {
+        List<Project> projects = projectService.findProjectsBySpecs(username, projectName);
         if (projects.size() == 0) {
             return new ResponseEntity<List<Project>>(HttpStatus.NOT_FOUND);
         }
@@ -106,11 +93,10 @@ public class ProjectController {
     public ResponseEntity<Project> getProjectById(
         // TODO Handle username
         @PathVariable String username,
-        @PathVariable Long projectId/*,
-        @RequestHeader(value = "Authorization") String projectSecret*/) {
-        // TODO search with secret
-        Project project = projectService.findById(projectId);
+        @PathVariable Long projectId) {
+        Project project = projectService.findById(username, projectId);
         if (project == null) {
+            // TODO move null check to service as an exception
             return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
         }
         // TODO add links
@@ -151,7 +137,7 @@ public class ProjectController {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
         }
-        String projectSecret = projectService.resetSecret(savedProject.getProjectId());
+        String projectSecret = projectService.resetSecret(username, savedProject.getProjectId());
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path(GlobalSettings.PROJECT_SPECIFIC_MAPPING)
                                    .buildAndExpand(

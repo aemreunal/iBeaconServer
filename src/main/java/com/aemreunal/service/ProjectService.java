@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Project;
+import com.aemreunal.domain.User;
 import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.repository.project.ProjectRepo;
 import com.aemreunal.repository.project.ProjectSpecs;
@@ -34,6 +35,9 @@ import com.aemreunal.repository.project.ProjectSpecs;
 @Transactional
 @Service
 public class ProjectService {
+    @Autowired
+    private UserService userService;
+
     @Autowired
     private ProjectRepo projectRepo;
 
@@ -63,9 +67,9 @@ public class ProjectService {
      *
      * @return The plain-text project secret
      */
-    public String resetSecret(Long projectId) throws ProjectNotFoundException {
+    public String resetSecret(String username, Long projectId) throws ProjectNotFoundException {
         String secret = UUID.randomUUID().toString().toUpperCase();
-        Project project = this.findById(projectId);
+        Project project = this.findById(username, projectId);
         if (project == null) {
             throw new ProjectNotFoundException();
         }
@@ -97,25 +101,60 @@ public class ProjectService {
     }
 
     /**
+     * Find the projects that belong to the specific {@link com.aemreunal.domain.User
+     * User} with the specified username. Searches through the projects, matching the
+     * {@link com.aemreunal.domain.User User} with the specified username.
+     *
+     * @param ownerUsername
+     *     The username of the {@link com.aemreunal.domain.User User} to find the projects
+     *     of
+     *
+     * @return The list of projects that belong to the {@link com.aemreunal.domain.User
+     * User} with the specified username
+     */
+    public List<Project> findAllBelongingTo(String ownerUsername) {
+        User owner = userService.findByUsername(ownerUsername);
+        return this.findAllBelongingTo(owner);
+    }
+
+    /**
+     * Find the projects that belong to a specific {@link com.aemreunal.domain.User User}.
+     * Searches through the projects, matching the specified {@link
+     * com.aemreunal.domain.User User}.
+     *
+     * @param owner
+     *     The {@link com.aemreunal.domain.User User} to find the projects of
+     *
+     * @return The list of projects that belong to the {@link com.aemreunal.domain.User
+     * User}
+     */
+    public List<Project> findAllBelongingTo(User owner) {
+        // TODO or, find the user and .getProjects()?
+        List<Project> projectList = new ArrayList<Project>();
+        for (Project project : projectRepo.findByOwner(owner)) {
+            projectList.add(project);
+        }
+        return projectList;
+    }
+
+    /**
      * Find projects conforming to specifications
      *
+     * @param username
+     *     The username of the owner of the projects to search for
      * @param projectName
      *     The project Name field constraint
-     * @param ownerName
-     *     The project Owner's Name field constraint
-     * @param ownerID
-     *     The project Owner's ID field constraint
      *
      * @return The list of projects conforming to given constraints
      */
-    public List<Project> findProjectsBySpecs(String projectName, String ownerName, Long ownerID) {
+    public List<Project> findProjectsBySpecs(String username, String projectName) {
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding projects with Project Name = \'" + projectName + "\' Owner Name = \'" + ownerName + "\' ownerID = \'" + ownerID + "\'");
+            System.out.println("Finding projects with Project Name = \'" + projectName + "\'");
         }
 
         List<Project> projectList = new ArrayList<Project>();
-
-        for (Object projectObject : projectRepo.findAll(ProjectSpecs.projectWithSpecification(projectName, ownerName, ownerID))) {
+        User owner = userService.findByUsername(username);
+        for (Object projectObject : projectRepo.findAll(ProjectSpecs.projectWithSpecification(owner, projectName))) {
             projectList.add((Project) projectObject);
         }
 
@@ -125,17 +164,20 @@ public class ProjectService {
     /**
      * Finds the project with the given ID
      *
+     * @param username
+     *     The username of the owner of the project
      * @param id
      *     The ID of the project to search for
      *
      * @return The project the given ID
      */
-    public Project findById(Long id) {
+    public Project findById(String username, Long id) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding project with ID = \'" + id + "\'");
         }
-
-        return projectRepo.findOne(id);
+        // TODO handle 'user not found' as an exception
+        User owner = userService.findByUsername(username);
+        return projectRepo.findByOwnerAndProjectId(owner, id);
     }
 
     /**
