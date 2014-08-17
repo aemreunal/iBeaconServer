@@ -191,20 +191,19 @@ public class ProjectService {
      * Deletes the project with the given ID and deletes the beacons and beacon groups in
      * the project
      *
-     * @param id
+     * @param username
+     *     The username of the owner of the project
+     * @param projectId
      *     The ID of the project to delete
      *
      * @return Whether the project was deleted or not
      */
-    public DeleteResponse delete(Long id) {
+    public DeleteResponse delete(String username, Long projectId) {
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Deleting project with ID = \'" + id + "\'");
+            System.out.println("Deleting project with ID = \'" + projectId + "\'");
         }
-        if (projectRepo.exists(id)) {
-            projectRepo.delete(id);
-            return DeleteResponse.DELETED;
-        } else {
-            return DeleteResponse.NOT_FOUND;
-        }
+        Project project = this.findById(username, projectId);
+        projectRepo.delete(project);
+        return DeleteResponse.DELETED;
     }
 }

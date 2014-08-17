@@ -43,7 +43,8 @@ public class ProjectController {
     private ProjectService projectService;
 
     /**
-     * Get all projects of the user. Optionally the user may search their projects by name
+     * Get all projects of the user. Optionally the user may search their projects by
+     * name
      *
      * @param username
      *     The username of the owner of the projects
@@ -145,15 +146,15 @@ public class ProjectController {
         return new ResponseEntity<JSONObject>(savedProject.getCreateResponse(projectSecret), headers, HttpStatus.CREATED);
     }
 
-    /**
-     * Adds the HATEOAS links to the project object. Object must be saved afterwards to
-     * ensure persistance of added links.
-     *
-     * @param project
-     *     Project to add the links to
-     *
-     * @return The project with links added
-     */
+//    /**
+//     * Adds the HATEOAS links to the project object. Object must be saved afterwards to
+//     * ensure persistance of added links.
+//     *
+//     * @param project
+//     *     Project to add the links to
+//     *
+//     * @return The project with links added
+//     */
     // TODO https://github.com/spring-projects/spring-hateoas#link-builder
     /*
     Produces:
@@ -186,6 +187,8 @@ public class ProjectController {
      * To delete the project, confirmation must be supplied as a URI parameter, in the
      * form of "?confirm=yes". If not supplied, the project will not be deleted.
      *
+     * @param username
+     *     The username of the owner of the project to delete
      * @param projectId
      *     The ID of the project to delete
      * @param confirmation
@@ -193,7 +196,6 @@ public class ProjectController {
      *
      * @return The status of deletion action
      */
-    // TODO add confirmation
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.PROJECT_ID_MAPPING)
     public ResponseEntity<Project> deleteProject(
         // TODO Handle username
@@ -203,7 +205,7 @@ public class ProjectController {
 
         DeleteResponse response = DeleteResponse.NOT_DELETED;
         if (confirmation.toLowerCase().equals("yes")) {
-            response = projectService.delete(projectId);
+            response = projectService.delete(username, projectId);
         }
 
         switch (response) {
