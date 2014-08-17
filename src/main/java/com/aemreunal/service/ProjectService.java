@@ -45,16 +45,22 @@ public class ProjectService {
     private BCryptPasswordEncoder encoder;
 
     /**
-     * Saves/updates the given project
+     * Saves/updates the given project. The given username parameter is used to set the
+     * owner of the project when the project is first created (saved/persisted).
      *
+     * @param username
+     *     The username of the owner of the project
      * @param project
      *     The project to save/update
      *
      * @return The saved/updated project
      */
-    public Project save(Project project) throws ConstraintViolationException {
+    public Project save(String username, Project project) throws ConstraintViolationException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving project with ID = \'" + project.getProjectId() + "\'");
+        }
+        if (project.getOwner() == null) {
+            project.setOwner(userService.findByUsername(username));
         }
         return projectRepo.save(project);
     }
@@ -67,14 +73,10 @@ public class ProjectService {
      *
      * @return The plain-text project secret
      */
-    public String resetSecret(String username, Long projectId) throws ProjectNotFoundException {
+    public String resetSecret(String username, Project project) throws ProjectNotFoundException {
         String secret = UUID.randomUUID().toString().toUpperCase();
-        Project project = this.findById(username, projectId);
-        if (project == null) {
-            throw new ProjectNotFoundException();
-        }
         project.setProjectSecret(encoder.encode(secret));
-        this.save(project);
+        this.save(username, project);
         return secret;
     }
 
@@ -170,14 +172,19 @@ public class ProjectService {
      *     The ID of the project to search for
      *
      * @return The project the given ID
+     *
+     * @throws ProjectNotFoundException
      */
-    public Project findById(String username, Long id) {
+    public Project findById(String username, Long id) throws ProjectNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding project with ID = \'" + id + "\'");
         }
-        // TODO handle 'user not found' as an exception
         User owner = userService.findByUsername(username);
-        return projectRepo.findByOwnerAndProjectId(owner, id);
+        Project project = projectRepo.findByOwnerAndProjectId(owner, id);
+        if (project == null) {
+            throw new ProjectNotFoundException();
+        }
+        return project;
     }
 
     /**

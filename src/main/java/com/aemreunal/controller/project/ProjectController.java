@@ -115,7 +115,7 @@ public class ProjectController {
      * constraintViolationExceptionHandler()} of the {@link com.aemreunal.controller.project.ProjectControllerAdvice
      * ProjectControllerAdvice} class.
      *
-     * @param projectJson
+     * @param projectFromJson
      *     The project as JSON object
      * @param builder
      *     The URI builder for post-creation redirect
@@ -126,18 +126,16 @@ public class ProjectController {
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<JSONObject> createProject(
-        // TODO Handle username
         @PathVariable String username,
-        @RequestBody Project projectJson,
+        @RequestBody Project projectFromJson,
         UriComponentsBuilder builder)
         throws ConstraintViolationException {
         Project savedProject;
-        projectJson.setOwner(userService.findByUsername(username));
-        savedProject = projectService.save(projectJson);
+        savedProject = projectService.save(username, projectFromJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
         }
-        String projectSecret = projectService.resetSecret(username, savedProject.getProjectId());
+        String projectSecret = projectService.resetSecret(username, savedProject);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path(GlobalSettings.PROJECT_SPECIFIC_MAPPING)
                                    .buildAndExpand(
