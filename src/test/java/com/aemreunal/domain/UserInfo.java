@@ -35,4 +35,16 @@ public class UserInfo {
         info += "\tUser ID: \'" + userId + "\'\n";
         return info;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof UserInfo)) {
+            return false;
+        } else {
+            UserInfo otherUserInfo = (UserInfo) obj;
+            boolean usernameMatches = this.username.equals(otherUserInfo.username);
+            boolean userIdMatches = this.userId == otherUserInfo.userId;
+            return usernameMatches && userIdMatches;
+        }
+    }
 }

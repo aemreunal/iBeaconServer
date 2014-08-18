@@ -74,4 +74,18 @@ public class ProjectInfo {
         info += "\tScenarios: " + scenarios + "\n";
         return info;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ProjectInfo)) {
+            return false;
+        } else {
+            ProjectInfo otherProjectInfo = (ProjectInfo) obj;
+            boolean ownerMatches = this.ownerUsername == otherProjectInfo.ownerUsername;
+            boolean idMatches = this.projectId == otherProjectInfo.projectId;
+            boolean nameMatches = this.name == otherProjectInfo.name;
+            boolean descriptionMatches = this.description == otherProjectInfo.description;
+            return ownerMatches && idMatches && nameMatches && descriptionMatches;
+        }
+    }
 }
