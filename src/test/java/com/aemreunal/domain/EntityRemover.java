@@ -19,14 +19,8 @@ package com.aemreunal.domain;
 import com.aemreunal.helper.RestHelper;
 
 public class EntityRemover {
-    public static void removeUser(String username) {
-        removeEntity("/" + username);
-    }
 
-    private static void removeEntity(String path) {
-        if (path.equals("")) {
-            path = "/";
-        }
+    protected static void removeEntity(String path) {
         path += "?confirm=yes";
         RestHelper.deleteEntityRequest(path);
     }

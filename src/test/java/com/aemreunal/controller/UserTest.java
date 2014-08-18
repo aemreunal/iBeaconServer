@@ -1,10 +1,10 @@
 package com.aemreunal.controller;
 
 import org.junit.Test;
-import com.aemreunal.domain.user.UserInfo;
 import com.aemreunal.domain.user.UserCreator;
-import com.aemreunal.domain.EntityGetter;
-import com.aemreunal.domain.EntityRemover;
+import com.aemreunal.domain.user.UserGetter;
+import com.aemreunal.domain.user.UserInfo;
+import com.aemreunal.domain.user.UserRemover;
 
 import static org.junit.Assert.assertTrue;
 
@@ -41,14 +41,14 @@ public class UserTest {
     public void testGetUser() {
         UserInfo createdUserInfo = UserCreator.createRandomUser();
         // TODO add expected status code for 404 not found assertion post-delete
-        UserInfo requestedUserInfo = EntityGetter.getUser(createdUserInfo.username);
+        UserInfo requestedUserInfo = UserGetter.getUser(createdUserInfo.username);
         assertTrue("The created and requested objects do not match!", createdUserInfo.equals(requestedUserInfo));
     }
 
     @Test
     public void testDeleteUser() {
         UserInfo createdUserInfo = UserCreator.createRandomUser();
-        EntityRemover.removeUser(createdUserInfo.username);
-        EntityGetter.failToGetUser(createdUserInfo.username);
+        UserRemover.removeUser(createdUserInfo.username);
+        UserGetter.failToGetUser(createdUserInfo.username);
     }
 }

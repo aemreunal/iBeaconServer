@@ -1,4 +1,4 @@
-package com.aemreunal.domain;
+package com.aemreunal.domain.user;
 
 /*
  ***************************
@@ -16,15 +16,11 @@ package com.aemreunal.domain;
  ***************************
  */
 
-import com.aemreunal.helper.RestHelper;
-import com.jayway.restassured.path.json.JsonPath;
+import com.aemreunal.domain.EntityRemover;
 
-public class EntityGetter {
-
-    protected static JsonPath getEntity(String path) {
-        JsonPath responseJson = RestHelper.getEntityRequest(path);
-        System.out.println("Get response:");
-        responseJson.prettyPrint();
-        return responseJson;
+public class UserRemover extends EntityRemover {
+    public static void removeUser(String username) {
+        removeEntity("/" + username);
     }
+
 }
