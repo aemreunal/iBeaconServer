@@ -1,10 +1,10 @@
 package com.aemreunal.controller;
 
 import org.junit.Test;
-import com.aemreunal.domain.UserInfo;
+import com.aemreunal.domain.user.UserInfo;
 import com.aemreunal.domain.user.UserCreator;
-import com.aemreunal.helper.EntityGetter;
-import com.aemreunal.helper.EntityRemover;
+import com.aemreunal.domain.EntityGetter;
+import com.aemreunal.domain.EntityRemover;
 
 import static org.junit.Assert.assertTrue;
 

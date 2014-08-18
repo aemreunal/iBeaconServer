@@ -1,4 +1,4 @@
-package com.aemreunal.helper;
+package com.aemreunal.domain;
 
 /*
  ***************************
@@ -17,7 +17,8 @@ package com.aemreunal.helper;
  */
 
 import org.apache.http.HttpStatus;
-import com.aemreunal.domain.UserInfo;
+import com.aemreunal.domain.user.UserInfo;
+import com.aemreunal.helper.RestHelper;
 import com.jayway.restassured.path.json.JsonPath;
 
 public class EntityGetter {

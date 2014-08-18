@@ -1,4 +1,4 @@
-package com.aemreunal.helper;
+package com.aemreunal.domain;
 
 /*
  ***************************
@@ -15,6 +15,8 @@ package com.aemreunal.helper;
  * aemreunal.com           *
  ***************************
  */
+
+import com.aemreunal.helper.RestHelper;
 
 public class EntityRemover {
     public static void removeUser(String username) {

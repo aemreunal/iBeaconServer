@@ -1,7 +1,7 @@
 package com.aemreunal.controller;
 
 import org.junit.Test;
-import com.aemreunal.domain.UserInfo;
+import com.aemreunal.domain.user.UserInfo;
 import com.aemreunal.domain.project.ProjectCreator;
 import com.aemreunal.domain.project.ProjectInfo;
 import com.aemreunal.domain.user.UserCreator;

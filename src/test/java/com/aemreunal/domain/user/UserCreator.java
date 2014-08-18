@@ -20,7 +20,6 @@ import net.minidev.json.JSONObject;
 
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.EntityCreator;
-import com.aemreunal.domain.UserInfo;
 import com.aemreunal.helper.JsonBuilder;
 import com.jayway.restassured.path.json.JsonPath;
 
@@ -59,7 +58,7 @@ public class UserCreator extends EntityCreator {
      *     (Optional) The requested password of the user. If left blank, the default
      *     password of "{@value UserCreator#TEST_PASSWORD}" will be assigned.
      *
-     * @return The {@link com.aemreunal.domain.UserInfo info} of the created user.
+     * @return The {@link UserInfo info} of the created user.
      */
     public static UserInfo createUser(String username, String password) {
         username = checkUsername(username);
