@@ -1,5 +1,18 @@
 package com.aemreunal.helper;
 
+import net.minidev.json.JSONObject;
+
+import java.util.UUID;
+import org.apache.http.HttpStatus;
+import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.domain.ProjectInfo;
+import com.aemreunal.domain.UserInfo;
+import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.path.json.JsonPath;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
+
 /*
  ***************************
  * Copyright (c) 2014      *
@@ -21,19 +34,6 @@ package com.aemreunal.helper;
  *
  * Documentation: http://code.google.com/p/rest-assured/wiki/Usage
  */
-
-import net.minidev.json.JSONObject;
-
-import java.util.UUID;
-import org.apache.http.HttpStatus;
-import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.domain.ProjectInfo;
-import com.aemreunal.domain.UserInfo;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.path.json.JsonPath;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.assertEquals;
 
 public class EntityCreator {
     public static final String TEST_PASSWORD = "testpassword";
@@ -139,13 +139,27 @@ public class EntityCreator {
         return new ProjectInfo(ownerUsername, responseJson.getLong("projectId"), responseJson.getString("secret"), name, description);
     }
 
+    /**
+     * Sends an entity create POST request to the specified path, with the given {@link
+     * net.minidev.json.JSONObject Json object} in the body of the request.
+     *
+     * @param entityAsJson
+     *     The body of the request
+     * @param path
+     *     The path of the request
+     *
+     * @return The response Json
+     */
     private static JsonPath createEntity(JSONObject entityAsJson, String path) {
+        if (path.equals("")) {
+            path = "/";
+        }
         JsonPath responseJson = given().contentType(ContentType.JSON)
                                        .log().ifValidationFails()
 
                                        .when()
                                        .body(entityAsJson)
-                                       .post(path)
+                                       .post(GlobalSettings.BASE_CONTEXT_PATH + path)
 
                                        .then()
                                        .log().ifValidationFails()
@@ -154,24 +168,7 @@ public class EntityCreator {
                                        .extract()
                                        .body()
                                        .jsonPath();
-        responseJson.prettyPrint();
-        return responseJson;
-    }
-
-    private static JsonPath getEntity(String path) {
-        JsonPath responseJson = given().log().ifValidationFails()
-
-                                       .when()
-                                       .get(path)
-
-                                       .then()
-                                       .log().ifValidationFails()
-                                       .statusCode(HttpStatus.SC_OK)
-                                       .contentType(ContentType.JSON)
-
-                                       .extract()
-                                       .body()
-                                       .jsonPath();
+        System.out.println("Create response:");
         responseJson.prettyPrint();
         return responseJson;
     }
