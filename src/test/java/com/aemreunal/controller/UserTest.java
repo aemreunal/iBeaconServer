@@ -50,5 +50,6 @@ public class UserTest {
         UserInfo createdUserInfo = UserCreator.createRandomUser();
         UserRemover.removeUser(createdUserInfo.username);
         UserGetter.failToGetUser(createdUserInfo.username);
+        UserRemover.failToRemoveUser(createdUserInfo.username);
     }
 }
