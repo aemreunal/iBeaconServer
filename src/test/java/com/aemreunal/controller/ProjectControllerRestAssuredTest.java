@@ -1,5 +1,11 @@
 package com.aemreunal.controller;
 
+import org.junit.Test;
+import com.aemreunal.domain.ProjectInfo;
+import com.aemreunal.domain.UserInfo;
+import com.aemreunal.helper.EntityCreator;
+import com.jayway.restassured.specification.ResponseSpecification;
+
 /*
  ***************************
  * Copyright (c) 2014      *
@@ -22,23 +28,10 @@ package com.aemreunal.controller;
  * Documentation: http://code.google.com/p/rest-assured/wiki/Usage
  */
 
-import org.apache.http.HttpStatus;
-import org.junit.Before;
-import org.junit.Test;
-import com.aemreunal.helper.DatabaseHelper;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.filter.log.LogDetail;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.specification.ResponseSpecification;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.assertTrue;
-
 public class ProjectControllerRestAssuredTest {
 
     private ResponseSpecification responseSpec;
+/*
 
     @Before
     public void createResponseSpec() {
@@ -49,7 +42,21 @@ public class ProjectControllerRestAssuredTest {
 
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(LogDetail.ALL);
     }
+*/
 
+    @Test
+    public void testCreateUser() {
+        UserInfo userInfo = EntityCreator.createRandomUser();
+        System.out.println(userInfo);
+    }
+
+    @Test
+    public void testCreateProject() {
+        UserInfo userInfo = EntityCreator.createRandomUser();
+        ProjectInfo projectInfo = EntityCreator.createRandomProject(userInfo.username);
+        System.out.println(projectInfo);
+    }
+/*
     @Test
     public void testGetProjects() {
         JsonPath response = given()
@@ -77,4 +84,5 @@ public class ProjectControllerRestAssuredTest {
         DatabaseHelper dbHelper = new DatabaseHelper();
         assertTrue("Failure to dump database!", dbHelper.extractFromDB());
     }
+    */
 }

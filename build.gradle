@@ -50,6 +50,7 @@ def jsonPathVersion = '0.9.1'
 def jsonTestVersion = '20140107'
 def junitVersion = '4.11'
 def logbackCoreVersion = '1.1.2'
+def loremIpsumVersion = '1.0'
 def mockitoAllVersion = '1.9.5'
 def mysqlConnectorJDBCVersion = '5.1.31'
 def restAssuredVersion = '2.3.2'
@@ -126,6 +127,7 @@ dependencies {
 //    testCompile group: 'junit', name: 'junit', version: junitVersion
     testCompile group: 'org.json', name: 'json', version: jsonTestVersion
     testCompile group: 'org.dbunit', name: 'dbunit', version: dbUnitVersion
+//    testCompile group: 'de.sven-jacobs', name: 'loremipsum', version: loremIpsumVersion
 
     // Tomcat
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
