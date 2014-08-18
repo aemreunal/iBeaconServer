@@ -1,4 +1,4 @@
-package com.aemreunal.domain;
+package com.aemreunal.domain.project;
 
 /*
  ***************************

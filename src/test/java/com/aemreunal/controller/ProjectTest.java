@@ -1,9 +1,10 @@
 package com.aemreunal.controller;
 
 import org.junit.Test;
-import com.aemreunal.domain.ProjectInfo;
 import com.aemreunal.domain.UserInfo;
-import com.aemreunal.helper.EntityCreator;
+import com.aemreunal.domain.project.ProjectCreator;
+import com.aemreunal.domain.project.ProjectInfo;
+import com.aemreunal.domain.user.UserCreator;
 
 /*
  ***************************
@@ -30,8 +31,8 @@ import com.aemreunal.helper.EntityCreator;
 public class ProjectTest {
     @Test
     public void testCreateProject() {
-        UserInfo userInfo = EntityCreator.createRandomUser();
-        ProjectInfo projectInfo = EntityCreator.createRandomProject(userInfo.username);
+        UserInfo userInfo = UserCreator.createRandomUser();
+        ProjectInfo projectInfo = ProjectCreator.createRandomProject(userInfo.username);
         System.out.println(projectInfo);
     }
 }

@@ -16,11 +16,6 @@ package com.aemreunal.helper;
  ***************************
  */
 
-import org.apache.http.HttpStatus;
-import com.aemreunal.config.GlobalSettings;
-
-import static com.jayway.restassured.RestAssured.given;
-
 public class EntityRemover {
     public static void removeUser(String username) {
         removeEntity("/" + username);
@@ -31,14 +26,7 @@ public class EntityRemover {
             path = "/";
         }
         path += "?confirm=yes";
-        given().log().ifValidationFails()
-
-               .when()
-               .delete(GlobalSettings.BASE_CONTEXT_PATH + path)
-
-               .then()
-               .log().ifValidationFails()
-               .statusCode(HttpStatus.SC_OK);
+        RestHelper.deleteEntityRequest(path);
     }
 
 }

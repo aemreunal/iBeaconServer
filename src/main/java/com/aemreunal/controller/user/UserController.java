@@ -86,7 +86,7 @@ public class UserController {
      *
      * @throws UsernameClashException
      */
-    @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.USER_CREATE_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<User> createUser(
         @RequestBody JSONObject userJson,
         UriComponentsBuilder builder) throws UsernameClashException {

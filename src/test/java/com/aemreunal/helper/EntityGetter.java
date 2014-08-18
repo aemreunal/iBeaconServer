@@ -17,12 +17,8 @@ package com.aemreunal.helper;
  */
 
 import org.apache.http.HttpStatus;
-import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.UserInfo;
 import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.response.ValidatableResponse;
-
-import static com.jayway.restassured.RestAssured.given;
 
 public class EntityGetter {
     public static UserInfo getUser(String username) {
@@ -31,30 +27,13 @@ public class EntityGetter {
     }
 
     public static void failToGetUser(String username) {
-        ValidatableResponse response = sendRequest("/" + username, HttpStatus.SC_NOT_FOUND);
+        RestHelper.sendGetRequest("/" + username, HttpStatus.SC_NOT_FOUND);
     }
 
     private static JsonPath getEntity(String path) {
-        ValidatableResponse response = sendRequest(path, HttpStatus.SC_OK);
-        JsonPath responseJson = response.extract()
-                                        .body()
-                                        .jsonPath();
-        System.out.println("Create response:");
+        JsonPath responseJson = RestHelper.getEntityRequest(path);
+        System.out.println("Get response:");
         responseJson.prettyPrint();
         return responseJson;
-    }
-
-    private static ValidatableResponse sendRequest(String path, int httpStatus) {
-        if (path.equals("")) {
-            path = "/";
-        }
-        return given().log().ifValidationFails()
-
-                      .when()
-                      .get(GlobalSettings.BASE_CONTEXT_PATH + path)
-
-                      .then()
-                      .log().ifValidationFails()
-                      .statusCode(httpStatus);
     }
 }

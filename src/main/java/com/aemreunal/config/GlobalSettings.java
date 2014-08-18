@@ -35,8 +35,9 @@ public class GlobalSettings {
      */
     public static final String BASE_CONTEXT_PATH = "iBeacon";
 
-//    public static final String USER_PATH_MAPPING     = "/user";
+    //    public static final String USER_PATH_MAPPING     = "/user";
     public static final String USER_PATH_MAPPING     = "";
+    public static final String USER_CREATE_MAPPING   = "/register";
     public static final String USER_USERNAME_MAPPING = "/{username}";
     public static final String USER_SPECIFIC_MAPPING = USER_PATH_MAPPING + USER_USERNAME_MAPPING;
 
