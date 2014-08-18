@@ -17,5 +17,5 @@ package com.aemreunal.controller;
  */
 
 public enum DeleteResponse {
-    DELETED, FORBIDDEN, NOT_FOUND, NOT_DELETED;
+    DELETED, FORBIDDEN, NOT_FOUND, NOT_DELETED
 }
