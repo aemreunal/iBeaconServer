@@ -19,13 +19,24 @@ package com.aemreunal.config;
 public class GlobalSettings {
     public static final boolean DEBUGGING = true;
 
-    // The BCrypt-hashed password field length (in User.class) is assumed to
-    // be 60 with a 2-digit log factor. For example, in '$2a$10$...', the '10'
-    // is the log factor. If it ever gets a 3-digit log factor (highly
-    // unlikely), the length of that field must become 61.
+    /*
+     * The BCrypt-hashed password field length (in User.class) is assumed to
+     * be 60 with a 2-digit log factor. For example, in '$2a$10$...', the '10'
+     * is the log factor. If it ever gets a 3-digit log factor (highly
+     * unlikely), the length of that field must become 61.
+     */
     public static final int BCRYPT_LOG_FACTOR = 10;
 
-    public static final String USER_PATH_MAPPING     = "/user";
+    /*
+     * This context path is defined inside the gradle build script,
+     * named 'build.gradle'. This value only reflects that one and
+     * if that context path is changed, this must be changed as
+     * well, since tests rely on the correctness of this value.
+     */
+    public static final String BASE_CONTEXT_PATH = "iBeacon";
+
+//    public static final String USER_PATH_MAPPING     = "/user";
+    public static final String USER_PATH_MAPPING     = "";
     public static final String USER_USERNAME_MAPPING = "/{username}";
     public static final String USER_SPECIFIC_MAPPING = USER_PATH_MAPPING + USER_USERNAME_MAPPING;
 
@@ -37,12 +48,12 @@ public class GlobalSettings {
     public static final String BEACON_ID_MAPPING       = "/{beaconId}";
     public static final String BEACON_SPECIFIC_MAPPING = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
 
-    public static final String BEACONGROUP_PATH_MAPPING     = PROJECT_SPECIFIC_MAPPING + "/beacongroup";
-    public static final String BEACONGROUP_ID_MAPPING       = "/{beaconGroupId}";
-    public static final String BEACONGROUP_SPECIFIC_MAPPING = BEACONGROUP_PATH_MAPPING + BEACONGROUP_ID_MAPPING;
-    public static final String BEACONGROUP_MEMBERS_MAPPING  = "/beacons";
-    public static final String BEACONGROUP_ADD_MEMBER_MAPPING  = BEACONGROUP_ID_MAPPING + "/addbeacontogroup";
-    public static final String BEACONGROUP_REMOVE_MEMBER_MAPPING  = BEACONGROUP_ID_MAPPING + "/removebeaconfromgroup";
+    public static final String BEACONGROUP_PATH_MAPPING          = PROJECT_SPECIFIC_MAPPING + "/beacongroup";
+    public static final String BEACONGROUP_ID_MAPPING            = "/{beaconGroupId}";
+    public static final String BEACONGROUP_SPECIFIC_MAPPING      = BEACONGROUP_PATH_MAPPING + BEACONGROUP_ID_MAPPING;
+    public static final String BEACONGROUP_MEMBERS_MAPPING       = "/beacons";
+    public static final String BEACONGROUP_ADD_MEMBER_MAPPING    = BEACONGROUP_ID_MAPPING + "/addbeacontogroup";
+    public static final String BEACONGROUP_REMOVE_MEMBER_MAPPING = BEACONGROUP_ID_MAPPING + "/removebeaconfromgroup";
 
 
     //-------------------------------------------------------------------------------------------
