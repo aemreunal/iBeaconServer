@@ -60,12 +60,7 @@ public class BeaconController {
         @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
         @RequestParam(value = "major", required = false, defaultValue = "") String major,
         @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
-        // First check if project exists
         Project project = projectService.findById(username, projectId);
-        if (project == null) {
-            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
-        }
-
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
             List<Beacon> beaconList = new ArrayList<Beacon>();
             for (Beacon beacon : project.getBeacons()) {
