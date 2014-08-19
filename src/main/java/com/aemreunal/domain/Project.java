@@ -300,10 +300,11 @@ public class Project extends ResourceSupport implements Serializable {
     }
 
     public JSONObject getCreateResponse(String projectSecret) {
-        return new JsonBuilder().add("projectId", getProjectId().toString())
+        return new JsonBuilder().add("projectId", getProjectId())
                                 .add("name", getName())
                                 .add("description", getDescription())
                                 .add("secret", projectSecret)
+                                .add("links", getLinks())
                                 .build();
     }
 }
