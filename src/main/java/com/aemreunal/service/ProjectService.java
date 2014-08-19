@@ -81,28 +81,6 @@ public class ProjectService {
     }
 
     /**
-     * Returns the list of all the projects. Will only work in debug mode. Otherwise, will
-     * only return an empty list.
-     *
-     * @return A list of all projects
-     */
-    public List<Project> findAll() {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding all projects");
-        }
-
-        List<Project> projectList = new ArrayList<Project>();
-
-// TODO        if (GlobalSettings.DEBUGGING) {
-        for (Project project : projectRepo.findAll()) {
-            projectList.add(project);
-        }
-//        }
-
-        return projectList;
-    }
-
-    /**
      * Find the projects that belong to the specific {@link com.aemreunal.domain.User
      * User} with the specified username. Searches through the projects, matching the
      * {@link com.aemreunal.domain.User User} with the specified username.
@@ -116,24 +94,9 @@ public class ProjectService {
      */
     public List<Project> findAllBelongingTo(String ownerUsername) {
         User owner = userService.findByUsername(ownerUsername);
-        return this.findAllBelongingTo(owner);
-    }
-
-    /**
-     * Find the projects that belong to a specific {@link com.aemreunal.domain.User User}.
-     * Searches through the projects, matching the specified {@link
-     * com.aemreunal.domain.User User}.
-     *
-     * @param owner
-     *     The {@link com.aemreunal.domain.User User} to find the projects of
-     *
-     * @return The list of projects that belong to the {@link com.aemreunal.domain.User
-     * User}
-     */
-    public List<Project> findAllBelongingTo(User owner) {
         // TODO or, find the user and .getProjects()?
         List<Project> projectList = new ArrayList<Project>();
-        for (Project project : projectRepo.findByOwner(owner)) {
+        for (Project project : owner.getProjects()) {
             projectList.add(project);
         }
         return projectList;
