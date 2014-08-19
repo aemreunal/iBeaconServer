@@ -18,17 +18,19 @@ package com.aemreunal.domain.project;
 
 import net.minidev.json.JSONObject;
 
+import org.apache.http.HttpStatus;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.EntityCreator;
 import com.aemreunal.helper.JsonBuilder;
 import com.jayway.restassured.path.json.JsonPath;
+import com.jayway.restassured.response.ValidatableResponse;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ProjectCreator extends EntityCreator {
     /**
-     * Calls {@link com.aemreunal.domain.project.ProjectCreator#createRandomProject(String, String,
-     * String) createRandomProject(String, String, String)} with empty String arguments,
+     * Calls {@link com.aemreunal.domain.project.ProjectCreator#createProject(String,
+     * String, String) createProject(String, String, String)} with empty String arguments,
      * except for the username argument, which must be supplied.
      *
      * @param ownerUsername
@@ -36,10 +38,11 @@ public class ProjectCreator extends EntityCreator {
      *
      * @return The created project's info.
      *
-     * @see com.aemreunal.domain.project.ProjectCreator#createRandomProject(String, String, String)
+     * @see com.aemreunal.domain.project.ProjectCreator#createProject(String, String,
+     * String)
      */
     public static ProjectInfo createRandomProject(String ownerUsername) {
-        return createRandomProject(ownerUsername, "", "");
+        return createProject(ownerUsername, "", "");
     }
 
     /**
@@ -63,18 +66,43 @@ public class ProjectCreator extends EntityCreator {
      *
      * @return The created project's info
      */
-    public static ProjectInfo createRandomProject(String ownerUsername, String name, String description) {
+    public static ProjectInfo createProject(String ownerUsername, String name, String description) {
         name = checkName(name);
         description = checkDescription(description, name);
 
-        JSONObject projectJson = new JsonBuilder().add("name", name)
-                                                  .add("description", description)
-                                                  .build();
-        String path = GlobalSettings.USER_PATH_MAPPING + "/" + ownerUsername + "/project";
+        JSONObject projectJson = getProjectCreateJson(name, description);
+        String path = getProjectCreatePath(ownerUsername);
         JsonPath responseJson = createEntity(projectJson, path);
 
         assertEquals("Requested project name and response project name do not match!", name, responseJson.getString("name"));
         assertEquals("Requested project description and response project description do not match!", description, responseJson.getString("description"));
-        return new ProjectInfo(ownerUsername, responseJson.getLong("projectId"), responseJson.getString("secret"), name, description);
+        return new ProjectInfo(responseJson, ownerUsername, responseJson.getString("secret"));
+    }
+
+    public static void failToCreateProject(String ownerUsername, String name, String description) {
+        name = checkName(name);
+        description = checkDescription(description, name);
+
+        JSONObject projectJson = getProjectCreateJson(name, description);
+        String path = getProjectCreatePath(ownerUsername);
+        ValidatableResponse response = sendPostRequest(projectJson, path, HttpStatus.SC_BAD_REQUEST);
+
+        JsonPath jsonResponse = response.extract().body().jsonPath();
+        assertNotNull(jsonResponse.getString("error"));
+        assertNotEquals(jsonResponse.getString("error"), "");
+        assertNotNull(jsonResponse.getString("reason"));
+        assertEquals(jsonResponse.getString("reason"), "project");
+        assertTrue(jsonResponse.getList("violations").size() >= 1);
+        jsonResponse.prettyPrint();
+    }
+
+    private static JSONObject getProjectCreateJson(String name, String description) {
+        return new JsonBuilder().add("name", name)
+                                .add("description", description)
+                                .build();
+    }
+
+    private static String getProjectCreatePath(String ownerUsername) {
+        return GlobalSettings.USER_PATH_MAPPING + "/" + ownerUsername + "/project";
     }
 }

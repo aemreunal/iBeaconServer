@@ -18,6 +18,7 @@ package com.aemreunal.domain.project;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.jayway.restassured.path.json.JsonPath;
 
 public class ProjectInfo {
     public String     ownerUsername = "";
@@ -35,6 +36,15 @@ public class ProjectInfo {
         this.secret = secret;
         this.name = name;
         this.description = description;
+    }
+
+    public ProjectInfo(JsonPath projectJson, String ownerUsername, String secret) {
+        this.ownerUsername = ownerUsername;
+        this.projectId = projectJson.getLong("projectId");
+        this.secret = secret;
+        this.name = projectJson.getString("name");
+        this.description = projectJson.getString("description");
+
     }
 
     public void addBeacon(Long beaconId) {
