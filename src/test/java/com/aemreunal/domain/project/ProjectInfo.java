@@ -17,6 +17,7 @@ package com.aemreunal.domain.project;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import com.jayway.restassured.path.json.JsonPath;
 
@@ -44,6 +45,15 @@ public class ProjectInfo {
         this.secret = secret;
         this.name = projectJson.getString("name");
         this.description = projectJson.getString("description");
+
+    }
+
+    public ProjectInfo(HashMap<String, Object> projectMap, String ownerUsername, String secret) {
+        this.ownerUsername = ownerUsername;
+        this.projectId = Long.parseLong(projectMap.get("projectId").toString());
+        this.secret = secret;
+        this.name = projectMap.get("name").toString();
+        this.description = projectMap.get("description").toString();
 
     }
 
