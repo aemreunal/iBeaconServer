@@ -14,6 +14,7 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.aemreunal.exception.project.ProjectNotFoundException;
+import com.aemreunal.helper.JsonBuilder;
 
 /*
  ***************************
@@ -35,21 +36,18 @@ import com.aemreunal.exception.project.ProjectNotFoundException;
 public class ProjectControllerAdvice {
     @ExceptionHandler(ProjectNotFoundException.class)
     public ResponseEntity<JSONObject> projectNotFoundExceptionHandler(ProjectNotFoundException ex) {
-        Map<String, String> errorMessage = new HashMap<>(2);
-        errorMessage.put("reason", "project");
-        errorMessage.put("error", ex.getLocalizedMessage());
-        JSONObject responseBody = new JSONObject(errorMessage);
+        JSONObject responseBody = new JsonBuilder().add("reason", "project")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = {ConstraintViolationException.class, TransactionSystemException.class })
+    @ExceptionHandler(value = { ConstraintViolationException.class, TransactionSystemException.class })
     public ResponseEntity<JSONObject> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
-        Map<String, Object> errorMessage = new HashMap<>(3);
-        errorMessage.put("reason", "project");
-        errorMessage.put("error", "Constraint violation error ocurred! Unable to save project.");
-        errorMessage.put("violations", formatViolations(violations));
-        JSONObject responseBody = new JSONObject(errorMessage);
+        JSONObject responseBody = new JsonBuilder().add("reason", "project")
+                                                   .add("error", "Constraint violation error ocurred! Unable to save project.")
+                                                   .add("violations", formatViolations(ex.getConstraintViolations()))
+                                                   .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
