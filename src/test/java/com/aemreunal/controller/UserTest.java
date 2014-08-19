@@ -52,4 +52,34 @@ public class UserTest {
         UserGetter.failToGetUser(createdUserInfo.username);
         UserRemover.failToRemoveUser(createdUserInfo.username);
     }
+
+    @Test
+    public void testFailToGetUserWithValidUsername() {
+        UserGetter.failToGetUser("nonExistantUser");
+    }
+
+    @Test
+    public void testFailToGetUserWithInvalidUsername() {
+        UserGetter.failToGetUser("Non-Existant User");
+    }
+
+    @Test
+    public void testFailToCreateUserDueToLongUsername() {
+        UserCreator.failToCreateUser("aUsernameWithMoreThanTheMaximumNumberOfCharactersAllowedForTheField");
+    }
+
+    @Test
+    public void testFailToCreateUserDueToSpaceInUsername() {
+        UserCreator.failToCreateUser("Hello world!");
+    }
+
+    @Test
+    public void testFailToCreateUserDueToIllegalUsername() {
+        UserCreator.failToCreateUser("HelloWorld!");
+        UserCreator.failToCreateUser("Hellö");
+        UserCreator.failToCreateUser("Héllo");
+        UserCreator.failToCreateUser("HşiğüçöıWOrlasda");
+        UserCreator.failToCreateUser("123Hello");
+        UserCreator.failToCreateUser("123 Hello");
+    }
 }
