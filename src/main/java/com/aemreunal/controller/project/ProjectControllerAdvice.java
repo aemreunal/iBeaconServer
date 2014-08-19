@@ -39,7 +39,7 @@ public class ProjectControllerAdvice {
         JSONObject responseBody = new JsonBuilder().add("reason", "project")
                                                    .add("error", ex.getLocalizedMessage())
                                                    .build();
-        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = { ConstraintViolationException.class, TransactionSystemException.class })
