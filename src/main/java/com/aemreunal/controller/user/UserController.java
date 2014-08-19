@@ -65,7 +65,9 @@ public class UserController {
      * @return The user
      */
     // TODO require authentication to get details
-    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.USER_USERNAME_MAPPING, produces = "application/json; charset=UTF-8")
+    @RequestMapping(method = RequestMethod.GET,
+                    value = GlobalSettings.USER_USERNAME_MAPPING,
+                    produces = "application/json; charset=UTF-8")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username);
         if (user == null) {
