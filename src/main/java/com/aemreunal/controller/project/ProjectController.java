@@ -204,10 +204,11 @@ public class ProjectController {
     public ResponseEntity<Project> deleteProject(@PathVariable String username,
                                                  @PathVariable Long projectId,
                                                  @RequestParam(value = "confirm", required = true) String confirmation) {
-
         if (confirmation.toLowerCase().equals("yes")) {
             projectService.delete(username, projectId);
+            return new ResponseEntity<Project>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Project>(HttpStatus.PRECONDITION_FAILED);
         }
-        return new ResponseEntity<Project>(HttpStatus.OK);
     }
 }
