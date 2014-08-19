@@ -18,11 +18,11 @@ package com.aemreunal.domain;
 
 import com.aemreunal.helper.RestHelper;
 
-public class EntityRemover {
+public class EntityRemover extends RestHelper {
 
     protected static void removeEntity(String path) {
         path += "?confirm=yes";
-        RestHelper.deleteEntityRequest(path);
+        deleteEntityRequest(path);
     }
 
 }

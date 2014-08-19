@@ -18,7 +18,6 @@ package com.aemreunal.domain.user;
 
 import org.apache.http.HttpStatus;
 import com.aemreunal.domain.EntityGetter;
-import com.aemreunal.helper.RestHelper;
 import com.jayway.restassured.path.json.JsonPath;
 
 public class UserGetter extends EntityGetter {
@@ -28,6 +27,6 @@ public class UserGetter extends EntityGetter {
     }
 
     public static void failToGetUser(String username) {
-        RestHelper.sendGetRequest("/" + username, HttpStatus.SC_NOT_FOUND);
+        sendGetRequest("/" + username, HttpStatus.SC_NOT_FOUND);
     }
 }

@@ -18,7 +18,6 @@ package com.aemreunal.domain.user;
 
 import org.apache.http.HttpStatus;
 import com.aemreunal.domain.EntityRemover;
-import com.aemreunal.helper.RestHelper;
 
 public class UserRemover extends EntityRemover {
     public static void removeUser(String username) {
@@ -26,6 +25,6 @@ public class UserRemover extends EntityRemover {
     }
 
     public static void failToRemoveUser(String username) {
-        RestHelper.sendDeleteRequest("/" + username + "?confirm=yes", HttpStatus.SC_NOT_FOUND);
+        sendDeleteRequest("/" + username + "?confirm=yes", HttpStatus.SC_NOT_FOUND);
     }
 }

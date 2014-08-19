@@ -6,6 +6,8 @@ import java.util.UUID;
 import com.aemreunal.helper.RestHelper;
 import com.jayway.restassured.path.json.JsonPath;
 
+import static org.junit.Assert.assertTrue;
+
 /*
  ***************************
  * Copyright (c) 2014      *
@@ -28,7 +30,7 @@ import com.jayway.restassured.path.json.JsonPath;
  * Documentation: http://code.google.com/p/rest-assured/wiki/Usage
  */
 
-public class EntityCreator {
+public class EntityCreator extends RestHelper {
     public static final String TEST_PASSWORD = "testpassword";
 
     /**
@@ -43,7 +45,7 @@ public class EntityCreator {
      * @return The response Json
      */
     protected static JsonPath createEntity(JSONObject entityAsJson, String path) {
-        JsonPath responseJson = RestHelper.createEntityRequest(entityAsJson, path);
+        JsonPath responseJson = createEntityRequest(entityAsJson, path);
         System.out.println("Create response:");
         responseJson.prettyPrint();
         return responseJson;
@@ -52,6 +54,9 @@ public class EntityCreator {
     protected static String checkName(String name) {
         if (name.equals("")) {
             name = "testproject-" + UUID.randomUUID().toString();
+        } else {
+            String errorMessage = "A project name with less than " + Project.NAME_MAX_LENGTH + " characters must be provided!";
+            assertTrue(errorMessage, name.length() <= Project.NAME_MAX_LENGTH);
         }
         return name;
     }
@@ -59,13 +64,19 @@ public class EntityCreator {
     protected static String checkDescription(String description, String name) {
         if (description.equals("")) {
             description = "Test project with name: " + name;
+        } else {
+            String errorMessage = "A project description with less than " + Project.DESCRIPTION_MAX_LENGTH + " characters must be provided!";
+            assertTrue(errorMessage, description.length() <= Project.DESCRIPTION_MAX_LENGTH);
         }
         return description;
     }
 
     protected static String checkUsername(String username) {
         if (username.equals("")) {
-            username = "testuser-" + UUID.randomUUID().toString();
+            username = "testuser" + UUID.randomUUID().toString().replaceAll("[^a-zA-Z0-9]", "");
+        } else {
+            String errorMessage = "A username with less than " + User.USERNAME_MAX_LENGTH + " characters must be provided!";
+            assertTrue(errorMessage, username.length() <= User.USERNAME_MAX_LENGTH);
         }
         return username;
     }

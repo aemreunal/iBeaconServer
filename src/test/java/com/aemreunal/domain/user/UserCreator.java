@@ -18,20 +18,23 @@ package com.aemreunal.domain.user;
 
 import net.minidev.json.JSONObject;
 
+import org.apache.http.HttpStatus;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.EntityCreator;
 import com.aemreunal.helper.JsonBuilder;
 import com.jayway.restassured.path.json.JsonPath;
+import com.jayway.restassured.response.ValidatableResponse;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class UserCreator extends EntityCreator {
+    public static final String USER_CREATE_PATH = GlobalSettings.USER_PATH_MAPPING + GlobalSettings.USER_CREATE_MAPPING;
 
 //    private static BCryptPasswordEncoder encoder    = new BCryptPasswordEncoder(GlobalSettings.BCRYPT_LOG_FACTOR);
 
     /**
-     * Calls {@link UserCreator#createUser(String, String)
-     * createUser(String, String)} with empty String arguments.
+     * Calls {@link UserCreator#createUser(String, String) createUser(String, String)}
+     * with empty String arguments.
      *
      * @return The created user's info.
      *
@@ -64,15 +67,30 @@ public class UserCreator extends EntityCreator {
         username = checkUsername(username);
         password = checkPassword(password);
 
-        JSONObject userJson = new JsonBuilder().add("username", username)
-                                               .add("password", password)
-                                               .build();
-        String path = GlobalSettings.USER_PATH_MAPPING + GlobalSettings.USER_CREATE_MAPPING;
-        JsonPath responseJson = createEntity(userJson, path);
+        JSONObject userJson = getUserCreateJson(username, password);
+        JsonPath responseJson = createEntity(userJson, USER_CREATE_PATH);
 
         assertEquals("Requested username and response username do not match!", username, responseJson.getString("username"));
         // TODO Assert in-DB password matches
         // assertTrue(encoder.matches(password, responseJson.getString("password")));
         return new UserInfo(username, password, responseJson.getLong("userId"));
+    }
+
+    public static void failToCreateUser(String username) {
+        JSONObject userJson = getUserCreateJson(username, TEST_PASSWORD);
+        ValidatableResponse response = sendPostRequest(userJson, USER_CREATE_PATH, HttpStatus.SC_BAD_REQUEST);
+        JsonPath jsonResponse = response.extract().body().jsonPath();
+        assertNotNull(jsonResponse.getString("error"));
+        assertNotEquals(jsonResponse.getString("error"), "");
+        assertNotNull(jsonResponse.getString("reason"));
+        assertNotEquals(jsonResponse.getString("reason"), "");
+        // TODO add violations assertTrue(jsonResponse.getList("violations").size() >= 1);
+        jsonResponse.prettyPrint();
+    }
+
+    private static JSONObject getUserCreateJson(String username, String password) {
+        return new JsonBuilder().add("username", username)
+                                .add("password", password)
+                                .build();
     }
 }

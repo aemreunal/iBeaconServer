@@ -20,7 +20,6 @@ import net.minidev.json.JSONObject;
 
 import org.apache.http.HttpStatus;
 import com.aemreunal.config.GlobalSettings;
-import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.ValidatableResponse;
 
@@ -28,28 +27,28 @@ import static com.jayway.restassured.RestAssured.given;
 
 public class RestHelper {
 
-    public static JsonPath createEntityRequest(JSONObject entityAsJson, String path) {
+    protected static JsonPath createEntityRequest(JSONObject entityAsJson, String path) {
         return RestHelper.sendPostRequest(entityAsJson, path, HttpStatus.SC_CREATED)
                          .extract()
                          .body()
                          .jsonPath();
     }
 
-    public static JsonPath getEntityRequest(String path) {
+    protected static JsonPath getEntityRequest(String path) {
         return RestHelper.sendGetRequest(path, HttpStatus.SC_OK)
                          .extract()
                          .body()
                          .jsonPath();
     }
 
-    public static JsonPath deleteEntityRequest(String path) {
+    protected static JsonPath deleteEntityRequest(String path) {
         return RestHelper.sendDeleteRequest(path, HttpStatus.SC_OK)
                          .extract()
                          .body()
                          .jsonPath();
     }
 
-    public static ValidatableResponse sendGetRequest(String path, int expectedHttpStatus) {
+    protected static ValidatableResponse sendGetRequest(String path, int expectedHttpStatus) {
         if (path.equals("")) {
             path = "/";
         }
@@ -63,11 +62,11 @@ public class RestHelper {
                       .statusCode(expectedHttpStatus);
     }
 
-    public static ValidatableResponse sendPostRequest(JSONObject entityAsJson, String path, int expectedHttpStatus) {
+    protected static ValidatableResponse sendPostRequest(JSONObject entityAsJson, String path, int expectedHttpStatus) {
         if (path.equals("")) {
             path = "/";
         }
-        return given().contentType(ContentType.JSON)
+        return given().contentType("application/json; charset=UTF-8")
                       .log().ifValidationFails()
 
                       .when()
@@ -79,7 +78,7 @@ public class RestHelper {
                       .statusCode(expectedHttpStatus);
     }
 
-    public static ValidatableResponse sendDeleteRequest(String path, int expectedHttpStatus) {
+    protected static ValidatableResponse sendDeleteRequest(String path, int expectedHttpStatus) {
         if (path.equals("")) {
             path = "/";
         }

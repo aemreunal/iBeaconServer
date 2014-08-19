@@ -19,10 +19,10 @@ package com.aemreunal.domain;
 import com.aemreunal.helper.RestHelper;
 import com.jayway.restassured.path.json.JsonPath;
 
-public class EntityGetter {
+public class EntityGetter extends RestHelper {
 
     protected static JsonPath getEntity(String path) {
-        JsonPath responseJson = RestHelper.getEntityRequest(path);
+        JsonPath responseJson = getEntityRequest(path);
         System.out.println("Get response:");
         responseJson.prettyPrint();
         return responseJson;
