@@ -4,7 +4,7 @@
   </option>
   <option name="httpMethod" value="POST" />
   <option name="urlBase" value="http://localhost:8080" />
-  <option name="urlPath" value="/user/hello/project" />
+  <option name="urlPath" value="iBeacon/hello/project" />
   <option name="headers">
     <list>
       <KeyValuePair>
