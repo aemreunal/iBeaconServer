@@ -31,6 +31,9 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class UserTest {
+
+    public static final String LONG_USERNAME = "aUsernameWithMoreThanTheMaximumNumberOfCharactersAllowedForTheField";
+
     @Test
     public void testCreateUser() {
         UserInfo userInfo = UserCreator.createRandomUser();
@@ -61,22 +64,16 @@ public class UserTest {
     @Test
     public void testFailToGetUserWithInvalidUsername() {
         UserGetter.failToGetUser("nönğüiasdşe-g");
+        UserGetter.failToGetUser("Hello world");
+        UserGetter.failToGetUser("Hello!");
+        UserGetter.failToGetUser("wörldais");
+        UserGetter.failToGetUser(LONG_USERNAME);
     }
 
     @Test
     public void testFailToCreateUserWithSameUsername() {
         UserInfo createdUserInfo = UserCreator.createRandomUser();
         UserCreator.failToCreateUser(createdUserInfo.username);
-    }
-
-    @Test
-    public void testFailToCreateUserDueToLongUsername() {
-        UserCreator.failToCreateUser("aUsernameWithMoreThanTheMaximumNumberOfCharactersAllowedForTheField");
-    }
-
-    @Test
-    public void testFailToCreateUserDueToSpaceInUsername() {
-        UserCreator.failToCreateUser("Hello world!");
     }
 
     @Test
@@ -87,5 +84,7 @@ public class UserTest {
         UserCreator.failToCreateUser("HşiğüçöıWOrlasda");
         UserCreator.failToCreateUser("123Hello");
         UserCreator.failToCreateUser("123 Hello");
+        UserCreator.failToCreateUser("Hello world!");
+        UserCreator.failToCreateUser(LONG_USERNAME);
     }
 }
