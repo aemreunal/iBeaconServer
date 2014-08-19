@@ -17,6 +17,10 @@ package com.aemreunal.config;
  */
 
 public class GlobalSettings {
+    /**
+     * Used to set the global logging levels, like whether to log SQL queries or prints
+     * inside methods.
+     */
     public static final boolean DEBUGGING = true;
 
     /**
@@ -40,7 +44,6 @@ public class GlobalSettings {
      */
     public static final String NON_ASCII_REGEX = ".*[^\\p{ASCII}].*";
 
-    //    public static final String USER_PATH_MAPPING     = "/user";
     public static final String USER_PATH_MAPPING     = "";
     public static final String USER_CREATE_MAPPING   = "/register";
     public static final String USER_USERNAME_MAPPING = "/{username}";
@@ -82,10 +85,10 @@ public class GlobalSettings {
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.show_sql"
     //----------------------------------------
-    public static final String SHOW_SQL_PROPERTY = "true";
+    public static final String SHOW_SQL_PROPERTY = String.valueOf(DEBUGGING);
 
     // Used for the JDBC adapter
-    public static final boolean SHOW_SQL = Boolean.getBoolean(SHOW_SQL_PROPERTY);
+    public static final boolean SHOW_SQL = DEBUGGING;
     //-------------------------------------------------------------------------------------------
 
     //-------------------------------------------------------------------------------------------
