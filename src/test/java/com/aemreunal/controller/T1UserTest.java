@@ -30,9 +30,8 @@ import static org.junit.Assert.assertTrue;
  * Documentation: http://code.google.com/p/rest-assured/wiki/Usage
  */
 
-public class UserTest {
-
-    public static final String LONG_USERNAME = "aUsernameWithMoreThanTheMaximumNumberOfCharactersAllowedForTheField";
+public class T1UserTest {
+    public static final String LONG_NAME = "aUsernameWithMoreThanTheMaximumNumberOfCharactersAllowedForTheField";
 
     @Test
     public void testCreateUser() {
@@ -67,7 +66,7 @@ public class UserTest {
         UserGetter.failToGetUser("Hello world");
         UserGetter.failToGetUser("Hello!");
         UserGetter.failToGetUser("wörldais");
-        UserGetter.failToGetUser(LONG_USERNAME);
+        UserGetter.failToGetUser(LONG_NAME);
     }
 
     @Test
@@ -85,6 +84,6 @@ public class UserTest {
         UserCreator.failToCreateUser("123Hello");
         UserCreator.failToCreateUser("123 Hello");
         UserCreator.failToCreateUser("Hello world!");
-        UserCreator.failToCreateUser(LONG_USERNAME);
+        UserCreator.failToCreateUser(LONG_NAME);
     }
 }

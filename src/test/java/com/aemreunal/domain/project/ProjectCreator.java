@@ -79,21 +79,39 @@ public class ProjectCreator extends EntityCreator {
         return new ProjectInfo(responseJson, ownerUsername, responseJson.getString("secret"));
     }
 
-    public static void failToCreateProject(String ownerUsername, String name, String description) {
-        name = checkName(name);
-        description = checkDescription(description, name);
+    public static void failToCreateProjectWithBadUsername(String ownerUsername, String name, String description, boolean usernameIsLegal) {
+        JsonPath jsonResponse;
+        if (usernameIsLegal) {
+            jsonResponse = failToCreateProject(ownerUsername, name, description, HttpStatus.SC_NOT_FOUND);
+        } else {
+            jsonResponse = failToCreateProject(ownerUsername, name, description, HttpStatus.SC_BAD_REQUEST);
+        }
+        assertNotNull(jsonResponse.getString("error"));
+        assertNotEquals(jsonResponse.getString("error"), "");
+        assertNotNull(jsonResponse.getString("reason"));
+        assertEquals(jsonResponse.getString("reason"), "username");
+        jsonResponse.prettyPrint();
+    }
 
-        JSONObject projectJson = getProjectCreateJson(name, description);
-        String path = getProjectCreatePath(ownerUsername);
-        ValidatableResponse response = sendPostRequest(projectJson, path, HttpStatus.SC_BAD_REQUEST);
-
-        JsonPath jsonResponse = response.extract().body().jsonPath();
+    public static void failToCreateInvalidProject(String ownerUsername, String name, String description) {
+        JsonPath jsonResponse = failToCreateProject(ownerUsername, name, description, HttpStatus.SC_BAD_REQUEST);
         assertNotNull(jsonResponse.getString("error"));
         assertNotEquals(jsonResponse.getString("error"), "");
         assertNotNull(jsonResponse.getString("reason"));
         assertEquals(jsonResponse.getString("reason"), "project");
-        assertTrue(jsonResponse.getList("violations").size() >= 1);
+        assertTrue("Violations are not returned!", jsonResponse.getList("violations").size() >= 1);
         jsonResponse.prettyPrint();
+    }
+
+    public static JsonPath failToCreateProject(String ownerUsername, String name, String description, int httpStatus) {
+        JSONObject projectJson = getProjectCreateJson(name, description);
+        String path = getProjectCreatePath(ownerUsername);
+        ValidatableResponse response;
+        response = sendPostRequest(projectJson, path, httpStatus);
+
+        JsonPath jsonResponse = response.extract().body().jsonPath();
+        jsonResponse.prettyPrint();
+        return jsonResponse;
     }
 
     private static JSONObject getProjectCreateJson(String name, String description) {
