@@ -8,6 +8,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.User;
 import com.aemreunal.exception.user.InvalidUsernameException;
+import com.aemreunal.exception.user.UserNotFoundException;
 import com.aemreunal.exception.user.UsernameClashException;
 import com.aemreunal.repository.user.UserRepo;
 import com.aemreunal.repository.user.UserSpecs;
@@ -119,22 +120,6 @@ public class UserService {
     }
 
     /**
-     * Finds the user with the given ID
-     *
-     * @param id
-     *     The ID of the user to search for
-     *
-     * @return The user the given ID
-     */
-    public User findById(Long id) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding user with ID = \'" + id + "\'");
-        }
-
-        return userRepo.findOne(id);
-    }
-
-    /**
      * Find the user with the given username
      *
      * @param username
@@ -147,8 +132,11 @@ public class UserService {
             System.out.println("Finding user with username = \'" + username + "\'");
         }
         verifyUsernameCorrectness(username);
-        // TODO throw not found ?
-        return userRepo.findByUsername(username);
+        User user = userRepo.findByUsername(username);
+        if(user == null) {
+            throw new UserNotFoundException();
+        }
+        return user;
     }
 
     /**
@@ -175,27 +163,6 @@ public class UserService {
             return null;
         }
     }
-
-//    /**
-//     * Deletes the user with the given ID and deletes everything (projects, etc.)
-//     * associated with the user
-//     *
-//     * @param id
-//     *     The ID of the user to delete
-//     *
-//     * @return Whether the user was deleted or not
-//     */
-//    public DeleteResponse delete(Long id) {
-//        if (GlobalSettings.DEBUGGING) {
-//            System.out.println("Deleting user with ID = \'" + id + "\'");
-//        }
-//        if (userRepo.exists(id)) {
-//            userRepo.delete(id);
-//            return DeleteResponse.DELETED;
-//        } else {
-//            return DeleteResponse.NOT_FOUND;
-//        }
-//    }
 
     /**
      * Deletes the user with the given username and deletes everything (projects, etc.)
