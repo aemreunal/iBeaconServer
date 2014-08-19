@@ -2,13 +2,13 @@ package com.aemreunal.controller.user;
 
 import net.minidev.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.aemreunal.exception.user.InvalidUsernameException;
 import com.aemreunal.exception.user.UsernameClashException;
+import com.aemreunal.helper.JsonBuilder;
 
 /*
  ***************************
@@ -30,10 +30,15 @@ import com.aemreunal.exception.user.UsernameClashException;
 public class UserControllerAdvice {
     @ExceptionHandler(UsernameClashException.class)
     public ResponseEntity<JSONObject> usernameClashExceptionHandler(UsernameClashException ex) {
-        Map<String, String> errorMessage = new HashMap<>(2);
-        errorMessage.put("reason", "username");
-        errorMessage.put("error", ex.getLocalizedMessage());
-        JSONObject responseBody = new JSONObject(errorMessage);
+        JSONObject responseBody = new JsonBuilder().add("reason", "username")
+                                                   .add("error", ex.getLocalizedMessage()).build();
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidUsernameException.class)
+    public ResponseEntity<JSONObject> invalidUsernameExceptionHangler(InvalidUsernameException ex) {
+        JSONObject responseBody = new JsonBuilder().add("reason", "username")
+                                                   .add("error", ex.getLocalizedMessage()).build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 }

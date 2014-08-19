@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.User;
+import com.aemreunal.exception.user.InvalidUsernameException;
+import com.aemreunal.exception.user.UsernameClashException;
 import com.aemreunal.repository.user.UserRepo;
 import com.aemreunal.repository.user.UserSpecs;
 
@@ -52,7 +54,43 @@ public class UserService {
         if (user.getUserId() == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
+        verifyUsernameCorrectness(user.getUsername());
         return userRepo.save(user);
+    }
+
+    /**
+     * Checks whether the specified username is correct (whether it already exists,
+     * whether it contains spaces or not) and if so, throws a UsernameClashException.
+     *
+     * @param username
+     *     The username to check
+     *
+     * @throws com.aemreunal.exception.user.UsernameClashException
+     */
+    private void verifyUsernameCorrectness(String username) throws UsernameClashException {
+        if (username.length() > User.USERNAME_MAX_LENGTH) {
+            // The specified username contains more characters than allowed
+            throw new InvalidUsernameException(username, "Username contains more than allowed number of characters!");
+        } else if (!Character.isLetter(username.charAt(0))) {
+            // The specified username does not begin with a letter
+            throw new InvalidUsernameException(username, "Username does not begin with a letter!");
+        } else if (username.indexOf(' ') != -1) {
+            // The specified username contains spaces
+            throw new InvalidUsernameException(username, "Username can not contain spaces!");
+        } else if(username.matches(".*[^\\p{ASCII}].*")) {
+            // The specified username contains non-ASCII characters
+            throw new InvalidUsernameException(username, "Username can not contain non-ASCII characters!");
+        } else if (isUsernameTaken(username)) {
+            // The specified username already exists
+            throw new UsernameClashException(username);
+        } else {
+            for (char ch : username.toCharArray()) {
+                if (!Character.isLetterOrDigit(ch)) {
+                    // The specified username contains a non-alphanumeric character
+                    throw new InvalidUsernameException(username, "Username contains an illegal (non-alphanumeric) character!");
+                }
+            }
+        }
     }
 
     /**

@@ -47,7 +47,7 @@ public class UserController {
 //     *
 //     * @return The user
 //     */
-//    @RequestMapping(method = RequestMethod.GET, value = "/{userId}", produces = "application/json;charset=UTF-8")
+//    @RequestMapping(method = RequestMethod.GET, value = "/{userId}", produces = "application/json; charset=UTF-8")
 //    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
 //        User user = userService.findById(userId);
 //        if (user == null) {
@@ -65,7 +65,7 @@ public class UserController {
      * @return The user
      */
     // TODO require authentication to get details
-    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.USER_USERNAME_MAPPING, produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.USER_USERNAME_MAPPING, produces = "application/json; charset=UTF-8")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username);
         if (user == null) {
@@ -86,12 +86,11 @@ public class UserController {
      *
      * @throws UsernameClashException
      */
-    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.USER_CREATE_MAPPING, produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.USER_CREATE_MAPPING, produces = "application/json; charset=UTF-8")
     public ResponseEntity<User> createUser(
         @RequestBody JSONObject userJson,
         UriComponentsBuilder builder) throws UsernameClashException {
         User savedUser = new User(userJson);
-        verifyUsernameUniqueness(savedUser.getUsername());
         try {
             savedUser = userService.save(savedUser);
         } catch (ConstraintViolationException | TransactionSystemException e) {
@@ -109,21 +108,6 @@ public class UserController {
                                        savedUser.getUsername())
                                    .toUri());
         return new ResponseEntity<User>(savedUser, headers, HttpStatus.CREATED);
-    }
-
-    /**
-     * Checks whether the specified username exists and if so, throws a
-     * UsernameClashException.
-     *
-     * @param username
-     *     The username to check
-     *
-     * @throws UsernameClashException
-     */
-    private void verifyUsernameUniqueness(String username) throws UsernameClashException {
-        if (userService.isUsernameTaken(username)) {
-            throw new UsernameClashException(username);
-        }
     }
 
     /**
