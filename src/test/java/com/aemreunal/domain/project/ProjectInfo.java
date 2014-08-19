@@ -91,10 +91,10 @@ public class ProjectInfo {
             return false;
         } else {
             ProjectInfo otherProjectInfo = (ProjectInfo) obj;
-            boolean ownerMatches = this.ownerUsername == otherProjectInfo.ownerUsername;
-            boolean idMatches = this.projectId == otherProjectInfo.projectId;
-            boolean nameMatches = this.name == otherProjectInfo.name;
-            boolean descriptionMatches = this.description == otherProjectInfo.description;
+            boolean ownerMatches = this.ownerUsername.equals(otherProjectInfo.ownerUsername);
+            boolean idMatches = this.projectId.equals(otherProjectInfo.projectId);
+            boolean nameMatches = this.name.equals(otherProjectInfo.name);
+            boolean descriptionMatches = this.description.equals(otherProjectInfo.description);
             return ownerMatches && idMatches && nameMatches && descriptionMatches;
         }
     }

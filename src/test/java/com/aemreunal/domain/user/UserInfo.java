@@ -43,7 +43,7 @@ public class UserInfo {
         } else {
             UserInfo otherUserInfo = (UserInfo) obj;
             boolean usernameMatches = this.username.equals(otherUserInfo.username);
-            boolean userIdMatches = this.userId == otherUserInfo.userId;
+            boolean userIdMatches = this.userId.equals(otherUserInfo.userId);
             return usernameMatches && userIdMatches;
         }
     }
