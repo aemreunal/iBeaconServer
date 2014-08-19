@@ -50,6 +50,22 @@ public class T2ProjectTest {
     }
 
     @Test
+    public void getProject() {
+        ProjectInfo createdProject = ProjectCreator.createRandomProject(testUser.username);
+        ProjectInfo requestedProject = ProjectGetter.findProject(testUser.username, createdProject.projectId);
+        assertEquals("The created and requested projects don't match!", createdProject, requestedProject);
+    }
+
+    @Test
+    public void deleteProject() {
+        ProjectInfo createdProject = ProjectCreator.createRandomProject(testUser.username);
+        ProjectInfo requestedProject = ProjectGetter.findProject(testUser.username, createdProject.projectId);
+        assertEquals("The created and requested projects don't match!", createdProject, requestedProject);
+        ProjectRemover.removeProject(testUser.username, createdProject.projectId);
+        ProjectGetter.failToFindProject(testUser.username, createdProject.projectId);
+    }
+
+    @Test
     public void createMultipleProjects1() {
         ProjectCreator.createRandomProject(testUser.username);
         ProjectCreator.createRandomProject(testUser.username);
