@@ -7,6 +7,7 @@ import org.junit.Test;
 import com.aemreunal.domain.project.ProjectCreator;
 import com.aemreunal.domain.project.ProjectGetter;
 import com.aemreunal.domain.project.ProjectInfo;
+import com.aemreunal.domain.project.ProjectRemover;
 import com.aemreunal.domain.user.UserCreator;
 import com.aemreunal.domain.user.UserInfo;
 import com.aemreunal.domain.user.UserRemover;
@@ -98,5 +99,37 @@ public class T2ProjectTest {
         ArrayList<ProjectInfo> projects = ProjectGetter.getAllProjects(testUser.username);
         assertTrue(projects.contains(createdProject1));
         assertTrue(projects.contains(createdProject2));
+    }
+
+    @Test
+    public void failToGetProjects1() {
+        ProjectInfo createdProject1 = ProjectCreator.createRandomProject(testUser.username);
+        ProjectInfo createdProject2 = ProjectCreator.createRandomProject(testUser.username);
+        ArrayList<ProjectInfo> projects = ProjectGetter.getAllProjects(testUser.username);
+        assertTrue(projects.contains(createdProject1));
+        assertTrue(projects.contains(createdProject2));
+        // Remove project 1
+        ProjectRemover.removeProject(createdProject1.ownerUsername, createdProject1.projectId);
+        projects = ProjectGetter.getAllProjects(testUser.username);
+        assertFalse(projects.contains(createdProject1));
+        assertTrue(projects.contains(createdProject2));
+        // Remove project 2
+        ProjectRemover.removeProject(createdProject2.ownerUsername, createdProject2.projectId);
+        projects = ProjectGetter.getAllProjects(testUser.username);
+        assertFalse(projects.contains(createdProject1));
+        assertFalse(projects.contains(createdProject2));
+    }
+
+    @Test
+    public void failToGetProjects2() {
+        UserInfo otherTestUser = UserCreator.createRandomUser();
+        ProjectInfo createdProject1 = ProjectCreator.createRandomProject(otherTestUser.username);
+        ProjectInfo createdProject2 = ProjectCreator.createRandomProject(otherTestUser.username);
+        ArrayList<ProjectInfo> projects = ProjectGetter.getAllProjects(otherTestUser.username);
+        assertTrue(projects.contains(createdProject1));
+        assertTrue(projects.contains(createdProject2));
+        // Remove user
+        UserRemover.removeUser(otherTestUser.username);
+        ProjectGetter.failToGetAllProjects(otherTestUser.username);
     }
 }

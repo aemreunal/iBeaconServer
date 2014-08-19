@@ -32,7 +32,11 @@ public class ProjectGetter extends EntityGetter {
         return projects;
     }
 
-    public static ProjectInfo getProject(String username, Long projectId) {
+    public static void failToGetAllProjects(String username) {
+        sendGetRequest("/" + username + "/project", HttpStatus.SC_NOT_FOUND);
+    }
+
+    public static ProjectInfo findProject(String username, Long projectId) {
         JsonPath responseJson = getEntity("/" + username + "/project/" + projectId);
         return new ProjectInfo(responseJson, username, "");
     }
