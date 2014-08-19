@@ -49,18 +49,24 @@ public class UserTest {
     public void testDeleteUser() {
         UserInfo createdUserInfo = UserCreator.createRandomUser();
         UserRemover.removeUser(createdUserInfo.username);
-        UserGetter.failToGetUser(createdUserInfo.username);
+        UserGetter.failToFindUser(createdUserInfo.username);
         UserRemover.failToRemoveUser(createdUserInfo.username);
     }
 
     @Test
     public void testFailToGetUserWithValidUsername() {
-        UserGetter.failToGetUser("nonExistantUser");
+        UserGetter.failToFindUser("nonExistantUser");
     }
 
     @Test
     public void testFailToGetUserWithInvalidUsername() {
-        UserGetter.failToGetUser("Non-Existant User");
+        UserGetter.failToGetUser("nönğüiasdşe-g");
+    }
+
+    @Test
+    public void testFailToCreateUserWithSameUsername() {
+        UserInfo createdUserInfo = UserCreator.createRandomUser();
+        UserCreator.failToCreateUser(createdUserInfo.username);
     }
 
     @Test

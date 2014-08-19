@@ -26,7 +26,11 @@ public class UserGetter extends EntityGetter {
         return new UserInfo(responseJson.getString("username"), null, responseJson.getLong("userId"));
     }
 
-    public static void failToGetUser(String username) {
+    public static void failToFindUser(String username) {
         sendGetRequest("/" + username, HttpStatus.SC_NOT_FOUND);
+    }
+
+    public static void failToGetUser(String username) {
+        sendGetRequest("/" + username, HttpStatus.SC_BAD_REQUEST);
     }
 }
