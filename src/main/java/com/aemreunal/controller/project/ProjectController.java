@@ -12,10 +12,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.DeleteResponse;
+import com.aemreunal.controller.BeaconController;
+import com.aemreunal.controller.BeaconGroupController;
+import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.ProjectService;
 import com.aemreunal.service.UserService;
+
+import static org.springframework.hateoas.core.DummyInvocationUtils.methodOn;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /*
  **************************
@@ -58,7 +63,7 @@ public class ProjectController {
         @PathVariable String username,
         @RequestParam(value = "name", required = false, defaultValue = "") String projectName) {
         if (projectName.equals("")) {
-            return new ResponseEntity<List<Project>>(projectService.findAllBelongingTo(username), HttpStatus.OK);
+            return new ResponseEntity<List<Project>>(projectService.findAllProjectsOf(username), HttpStatus.OK);
         } else {
             return getProjectsWithMatchingCriteria(username, projectName);
         }
@@ -92,16 +97,11 @@ public class ProjectController {
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.PROJECT_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Project> getProjectById(
-        // TODO Handle username
         @PathVariable String username,
         @PathVariable Long projectId) {
         Project project = projectService.findById(username, projectId);
-        if (project == null) {
-            // TODO move null check to service as an exception
-            return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
-        }
         // TODO add links
-        return new ResponseEntity<Project>(project, HttpStatus.OK);
+        return new ResponseEntity<Project>(addLinks(project), HttpStatus.OK);
     }
 
     /**
@@ -109,9 +109,9 @@ public class ProjectController {
      * <p/>
      * In the case of a constraint violation occurring during the save operation, a {@link
      * ConstraintViolationException} will be thrown from the {@link
-     * com.aemreunal.service.ProjectService#save(com.aemreunal.domain.Project) save()}
-     * method of {@link com.aemreunal.service.ProjectService}, propagated to this method
-     * and then thrown from this one. This exception will be caught by the {@link
+     * com.aemreunal.service.ProjectService#save(String, com.aemreunal.domain.Project)
+     * save()} method of {@link com.aemreunal.service.ProjectService}, propagated to this
+     * method and then thrown from this one. This exception will be caught by the {@link
      * com.aemreunal.controller.project.ProjectControllerAdvice#constraintViolationExceptionHandler(javax.validation.ConstraintViolationException)
      * constraintViolationExceptionHandler()} of the {@link com.aemreunal.controller.project.ProjectControllerAdvice
      * ProjectControllerAdvice} class.
@@ -126,59 +126,63 @@ public class ProjectController {
      * @throws ConstraintViolationException
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<JSONObject> createProject(
-        @PathVariable String username,
-        @RequestBody Project projectFromJson,
-        UriComponentsBuilder builder)
+    public ResponseEntity<JSONObject> createProject(@PathVariable String username,
+                                                    @RequestBody Project projectFromJson,
+                                                    UriComponentsBuilder builder)
         throws ConstraintViolationException {
-        Project savedProject;
-        savedProject = projectService.save(username, projectFromJson);
+        Project savedProject = projectService.save(username, projectFromJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
         }
         String projectSecret = projectService.resetSecret(username, savedProject);
+        return buildCreateResponse(builder, addLinks(savedProject), projectSecret);
+    }
+
+    /**
+     * Builds the post-create response for a project. Sets the appropriate headers and
+     * HATEOAS links and creates a {@link org.springframework.http.ResponseEntity
+     * ResponseEntity} object with {@link net.minidev.json.JSONObject JSONObject} type.
+     *
+     * @param builder
+     *     The URI builder for post-creation redirect
+     * @param savedProject
+     *     The project to create the response for
+     * @param projectSecret
+     *     The secret of the project
+     *
+     * @return The {@link org.springframework.http.ResponseEntity ResponseEntity} for this
+     * project
+     */
+    private ResponseEntity<JSONObject> buildCreateResponse(UriComponentsBuilder builder, Project savedProject, String projectSecret) {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path(GlobalSettings.PROJECT_SPECIFIC_MAPPING)
                                    .buildAndExpand(
-                                       username,
+                                       savedProject.getOwner().getUsername(),
                                        savedProject.getProjectId().toString())
                                    .toUri());
         return new ResponseEntity<JSONObject>(savedProject.getCreateResponse(projectSecret), headers, HttpStatus.CREATED);
     }
 
-//    /**
-//     * Adds the HATEOAS links to the project object. Object must be saved afterwards to
-//     * ensure persistance of added links.
-//     *
-//     * @param project
-//     *     Project to add the links to
-//     *
-//     * @return The project with links added
-//     */
-    // TODO https://github.com/spring-projects/spring-hateoas#link-builder
-    /*
-    Produces:
-        "links": [
-            {
-              "rel": "self",
-              "href": "http://localhost:8080/project/2"
-            },
-            {
-              "rel": "beacons",
-              "href": "http://localhost:8080/project/2/beacon?uuid=&major=&minor="
-            },
-            {
-              "rel": "groups",
-              "href": "http://localhost:8080/project/2/beacongroup?name="
-            }
-        ]
+    /**
+     * Adds the HATEOAS links to the {@link com.aemreunal.domain.Project Project} object.
+     *
+     * @param project
+     *     Project to add the links to
+     *
+     * @return The project with links added
+     *
+     * @see <a href="https://github.com/spring-projects/spring-hateoas#link-builder">Spring
+     * HATEOAS GitHub repo</a>
+     */
     private Project addLinks(Project project) {
-        project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(project.getProjectId(), "<Project secret>")).withSelfRel());
-        project.getLinks().add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(project.getProjectId(), "", "", "")).withRel("beacons"));
-        project.getLinks().add(ControllerLinkBuilder.linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(project.getProjectId(), "")).withRel("groups"));
+        String username = project.getOwner().getUsername();
+        Long projectId = project.getProjectId();
+        project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withSelfRel());
+        project.getLinks().add(linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(username, projectId, "", "", "")).withRel("beacons"));
+        project.getLinks().add(linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(username, projectId, "")).withRel("groups"));
+        project.getLinks().add(linkTo(methodOn(UserController.class).getUserByUsername(username)).withRel("owner"));
         return project;
     }
-    */
 
     /**
      * Delete the specified project, along with all the beacons, beacon groups and
@@ -194,32 +198,16 @@ public class ProjectController {
      * @param confirmation
      *     The confirmation parameter
      *
-     * @return The status of deletion action
+     * @return
      */
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.PROJECT_ID_MAPPING)
-    public ResponseEntity<Project> deleteProject(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @RequestParam(value = "confirm", required = true) String confirmation) {
+    public ResponseEntity<Project> deleteProject(@PathVariable String username,
+                                                 @PathVariable Long projectId,
+                                                 @RequestParam(value = "confirm", required = true) String confirmation) {
 
-        DeleteResponse response = DeleteResponse.NOT_DELETED;
         if (confirmation.toLowerCase().equals("yes")) {
-            response = projectService.delete(username, projectId);
+            projectService.delete(username, projectId);
         }
-
-        // TODO clear up responses
-        switch (response) {
-            case DELETED:
-                return new ResponseEntity<Project>(HttpStatus.OK);
-            case FORBIDDEN:
-                return new ResponseEntity<Project>(HttpStatus.FORBIDDEN);
-            case NOT_FOUND:
-                return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
-            case NOT_DELETED:
-                return new ResponseEntity<Project>(HttpStatus.PRECONDITION_FAILED);
-            default:
-                return new ResponseEntity<Project>(HttpStatus.I_AM_A_TEAPOT);
-        }
+        return new ResponseEntity<Project>(HttpStatus.OK);
     }
 }

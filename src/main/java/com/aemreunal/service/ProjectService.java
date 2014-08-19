@@ -9,7 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.User;
 import com.aemreunal.exception.project.ProjectNotFoundException;
@@ -50,19 +49,19 @@ public class ProjectService {
      *
      * @param username
      *     The username of the owner of the project
-     * @param project
+     * @param projectFromJson
      *     The project to save/update
      *
      * @return The saved/updated project
      */
-    public Project save(String username, Project project) throws ConstraintViolationException {
+    public Project save(String username, Project projectFromJson) throws ConstraintViolationException {
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saving project with ID = \'" + project.getProjectId() + "\'");
+            System.out.println("Saving project with ID = \'" + projectFromJson.getProjectId() + "\'");
         }
-        if (project.getOwner() == null) {
-            project.setOwner(userService.findByUsername(username));
+        if (projectFromJson.getOwner() == null) {
+            projectFromJson.setOwner(userService.findByUsername(username));
         }
-        return projectRepo.save(project);
+        return projectRepo.save(projectFromJson);
     }
 
     /**
@@ -92,7 +91,7 @@ public class ProjectService {
      * @return The list of projects that belong to the {@link com.aemreunal.domain.User
      * User} with the specified username
      */
-    public List<Project> findAllBelongingTo(String ownerUsername) {
+    public List<Project> findAllProjectsOf(String ownerUsername) {
         User owner = userService.findByUsername(ownerUsername);
         // TODO or, find the user and .getProjects()?
         List<Project> projectList = new ArrayList<Project>();
@@ -142,6 +141,7 @@ public class ProjectService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding project with ID = \'" + id + "\'");
         }
+        // Verify owner exists
         User owner = userService.findByUsername(username);
         Project project = projectRepo.findByOwnerAndProjectId(owner, id);
         if (project == null) {
@@ -151,22 +151,23 @@ public class ProjectService {
     }
 
     /**
-     * Deletes the project with the given ID and deletes the beacons and beacon groups in
-     * the project
+     * Deletes the {@link com.aemreunal.domain.Project project} with the given ID and
+     * deletes the {@link com.aemreunal.domain.Beacon beacons} and {@link
+     * com.aemreunal.domain.BeaconGroup beacon groups} in the project.
      *
      * @param username
      *     The username of the owner of the project
      * @param projectId
      *     The ID of the project to delete
      *
-     * @return Whether the project was deleted or not
+     * @return The deleted project
      */
-    public DeleteResponse delete(String username, Long projectId) {
+    public Project delete(String username, Long projectId) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting project with ID = \'" + projectId + "\'");
         }
         Project project = this.findById(username, projectId);
         projectRepo.delete(project);
-        return DeleteResponse.DELETED;
+        return project;
     }
 }
