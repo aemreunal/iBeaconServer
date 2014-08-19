@@ -86,7 +86,7 @@ public class UserService {
         } else if (username.indexOf(' ') != -1) {
             // The specified username contains spaces
             throw new InvalidUsernameException(username, "Username can not contain spaces!");
-        } else if (username.matches(".*[^\\p{ASCII}].*")) {
+        } else if (username.matches(GlobalSettings.NON_ASCII_REGEX)) {
             // The specified username contains non-ASCII characters
             throw new InvalidUsernameException(username, "Username can not contain non-ASCII characters!");
         } else {
