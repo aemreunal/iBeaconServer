@@ -1,12 +1,17 @@
 package com.aemreunal.controller;
 
+import java.util.ArrayList;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import com.aemreunal.domain.project.ProjectCreator;
+import com.aemreunal.domain.project.ProjectGetter;
+import com.aemreunal.domain.project.ProjectInfo;
 import com.aemreunal.domain.user.UserCreator;
 import com.aemreunal.domain.user.UserInfo;
 import com.aemreunal.domain.user.UserRemover;
+
+import static org.junit.Assert.*;
 
 /*
  ***************************
@@ -39,19 +44,19 @@ public class T2ProjectTest {
     }
 
     @Test
-    public void testCreateProject() {
+    public void createProject() {
         ProjectCreator.createRandomProject(testUser.username);
     }
 
     @Test
-    public void testCreateMultipleProjects1() {
+    public void createMultipleProjects1() {
         ProjectCreator.createRandomProject(testUser.username);
         ProjectCreator.createRandomProject(testUser.username);
         ProjectCreator.createRandomProject(testUser.username);
     }
 
     @Test
-    public void testCreateMultipleProjects2() {
+    public void createMultipleProjects2() {
         ProjectCreator.createRandomProject(testUser.username);
         ProjectCreator.createRandomProject(testUser.username);
         ProjectCreator.createRandomProject(testUser.username);
@@ -84,5 +89,14 @@ public class T2ProjectTest {
         UserRemover.removeUser(otherTestUser.username);
         ProjectCreator.failToCreateProjectWithBadUsername(otherTestUser.username, "test", "test", true);
         ProjectCreator.failToCreateProjectWithBadUsername(otherTestUser.username, "test", "test", true);
+    }
+
+    @Test
+    public void getProjects() {
+        ProjectInfo createdProject1 = ProjectCreator.createRandomProject(testUser.username);
+        ProjectInfo createdProject2 = ProjectCreator.createRandomProject(testUser.username);
+        ArrayList<ProjectInfo> projects = ProjectGetter.getAllProjects(testUser.username);
+        assertTrue(projects.contains(createdProject1));
+        assertTrue(projects.contains(createdProject2));
     }
 }
