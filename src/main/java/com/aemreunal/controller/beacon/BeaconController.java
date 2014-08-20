@@ -45,28 +45,49 @@ public class BeaconController {
     private BeaconService beaconService;
 
     /**
-     * Get beacons that belong to a project.
+     * Get all the {@link com.aemreunal.domain.Beacon beacons} that belong to the
+     * specified {@link com.aemreunal.domain.Project project}. Returns an empty list if no
+     * beacons are present in the project.
+     * <p/>
+     * Optionally, certain parameters may be specified to get a refined search. These
+     * paramters are: <li><b>UUID:</b> The UUID constraint. Can be specified with the
+     * "{@code?uuid=...}" URI parameter.</li> <li><b>Major:</b> The Major constraint. Can
+     * be specified with the "{@code?major=...}" URI parameter.</li> <li><b>Minor:</b> The
+     * Minor constraint. Can be specified with the "{@code?minor=...}" URI
+     * parameter.</li>
+     * <p/>
+     * (Any continuous part of these 3 attributes may be specified in the constraint.)
      *
+     * @param username
+     *     The username of the owner of the project
      * @param projectId
      *     The ID of the project
+     * @param uuid
+     *     (Optional) The UUID constraint for the beacon search
+     * @param major
+     *     (Optional) The Major constraint for the beacon search
+     * @param minor
+     *     (Optional) The Minor constraint for the beacon search
      *
-     * @return The list of beacons that belong to the project with the specified ID
+     * @return If no optional parameters are specified, returns all the beacons that
+     * belong to a project (an empty list if the project has no beacons). If optional
+     * constraints are given, returns a list of all the matching beacons or throws a
+     * {@link com.aemreunal.exception.beacon.BeaconNotFoundException
+     * BeaconNotFoundException} if no beacons match the constraints.
      */
     @Transactional
     @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<List<Beacon>> viewBeaconsOfProject(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
-        @RequestParam(value = "major", required = false, defaultValue = "") String major,
-        @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
-        Project project = projectService.findById(username, projectId);
+    public ResponseEntity<List<Beacon>> getBeaconsOfProject(@PathVariable String username,
+                                                            @PathVariable Long projectId,
+                                                            @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
+                                                            @RequestParam(value = "major", required = false, defaultValue = "") String major,
+                                                            @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
+        Project project = projectService.findProjectsById(username, projectId);
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
             List<Beacon> beaconList = new ArrayList<Beacon>();
             for (Beacon beacon : project.getBeacons()) {
                 beaconList.add(beacon);
-//                beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeacon(projectId, beacon.getBeaconId())).withSelfRel());
+//                beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).getBeacon(projectId, beacon.getBeaconId())).withSelfRel());
             }
             return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
         } else {
@@ -109,12 +130,12 @@ public class BeaconController {
      * @return The beacon
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACON_ID_MAPPING, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Beacon> viewBeacon(
+    public ResponseEntity<Beacon> getBeacon(
         // TODO Handle username
         @PathVariable String username,
         @PathVariable Long projectId,
         @PathVariable Long beaconId) {
-        Project project = projectService.findById(username, projectId);
+        Project project = projectService.findProjectsById(username, projectId);
         if (project == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
@@ -124,7 +145,7 @@ public class BeaconController {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
         // For HATEOAS
-//        beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).viewBeacon(projectId, beaconId)).withSelfRel());
+//        beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).getBeacon(projectId, beaconId)).withSelfRel());
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
 
@@ -150,7 +171,7 @@ public class BeaconController {
         @RequestBody Beacon restBeacon,
         UriComponentsBuilder builder) {
 
-        Project project = projectService.findById(username, projectId);
+        Project project = projectService.findProjectsById(username, projectId);
         if (project == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
@@ -169,9 +190,9 @@ public class BeaconController {
 
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
-                "\' major = \'" + savedBeacon.getMajor() +
-                "\' minor = \'" + savedBeacon.getMinor() +
-                "\' in project with ID = \'" + projectId + "\'");
+                                   "\' major = \'" + savedBeacon.getMajor() +
+                                   "\' minor = \'" + savedBeacon.getMinor() +
+                                   "\' in project with ID = \'" + projectId + "\'");
         }
 
         HttpHeaders headers = new HttpHeaders();

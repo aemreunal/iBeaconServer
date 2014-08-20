@@ -99,7 +99,7 @@ public class ProjectController {
     public ResponseEntity<Project> getProjectById(
         @PathVariable String username,
         @PathVariable Long projectId) {
-        Project project = projectService.findById(username, projectId);
+        Project project = projectService.findProjectsById(username, projectId);
         // TODO add links
         return new ResponseEntity<Project>(addLinks(project), HttpStatus.OK);
     }
@@ -178,7 +178,7 @@ public class ProjectController {
         String username = project.getOwner().getUsername();
         Long projectId = project.getProjectId();
         project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withSelfRel());
-        project.getLinks().add(linkTo(methodOn(BeaconController.class).viewBeaconsOfProject(username, projectId, "", "", "")).withRel("beacons"));
+        project.getLinks().add(linkTo(methodOn(BeaconController.class).getBeaconsOfProject(username, projectId, "", "", "")).withRel("beacons"));
         project.getLinks().add(linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(username, projectId, "")).withRel("groups"));
         project.getLinks().add(linkTo(methodOn(UserController.class).getUserByUsername(username)).withRel("owner"));
         return project;

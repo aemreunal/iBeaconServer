@@ -137,7 +137,7 @@ public class ProjectService {
      *
      * @throws ProjectNotFoundException
      */
-    public Project findById(String username, Long id) throws ProjectNotFoundException {
+    public Project findProjectsById(String username, Long id) throws ProjectNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding project with ID = \'" + id + "\'");
         }
@@ -166,7 +166,7 @@ public class ProjectService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting project with ID = \'" + projectId + "\'");
         }
-        Project project = this.findById(username, projectId);
+        Project project = this.findProjectsById(username, projectId);
         projectRepo.delete(project);
         return project;
     }
