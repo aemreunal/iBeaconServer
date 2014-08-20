@@ -99,7 +99,7 @@ public class ProjectController {
     public ResponseEntity<Project> getProjectById(
         @PathVariable String username,
         @PathVariable Long projectId) {
-        Project project = projectService.findProjectsById(username, projectId);
+        Project project = projectService.findProjectById(username, projectId);
         // TODO add links
         return new ResponseEntity<Project>(addLinks(project), HttpStatus.OK);
     }

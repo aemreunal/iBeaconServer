@@ -1,5 +1,6 @@
 package com.aemreunal.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
+import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
 
@@ -30,6 +32,9 @@ import com.aemreunal.repository.beacon.BeaconSpecs;
 @Transactional
 @Service
 public class BeaconService {
+    @Autowired
+    private ProjectService projectService;
+
     @Autowired
     private BeaconRepo beaconRepo;
 
@@ -63,12 +68,16 @@ public class BeaconService {
      *
      * @return The list of beacons conforming to given constraints
      */
-    public List<Beacon> findBeaconsBySpecs(Long projectId, String uuid, String major, String minor) {
+    public List<Beacon> findBeaconsBySpecs(String username, Long projectId, String uuid, String major, String minor) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
         }
-
-        return beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(projectId, uuid, major, minor));
+        Project project = projectService.findProjectById(username, projectId);
+        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(project.getOwner(), projectId, uuid, major, minor));
+        if (beacons.size() == 0) {
+            throw new BeaconNotFoundException();
+        }
+        return beacons;
     }
 
     /**
@@ -87,6 +96,27 @@ public class BeaconService {
         }
 
         return beaconRepo.findByBeaconIdAndProject(beaconId, project);
+    }
+
+    /**
+     * Returns the list of {@link com.aemreunal.domain.Beacon beacons} that belong to a
+     * {@link com.aemreunal.domain.Project project}.
+     *
+     * @param username
+     *     The username of the {@link com.aemreunal.domain.User owner} of the project
+     * @param projectId
+     *     The ID of the project
+     *
+     * @return The list of beacons that belong to a project. Returns an empty list if the
+     * project has no beacons
+     */
+    public List<Beacon> getBeaconsOfProject(String username, Long projectId) {
+        Project project = projectService.findProjectById(username, projectId);
+        List<Beacon> beacons = new ArrayList<Beacon>();
+        for (Beacon beacon : project.getBeacons()) {
+            beacons.add(beacon);
+        }
+        return beacons;
     }
 
     /**

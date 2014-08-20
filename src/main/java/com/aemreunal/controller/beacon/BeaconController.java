@@ -1,6 +1,5 @@
 package com.aemreunal.controller.beacon;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +50,11 @@ public class BeaconController {
      * <p/>
      * Optionally, certain parameters may be specified to get a refined search. These
      * paramters are: <li><b>UUID:</b> The UUID constraint. Can be specified with the
-     * "{@code?uuid=...}" URI parameter.</li> <li><b>Major:</b> The Major constraint. Can
-     * be specified with the "{@code?major=...}" URI parameter.</li> <li><b>Minor:</b> The
+     * "{@code?uuid=...}" URI parameter. Any continuous part of thes UUID attribute may be
+     * specified in the constraint.</li> <li><b>Major:</b> The Major constraint. Can be
+     * specified with the "{@code?major=...}" URI parameter.</li> <li><b>Minor:</b> The
      * Minor constraint. Can be specified with the "{@code?minor=...}" URI
      * parameter.</li>
-     * <p/>
-     * (Any continuous part of these 3 attributes may be specified in the constraint.)
      *
      * @param username
      *     The username of the owner of the project
@@ -82,16 +80,11 @@ public class BeaconController {
                                                             @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
                                                             @RequestParam(value = "major", required = false, defaultValue = "") String major,
                                                             @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
-        Project project = projectService.findProjectsById(username, projectId);
         if (uuid.equals("") && major.equals("") && minor.equals("")) {
-            List<Beacon> beaconList = new ArrayList<Beacon>();
-            for (Beacon beacon : project.getBeacons()) {
-                beaconList.add(beacon);
-//                beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).getBeacon(projectId, beacon.getBeaconId())).withSelfRel());
-            }
+            List<Beacon> beaconList = beaconService.getBeaconsOfProject(username, projectId);
             return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
         } else {
-            return getBeaconsWithMatchingCriteria(projectId, uuid, major, minor);
+            return getBeaconsWithMatchingCriteria(username, projectId, uuid, major, minor);
         }
     }
 
@@ -110,12 +103,8 @@ public class BeaconController {
      * @return The list of beacons that match the given criteria
      */
 //    @Transactional // TODO required?
-    private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(Long projectId, String uuid, String major, String minor) {
-        List<Beacon> beacons = beaconService.findBeaconsBySpecs(projectId, uuid, major, minor);
-
-        if (beacons.size() == 0) {
-            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
-        }
+    private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(String username, Long projectId, String uuid, String major, String minor) {
+        List<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, uuid, major, minor);
         return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
     }
 
@@ -135,7 +124,7 @@ public class BeaconController {
         @PathVariable String username,
         @PathVariable Long projectId,
         @PathVariable Long beaconId) {
-        Project project = projectService.findProjectsById(username, projectId);
+        Project project = projectService.findProjectById(username, projectId);
         if (project == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }
@@ -171,7 +160,7 @@ public class BeaconController {
         @RequestBody Beacon restBeacon,
         UriComponentsBuilder builder) {
 
-        Project project = projectService.findProjectsById(username, projectId);
+        Project project = projectService.findProjectById(username, projectId);
         if (project == null) {
             return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
         }

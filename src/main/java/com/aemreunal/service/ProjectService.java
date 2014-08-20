@@ -130,20 +130,20 @@ public class ProjectService {
      *
      * @param username
      *     The username of the owner of the project
-     * @param id
+     * @param projectId
      *     The ID of the project to search for
      *
      * @return The project the given ID
      *
      * @throws ProjectNotFoundException
      */
-    public Project findProjectsById(String username, Long id) throws ProjectNotFoundException {
+    public Project findProjectById(String username, Long projectId) throws ProjectNotFoundException {
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding project with ID = \'" + id + "\'");
+            System.out.println("Finding project with ID = \'" + projectId + "\'");
         }
         // Verify owner exists
         User owner = userService.findByUsername(username);
-        Project project = projectRepo.findByOwnerAndProjectId(owner, id);
+        Project project = projectRepo.findByOwnerAndProjectId(owner, projectId);
         if (project == null) {
             throw new ProjectNotFoundException();
         }
@@ -166,7 +166,7 @@ public class ProjectService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting project with ID = \'" + projectId + "\'");
         }
-        Project project = this.findProjectsById(username, projectId);
+        Project project = this.findProjectById(username, projectId);
         projectRepo.delete(project);
         return project;
     }
