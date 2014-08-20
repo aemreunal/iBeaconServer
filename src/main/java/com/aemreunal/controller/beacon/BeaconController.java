@@ -17,7 +17,6 @@ import com.aemreunal.controller.project.ProjectController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.service.BeaconService;
-import com.aemreunal.service.ProjectService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -40,9 +39,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Controller
 @RequestMapping(GlobalSettings.BEACON_PATH_MAPPING)
 public class BeaconController {
-    @Autowired
-    private ProjectService projectService;
-
     @Autowired
     private BeaconService beaconService;
 
