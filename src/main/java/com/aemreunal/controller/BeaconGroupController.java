@@ -16,7 +16,6 @@ package com.aemreunal.controller;
  **************************
  */
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,30 +55,16 @@ public class BeaconGroupController {
      * @return The list of beacon groups that belong to the project with the specified ID
      */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<BeaconGroup>> viewBeaconGroupsOfProject(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @RequestParam(value = "name", required = false, defaultValue = "") String name) {
-        // First check if project exists
-        Project project = projectService.findProjectById(username, projectId);
-        if (project == null) {
-            return new ResponseEntity<List<BeaconGroup>>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<BeaconGroup>> viewBeaconGroupsOfProject(@PathVariable String username,
+                                                                       @PathVariable Long projectId,
+                                                                       @RequestParam(value = "name", required = false, defaultValue = "") String beaconGroupName) {
+        if (beaconGroupName.equals("")) {
+            List<BeaconGroup> beaconGroups = beaconGroupService.getAllBeaconGroupsOf(username, projectId);
+            return new ResponseEntity<List<BeaconGroup>>(beaconGroups, HttpStatus.OK);
+        } else {
+            List<BeaconGroup> beaconGroups = beaconGroupService.findBeaconGroupsBySpecs(username, projectId, beaconGroupName);
+            return new ResponseEntity<List<BeaconGroup>>(beaconGroups, HttpStatus.OK);
         }
-
-        if (name.equals("")) {
-            List<BeaconGroup> beaconGroupsList = new ArrayList<BeaconGroup>();
-            for (BeaconGroup beaconGroup : project.getBeaconGroups()) {
-                beaconGroupsList.add(beaconGroup);
-            }
-            return new ResponseEntity<List<BeaconGroup>>(beaconGroupsList, HttpStatus.OK);
-        }
-
-        List<BeaconGroup> beaconGroups = beaconGroupService.findBeaconGroupsBySpecs(projectId, name);
-        if (beaconGroups.size() == 0) {
-            return new ResponseEntity<List<BeaconGroup>>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<List<BeaconGroup>>(beaconGroups, HttpStatus.OK);
     }
 
     /**
@@ -93,21 +78,11 @@ public class BeaconGroupController {
      * @return The beacon group
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACONGROUP_ID_MAPPING, produces = "application/json")
-    public ResponseEntity<BeaconGroup> viewBeaconGroup(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @PathVariable Long beaconGroupId) {
-        // First check if project exists
-        Project project = projectService.findProjectById(username, projectId);
-        if (project == null) {
-            return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
-        }
-
-        BeaconGroup beaconGroup = beaconGroupService.findByBeaconGroupIdAndProject(beaconGroupId, project);
-        if (beaconGroup == null) {
-            return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<BeaconGroup> viewBeaconGroup(@PathVariable String username,
+                                                       @PathVariable Long projectId,
+                                                       @PathVariable Long beaconGroupId) {
+        BeaconGroup beaconGroup = beaconGroupService.findByBeaconGroupIdAndProject(username, projectId, beaconGroupId);
+        // TODO add links
         return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
     }
 
@@ -123,25 +98,10 @@ public class BeaconGroupController {
      */
     // TODO maybe return just the list of Beacon IDs, queried from beacon_groups_to_beacon
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACONGROUP_MEMBERS_MAPPING, produces = "application/json")
-    public ResponseEntity<List<Beacon>> viewBeaconGroupMembers(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @PathVariable Long beaconGroupId) {
-        // First check if project exists
-        Project project = projectService.findProjectById(username, projectId);
-        if (project == null) {
-            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
-        }
-
-        BeaconGroup beaconGroup = beaconGroupService.findByBeaconGroupIdAndProject(beaconGroupId, project);
-        if (beaconGroup == null) {
-            return new ResponseEntity<List<Beacon>>(HttpStatus.NOT_FOUND);
-        }
-        List<Beacon> beaconList = new ArrayList<Beacon>();
-        for (Beacon beacon : beaconGroup.getBeacons()) {
-            beaconList.add(beacon);
-        }
+    public ResponseEntity<List<Beacon>> viewBeaconGroupMembers(@PathVariable String username,
+                                                               @PathVariable Long projectId,
+                                                               @PathVariable Long beaconGroupId) {
+        List<Beacon> beaconList = beaconGroupService.getMembersOfBeaconGroup(username, projectId, beaconGroupId);
         return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
     }
 
@@ -229,7 +189,7 @@ public class BeaconGroupController {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
 
-        BeaconGroup beaconGroup = beaconGroupService.findByBeaconGroupIdAndProject(beaconGroupId, project);
+        BeaconGroup beaconGroup = beaconGroupService.findByBeaconGroupIdAndProject(username, projectId, beaconGroupId);
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
@@ -277,7 +237,7 @@ public class BeaconGroupController {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
 
-        BeaconGroup beaconGroup = beaconGroupService.findByBeaconGroupIdAndProject(beaconGroupId, project);
+        BeaconGroup beaconGroup = beaconGroupService.findByBeaconGroupIdAndProject(username, projectId, beaconGroupId);
         if (beaconGroup == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }

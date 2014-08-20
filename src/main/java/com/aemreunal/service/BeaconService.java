@@ -78,7 +78,7 @@ public class BeaconService {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
         }
         Project project = projectService.findProjectById(username, projectId);
-        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(project.getOwner(), projectId, uuid, major, minor));
+        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(project.getProjectId(), uuid, major, minor));
         if (beacons.size() == 0) {
             throw new BeaconNotFoundException();
         }

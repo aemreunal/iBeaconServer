@@ -96,7 +96,6 @@ public class ProjectController {
         @PathVariable String username,
         @PathVariable Long projectId) {
         Project project = projectService.findProjectById(username, projectId);
-        // TODO add links
         return new ResponseEntity<Project>(addLinks(project), HttpStatus.OK);
     }
 

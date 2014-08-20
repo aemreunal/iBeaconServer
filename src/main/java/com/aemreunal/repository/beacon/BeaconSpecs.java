@@ -23,7 +23,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import com.aemreunal.domain.Beacon;
-import com.aemreunal.domain.User;
 
 public class BeaconSpecs {
     /**
@@ -40,11 +39,10 @@ public class BeaconSpecs {
      *
      * @return The specification of the beacon
      */
-    public static Specification<Beacon> beaconWithSpecification(final User owner, final Long projectId, final String uuid, final String major, final String minor) {
+    public static Specification<Beacon> beaconWithSpecification(final Long projectId, final String uuid, final String major, final String minor) {
         return new Specification<Beacon>() {
             public Predicate toPredicate(Root<Beacon> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
                 ArrayList<Predicate> predicates = new ArrayList<Predicate>();
-                predicates.add(builder.equal(root.get("owner"), owner));
                 predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
 
                 if (!uuid.equals("")) {

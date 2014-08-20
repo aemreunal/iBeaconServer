@@ -83,30 +83,9 @@ public class BeaconController {
             List<Beacon> beaconList = beaconService.getBeaconsOfProject(username, projectId);
             return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
         } else {
-            return getBeaconsWithMatchingCriteria(username, projectId, uuid, major, minor);
+            List<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, uuid, major, minor);
+            return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
         }
-    }
-
-    /**
-     * Returns the list of beacons that match a given criteria
-     *
-     * @param username
-     *     The username of the owner of the project
-     * @param projectId
-     *     The project ID to search
-     * @param uuid
-     *     (Optional) The UUID of the beacon
-     * @param major
-     *     (Optional) The major of the beacon
-     * @param minor
-     *     (Optional) The minor of the beacon
-     *
-     * @return The list of beacons that match the given criteria
-     */
-//    @Transactional // TODO required?
-    private ResponseEntity<List<Beacon>> getBeaconsWithMatchingCriteria(String username, Long projectId, String uuid, String major, String minor) {
-        List<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, uuid, major, minor);
-        return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
     }
 
     /**

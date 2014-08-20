@@ -25,7 +25,7 @@ import com.aemreunal.domain.BeaconGroup;
  ***************************
  */
 public class BeaconGroupSpecs {
-    public static Specification<BeaconGroup> beaconWithSpecification(final Long projectId, final String name) {
+    public static Specification<BeaconGroup> beaconGroupWithSpecification(final Long projectId, final String name) {
         return new Specification<BeaconGroup>() {
             public Predicate toPredicate(Root<BeaconGroup> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
                 ArrayList<Predicate> predicates = new ArrayList<Predicate>();
@@ -51,7 +51,7 @@ public class BeaconGroupSpecs {
      *
      * @return The specification of the beacon group
      */
-    public static Specification<BeaconGroup> beaconExistsSpecification(final Long projectId, final Long beaconGroupId) {
+    public static Specification<BeaconGroup> beaconGroupExistsSpecification(final Long projectId, final Long beaconGroupId) {
         return new Specification<BeaconGroup>() {
             public Predicate toPredicate(Root<BeaconGroup> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
                 ArrayList<Predicate> predicates = new ArrayList<Predicate>();
