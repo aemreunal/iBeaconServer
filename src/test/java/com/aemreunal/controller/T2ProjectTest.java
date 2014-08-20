@@ -142,15 +142,37 @@ public class T2ProjectTest {
 
     @Test
     public void failToGetProjects2() {
+        ProjectInfo createdProject1 = ProjectCreator.createRandomProject(testUser.username);
+        ProjectInfo createdProject2 = ProjectCreator.createRandomProject(testUser.username);
+
         UserInfo otherTestUser = UserCreator.createRandomUser();
-        ProjectInfo createdProject1 = ProjectCreator.createRandomProject(otherTestUser.username);
-        ProjectInfo createdProject2 = ProjectCreator.createRandomProject(otherTestUser.username);
-        ArrayList<ProjectInfo> projects = ProjectGetter.getAllProjects(otherTestUser.username);
+        ProjectInfo createdProject3 = ProjectCreator.createRandomProject(otherTestUser.username);
+        ProjectInfo createdProject4 = ProjectCreator.createRandomProject(otherTestUser.username);
+
+        ArrayList<ProjectInfo> projects;
+        // Ensure other user doesn't get test user's projects
+        projects = ProjectGetter.getAllProjects(otherTestUser.username);
+        assertFalse(projects.contains(createdProject1));
+        assertFalse(projects.contains(createdProject2));
+        assertTrue(projects.contains(createdProject3));
+        assertTrue(projects.contains(createdProject4));
+
+        // Ensure test user doesn't get other user's projects
+        projects = ProjectGetter.getAllProjects(testUser.username);
         assertTrue(projects.contains(createdProject1));
         assertTrue(projects.contains(createdProject2));
+        assertFalse(projects.contains(createdProject3));
+        assertFalse(projects.contains(createdProject4));
+
         // Remove user
         UserRemover.removeUser(otherTestUser.username);
         ProjectGetter.failToGetAllProjects(otherTestUser.username);
+
+        projects = ProjectGetter.getAllProjects(testUser.username);
+        assertTrue(projects.contains(createdProject1));
+        assertTrue(projects.contains(createdProject2));
+        assertFalse(projects.contains(createdProject3));
+        assertFalse(projects.contains(createdProject4));
     }
 
     @Test
@@ -177,7 +199,7 @@ public class T2ProjectTest {
         ProjectInfo createdProject1 = ProjectCreator.createRandomProject(testUser.username);
         ProjectInfo createdProject2 = ProjectCreator.createRandomProject(testUser.username);
 
-        // Search 3 times to ensure
+        // Search NUM_SEARCH_REPEAT times to ensure
         for (int i = 0; i < NUM_SEARCH_REPEAT; i++) {
             projects = ProjectGetter.searchForProjects(testUser.username, getRandomSubstring(createdProject1.name));
             assertTrue(projects.contains(createdProject1));
