@@ -80,9 +80,6 @@ public class ProjectController {
      */
     private ResponseEntity<List<Project>> getProjectsWithMatchingCriteria(String username, String projectName) {
         List<Project> projects = projectService.findProjectsBySpecs(username, projectName);
-        if (projects.size() == 0) {
-            return new ResponseEntity<List<Project>>(HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);
     }
 
