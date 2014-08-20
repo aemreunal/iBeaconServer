@@ -267,29 +267,16 @@ public class BeaconGroupController {
      * @return The deleted beacon group
      */
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACONGROUP_ID_MAPPING, produces = "application/json")
-    public ResponseEntity<BeaconGroup> deleteBeaconGroup(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @PathVariable Long beaconGroupId,
-        @RequestParam(value = "confirm", required = true) String confirmation) {
+    public ResponseEntity<BeaconGroup> deleteBeaconGroup(@PathVariable String username,
+                                                         @PathVariable Long projectId,
+                                                         @PathVariable Long beaconGroupId,
+                                                         @RequestParam(value = "confirm", required = true) String confirmation) {
 
-        DeleteResponse response = DeleteResponse.NOT_DELETED;
         if (confirmation.toLowerCase().equals("yes")) {
-            response = beaconGroupService.delete(username, projectId, beaconGroupId);
-        }
-
-        switch (response) {
-            case DELETED:
-                return new ResponseEntity<BeaconGroup>(HttpStatus.OK);
-            case FORBIDDEN:
-                return new ResponseEntity<BeaconGroup>(HttpStatus.FORBIDDEN);
-            case NOT_FOUND:
-                return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
-            case NOT_DELETED:
-                return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_ACCEPTABLE);
-            default:
-                return new ResponseEntity<BeaconGroup>(HttpStatus.I_AM_A_TEAPOT);
+            BeaconGroup deletedBeaconGroup = beaconGroupService.delete(username, projectId, beaconGroupId);
+            return new ResponseEntity<BeaconGroup>(deletedBeaconGroup, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<BeaconGroup>(HttpStatus.PRECONDITION_FAILED);
         }
     }
 }

@@ -121,30 +121,14 @@ public class BeaconGroupService {
      *
      * @return Whether the beacon group was deleted or not
      */
-    public DeleteResponse delete(String username, Long projectId, Long beaconGroupId) {
+    public BeaconGroup delete(String username, Long projectId, Long beaconGroupId) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon group with ID = \'" + beaconGroupId + "\'");
         }
-        // TODO better membership checking
-        if (isMember(projectId, beaconGroupId)) {
-            /*
-             * Because beacons own the relationship to their beaconGroups, they must be updated first.
-             * For more info, refer to To-Do ID:XNYLXIWD
-             *
-             * orphanRemoval on BeaconGroup leads to deletion of Beacons, undesirable!
-             */
-            updateBeaconsInGroup(username, projectId, beaconGroupId);
-            if (GlobalSettings.DEBUGGING) {
-                System.out.println("Project " + projectId + " has beacon group " + beaconGroupId + ", deleting.");
-            }
-            beaconGroupRepo.delete(beaconGroupId);
-            return DeleteResponse.DELETED;
-        } else {
-            if (GlobalSettings.DEBUGGING) {
-                System.out.println("Project " + projectId + " does not have beacon group " + beaconGroupId + ".");
-            }
-            return DeleteResponse.NOT_FOUND;
-        }
+        BeaconGroup beaconGroup = this.findByBeaconGroupIdAndProject(username, projectId, beaconGroupId);
+        updateBeaconsInGroup(beaconGroup, username, projectId);
+        beaconGroupRepo.delete(beaconGroup);
+        return beaconGroup;
     }
 
     /**
@@ -162,14 +146,8 @@ public class BeaconGroupService {
         return beaconGroups.size() >= 1;
     }
 
-    /**
-     * Removes the association between a group and the beacons in the group
-     *
-     * @param beaconGroupId
-     *     The ID of the group
-     */
-    private void updateBeaconsInGroup(String username, Long projectId, Long beaconGroupId) {
-        for (Beacon beacon : beaconGroupRepo.findOne(beaconGroupId).getBeacons()) {
+    private void updateBeaconsInGroup(BeaconGroup beaconGroup, String username, Long projectId) {
+        for (Beacon beacon : beaconGroup.getBeacons()) {
             beacon.setGroup(null);
             beaconService.save(username, projectId, beacon);
         }
