@@ -1,4 +1,4 @@
-package com.aemreunal.controller;
+package com.aemreunal.controller.beacon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.BeaconService;
