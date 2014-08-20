@@ -1,6 +1,7 @@
 package com.aemreunal.controller;
 
 import java.util.ArrayList;
+import java.util.Random;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,11 +38,14 @@ import static org.junit.Assert.*;
  */
 
 public class T2ProjectTest {
+    public static final int NUM_SEARCH_REPEAT = 10;
     private UserInfo testUser;
+    private Random random;
 
     @Before
     public void createTestUser() {
         testUser = UserCreator.createRandomUser();
+        random = new Random();
     }
 
     @Test
@@ -52,17 +56,17 @@ public class T2ProjectTest {
     @Test
     public void getProject() {
         ProjectInfo createdProject = ProjectCreator.createRandomProject(testUser.username);
-        ProjectInfo requestedProject = ProjectGetter.findProject(testUser.username, createdProject.projectId);
+        ProjectInfo requestedProject = ProjectGetter.getProject(testUser.username, createdProject.projectId);
         assertEquals("The created and requested projects don't match!", createdProject, requestedProject);
     }
 
     @Test
     public void deleteProject() {
         ProjectInfo createdProject = ProjectCreator.createRandomProject(testUser.username);
-        ProjectInfo requestedProject = ProjectGetter.findProject(testUser.username, createdProject.projectId);
+        ProjectInfo requestedProject = ProjectGetter.getProject(testUser.username, createdProject.projectId);
         assertEquals("The created and requested projects don't match!", createdProject, requestedProject);
         ProjectRemover.removeProject(testUser.username, createdProject.projectId);
-        ProjectGetter.failToFindProject(testUser.username, createdProject.projectId);
+        ProjectGetter.failToGetProject(testUser.username, createdProject.projectId);
     }
 
     @Test
@@ -147,5 +151,50 @@ public class T2ProjectTest {
         // Remove user
         UserRemover.removeUser(otherTestUser.username);
         ProjectGetter.failToGetAllProjects(otherTestUser.username);
+    }
+
+    @Test
+    public void searchProjectsExact() {
+        ArrayList<ProjectInfo> projects;
+        ProjectInfo createdProject1 = ProjectCreator.createRandomProject(testUser.username);
+        ProjectInfo createdProject2 = ProjectCreator.createRandomProject(testUser.username);
+
+        projects = ProjectGetter.searchForProjects(testUser.username, createdProject1.name);
+        assertTrue("Search did not return created project with ID " + createdProject1.projectId + "!", projects.contains(createdProject1));
+        projects = ProjectGetter.searchForProjects(testUser.username, createdProject2.name);
+        assertTrue("Search did not return created project with ID " + createdProject2.projectId + "!", projects.contains(createdProject2));
+
+        ProjectRemover.removeProject(testUser.username, createdProject1.projectId);
+        ProjectGetter.failToSearchForProjects(testUser.username, createdProject1.name);
+
+        ProjectRemover.removeProject(testUser.username, createdProject2.projectId);
+        ProjectGetter.failToSearchForProjects(testUser.username, createdProject2.name);
+    }
+
+    @Test
+    public void searchProjectsFuzzy() {
+        ArrayList<ProjectInfo> projects;
+        ProjectInfo createdProject1 = ProjectCreator.createRandomProject(testUser.username);
+        ProjectInfo createdProject2 = ProjectCreator.createRandomProject(testUser.username);
+
+        // Search 3 times to ensure
+        for (int i = 0; i < NUM_SEARCH_REPEAT; i++) {
+            projects = ProjectGetter.searchForProjects(testUser.username, getRandomSubstring(createdProject1.name));
+            assertTrue(projects.contains(createdProject1));
+
+            projects = ProjectGetter.searchForProjects(testUser.username, getRandomSubstring(createdProject2.name));
+            assertTrue(projects.contains(createdProject2));
+        }
+    }
+
+    public String getRandomSubstring(String str) {
+        // +1 to include the last character of the String,
+        // as the .substring already excludes it.
+        int beginIndex = random.nextInt(str.length() + 1);
+        int endIndex;
+        do {
+            endIndex = random.nextInt(str.length() + 1);
+        } while (endIndex < beginIndex);
+        return str.substring(beginIndex, endIndex);
     }
 }

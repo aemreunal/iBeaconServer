@@ -36,13 +36,26 @@ public class ProjectGetter extends EntityGetter {
         sendGetRequest("/" + username + "/project", HttpStatus.SC_NOT_FOUND);
     }
 
-    public static ProjectInfo findProject(String username, Long projectId) {
+    public static ProjectInfo getProject(String username, Long projectId) {
         JsonPath responseJson = getEntity("/" + username + "/project/" + projectId);
         return new ProjectInfo(responseJson, username, "");
     }
 
-    public static void failToFindProject(String username, Long projectId) {
+    public static void failToGetProject(String username, Long projectId) {
         // TODO parametrise requests via rest-assured get()/post() Object... parameters
         sendGetRequest("/" + username + "/project/" + projectId, HttpStatus.SC_NOT_FOUND);
+    }
+
+    public static ArrayList<ProjectInfo> searchForProjects(String username, String projectName) {
+        JsonPath responseJson = getEntity("/" + username + "/project?name=" + projectName);
+        ArrayList<ProjectInfo> projects = new ArrayList<>();
+        for (HashMap projectMap : responseJson.getList("", HashMap.class)) {
+            projects.add(new ProjectInfo(projectMap, username, ""));
+        }
+        return projects;
+    }
+
+    public static void failToSearchForProjects(String username, String projectName) {
+        sendGetRequest("/" + username + "/project?name=" + projectName, HttpStatus.SC_NOT_FOUND);
     }
 }
