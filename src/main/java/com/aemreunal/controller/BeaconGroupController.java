@@ -185,8 +185,8 @@ public class BeaconGroupController {
 
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon group with ID = \'" + savedBeaconGroup.getBeaconGroupId() +
-                "\' name = \'" + savedBeaconGroup.getName() +
-                "\' in project with ID = \'" + projectId + "\'");
+                                   "\' name = \'" + savedBeaconGroup.getName() +
+                                   "\' in project with ID = \'" + projectId + "\'");
         }
 
         HttpHeaders headers = new HttpHeaders();
@@ -234,7 +234,7 @@ public class BeaconGroupController {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
 
-        Beacon beacon = beaconService.findByBeaconIdAndProject(beaconId, project);
+        Beacon beacon = beaconService.findBeaconInProject(username, projectId, beaconId);
         if (beacon == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
@@ -243,7 +243,7 @@ public class BeaconGroupController {
             return new ResponseEntity<BeaconGroup>(HttpStatus.CONFLICT);
         } else {
             beacon.setGroup(beaconGroup);
-            beaconService.save(beacon);
+            beaconService.save(username, projectId, beacon);
             return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
         }
     }
@@ -282,7 +282,7 @@ public class BeaconGroupController {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
 
-        Beacon beacon = beaconService.findByBeaconIdAndProject(beaconId, project);
+        Beacon beacon = beaconService.findBeaconInProject(username, projectId, beaconId);
         if (beacon == null) {
             return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
         }
@@ -291,7 +291,7 @@ public class BeaconGroupController {
             return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
         }
         beacon.setGroup(null);
-        beaconService.save(beacon);
+        beaconService.save(username, projectId, beacon);
         return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
     }
 
@@ -316,7 +316,7 @@ public class BeaconGroupController {
 
         DeleteResponse response = DeleteResponse.NOT_DELETED;
         if (confirmation.toLowerCase().equals("yes")) {
-            response = beaconGroupService.delete(projectId, beaconGroupId);
+            response = beaconGroupService.delete(username, projectId, beaconGroupId);
         }
 
         switch (response) {

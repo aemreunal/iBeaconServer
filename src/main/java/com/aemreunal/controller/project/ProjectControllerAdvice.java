@@ -54,7 +54,7 @@ public class ProjectControllerAdvice {
     private JSONArray formatViolations(Set<ConstraintViolation<?>> violations) {
         JSONArray violationDescriptions = new JSONArray();
         for (ConstraintViolation<?> violation : violations) {
-            Map<String, String> violationDescription = new HashMap<>(2);
+            Map<String, String> violationDescription = new HashMap<>();
             violationDescription.put("property", violation.getPropertyPath().toString());
             violationDescription.put("violation", violation.getMessage());
             violationDescriptions.add(violationDescription);

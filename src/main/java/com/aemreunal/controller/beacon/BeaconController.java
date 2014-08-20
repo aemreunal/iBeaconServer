@@ -3,20 +3,23 @@ package com.aemreunal.controller.beacon;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.DeleteResponse;
+import com.aemreunal.controller.BeaconGroupController;
+import com.aemreunal.controller.project.ProjectController;
+import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
-import com.aemreunal.domain.Project;
 import com.aemreunal.service.BeaconService;
 import com.aemreunal.service.ProjectService;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /*
  **************************
@@ -91,6 +94,8 @@ public class BeaconController {
     /**
      * Returns the list of beacons that match a given criteria
      *
+     * @param username
+     *     The username of the owner of the project
      * @param projectId
      *     The project ID to search
      * @param uuid
@@ -111,6 +116,8 @@ public class BeaconController {
     /**
      * Get the beacon with the specified ID
      *
+     * @param username
+     *     The username of the owner of the project
      * @param projectId
      *     The ID of the project
      * @param beaconId
@@ -119,23 +126,21 @@ public class BeaconController {
      * @return The beacon
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACON_ID_MAPPING, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Beacon> getBeacon(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @PathVariable Long beaconId) {
-        Project project = projectService.findProjectById(username, projectId);
-        if (project == null) {
-            return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
-        }
-
-        Beacon beacon = beaconService.findByBeaconIdAndProject(beaconId, project);
-        if (beacon == null) {
-            return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
-        }
-        // For HATEOAS
-//        beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).getBeacon(projectId, beaconId)).withSelfRel());
+    public ResponseEntity<Beacon> getBeacon(@PathVariable String username,
+                                            @PathVariable Long projectId,
+                                            @PathVariable Long beaconId) {
+        Beacon beacon = beaconService.findBeaconInProject(username, projectId, beaconId);
+        addLinks(username, projectId, beacon);
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
+    }
+
+    private void addLinks(String username, Long projectId, Beacon beacon) {
+        beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).getBeacon(username, projectId, beacon.getBeaconId())).withSelfRel());
+        beacon.add(ControllerLinkBuilder.linkTo(methodOn(UserController.class).getUserByUsername(username)).withRel("owner"));
+        beacon.add(ControllerLinkBuilder.linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withRel("project"));
+        if (beacon.getGroup() != null) {
+            beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconGroupController.class).viewBeaconGroup(username, projectId, beacon.getGroup().getBeaconGroupId())).withRel("group"));
+        }
     }
 
     /**
@@ -153,29 +158,12 @@ public class BeaconController {
      * @return The created beacon
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Beacon> createBeaconInProject(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @RequestBody Beacon restBeacon,
-        UriComponentsBuilder builder) {
-
-        Project project = projectService.findProjectById(username, projectId);
-        if (project == null) {
-            return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
-        }
-
-        restBeacon.setProject(project);
-
-        Beacon savedBeacon;
-        try {
-            savedBeacon = beaconService.save(restBeacon);
-        } catch (ConstraintViolationException | TransactionSystemException e) {
-            if (GlobalSettings.DEBUGGING) {
-                System.err.println("Unable to save beacon! Constraint violation detected!");
-            }
-            return new ResponseEntity<Beacon>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Beacon> createBeaconInProject(@PathVariable String username,
+                                                        @PathVariable Long projectId,
+                                                        @RequestBody Beacon restBeacon,
+                                                        UriComponentsBuilder builder)
+        throws ConstraintViolationException {
+        Beacon savedBeacon = beaconService.save(username, projectId, restBeacon);
 
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
@@ -183,12 +171,15 @@ public class BeaconController {
                                    "\' minor = \'" + savedBeacon.getMinor() +
                                    "\' in project with ID = \'" + projectId + "\'");
         }
+        return buildCreateResponse(username, builder, savedBeacon);
+    }
 
+    private ResponseEntity<Beacon> buildCreateResponse(String username, UriComponentsBuilder builder, Beacon savedBeacon) {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path(GlobalSettings.BEACON_SPECIFIC_MAPPING)
                                    .buildAndExpand(
                                        username,
-                                       project.getProjectId().toString(),
+                                       savedBeacon.getProject().getProjectId().toString(),
                                        savedBeacon.getBeaconId().toString())
                                    .toUri());
         return new ResponseEntity<Beacon>(savedBeacon, headers, HttpStatus.CREATED);
@@ -208,29 +199,15 @@ public class BeaconController {
      * @return The status of deletion action
      */
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACON_ID_MAPPING)
-    public ResponseEntity<Beacon> deleteBeacon(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @PathVariable Long beaconId,
-        @RequestParam(value = "confirm", required = true) String confirmation) {
-
-        DeleteResponse response = DeleteResponse.NOT_DELETED;
+    public ResponseEntity<Beacon> deleteBeacon(@PathVariable String username,
+                                               @PathVariable Long projectId,
+                                               @PathVariable Long beaconId,
+                                               @RequestParam(value = "confirm", required = true) String confirmation) {
         if (confirmation.toLowerCase().equals("yes")) {
-            response = beaconService.delete(projectId, beaconId);
-        }
-
-        switch (response) {
-            case DELETED:
-                return new ResponseEntity<Beacon>(HttpStatus.OK);
-            case FORBIDDEN:
-                return new ResponseEntity<Beacon>(HttpStatus.FORBIDDEN);
-            case NOT_FOUND:
-                return new ResponseEntity<Beacon>(HttpStatus.NOT_FOUND);
-            case NOT_DELETED:
-                return new ResponseEntity<Beacon>(HttpStatus.NOT_ACCEPTABLE);
-            default:
-                return new ResponseEntity<Beacon>(HttpStatus.I_AM_A_TEAPOT);
+            Beacon deletedBeacon = beaconService.delete(username, projectId, beaconId);
+            return new ResponseEntity<Beacon>(deletedBeacon, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Beacon>(HttpStatus.PRECONDITION_FAILED);
         }
     }
 

@@ -139,8 +139,8 @@ public class ProjectController {
 
     /**
      * Builds the post-create response for a project. Sets the appropriate headers and
-     * HATEOAS links and creates a {@link org.springframework.http.ResponseEntity
-     * ResponseEntity} object with {@link net.minidev.json.JSONObject JSONObject} type.
+     * creates a {@link org.springframework.http.ResponseEntity ResponseEntity} object
+     * with {@link net.minidev.json.JSONObject JSONObject} type.
      *
      * @param builder
      *     The URI builder for post-creation redirect
@@ -204,8 +204,8 @@ public class ProjectController {
                                                  @PathVariable Long projectId,
                                                  @RequestParam(value = "confirm", required = true) String confirmation) {
         if (confirmation.toLowerCase().equals("yes")) {
-            projectService.delete(username, projectId);
-            return new ResponseEntity<Project>(HttpStatus.OK);
+            Project deletedProject = projectService.delete(username, projectId);
+            return new ResponseEntity<Project>(deletedProject, HttpStatus.OK);
         } else {
             return new ResponseEntity<Project>(HttpStatus.PRECONDITION_FAILED);
         }

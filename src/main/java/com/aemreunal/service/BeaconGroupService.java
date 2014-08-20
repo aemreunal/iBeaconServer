@@ -118,7 +118,7 @@ public class BeaconGroupService {
      *
      * @return Whether the beacon group was deleted or not
      */
-    public DeleteResponse delete(Long projectId, Long beaconGroupId) {
+    public DeleteResponse delete(String username, Long projectId, Long beaconGroupId) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon group with ID = \'" + beaconGroupId + "\'");
         }
@@ -130,7 +130,7 @@ public class BeaconGroupService {
              *
              * orphanRemoval on BeaconGroup leads to deletion of Beacons, undesirable!
              */
-            updateBeaconsInGroup(beaconGroupId);
+            updateBeaconsInGroup(username, projectId, beaconGroupId);
             if (GlobalSettings.DEBUGGING) {
                 System.out.println("Project " + projectId + " has beacon group " + beaconGroupId + ", deleting.");
             }
@@ -162,13 +162,13 @@ public class BeaconGroupService {
     /**
      * Removes the association between a group and the beacons in the group
      *
-     * @param id
+     * @param beaconGroupId
      *     The ID of the group
      */
-    private void updateBeaconsInGroup(Long id) {
-        for (Beacon beacon : beaconGroupRepo.findOne(id).getBeacons()) {
+    private void updateBeaconsInGroup(String username, Long projectId, Long beaconGroupId) {
+        for (Beacon beacon : beaconGroupRepo.findOne(beaconGroupId).getBeacons()) {
             beacon.setGroup(null);
-            beaconService.save(beacon);
+            beaconService.save(username, projectId, beacon);
         }
     }
 }

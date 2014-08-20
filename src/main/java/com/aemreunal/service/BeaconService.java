@@ -2,14 +2,15 @@ package com.aemreunal.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
+import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
 
@@ -46,11 +47,15 @@ public class BeaconService {
      *
      * @return The saved/updated beacon
      */
-    public Beacon save(Beacon beacon) {
+    public Beacon save(String username, Long projectId, Beacon beacon) throws ConstraintViolationException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         }
-
+        Project project = projectService.findProjectById(username, projectId);
+        if(beacon.getBeaconId() == null) {
+            // This means it hasn't been saved yet
+            beacon.setProject(project);
+        }
         return beaconRepo.save(beacon);
     }
 
@@ -81,21 +86,33 @@ public class BeaconService {
     }
 
     /**
-     * Finds the beacon with the given ID in the given project
+     * Finds the {@link com.aemreunal.domain.Beacon beacon} with the specified projectId
+     * in a {@link com.aemreunal.domain.Project project}.
      *
+     * @param username
+     *     The username of the {@link com.aemreunal.domain.User owner} of the project
+     * @param projectId
+     *     The ID of the project
      * @param beaconId
-     *     The ID of the beacon to search for
-     * @param project
-     *     The project to search in
+     *     The ID of the beacon to find
      *
-     * @return The beacon with the given ID
+     * @return The beacon
+     *
+     * @throws com.aemreunal.exception.beacon.BeaconNotFoundException
+     *     If the specified beacon does not exist.
+     * @throws com.aemreunal.exception.project.ProjectNotFoundException
+     *     If the specified project does not exist.
      */
-    public Beacon findByBeaconIdAndProject(Long beaconId, Project project) {
+    public Beacon findBeaconInProject(String username, Long projectId, Long beaconId) throws BeaconNotFoundException, ProjectNotFoundException {
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + project.getProjectId() + "\'");
+            System.out.println("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + projectId + "\'");
         }
-
-        return beaconRepo.findByBeaconIdAndProject(beaconId, project);
+        Project project = projectService.findProjectById(username, projectId);
+        Beacon beacon = beaconRepo.findByBeaconIdAndProject(beaconId, project);
+        if (beacon == null) {
+            throw new BeaconNotFoundException();
+        }
+        return beacon;
     }
 
     /**
@@ -119,33 +136,14 @@ public class BeaconService {
         return beacons;
     }
 
-    /**
-     * Deletes the beacon with the given ID
-     *
-     * @param projectId
-     *     The ID of the project to delete the beacon from
-     * @param beaconId
-     *     The ID of the beacon to delete
-     *
-     * @return Whether the beacon was deleted or not
-     */
-    public DeleteResponse delete(Long projectId, Long beaconId) {
+    public Beacon delete(String username, Long projectId, Long beaconId) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon with ID = \'" + beaconId + "\'");
         }
 
-        if (isMember(projectId, beaconId)) {
-            if (GlobalSettings.DEBUGGING) {
-                System.out.println("Project " + projectId + " has beacon " + beaconId + ", deleting.");
-            }
-            beaconRepo.delete(beaconId);
-            return DeleteResponse.DELETED;
-        } else {
-            if (GlobalSettings.DEBUGGING) {
-                System.out.println("Project " + projectId + " does not have beacon " + beaconId + ".");
-            }
-            return DeleteResponse.NOT_FOUND;
-        }
+        Beacon beacon = this.findBeaconInProject(username, projectId, beaconId);
+        beaconRepo.delete(beaconId);
+        return beacon;
     }
 
     /**
