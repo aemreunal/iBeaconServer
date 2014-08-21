@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.BeaconGroupController;
+import com.aemreunal.controller.beaconGroup.BeaconGroupController;
 import com.aemreunal.controller.beacon.BeaconController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Project;

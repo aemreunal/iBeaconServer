@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.BeaconGroupController;
+import com.aemreunal.controller.beaconGroup.BeaconGroupController;
 import com.aemreunal.controller.project.ProjectController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;

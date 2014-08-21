@@ -1,4 +1,4 @@
-package com.aemreunal.controller;
+package com.aemreunal.controller.beaconGroup;
 
 /*
  **************************
