@@ -52,7 +52,7 @@ public class BeaconService {
             System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         }
         Project project = projectService.findProjectById(username, projectId);
-        if(beacon.getBeaconId() == null) {
+        if(beacon.getProject() == null) {
             // This means it hasn't been saved yet
             beacon.setProject(project);
         }
