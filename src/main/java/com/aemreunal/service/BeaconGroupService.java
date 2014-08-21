@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
@@ -51,11 +50,14 @@ public class BeaconGroupService {
      *
      * @return The saved/updated beacon group
      */
-    public BeaconGroup save(BeaconGroup beaconGroup) {
+    public BeaconGroup save(String username, Long projectId, BeaconGroup beaconGroup) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving beacon group with ID = \'" + beaconGroup.getBeaconGroupId() + "\'");
         }
-
+        Project project = projectService.findProjectById(username, projectId);
+        if(beaconGroup.getProject() == null) {
+            beaconGroup.setProject(project);
+        }
         return beaconGroupRepo.save(beaconGroup);
     }
 

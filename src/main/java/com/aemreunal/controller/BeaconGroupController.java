@@ -17,13 +17,11 @@ package com.aemreunal.controller;
  */
 
 import java.util.List;
-import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
@@ -108,54 +106,39 @@ public class BeaconGroupController {
     /**
      * Create a new beacon group in project
      * <p/>
-     * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
      *
      * @param projectId
      *     The ID of the project to create the beacon group in
-     * @param restBeaconGroup
+     * @param beaconGroupFromJson
      *     The beacon group as JSON object
      * @param builder
      *     The URI builder for post-creation redirect
      *
      * @return The created beacon group
      */
+    // TODO {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<BeaconGroup> createBeaconGroupInProject(
-        // TODO Handle username
-        @PathVariable String username,
-        @PathVariable Long projectId,
-        @RequestBody BeaconGroup restBeaconGroup,
-        UriComponentsBuilder builder) {
-        Project project = projectService.findProjectById(username, projectId);
-        if (project == null) {
-            return new ResponseEntity<BeaconGroup>(HttpStatus.NOT_FOUND);
-        }
-
-        restBeaconGroup.setProject(project);
-        BeaconGroup savedBeaconGroup;
-
-        try {
-            savedBeaconGroup = beaconGroupService.save(restBeaconGroup);
-        } catch (ConstraintViolationException | TransactionSystemException e) {
-            if (GlobalSettings.DEBUGGING) {
-                System.err.println("Unable to save beacon group! Constraint violation detected!");
-            }
-            return new ResponseEntity<BeaconGroup>(HttpStatus.BAD_REQUEST);
-        }
-
+    public ResponseEntity<BeaconGroup> createBeaconGroupInProject(@PathVariable String username,
+                                                                  @PathVariable Long projectId,
+                                                                  @RequestBody BeaconGroup beaconGroupFromJson,
+                                                                  UriComponentsBuilder builder) {
+        BeaconGroup savedBeaconGroup = beaconGroupService.save(username, projectId, beaconGroupFromJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon group with ID = \'" + savedBeaconGroup.getBeaconGroupId() +
                                    "\' name = \'" + savedBeaconGroup.getName() +
                                    "\' in project with ID = \'" + projectId + "\'");
         }
 
+        return buildCreateResponse(username, builder, savedBeaconGroup);
+    }
+
+    private ResponseEntity<BeaconGroup> buildCreateResponse(String username, UriComponentsBuilder builder, BeaconGroup savedBeaconGroup) {
         HttpHeaders headers = new HttpHeaders();
-        // TODO Check redirect location
         headers.setLocation(builder.path(GlobalSettings.BEACONGROUP_SPECIFIC_MAPPING)
                                    .buildAndExpand(
                                        username,
-                                       project.getProjectId().toString(),
-                                       savedBeaconGroup.getBeaconGroupId().toString())
+                                       savedBeaconGroup.getProject().getProjectId(),
+                                       savedBeaconGroup.getBeaconGroupId())
                                    .toUri());
         return new ResponseEntity<BeaconGroup>(savedBeaconGroup, headers, HttpStatus.CREATED);
     }
