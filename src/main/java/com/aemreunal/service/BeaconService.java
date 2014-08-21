@@ -103,7 +103,7 @@ public class BeaconService {
      * @throws com.aemreunal.exception.project.ProjectNotFoundException
      *     If the specified project does not exist.
      */
-    public Beacon findBeaconInProject(String username, Long projectId, Long beaconId) throws BeaconNotFoundException, ProjectNotFoundException {
+    public Beacon getBeacon(String username, Long projectId, Long beaconId) throws BeaconNotFoundException, ProjectNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + projectId + "\'");
         }
@@ -141,7 +141,7 @@ public class BeaconService {
             System.out.println("Deleting beacon with ID = \'" + beaconId + "\'");
         }
 
-        Beacon beacon = this.findBeaconInProject(username, projectId, beaconId);
+        Beacon beacon = this.getBeacon(username, projectId, beaconId);
         beaconRepo.delete(beaconId);
         return beacon;
     }

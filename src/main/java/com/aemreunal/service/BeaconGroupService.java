@@ -9,7 +9,9 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
+import com.aemreunal.exception.beaconGroup.BeaconDoesntHaveGroupException;
 import com.aemreunal.exception.beaconGroup.BeaconGroupNotFoundException;
+import com.aemreunal.exception.beaconGroup.BeaconHasGroupException;
 import com.aemreunal.repository.beaconGroup.BeaconGroupRepo;
 import com.aemreunal.repository.beaconGroup.BeaconGroupSpecs;
 
@@ -55,7 +57,7 @@ public class BeaconGroupService {
             System.out.println("Saving beacon group with ID = \'" + beaconGroup.getBeaconGroupId() + "\'");
         }
         Project project = projectService.findProjectById(username, projectId);
-        if(beaconGroup.getProject() == null) {
+        if (beaconGroup.getProject() == null) {
             beaconGroup.setProject(project);
         }
         return beaconGroupRepo.save(beaconGroup);
@@ -70,7 +72,7 @@ public class BeaconGroupService {
         return beaconGroups;
     }
 
-    public BeaconGroup findByBeaconGroupIdAndProject(String username, Long projectId, Long beaconGroupId) {
+    public BeaconGroup getBeaconGroup(String username, Long projectId, Long beaconGroupId) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacon group with ID = \'" + beaconGroupId + "\'");
         }
@@ -105,12 +107,36 @@ public class BeaconGroupService {
     }
 
     public List<Beacon> getMembersOfBeaconGroup(String username, Long projectId, Long beaconGroupId) {
-        BeaconGroup beaconGroup = this.findByBeaconGroupIdAndProject(username, projectId, beaconGroupId);
+        BeaconGroup beaconGroup = this.getBeaconGroup(username, projectId, beaconGroupId);
         List<Beacon> beaconList = new ArrayList<Beacon>();
         for (Beacon beacon : beaconGroup.getBeacons()) {
             beaconList.add(beacon);
         }
         return beaconList;
+    }
+
+    public BeaconGroup addBeaconToGroup(String username, Long projectId, Long beaconGroupId, Long beaconId) {
+        BeaconGroup beaconGroup = getBeaconGroup(username, projectId, beaconGroupId);
+        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
+        if (beacon.getGroup() != null) {
+            throw new BeaconHasGroupException(beacon.getBeaconId(), beacon.getGroup().getBeaconGroupId());
+        }
+        beacon.setGroup(beaconGroup);
+        beaconService.save(username, projectId, beacon);
+        return beaconGroup;
+    }
+
+    public BeaconGroup removeBeaconFromGroup(String username, Long projectId, Long beaconGroupId, Long beaconId) {
+        BeaconGroup beaconGroup = getBeaconGroup(username, projectId, beaconGroupId);
+        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
+        if (beacon.getGroup() == null) {
+            throw new BeaconDoesntHaveGroupException(beacon.getBeaconId(), beacon.getGroup().getBeaconGroupId());
+        } else if(!(beacon.getGroup().getBeaconGroupId().equals(beaconGroupId))) {
+            throw new BeaconHasGroupException(beaconId, beacon.getGroup().getBeaconGroupId());
+        }
+        beacon.setGroup(null);
+        beaconService.save(username, projectId, beacon);
+        return beaconGroup;
     }
 
     /**
@@ -127,25 +153,10 @@ public class BeaconGroupService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon group with ID = \'" + beaconGroupId + "\'");
         }
-        BeaconGroup beaconGroup = this.findByBeaconGroupIdAndProject(username, projectId, beaconGroupId);
+        BeaconGroup beaconGroup = this.getBeaconGroup(username, projectId, beaconGroupId);
         updateBeaconsInGroup(beaconGroup, username, projectId);
         beaconGroupRepo.delete(beaconGroup);
         return beaconGroup;
-    }
-
-    /**
-     * Checks whether the given beacon group belongs to the given project
-     *
-     * @param projectId
-     *     The ID of the project to check in
-     * @param beaconGroupId
-     *     The ID of the beacon group to check for
-     *
-     * @return Whether the beacon group belongs to the project
-     */
-    public boolean isMember(Long projectId, Long beaconGroupId) {
-        List<BeaconGroup> beaconGroups = beaconGroupRepo.findAll(BeaconGroupSpecs.beaconGroupExistsSpecification(projectId, beaconGroupId));
-        return beaconGroups.size() >= 1;
     }
 
     private void updateBeaconsInGroup(BeaconGroup beaconGroup, String username, Long projectId) {

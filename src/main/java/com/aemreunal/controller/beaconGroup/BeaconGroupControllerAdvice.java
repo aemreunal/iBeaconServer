@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.aemreunal.exception.beaconGroup.BeaconGroupNotFoundException;
+import com.aemreunal.exception.beaconGroup.BeaconHasGroupException;
 import com.aemreunal.helper.JsonBuilder;
 
 /*
@@ -34,5 +35,13 @@ public class BeaconGroupControllerAdvice {
                                                    .add("error", ex.getLocalizedMessage())
                                                    .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BeaconHasGroupException.class)
+    public ResponseEntity<JSONObject> beaconHasGroupExceptionHandler(BeaconHasGroupException ex) {
+        JSONObject responseBody = new JsonBuilder().add("reason", "beacongroup")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 }

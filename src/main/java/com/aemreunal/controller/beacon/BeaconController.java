@@ -104,7 +104,7 @@ public class BeaconController {
     public ResponseEntity<Beacon> getBeacon(@PathVariable String username,
                                             @PathVariable Long projectId,
                                             @PathVariable Long beaconId) {
-        Beacon beacon = beaconService.findBeaconInProject(username, projectId, beaconId);
+        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
         addLinks(username, projectId, beacon);
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
