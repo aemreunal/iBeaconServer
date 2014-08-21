@@ -24,7 +24,7 @@ import com.jayway.restassured.path.json.JsonPath;
 
 public class ProjectGetter extends EntityGetter {
     public static ArrayList<ProjectInfo> getAllProjects(String username) {
-        JsonPath responseJson = getEntity("/" + username + "/project");
+        JsonPath responseJson = getEntity("/" + username + "/projects");
         ArrayList<ProjectInfo> projects = new ArrayList<>();
         for (HashMap projectMap : responseJson.getList("", HashMap.class)) {
             projects.add(new ProjectInfo(projectMap, username, ""));
@@ -33,21 +33,21 @@ public class ProjectGetter extends EntityGetter {
     }
 
     public static void failToGetAllProjects(String username) {
-        sendGetRequest("/" + username + "/project", HttpStatus.SC_NOT_FOUND);
+        sendGetRequest("/" + username + "/projects", HttpStatus.SC_NOT_FOUND);
     }
 
     public static ProjectInfo getProject(String username, Long projectId) {
-        JsonPath responseJson = getEntity("/" + username + "/project/" + projectId);
+        JsonPath responseJson = getEntity("/" + username + "/projects/" + projectId);
         return new ProjectInfo(responseJson, username, "");
     }
 
     public static void failToGetProject(String username, Long projectId) {
         // TODO parametrise requests via rest-assured get()/post() Object... parameters
-        sendGetRequest("/" + username + "/project/" + projectId, HttpStatus.SC_NOT_FOUND);
+        sendGetRequest("/" + username + "/projects/" + projectId, HttpStatus.SC_NOT_FOUND);
     }
 
     public static ArrayList<ProjectInfo> searchForProjects(String username, String projectName) {
-        JsonPath responseJson = getEntity("/" + username + "/project?name=" + projectName);
+        JsonPath responseJson = getEntity("/" + username + "/projects?name=" + projectName);
         ArrayList<ProjectInfo> projects = new ArrayList<>();
         for (HashMap projectMap : responseJson.getList("", HashMap.class)) {
             projects.add(new ProjectInfo(projectMap, username, ""));
@@ -56,6 +56,6 @@ public class ProjectGetter extends EntityGetter {
     }
 
     public static void failToSearchForProjects(String username, String projectName) {
-        sendGetRequest("/" + username + "/project?name=" + projectName, HttpStatus.SC_NOT_FOUND);
+        sendGetRequest("/" + username + "/projects?name=" + projectName, HttpStatus.SC_NOT_FOUND);
     }
 }

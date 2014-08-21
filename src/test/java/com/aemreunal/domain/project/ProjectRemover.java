@@ -21,10 +21,10 @@ import com.aemreunal.domain.EntityRemover;
 
 public class ProjectRemover extends EntityRemover {
     public static void removeProject(String username, Long projectId) {
-        removeEntity("/" + username + "/project/" + projectId);
+        removeEntity("/" + username + "/projects/" + projectId);
     }
 
     public static void failToRemoveProject(String username, Long projectId) {
-        sendDeleteRequest("/" + username + "/project/" + projectId + "?confirm=yes", HttpStatus.SC_NOT_FOUND);
+        sendDeleteRequest("/" + username + "/projects/" + projectId + "?confirm=yes", HttpStatus.SC_NOT_FOUND);
     }
 }

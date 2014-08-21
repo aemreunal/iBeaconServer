@@ -121,6 +121,6 @@ public class ProjectCreator extends EntityCreator {
     }
 
     private static String getProjectCreatePath(String ownerUsername) {
-        return GlobalSettings.USER_PATH_MAPPING + "/" + ownerUsername + "/project";
+        return GlobalSettings.USER_PATH_MAPPING + "/" + ownerUsername + "/projects";
     }
 }
