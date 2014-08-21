@@ -2,17 +2,14 @@ package com.aemreunal.controller.user;
 
 import net.minidev.json.JSONObject;
 
-import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.User;
 import com.aemreunal.exception.user.UsernameClashException;
 import com.aemreunal.service.UserService;
@@ -39,23 +36,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    /**
-//     * Get the user with the specified ID
-//     *
-//     * @param userId
-//     *     The ID of the user
-//     *
-//     * @return The user
-//     */
-//    @RequestMapping(method = RequestMethod.GET, value = "/{userId}", produces = "application/json; charset=UTF-8")
-//    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-//        User user = userService.findById(userId);
-//        if (user == null) {
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<User>(user, HttpStatus.OK);
-//    }
-
     /**
      * Get the user with the specified username
      *
@@ -70,9 +50,6 @@ public class UserController {
                     produces = "application/json; charset=UTF-8")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username);
-        if (user == null) {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
@@ -93,17 +70,14 @@ public class UserController {
         @RequestBody JSONObject userJson,
         UriComponentsBuilder builder) throws UsernameClashException {
         User savedUser = new User(userJson);
-        try {
-            savedUser = userService.save(savedUser);
-        } catch (ConstraintViolationException | TransactionSystemException e) {
-            if (GlobalSettings.DEBUGGING) {
-                System.err.println("Unable to save user! Constraint violation detected!");
-            }
-            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
-        }
+        savedUser = userService.save(savedUser);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved user with username = \'" + savedUser.getUsername() + "\' ID = \'" + savedUser.getUserId() + "\'");
         }
+        return buildCreateResponse(builder, savedUser);
+    }
+
+    private ResponseEntity<User> buildCreateResponse(UriComponentsBuilder builder, User savedUser) {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path(GlobalSettings.USER_SPECIFIC_MAPPING)
                                    .buildAndExpand(
@@ -125,36 +99,21 @@ public class UserController {
      *
      * @return The status of the deletion action
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.USER_USERNAME_MAPPING)
-    public ResponseEntity<User> deleteUser(
-        @PathVariable String username,
-        @RequestParam(value = "confirm", required = true) String confirmation/*,
+    /*
         TODO Instead of getting password via a parameter, just authenticate user with oauth:
         Define: "/user/XXX has access to everyting beyond XXX/... if it authenticates with the
         credentials of XXX" -> variable authentication.
-        @RequestParam(value = "password", required = true) String password*/) {
-
-        DeleteResponse response = DeleteResponse.NOT_DELETED;
+        @RequestParam(value = "password", required = true) String password
+     */
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.USER_USERNAME_MAPPING)
+    public ResponseEntity<User> deleteUser(
+        @PathVariable String username,
+        @RequestParam(value = "confirm", required = true) String confirmation) {
         if (confirmation.toLowerCase().equals("yes")) {
-//            if (userService.authenticateAndFindUser(username, password) == null) {
-//            TODO throw new authentication exception
-//                response = DeleteResponse.FORBIDDEN;
-//            } else {
-            response = userService.delete(username);
-//            }
-        }
-
-        switch (response) {
-            case DELETED:
-                return new ResponseEntity<User>(HttpStatus.OK);
-            case FORBIDDEN:
-                return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
-            case NOT_FOUND:
-                return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-            case NOT_DELETED:
-                return new ResponseEntity<User>(HttpStatus.PRECONDITION_FAILED);
-            default:
-                return new ResponseEntity<User>(HttpStatus.I_AM_A_TEAPOT);
+            User user = userService.delete(username);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<User>(HttpStatus.PRECONDITION_FAILED);
         }
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.DeleteResponse;
 import com.aemreunal.domain.User;
 import com.aemreunal.exception.user.InvalidUsernameException;
 import com.aemreunal.exception.user.UserNotFoundException;
@@ -133,7 +132,7 @@ public class UserService {
         }
         verifyUsernameCorrectness(username);
         User user = userRepo.findByUsername(username);
-        if(user == null) {
+        if (user == null) {
             throw new UserNotFoundException();
         }
         return user;
@@ -173,16 +172,12 @@ public class UserService {
      *
      * @return Whether the user was deleted or not
      */
-    public DeleteResponse delete(String username) {
+    public User delete(String username) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting user with username = \'" + username + "\'");
         }
         User userToDelete = findByUsername(username);
-        if (userToDelete != null) {
-            userRepo.delete(userToDelete);
-            return DeleteResponse.DELETED;
-        } else {
-            return DeleteResponse.NOT_FOUND;
-        }
+        userRepo.delete(userToDelete);
+        return userToDelete;
     }
 }
