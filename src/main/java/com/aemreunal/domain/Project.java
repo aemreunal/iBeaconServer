@@ -42,7 +42,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "projects")
 @ResponseBody
-@JsonIgnoreProperties(value = { "beacons", "beaconGroups", "projectSecret", "owner", "creationDate" })
+@JsonIgnoreProperties(value = { "beacons", "beaconGroups", "scenarios", "projectSecret", "owner", "creationDate" })
 public class Project extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -230,21 +230,20 @@ public class Project extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Project 'scenarios list' attribute
      */
-/*
-    // MUST BE IMPLEMENTED
-    // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
-    @JsonIgnore
-    // MUST BE IMPLEMENTED
-    private List<Scenario> scenarios;
+    @OneToMany(targetEntity = Scenario.class,
+               mappedBy = "project",
+               orphanRemoval = true,
+               fetch = FetchType.LAZY)
+    @OrderBy(value = "scenarioId")
+    private Set<Scenario> scenarios;
 
-    public List<Scenario> getScenarios() {
+    public Set<Scenario> getScenarios() {
         return scenarios;
     }
 
-    public void setScenarios(List<Scenario> scenarios) {
+    public void setScenarios(Set<Scenario> scenarios) {
         this.scenarios = scenarios;
     }
-*/
     /*
      * END: Project 'scenarios list' attribute
      *------------------------------------------------------------
@@ -257,10 +256,7 @@ public class Project extends ResourceSupport implements Serializable {
     @Column(name = "project_secret", nullable = false, unique = false)
     @Size(min = BCRYPT_HASH_LENGTH, max = BCRYPT_HASH_LENGTH)
     /*
-     * TODO JsonIgnore this and only show it once
      * TODO add resetting secret
-     * TODO send secret by email?
-     * TODO or send project ID & secret by JSON when it's created
      */
     private String projectSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
