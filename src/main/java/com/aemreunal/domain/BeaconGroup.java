@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "beacon_groups")
 @ResponseBody
-@JsonIgnoreProperties(value = { "links", "beacons", "project" })
+@JsonIgnoreProperties(value = { "beacons", "project" })
 public class BeaconGroup extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -155,7 +155,6 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
                joinColumns = @JoinColumn(name="beacon_group_id"),
                inverseJoinColumns = @JoinColumn(name="project_id")
     )
-    // TODO @JsonIgnoreProperties(value = {})
     private Project project;
 
     public Project getProject() {
