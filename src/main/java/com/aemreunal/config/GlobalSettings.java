@@ -44,19 +44,20 @@ public class GlobalSettings {
      */
     public static final String NON_ASCII_REGEX = ".*[^\\p{ASCII}].*";
 
-    public static final String USER_PATH_MAPPING     = "";
-    public static final String USER_CREATE_MAPPING   = "/register";
-    public static final String USER_USERNAME_MAPPING = "/{username}";
-    public static final String USER_SPECIFIC_MAPPING = USER_PATH_MAPPING + USER_USERNAME_MAPPING;
-
-    public static final String PROJECT_PATH_MAPPING     = USER_SPECIFIC_MAPPING + "/projects";
-    public static final String PROJECT_ID_MAPPING       = "/{projectId}";
-    public static final String PROJECT_SPECIFIC_MAPPING = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
-
-    public static final String BEACON_PATH_MAPPING     = PROJECT_SPECIFIC_MAPPING + "/beacons";
-    public static final String BEACON_ID_MAPPING       = "/{beaconId}";
-    public static final String BEACON_SPECIFIC_MAPPING = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
-
+    // User
+    public static final String USER_PATH_MAPPING                 = "";
+    public static final String USER_CREATE_MAPPING               = "/register";
+    public static final String USER_USERNAME_MAPPING             = "/{username}";
+    public static final String USER_SPECIFIC_MAPPING             = USER_PATH_MAPPING + USER_USERNAME_MAPPING;
+    // Project
+    public static final String PROJECT_PATH_MAPPING              = USER_SPECIFIC_MAPPING + "/projects";
+    public static final String PROJECT_ID_MAPPING                = "/{projectId}";
+    public static final String PROJECT_SPECIFIC_MAPPING          = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
+    // Beacon
+    public static final String BEACON_PATH_MAPPING               = PROJECT_SPECIFIC_MAPPING + "/beacons";
+    public static final String BEACON_ID_MAPPING                 = "/{beaconId}";
+    public static final String BEACON_SPECIFIC_MAPPING           = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
+    // Beacon group
     public static final String BEACONGROUP_PATH_MAPPING          = PROJECT_SPECIFIC_MAPPING + "/beacongroup";
     public static final String BEACONGROUP_ID_MAPPING            = "/{beaconGroupId}";
     public static final String BEACONGROUP_SPECIFIC_MAPPING      = BEACONGROUP_PATH_MAPPING + BEACONGROUP_ID_MAPPING;
