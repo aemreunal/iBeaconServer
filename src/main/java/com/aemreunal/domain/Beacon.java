@@ -31,13 +31,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(value = { "group", "project" })
 public class Beacon extends ResourceSupport implements Serializable {
     // UUID hex string (including dashes) is 36 characters long
-    public static final int UUID_MAX_LENGTH = 36;
+    public static final int UUID_MAX_LENGTH        = 36;
     // Major hex string is 4 characters long
-    public static final int MAJOR_MIN_LENGTH = 1;
-    public static final int MAJOR_MAX_LENGTH = 4;
+    public static final int MAJOR_MIN_LENGTH       = 1;
+    public static final int MAJOR_MAX_LENGTH       = 4;
     // Minor hex string is 4 characters long
-    public static final int MINOR_MIN_LENGTH = 1;
-    public static final int MINOR_MAX_LENGTH = 4;
+    public static final int MINOR_MIN_LENGTH       = 1;
+    public static final int MINOR_MAX_LENGTH       = 4;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
 
     /*
@@ -151,12 +151,12 @@ public class Beacon extends ResourceSupport implements Serializable {
      * BEGIN: Beacon 'group' attribute
      */
     @ManyToOne(targetEntity = BeaconGroup.class,
-        fetch = FetchType.LAZY,
-        optional = true)
+               fetch = FetchType.LAZY,
+               optional = true)
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
-    @JoinTable(name="beacon_groups_to_beacons",
-               joinColumns = @JoinColumn(name="beacon_id"),
-               inverseJoinColumns = @JoinColumn(name="beacon_group_id")
+    @JoinTable(name = "beacon_groups_to_beacons",
+               joinColumns = @JoinColumn(name = "beacon_id"),
+               inverseJoinColumns = @JoinColumn(name = "beacon_group_id")
     )
     @Access(AccessType.PROPERTY)
     private BeaconGroup group;
@@ -180,12 +180,12 @@ public class Beacon extends ResourceSupport implements Serializable {
      * BEGIN: Beacon 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
-        fetch = FetchType.LAZY,
-        optional = false)
+               fetch = FetchType.LAZY,
+               optional = false)
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
-    @JoinTable(name="projects_to_beacons",
-               joinColumns = @JoinColumn(name="beacon_id"),
-               inverseJoinColumns = @JoinColumn(name="project_id")
+    @JoinTable(name = "projects_to_beacons",
+               joinColumns = @JoinColumn(name = "beacon_id"),
+               inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     @Access(AccessType.PROPERTY)
     private Project project;
@@ -201,6 +201,33 @@ public class Beacon extends ResourceSupport implements Serializable {
     }
     /*
      * END: Beacon 'project' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Beacon 'scenario' attribute
+     */
+    @ManyToOne(targetEntity = Scenario.class,
+               fetch = FetchType.LAZY,
+               optional = false)
+    @JoinTable(name = "scenarios_to_beacons",
+               joinColumns = @JoinColumn(name = "beacon_id"),
+               inverseJoinColumns = @JoinColumn(name = "scenario_id"))
+    @Access(AccessType.PROPERTY)
+    private Scenario scenario;
+
+    public Scenario getScenario() {
+        CoreConfig.initLazily(scenario);
+        return scenario;
+    }
+
+    public void setScenario(Scenario scenario) {
+        CoreConfig.initLazily(scenario);
+        this.scenario = scenario;
+    }
+    /*
+     * END: Beacon 'scenario' attribute
      *------------------------------------------------------------
      */
 
@@ -235,7 +262,7 @@ public class Beacon extends ResourceSupport implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof Beacon)) {
+        if (!(obj instanceof Beacon)) {
             return false;
         } else {
             return ((Beacon) obj).getBeaconId() == this.getBeaconId();

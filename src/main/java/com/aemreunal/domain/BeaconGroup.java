@@ -171,6 +171,33 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      */
 
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Beacon group 'scenario' attribute
+     */
+    @ManyToOne(targetEntity = Scenario.class,
+               fetch = FetchType.LAZY,
+               optional = false)
+    @JoinTable(name = "scenarios_to_beacon_groups",
+               joinColumns = @JoinColumn(name = "beacon_group_id"),
+               inverseJoinColumns = @JoinColumn(name = "scenario_id"))
+    @Access(AccessType.PROPERTY)
+    private Scenario scenario;
+
+    public Scenario getScenario() {
+        CoreConfig.initLazily(scenario);
+        return scenario;
+    }
+
+    public void setScenario(Scenario scenario) {
+        CoreConfig.initLazily(scenario);
+        this.scenario = scenario;
+    }
+    /*
+     * END: Beacon group 'scenario' attribute
+     *------------------------------------------------------------
+     */
+
 
     /*
      *------------------------------------------------------------

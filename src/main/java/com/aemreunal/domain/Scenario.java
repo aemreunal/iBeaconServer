@@ -2,11 +2,14 @@ package com.aemreunal.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.config.CoreConfig;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
  **************************
@@ -27,6 +30,7 @@ import com.aemreunal.config.CoreConfig;
 @Entity
 @Table(name = "scenarios")
 @ResponseBody
+@JsonIgnoreProperties(value = { "beacons", "project", "beaconGroups" })
 public class Scenario extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH = 100;
     public static final int DESCRIPTION_MAX_LENGTH = 1000;
@@ -117,6 +121,62 @@ public class Scenario extends ResourceSupport implements Serializable {
     }
     /*
      * END: Scenario 'project' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Scenario 'beacons list' attribute
+     */
+    @OneToMany(targetEntity = Beacon.class,
+               mappedBy = "scenario",
+               fetch = FetchType.LAZY)
+    @OrderBy("beaconId")
+    private Set<Beacon> beacons = new LinkedHashSet<>();
+
+    public Set<Beacon> getBeacons() {
+        CoreConfig.initLazily(beacons);
+        return beacons;
+    }
+
+    public void setBeacons(Set<Beacon> beacons) {
+        this.beacons = beacons;
+    }
+
+    public void addBeacon(Beacon beacon) {
+        CoreConfig.initLazily(beacons);
+        this.beacons.add(beacon);
+    }
+    /*
+     * END: Scenario 'beacons list' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Scenario 'beacon groups list' attribute
+     */
+    @OneToMany(targetEntity = BeaconGroup.class,
+               mappedBy = "scenario",
+               fetch = FetchType.LAZY)
+    @OrderBy(value = "beaconGroupId")
+    private Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
+
+    public Set<BeaconGroup> getBeaconGroups() {
+        CoreConfig.initLazily(beaconGroups);
+        return beaconGroups;
+    }
+
+    public void setBeaconGroups(Set<BeaconGroup> beaconGroups) {
+        this.beaconGroups = beaconGroups;
+    }
+
+    public void addBeaconGroup(BeaconGroup beaconGroup) {
+        CoreConfig.initLazily(beaconGroups);
+        this.beaconGroups.add(beaconGroup);
+    }
+    /*
+     * END: Scenario 'beacon groups list' attribute
      *------------------------------------------------------------
      */
 
