@@ -12,12 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.beaconGroup.BeaconGroupController;
 import com.aemreunal.controller.beacon.BeaconController;
+import com.aemreunal.controller.beaconGroup.BeaconGroupController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.ProjectService;
-import com.aemreunal.service.UserService;
 
 import static org.springframework.hateoas.core.DummyInvocationUtils.methodOn;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -42,9 +41,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @RequestMapping(GlobalSettings.PROJECT_PATH_MAPPING)
 public class ProjectController {
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private ProjectService projectService;
 
     /**
@@ -59,8 +55,8 @@ public class ProjectController {
      * @return All existing projects (Optionally, all that match the given criteria)
      */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<List<Project>> getAllProjects(@PathVariable String username,
-                                                        @RequestParam(value = "name", required = false, defaultValue = "") String projectName) {
+    public ResponseEntity<List<Project>> getAllProjectsOfUser(@PathVariable String username,
+                                                              @RequestParam(value = "name", required = false, defaultValue = "") String projectName) {
         if (projectName.equals("")) {
             return new ResponseEntity<List<Project>>(projectService.findAllProjectsOf(username), HttpStatus.OK);
         } else {
