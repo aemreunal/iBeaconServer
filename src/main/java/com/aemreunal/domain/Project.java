@@ -235,13 +235,15 @@ public class Project extends ResourceSupport implements Serializable {
                orphanRemoval = true,
                fetch = FetchType.LAZY)
     @OrderBy(value = "scenarioId")
-    private Set<Scenario> scenarios;
+    private Set<Scenario> scenarios = new LinkedHashSet<>();
 
     public Set<Scenario> getScenarios() {
+        CoreConfig.initLazily(scenarios);
         return scenarios;
     }
 
     public void setScenarios(Set<Scenario> scenarios) {
+        CoreConfig.initLazily(scenarios);
         this.scenarios = scenarios;
     }
     /*
