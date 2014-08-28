@@ -64,6 +64,10 @@ public class GlobalSettings {
     public static final String BEACONGROUP_MEMBERS_MAPPING       = "/members";
     public static final String BEACONGROUP_ADD_MEMBER_MAPPING    = BEACONGROUP_ID_MAPPING + "/addmember";
     public static final String BEACONGROUP_REMOVE_MEMBER_MAPPING = BEACONGROUP_ID_MAPPING + "/removemember";
+    // Beacon
+    public static final String SCENARIO_PATH_MAPPING               = PROJECT_SPECIFIC_MAPPING + "/scenarios";
+    public static final String SCENARIO_ID_MAPPING                 = "/{scenarioId}";
+    public static final String SCENARIO_SPECIFIC_MAPPING           = SCENARIO_PATH_MAPPING + SCENARIO_ID_MAPPING;
 
 
     //-------------------------------------------------------------------------------------------
