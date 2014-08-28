@@ -16,14 +16,17 @@ package com.aemreunal.service;
  ***************************
  */
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.domain.Beacon;
+import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Scenario;
-import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.exception.scenario.ScenarioNotFoundException;
 import com.aemreunal.repository.scenario.ScenarioRepo;
 
@@ -50,7 +53,7 @@ public class ScenarioService {
         return scenarioRepo.save(scenario);
     }
 
-    public Scenario getScenario(String username, Long projectId, Long scenarioId) throws ScenarioNotFoundException, ProjectNotFoundException {
+    public Scenario getScenario(String username, Long projectId, Long scenarioId) throws ScenarioNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding scenario with ID = \'" + scenarioId + "\' in project = \'" + projectId + "\'");
         }
@@ -62,4 +65,30 @@ public class ScenarioService {
         return scenario;
     }
 
+    public List<Beacon> getBeaconsInScenario(String username, Long projectId, Long scenarioId) {
+        Scenario scenario = this.getScenario(username, projectId, scenarioId);
+        List<Beacon> beacons = new ArrayList<Beacon>();
+        for (Beacon beacon : scenario.getBeacons()) {
+            beacons.add(beacon);
+        }
+        return beacons;
+    }
+
+    public List<BeaconGroup> getBeaconGroupsInScenario(String username, Long projectId, Long scenarioId) {
+        Scenario scenario = this.getScenario(username, projectId, scenarioId);
+        List<BeaconGroup> beaconGroups = new ArrayList<BeaconGroup>();
+        for (BeaconGroup beaconGroup : scenario.getBeaconGroups()) {
+            beaconGroups.add(beaconGroup);
+        }
+        return beaconGroups;
+    }
+
+    public Scenario delete(String username, Long projectId, Long scenarioId) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Deleting scenario with ID = \'" + scenarioId + "\'");
+        }
+        Scenario scenario = this.getScenario(username, projectId, scenarioId);
+        scenarioRepo.delete(scenario);
+        return scenario;
+    }
 }
