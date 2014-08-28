@@ -51,6 +51,8 @@ public class BeaconService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         }
+        // Even though the 'project' variable is only used inside the if-clause,
+        // the Project is found no matter what to ensure it exists and legitimate.
         Project project = projectService.findProjectById(username, projectId);
         if(beacon.getProject() == null) {
             // This means it hasn't been saved yet
