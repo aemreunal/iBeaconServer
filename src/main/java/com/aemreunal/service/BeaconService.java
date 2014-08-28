@@ -147,19 +147,4 @@ public class BeaconService {
         beaconRepo.delete(beaconId);
         return beacon;
     }
-
-    /**
-     * Checks whether the given beacon belongs to the given project
-     *
-     * @param projectId
-     *     The ID of the project to check in
-     * @param beaconId
-     *     The ID of the beacon to check for
-     *
-     * @return Whether the beacon belongs to the project
-     */
-    public boolean isMember(Long projectId, Long beaconId) {
-        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconExistsSpecification(projectId, beaconId));
-        return beacons.size() >= 1;
-    }
 }
