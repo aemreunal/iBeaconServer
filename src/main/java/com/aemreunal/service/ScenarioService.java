@@ -53,6 +53,15 @@ public class ScenarioService {
         return scenarioRepo.save(scenario);
     }
 
+    public List<Scenario> getScenariosOfProject(String username, Long projectId) {
+        Project project = projectService.findProjectById(username, projectId);
+        List<Scenario> scenarios = new ArrayList<Scenario>();
+        for (Scenario scenario : project.getScenarios()) {
+            scenarios.add(scenario);
+        }
+        return scenarios;
+    }
+
     public Scenario getScenario(String username, Long projectId, Long scenarioId) throws ScenarioNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding scenario with ID = \'" + scenarioId + "\' in project = \'" + projectId + "\'");
