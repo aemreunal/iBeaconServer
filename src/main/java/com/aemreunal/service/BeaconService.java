@@ -112,7 +112,7 @@ public class BeaconService {
         Project project = projectService.findProjectById(username, projectId);
         Beacon beacon = beaconRepo.findByBeaconIdAndProject(beaconId, project);
         if (beacon == null) {
-            throw new BeaconNotFoundException();
+            throw new BeaconNotFoundException(beaconId);
         }
         return beacon;
     }
