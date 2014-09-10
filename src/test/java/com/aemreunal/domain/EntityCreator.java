@@ -2,6 +2,7 @@ package com.aemreunal.domain;
 
 import net.minidev.json.JSONObject;
 
+import java.util.Random;
 import java.util.UUID;
 import com.aemreunal.helper.RestHelper;
 import com.jayway.restassured.path.json.JsonPath;
@@ -32,6 +33,7 @@ import static org.junit.Assert.assertTrue;
 
 public class EntityCreator extends RestHelper {
     public static final String TEST_PASSWORD = "testpassword";
+    protected static    Random random        = new Random();
 
     /**
      * Sends an entity create POST request to the specified path, with the given {@link
@@ -51,21 +53,11 @@ public class EntityCreator extends RestHelper {
         return responseJson;
     }
 
-    protected static String checkName(String name) {
-        if (name.equals("")) {
-            name = "testproject-" + UUID.randomUUID().toString();
-        } else {
-            String errorMessage = "A project name with less than " + Project.NAME_MAX_LENGTH + " characters must be provided!";
-            assertTrue(errorMessage, name.length() <= Project.NAME_MAX_LENGTH);
-        }
-        return name;
-    }
-
-    protected static String checkDescription(String description, String name) {
+    protected static String checkDescription(String description) {
         if (description.equals("")) {
-            description = "Test project with name: " + name;
+            description = "Test description! This is a test object.";
         } else {
-            String errorMessage = "A project description with less than " + Project.DESCRIPTION_MAX_LENGTH + " characters must be provided!";
+            String errorMessage = "A description with less than " + Project.DESCRIPTION_MAX_LENGTH + " characters must be provided!";
             assertTrue(errorMessage, description.length() <= Project.DESCRIPTION_MAX_LENGTH);
         }
         return description;

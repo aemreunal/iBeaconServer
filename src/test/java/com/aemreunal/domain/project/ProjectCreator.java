@@ -18,9 +18,11 @@ package com.aemreunal.domain.project;
 
 import net.minidev.json.JSONObject;
 
+import java.util.UUID;
 import org.apache.http.HttpStatus;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.EntityCreator;
+import com.aemreunal.domain.Project;
 import com.aemreunal.helper.JsonBuilder;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.ValidatableResponse;
@@ -67,8 +69,8 @@ public class ProjectCreator extends EntityCreator {
      * @return The created project's info
      */
     public static ProjectInfo createProject(String ownerUsername, String name, String description) {
-        name = checkName(name);
-        description = checkDescription(description, name);
+        name = checkProjectName(name);
+        description = checkDescription(description);
 
         JSONObject projectJson = getProjectCreateJson(name, description);
         String path = getProjectCreatePath(ownerUsername);
@@ -112,6 +114,16 @@ public class ProjectCreator extends EntityCreator {
         JsonPath jsonResponse = response.extract().body().jsonPath();
         jsonResponse.prettyPrint();
         return jsonResponse;
+    }
+
+    protected static String checkProjectName(String name) {
+        if (name.equals("")) {
+            name = "testproject-" + UUID.randomUUID().toString();
+        } else {
+            String errorMessage = "A project name with less than " + Project.NAME_MAX_LENGTH + " characters must be provided!";
+            assertTrue(errorMessage, name.length() <= Project.NAME_MAX_LENGTH);
+        }
+        return name;
     }
 
     private static JSONObject getProjectCreateJson(String name, String description) {
