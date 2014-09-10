@@ -64,9 +64,9 @@ public class ScenarioController {
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Scenario> createScenario(@PathVariable String username,
-                                                     @PathVariable Long projectId,
-                                                     @RequestBody Scenario scenarioFromJson,
-                                                     UriComponentsBuilder builder) {
+                                                   @PathVariable Long projectId,
+                                                   @RequestBody Scenario scenarioFromJson,
+                                                   UriComponentsBuilder builder) {
         Scenario savedScenario = scenarioService.save(username, projectId, scenarioFromJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved scenario with Name = \'" + savedScenario.getName() + "\' ID = \'" + savedScenario.getScenarioId() + "\'");
@@ -87,7 +87,7 @@ public class ScenarioController {
     }
 
 
-                                                            @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_ID_MAPPING, produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Scenario> deleteScenario(@PathVariable String username,
                                                    @PathVariable Long projectId,
                                                    @PathVariable Long scenarioId,
