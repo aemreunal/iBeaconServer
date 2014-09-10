@@ -25,7 +25,6 @@ import com.aemreunal.domain.EntityCreator;
 import com.aemreunal.domain.Project;
 import com.aemreunal.helper.JsonBuilder;
 import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.response.ValidatableResponse;
 
 import static org.junit.Assert.*;
 
@@ -108,12 +107,7 @@ public class ProjectCreator extends EntityCreator {
     public static JsonPath failToCreateProject(String ownerUsername, String name, String description, int httpStatus) {
         JSONObject projectJson = getProjectCreateJson(name, description);
         String path = getProjectCreatePath(ownerUsername);
-        ValidatableResponse response;
-        response = sendPostRequest(projectJson, path, httpStatus);
-
-        JsonPath jsonResponse = response.extract().body().jsonPath();
-        jsonResponse.prettyPrint();
-        return jsonResponse;
+        return failToCreateEntity(path, httpStatus, projectJson);
     }
 
     protected static String checkProjectName(String name) {

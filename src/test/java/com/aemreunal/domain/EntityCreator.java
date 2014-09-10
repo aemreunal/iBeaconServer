@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.UUID;
 import com.aemreunal.helper.RestHelper;
 import com.jayway.restassured.path.json.JsonPath;
+import com.jayway.restassured.response.ValidatableResponse;
 
 import static org.junit.Assert.assertTrue;
 
@@ -51,6 +52,13 @@ public class EntityCreator extends RestHelper {
         System.out.println("Create response:");
         responseJson.prettyPrint();
         return responseJson;
+    }
+
+    protected static JsonPath failToCreateEntity(String path, int httpStatus, JSONObject entityJson) {
+        ValidatableResponse response = sendPostRequest(entityJson, path, httpStatus);
+        JsonPath jsonResponse = response.extract().body().jsonPath();
+        jsonResponse.prettyPrint();
+        return jsonResponse;
     }
 
     protected static String checkDescription(String description) {

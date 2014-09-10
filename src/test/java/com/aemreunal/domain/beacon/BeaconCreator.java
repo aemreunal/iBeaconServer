@@ -48,6 +48,12 @@ public class BeaconCreator extends EntityCreator {
         return new BeaconInfo(responseJson, projectId, ownerUsername);
     }
 
+    private static JsonPath failToCreateBeacon(String ownerUsername, Long projectId, String uuid, String major, String minor, String description, int httpStatus) {
+        JSONObject beaconJson = getBeaconCreateJson(uuid, major, minor, description);
+        String path = getBeaconCreatePath(ownerUsername, projectId);
+        return failToCreateEntity(path, httpStatus, beaconJson);
+    }
+
     private static String getBeaconCreatePath(String ownerUsername, Long projectId) {
         return "/" + ownerUsername + "/projects/" + projectId + "/beacons";
     }
