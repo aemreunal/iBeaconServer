@@ -113,14 +113,11 @@ public class ProjectController {
      *     The URI builder for post-creation redirect
      *
      * @return The created project
-     *
-     * @throws ConstraintViolationException
      */
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<JSONObject> createProject(@PathVariable String username,
                                                     @RequestBody Project projectFromJson,
-                                                    UriComponentsBuilder builder)
-        throws ConstraintViolationException {
+                                                    UriComponentsBuilder builder) {
         Project savedProject = projectService.save(username, projectFromJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
