@@ -51,6 +51,7 @@ public class APIController {
         String minor = (String) beaconQueryJson.get("minor");
         String secret = (String) beaconQueryJson.get("secret");
         Scenario scenario = scenarioService.queryForScenario(uuid, major, minor, secret);
+        // TODO do something intelligent instead of just returning the scenario
         return new ResponseEntity<Scenario>(scenario, HttpStatus.OK);
     }
 }
