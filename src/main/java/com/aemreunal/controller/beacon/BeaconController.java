@@ -1,7 +1,6 @@
 package com.aemreunal.controller.beacon;
 
 import java.util.List;
-import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
@@ -46,6 +45,16 @@ public class BeaconController {
      * Get all the {@link com.aemreunal.domain.Beacon beacons} that belong to the
      * specified {@link com.aemreunal.domain.Project project}. Returns an empty list if no
      * beacons are present in the project.
+     * <p/>
+     * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
+     * <p/>
+     * Create JSON:<br/>
+     * {<br/>
+     *     "uuid":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",<br/>
+     *     "major":"1",<br/>
+     *     "minor":"2",<br/>
+     *     "description":"Test beacon"<br/>
+     * }
      * <p/>
      * Optionally, certain parameters may be specified to get a refined search. These
      * paramters are: <li><b>UUID:</b> The UUID constraint. Can be specified with the
@@ -120,8 +129,6 @@ public class BeaconController {
 
     /**
      * Create a new beacon in project
-     * <p/>
-     * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
      *
      * @param projectId
      *     The ID of the project to create the beacon in
@@ -136,8 +143,7 @@ public class BeaconController {
     public ResponseEntity<Beacon> createBeaconInProject(@PathVariable String username,
                                                         @PathVariable Long projectId,
                                                         @RequestBody Beacon restBeacon,
-                                                        UriComponentsBuilder builder)
-        throws ConstraintViolationException {
+                                                        UriComponentsBuilder builder) {
         Beacon savedBeacon = beaconService.save(username, projectId, restBeacon);
 
         if (GlobalSettings.DEBUGGING) {
