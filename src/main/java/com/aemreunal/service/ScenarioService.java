@@ -27,6 +27,7 @@ import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Scenario;
+import com.aemreunal.exception.scenario.BeaconDoesntHaveScenarioException;
 import com.aemreunal.exception.scenario.ScenarioNotFoundException;
 import com.aemreunal.repository.scenario.ScenarioRepo;
 
@@ -35,6 +36,9 @@ import com.aemreunal.repository.scenario.ScenarioRepo;
 public class ScenarioService {
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private BeaconService beaconService;
 
     @Autowired
     private ScenarioRepo scenarioRepo;
@@ -68,8 +72,21 @@ public class ScenarioService {
         }
         Project project = projectService.findProjectById(username, projectId);
         Scenario scenario = scenarioRepo.findByScenarioIdAndProject(scenarioId, project);
-        if(scenario == null) {
+        if (scenario == null) {
             throw new ScenarioNotFoundException(scenarioId);
+        }
+        return scenario;
+    }
+
+    public Scenario queryForScenario(String uuid,
+                                     String major,
+                                     String minor,
+                                     String projectSecret)
+    throws BeaconDoesntHaveScenarioException {
+        Beacon beacon = beaconService.queryForBeacon(uuid, major, minor, projectSecret);
+        Scenario scenario = beacon.getScenario();
+        if (scenario == null) {
+            throw new BeaconDoesntHaveScenarioException(uuid, major, minor);
         }
         return scenario;
     }
