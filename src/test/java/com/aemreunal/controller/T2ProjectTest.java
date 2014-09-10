@@ -70,14 +70,7 @@ public class T2ProjectTest {
     }
 
     @Test
-    public void createMultipleProjects1() {
-        ProjectCreator.createRandomProject(testUser.username);
-        ProjectCreator.createRandomProject(testUser.username);
-        ProjectCreator.createRandomProject(testUser.username);
-    }
-
-    @Test
-    public void createMultipleProjects2() {
+    public void createMultipleProjects() {
         ProjectCreator.createRandomProject(testUser.username);
         ProjectCreator.createRandomProject(testUser.username);
         ProjectCreator.createRandomProject(testUser.username);
