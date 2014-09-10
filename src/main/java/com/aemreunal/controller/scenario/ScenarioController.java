@@ -19,13 +19,12 @@ package com.aemreunal.controller.scenario;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.project.ProjectController;
 import com.aemreunal.controller.user.UserController;
@@ -63,7 +62,32 @@ public class ScenarioController {
         scenario.add(ControllerLinkBuilder.linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withRel("project"));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_ID_MAPPING, produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Scenario> createScenario(@PathVariable String username,
+                                                     @PathVariable Long projectId,
+                                                     @RequestBody Scenario scenarioFromJson,
+                                                     UriComponentsBuilder builder) {
+        Scenario savedScenario = scenarioService.save(username, projectId, scenarioFromJson);
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Saved scenario with Name = \'" + savedScenario.getName() + "\' ID = \'" + savedScenario.getScenarioId() + "\'");
+        }
+        return buildCreateResponse(username, builder, savedScenario);
+    }
+
+    private ResponseEntity<Scenario> buildCreateResponse(String username, UriComponentsBuilder builder, Scenario savedScenario) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(builder.path(GlobalSettings.SCENARIO_SPECIFIC_MAPPING)
+                                   .buildAndExpand(
+                                       username,
+                                       savedScenario.getProject().getProjectId(),
+                                       savedScenario.getScenarioId()
+                                   )
+                                   .toUri());
+        return new ResponseEntity<Scenario>(savedScenario, headers, HttpStatus.CREATED);
+    }
+
+
+                                                            @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Scenario> deleteScenario(@PathVariable String username,
                                                    @PathVariable Long projectId,
                                                    @PathVariable Long scenarioId,
