@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
@@ -39,6 +40,9 @@ public class BeaconService {
     @Autowired
     private BeaconRepo beaconRepo;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     /**
      * Saves/updates the given beacon
      *
@@ -54,7 +58,7 @@ public class BeaconService {
         // Even though the 'project' variable is only used inside the if-clause,
         // the Project is found no matter what to ensure it exists and legitimate.
         Project project = projectService.findProjectById(username, projectId);
-        if(beacon.getProject() == null) {
+        if (beacon.getProject() == null) {
             // This means it hasn't been saved yet
             beacon.setProject(project);
         }
@@ -75,7 +79,11 @@ public class BeaconService {
      *
      * @return The list of beacons conforming to given constraints
      */
-    public List<Beacon> findBeaconsBySpecs(String username, Long projectId, String uuid, String major, String minor) {
+    public List<Beacon> findBeaconsBySpecs(String username,
+                                           Long projectId,
+                                           String uuid,
+                                           String major,
+                                           String minor) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
         }
@@ -85,6 +93,19 @@ public class BeaconService {
             throw new BeaconNotFoundException();
         }
         return beacons;
+    }
+
+    public Beacon queryForBeacon(String uuid,
+                                 String major,
+                                 String minor,
+                                 String projectSecret)
+    throws BeaconNotFoundException {
+        Beacon beacon = (Beacon) beaconRepo.findOne(BeaconSpecs.beaconWithSpecification(null, uuid, major, minor));
+        if (beacon == null || !(passwordEncoder.matches(projectSecret, beacon.getProject().getProjectSecret()))) {
+            // Throw not found exception if it really doesn't exist or the secret is wrong.
+            throw new BeaconNotFoundException();
+        }
+        return beacon;
     }
 
     /**
