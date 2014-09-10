@@ -67,7 +67,6 @@ public class BeaconInfo {
         this.major = beaconJson.getString("major");
         this.minor = beaconJson.getString("minor");
         this.description = beaconJson.getString("description");
-        ;
     }
 
     public BeaconInfo(HashMap<String, Object> beaconMap, Long projectId, String ownerUsername) {

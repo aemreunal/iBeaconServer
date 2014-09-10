@@ -141,7 +141,6 @@ public class Project extends ResourceSupport implements Serializable {
     @ManyToOne(targetEntity = User.class,
                fetch = FetchType.LAZY,
                optional = false)
-    // TODO @JsonIgnoreProperties(value = { "name", "description", "beacons" })
     @JoinTable(name = "users_to_projects",
                joinColumns = @JoinColumn(name = "project_id"),
                inverseJoinColumns = @JoinColumn(name = "user_id"))

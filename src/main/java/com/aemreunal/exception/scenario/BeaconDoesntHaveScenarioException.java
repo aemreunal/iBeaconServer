@@ -17,8 +17,6 @@ package com.aemreunal.exception.scenario;
  */
 
 public class BeaconDoesntHaveScenarioException extends NullPointerException {
-
-    // TODO add handler advice
     public BeaconDoesntHaveScenarioException(String uuid, String major, String minor) {
         super("Beacon with UUID: " + uuid + ", Major: " + major + ", Minor: " + minor + " doesn't have an associated scenario!");
     }
