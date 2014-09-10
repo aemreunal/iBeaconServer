@@ -29,7 +29,7 @@ public class BeaconSpecs {
      * Creates the Beacon search specification from the given attributes
      *
      * @param projectId
-     *     The project ID to search in
+     *     The project ID to search in. Could be NULL for API queries.
      * @param uuid
      *     The UUID attribute to search for
      * @param major
@@ -43,7 +43,9 @@ public class BeaconSpecs {
         return new Specification<Beacon>() {
             public Predicate toPredicate(Root<Beacon> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
                 ArrayList<Predicate> predicates = new ArrayList<Predicate>();
-                predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
+                if (projectId != null) {
+                    predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
+                }
 
                 if (!uuid.equals("")) {
                     if (uuid.length() == Beacon.UUID_MAX_LENGTH) {
