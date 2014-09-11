@@ -86,9 +86,9 @@ public class BeaconInfo {
         } else {
             BeaconInfo otherBeaconInfo = (BeaconInfo) obj;
             boolean beaconIdMatches = otherBeaconInfo.beaconId.equals(this.beaconId);
-            boolean uuidMatches = otherBeaconInfo.uuid.equals(this.uuid);
-            boolean majorMatches = otherBeaconInfo.major.equals(this.major);
-            boolean minorMatches = otherBeaconInfo.minor.equals(this.minor);
+            boolean uuidMatches = otherBeaconInfo.uuid.toUpperCase().equals(this.uuid.toUpperCase());
+            boolean majorMatches = otherBeaconInfo.major.toUpperCase().equals(this.major.toUpperCase());
+            boolean minorMatches = otherBeaconInfo.minor.toUpperCase().equals(this.minor.toUpperCase());
             boolean descriptionMatches = otherBeaconInfo.description.equals(this.description);
             return beaconIdMatches && uuidMatches && majorMatches && minorMatches && descriptionMatches;
         }

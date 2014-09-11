@@ -30,7 +30,7 @@ public class BeaconCreator extends EntityCreator {
          return createBeacon(ownerUsername, projectId, "", "", "", "");
     }
 
-    private static BeaconInfo createBeacon(String ownerUsername, Long projectId, String uuid, String major, String minor, String description) {
+    public static BeaconInfo createBeacon(String ownerUsername, Long projectId, String uuid, String major, String minor, String description) {
         uuid = checkUUID(uuid);
         major = checkMajor(major);
         minor = checkMinor(minor);
@@ -40,15 +40,15 @@ public class BeaconCreator extends EntityCreator {
         String path = getBeaconCreatePath(ownerUsername, projectId);
         JsonPath responseJson = createEntity(beaconJson, path);
 
-        assertEquals("Requested beacon uuid and response beacon uuid do not match!", uuid, responseJson.getString("uuid"));
-        assertEquals("Requested beacon major and response beacon major do not match!", major, responseJson.getString("major"));
-        assertEquals("Requested beacon minor and response beacon minor do not match!", minor, responseJson.getString("minor"));
+        assertEquals("Requested beacon uuid and response beacon uuid do not match!", uuid.toUpperCase(), responseJson.getString("uuid").toUpperCase());
+        assertEquals("Requested beacon major and response beacon major do not match!", major.toUpperCase(), responseJson.getString("major").toUpperCase());
+        assertEquals("Requested beacon minor and response beacon minor do not match!", minor.toUpperCase(), responseJson.getString("minor").toUpperCase());
         assertEquals("Requested beacon description and response beacon description do not match!", description, responseJson.getString("description"));
 
         return new BeaconInfo(responseJson, projectId, ownerUsername);
     }
 
-    private static JsonPath failToCreateBeacon(String ownerUsername, Long projectId, String uuid, String major, String minor, String description, int httpStatus) {
+    public static JsonPath failToCreateBeacon(String ownerUsername, Long projectId, String uuid, String major, String minor, String description, int httpStatus) {
         JSONObject beaconJson = getBeaconCreateJson(uuid, major, minor, description);
         String path = getBeaconCreatePath(ownerUsername, projectId);
         return failToCreateEntity(path, httpStatus, beaconJson);
