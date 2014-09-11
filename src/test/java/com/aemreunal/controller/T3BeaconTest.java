@@ -16,6 +16,8 @@ package com.aemreunal.controller;
  ***************************
  */
 
+import java.util.UUID;
+import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,5 +68,15 @@ public class T3BeaconTest {
         BeaconRemover.removeBeacon(testUser.username, testProject.projectId, createdBeacon2.beaconId);
         BeaconGetter.failToGetBeacon(testUser.username, testProject.projectId, createdBeacon1.beaconId);
         BeaconGetter.failToGetBeacon(testUser.username, testProject.projectId, createdBeacon2.beaconId);
+    }
+
+    @Test
+    public void failToCreateUser() {
+        BeaconCreator.failToCreateBeacon(testUser.username, testProject.projectId, "hello", "1234", "1234", "1234", HttpStatus.SC_BAD_REQUEST);
+        BeaconCreator.failToCreateBeacon(testUser.username, testProject.projectId, UUID.randomUUID().toString(), "1234567", "1234", "1234", HttpStatus.SC_BAD_REQUEST);
+        BeaconCreator.failToCreateBeacon(testUser.username, testProject.projectId, UUID.randomUUID().toString(), "1234", "1234567", "1234", HttpStatus.SC_BAD_REQUEST);
+        BeaconCreator.failToCreateBeacon("hello world", testProject.projectId, UUID.randomUUID().toString(), "1234", "1234", "1234", HttpStatus.SC_BAD_REQUEST);
+        BeaconCreator.failToCreateBeacon("helloworldasdasdas", testProject.projectId, UUID.randomUUID().toString(), "1234", "1234", "1234", HttpStatus.SC_NOT_FOUND);
+        BeaconCreator.failToCreateBeacon(testUser.username, 1234L, UUID.randomUUID().toString(), "1234", "1234", "1234", HttpStatus.SC_NOT_FOUND);
     }
 }
