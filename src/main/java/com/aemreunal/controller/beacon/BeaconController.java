@@ -48,14 +48,6 @@ public class BeaconController {
      * <p/>
      * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
      * <p/>
-     * Create JSON:<br/>
-     * {<br/>
-     *     "uuid":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",<br/>
-     *     "major":"1",<br/>
-     *     "minor":"2",<br/>
-     *     "description":"Test beacon"<br/>
-     * }
-     * <p/>
      * Optionally, certain parameters may be specified to get a refined search. These
      * paramters are: <li><b>UUID:</b> The UUID constraint. Can be specified with the
      * "{@code?uuid=...}" URI parameter. Any continuous part of thes UUID attribute may be
@@ -129,6 +121,14 @@ public class BeaconController {
 
     /**
      * Create a new beacon in project
+     * <p/>
+     * Create JSON:<br/>
+     * {<br/>
+     *     "uuid":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",<br/>
+     *     "major":"1",<br/>
+     *     "minor":"2",<br/>
+     *     "description":"Test beacon"<br/>
+     * }
      *
      * @param projectId
      *     The ID of the project to create the beacon in
