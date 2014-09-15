@@ -58,7 +58,7 @@ public class GlobalSettings {
     public static final String BEACON_ID_MAPPING                 = "/{beaconId}";
     public static final String BEACON_SPECIFIC_MAPPING           = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
     // Beacon group
-    public static final String BEACONGROUP_PATH_MAPPING          = PROJECT_SPECIFIC_MAPPING + "/beacongroup";
+    public static final String BEACONGROUP_PATH_MAPPING          = PROJECT_SPECIFIC_MAPPING + "/beacongroups";
     public static final String BEACONGROUP_ID_MAPPING            = "/{beaconGroupId}";
     public static final String BEACONGROUP_SPECIFIC_MAPPING      = BEACONGROUP_PATH_MAPPING + BEACONGROUP_ID_MAPPING;
     public static final String BEACONGROUP_MEMBERS_MAPPING       = "/members";
