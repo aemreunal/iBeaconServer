@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @ResponseBody
 @JsonIgnoreProperties(value = { "beacons", "project", "scenario" })
 public class BeaconGroup extends ResourceSupport implements Serializable {
-    public static final int NAME_MAX_LENGTH = 50;
+    public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
 
     /*
@@ -151,9 +151,9 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
                optional = false,
                fetch = FetchType.LAZY)
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
-    @JoinTable(name="projects_to_beacon_groups",
-               joinColumns = @JoinColumn(name="beacon_group_id"),
-               inverseJoinColumns = @JoinColumn(name="project_id")
+    @JoinTable(name = "projects_to_beacon_groups",
+               joinColumns = @JoinColumn(name = "beacon_group_id"),
+               inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private Project project;
 
