@@ -132,7 +132,7 @@ public class BeaconController {
      *
      * @param projectId
      *     The ID of the project to create the beacon in
-     * @param restBeacon
+     * @param beaconJson
      *     The beacon as JSON object
      * @param builder
      *     The URI builder for post-creation redirect
@@ -142,9 +142,9 @@ public class BeaconController {
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Beacon> createBeaconInProject(@PathVariable String username,
                                                         @PathVariable Long projectId,
-                                                        @RequestBody Beacon restBeacon,
+                                                        @RequestBody Beacon beaconJson,
                                                         UriComponentsBuilder builder) {
-        Beacon savedBeacon = beaconService.save(username, projectId, restBeacon);
+        Beacon savedBeacon = beaconService.save(username, projectId, beaconJson);
 
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
@@ -152,6 +152,7 @@ public class BeaconController {
                                    "\' minor = \'" + savedBeacon.getMinor() +
                                    "\' in project with ID = \'" + projectId + "\'");
         }
+        addLinks(username, projectId, savedBeacon);
         return buildCreateResponse(username, builder, savedBeacon);
     }
 

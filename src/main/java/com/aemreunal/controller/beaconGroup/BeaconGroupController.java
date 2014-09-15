@@ -100,7 +100,7 @@ public class BeaconGroupController {
      *
      * @param projectId
      *     The ID of the project to create the beacon group in
-     * @param beaconGroupFromJson
+     * @param beaconGroupJson
      *     The beacon group as JSON object
      * @param builder
      *     The URI builder for post-creation redirect
@@ -111,9 +111,9 @@ public class BeaconGroupController {
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<BeaconGroup> createBeaconGroupInProject(@PathVariable String username,
                                                                   @PathVariable Long projectId,
-                                                                  @RequestBody BeaconGroup beaconGroupFromJson,
+                                                                  @RequestBody BeaconGroup beaconGroupJson,
                                                                   UriComponentsBuilder builder) {
-        BeaconGroup savedBeaconGroup = beaconGroupService.save(username, projectId, beaconGroupFromJson);
+        BeaconGroup savedBeaconGroup = beaconGroupService.save(username, projectId, beaconGroupJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon group with ID = \'" + savedBeaconGroup.getBeaconGroupId() +
                                    "\' name = \'" + savedBeaconGroup.getName() +
