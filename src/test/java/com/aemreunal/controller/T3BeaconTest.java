@@ -71,7 +71,7 @@ public class T3BeaconTest {
     }
 
     @Test
-    public void failToCreateUser() {
+    public void failToCreateBeacon() {
         BeaconCreator.failToCreateBeacon(testUser.username, testProject.projectId, "hello", "1234", "1234", "1234", HttpStatus.SC_BAD_REQUEST);
         BeaconCreator.failToCreateBeacon(testUser.username, testProject.projectId, UUID.randomUUID().toString(), "1234567", "1234", "1234", HttpStatus.SC_BAD_REQUEST);
         BeaconCreator.failToCreateBeacon(testUser.username, testProject.projectId, UUID.randomUUID().toString(), "1234", "1234567", "1234", HttpStatus.SC_BAD_REQUEST);
