@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.User;
+import com.aemreunal.exception.MalformedRequestException;
 import com.aemreunal.exception.user.UsernameClashException;
 import com.aemreunal.service.UserService;
 
@@ -56,6 +57,12 @@ public class UserController {
     /**
      * Create a new user
      *
+     * User creation request JSON:<br/>
+     * {<br/>
+     *     "username":"testuser12",<br/>
+     *     "password":"test_password"
+     * }
+     *
      * @param userJson
      *     The user as a JSON object
      * @param builder
@@ -68,13 +75,20 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.USER_CREATE_MAPPING, produces = "application/json; charset=UTF-8")
     public ResponseEntity<User> createUser(
         @RequestBody JSONObject userJson,
-        UriComponentsBuilder builder) throws UsernameClashException {
-        User savedUser = new User(userJson);
-        savedUser = userService.save(savedUser);
+        UriComponentsBuilder builder) throws UsernameClashException, MalformedRequestException {
+        verifyUserCreateJson(userJson);
+        User savedUser = userService.save(new User(userJson));
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved user with username = \'" + savedUser.getUsername() + "\' ID = \'" + savedUser.getUserId() + "\'");
         }
         return buildCreateResponse(builder, savedUser);
+    }
+
+    // TODO verify JSON inputs
+    private void verifyUserCreateJson(JSONObject userJson) throws MalformedRequestException {
+        if (!userJson.containsKey("username") || !userJson.containsKey("password")) {
+            throw new MalformedRequestException("user");
+        }
     }
 
     private ResponseEntity<User> buildCreateResponse(UriComponentsBuilder builder, User savedUser) {
