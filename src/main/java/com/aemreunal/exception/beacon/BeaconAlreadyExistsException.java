@@ -21,6 +21,6 @@ import com.aemreunal.domain.Beacon;
 public class BeaconAlreadyExistsException extends IllegalArgumentException {
 
     public BeaconAlreadyExistsException(Beacon beacon) {
-        super("Beacon with UUID:\"" + beacon.getUuid() + "\", Major:\"" + beacon.getMajor() + "\", Minor:\"" + beacon.getMinor() + "\" already exists!");
+        super("Beacon with UUID:'" + beacon.getUuid() + "', Major:'" + beacon.getMajor() + "', Minor:'" + beacon.getMinor() + "' already exists!");
     }
 }
