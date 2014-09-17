@@ -39,10 +39,10 @@ public class APIController {
     /*
      * Beacon query JSON example:
      * {
-     *      uuid:   <beacon UUID>
-     *      major:  <beacon Major>
-     *      minor:  <beacon Minor>
-     *      secret: <project Secret>
+     *      "uuid":   <beacon UUID>
+     *      "major":  <beacon Major>
+     *      "minor":  <beacon Minor>
+     *      "secret": <project Secret>
      * }
      */
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = "application/json; charset=UTF-8")
