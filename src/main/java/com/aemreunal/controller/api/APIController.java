@@ -9,9 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Scenario;
+import com.aemreunal.exception.MalformedRequestException;
 import com.aemreunal.service.ScenarioService;
 
 /*
@@ -46,9 +46,8 @@ public class APIController {
      * }
      */
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = "application/json; charset=UTF-8")
-    public ResponseEntity<Scenario> queryForScenario(@RequestBody JSONObject beaconQueryJson,
-                                                     UriComponentsBuilder builder) {
-        // TODO verify request JSON
+    public ResponseEntity<Scenario> queryForScenario(@RequestBody JSONObject beaconQueryJson) {
+        verifyQueryRequest(beaconQueryJson);
         String uuid = beaconQueryJson.get("uuid").toString().toUpperCase();
         String major = beaconQueryJson.get("major").toString().toUpperCase();
         String minor = beaconQueryJson.get("minor").toString().toUpperCase();
@@ -56,5 +55,14 @@ public class APIController {
         Scenario scenario = scenarioService.queryForScenario(uuid, major, minor, secret);
         // TODO do something intelligent instead of just returning the scenario
         return new ResponseEntity<Scenario>(scenario, HttpStatus.OK);
+    }
+
+    private void verifyQueryRequest(JSONObject beaconQueryJson) {
+        if (!beaconQueryJson.containsKey("uuid") ||
+            !beaconQueryJson.containsKey("major") ||
+            !beaconQueryJson.containsKey("minor") ||
+            !beaconQueryJson.containsKey("secret")) {
+            throw new MalformedRequestException();
+        }
     }
 }
