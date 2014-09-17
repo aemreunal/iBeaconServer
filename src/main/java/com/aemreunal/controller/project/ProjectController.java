@@ -3,6 +3,7 @@ package com.aemreunal.controller.project;
 import net.minidev.json.JSONObject;
 
 import java.util.List;
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -113,6 +114,7 @@ public class ProjectController {
      *
      * @return The created project
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<JSONObject> createProject(@PathVariable String username,
                                                     @RequestBody Project projectFromJson,
