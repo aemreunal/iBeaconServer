@@ -88,9 +88,8 @@ public class ProjectController {
      * @return The project
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.PROJECT_ID_MAPPING, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Project> getProjectById(
-        @PathVariable String username,
-        @PathVariable Long projectId) {
+    public ResponseEntity<Project> getProjectById(@PathVariable String username,
+                                                  @PathVariable Long projectId) {
         Project project = projectService.findProjectById(username, projectId);
         return new ResponseEntity<Project>(addLinks(project), HttpStatus.OK);
     }
