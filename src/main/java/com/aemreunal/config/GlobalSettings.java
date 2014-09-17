@@ -45,7 +45,7 @@ public class GlobalSettings {
     public static final String NON_ASCII_REGEX = ".*[^\\p{ASCII}].*";
 
     // User
-    public static final String USER_PATH_MAPPING                 = "";
+    public static final String USER_PATH_MAPPING                 = "/human";
     public static final String USER_CREATE_MAPPING               = "/register";
     public static final String USER_USERNAME_MAPPING             = "/{username}";
     public static final String USER_SPECIFIC_MAPPING             = USER_PATH_MAPPING + USER_USERNAME_MAPPING;
@@ -69,7 +69,7 @@ public class GlobalSettings {
     public static final String SCENARIO_ID_MAPPING               = "/{scenarioId}";
     public static final String SCENARIO_SPECIFIC_MAPPING         = SCENARIO_PATH_MAPPING + SCENARIO_ID_MAPPING;
     // API
-    public static final String API_PATH_MAPPING                  = "/api";
+    public static final String API_PATH_MAPPING                  = "/robot";
     public static final String API_BEACON_QUERY_PATH_MAPPING     = "/querybeacon";
 
 
