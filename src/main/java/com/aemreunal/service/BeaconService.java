@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
+import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.repository.beacon.BeaconRepo;
@@ -51,7 +52,7 @@ public class BeaconService {
      *
      * @return The saved/updated beacon
      */
-    public Beacon save(String username, Long projectId, Beacon beacon) throws ConstraintViolationException {
+    public Beacon save(String username, Long projectId, Beacon beacon) throws ConstraintViolationException, BeaconAlreadyExistsException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         }
@@ -60,9 +61,23 @@ public class BeaconService {
         Project project = projectService.findProjectById(username, projectId);
         if (beacon.getProject() == null) {
             // This means it hasn't been saved yet
+            // First, verify the beacon doesn't already exist
+            if(beaconExists(username, projectId, beacon)) {
+                throw new BeaconAlreadyExistsException(beacon);
+            }
             beacon.setProject(project);
         }
         return beaconRepo.save(beacon);
+    }
+
+    private boolean beaconExists(String username, Long projectId, Beacon beacon) {
+        List<Beacon> beacons;
+        try {
+            beacons = findBeaconsBySpecs(username, projectId, beacon.getUuid(), beacon.getMajor(), beacon.getMinor());
+        } catch (BeaconNotFoundException ex) {
+            return false;
+        }
+        return beacons.size() != 0;
     }
 
     /**
@@ -83,7 +98,8 @@ public class BeaconService {
                                            Long projectId,
                                            String uuid,
                                            String major,
-                                           String minor) {
+                                           String minor)
+        throws BeaconNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
         }

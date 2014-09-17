@@ -11,9 +11,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.helper.JsonBuilder;
 
@@ -43,7 +43,15 @@ public class BeaconControllerAdvice {
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = { ConstraintViolationException.class, TransactionSystemException.class })
+    @ExceptionHandler(BeaconAlreadyExistsException.class)
+    public ResponseEntity<JSONObject> beaconAlreadyExistsExceptionHandler(BeaconAlreadyExistsException ex) {
+        JSONObject responseBody = new JsonBuilder().add("reason", "beacon")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = ConstraintViolationException.class)
     public ResponseEntity<JSONObject> constraintViolationExceptionHandler(ConstraintViolationException ex) {
         JSONObject responseBody = new JsonBuilder().add("reason", "beacon")
                                                    .add("error", "Constraint violation error ocurred! Unable to save beacon.")
