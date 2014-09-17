@@ -61,8 +61,8 @@ public class BeaconService {
         Project project = projectService.findProjectById(username, projectId);
         if (beacon.getProject() == null) {
             // This means it hasn't been saved yet
-            // First, verify the beacon doesn't already exist
             if(beaconExists(username, projectId, beacon)) {
+                // First, verify the beacon doesn't already exist
                 throw new BeaconAlreadyExistsException(beacon);
             }
             beacon.setProject(project);
@@ -71,12 +71,7 @@ public class BeaconService {
     }
 
     private boolean beaconExists(String username, Long projectId, Beacon beacon) {
-        List<Beacon> beacons;
-        try {
-            beacons = findBeaconsBySpecs(username, projectId, beacon.getUuid(), beacon.getMajor(), beacon.getMinor());
-        } catch (BeaconNotFoundException ex) {
-            return false;
-        }
+        List<Beacon> beacons = searchBeaconsBySpecs(username, projectId, beacon.getUuid(), beacon.getMajor(), beacon.getMinor());
         return beacons.size() != 0;
     }
 
@@ -100,15 +95,19 @@ public class BeaconService {
                                            String major,
                                            String minor)
         throws BeaconNotFoundException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
-        }
-        Project project = projectService.findProjectById(username, projectId);
-        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(project.getProjectId(), uuid, major, minor));
+        List<Beacon> beacons = searchBeaconsBySpecs(username, projectId, uuid, major, minor);
         if (beacons.size() == 0) {
             throw new BeaconNotFoundException();
         }
         return beacons;
+    }
+
+    private List<Beacon> searchBeaconsBySpecs(String username, Long projectId, String uuid, String major, String minor) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
+        }
+        Project project = projectService.findProjectById(username, projectId);
+        return beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(project.getProjectId(), uuid, major, minor));
     }
 
     public Beacon queryForBeacon(String uuid,
