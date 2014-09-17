@@ -49,19 +49,19 @@ public class ProjectService {
      *
      * @param username
      *     The username of the owner of the project
-     * @param projectFromJson
+     * @param project
      *     The project to save/update
      *
      * @return The saved/updated project
      */
-    public Project save(String username, Project projectFromJson) throws ConstraintViolationException {
+    public Project save(String username, Project project) throws ConstraintViolationException {
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saving project with ID = \'" + projectFromJson.getProjectId() + "\'");
+            System.out.println("Saving project with ID = \'" + project.getProjectId() + "\'");
         }
-        if (projectFromJson.getOwner() == null) {
-            projectFromJson.setOwner(userService.findByUsername(username));
+        if (project.getOwner() == null) {
+            project.setOwner(userService.findByUsername(username));
         }
-        return projectRepo.save(projectFromJson);
+        return projectRepo.save(project);
     }
 
     /**
