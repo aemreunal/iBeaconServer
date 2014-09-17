@@ -56,12 +56,9 @@ public class UserController {
 
     /**
      * Create a new user
-     *
-     * User creation request JSON:<br/>
-     * {<br/>
-     *     "username":"testuser12",<br/>
-     *     "password":"test_password"
-     * }
+     * <p/>
+     * User creation request JSON:<br/> {<br/> "username":"testuser12",<br/>
+     * "password":"test_password" }
      *
      * @param userJson
      *     The user as a JSON object
@@ -73,9 +70,9 @@ public class UserController {
      * @throws UsernameClashException
      */
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.USER_CREATE_MAPPING, produces = "application/json; charset=UTF-8")
-    public ResponseEntity<User> createUser(
-        @RequestBody JSONObject userJson,
-        UriComponentsBuilder builder) throws UsernameClashException, MalformedRequestException {
+    public ResponseEntity<User> createUser(@RequestBody JSONObject userJson,
+                                           UriComponentsBuilder builder)
+        throws UsernameClashException, MalformedRequestException {
         verifyUserCreateJson(userJson);
         User savedUser = userService.save(new User(userJson));
         if (GlobalSettings.DEBUGGING) {
