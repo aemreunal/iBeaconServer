@@ -49,10 +49,10 @@ public class APIController {
     public ResponseEntity<Scenario> queryForScenario(@RequestBody JSONObject beaconQueryJson,
                                                      UriComponentsBuilder builder) {
         // TODO verify request JSON
-        String uuid = (String) beaconQueryJson.get("uuid");
-        String major = (String) beaconQueryJson.get("major");
-        String minor = (String) beaconQueryJson.get("minor");
-        String secret = (String) beaconQueryJson.get("secret");
+        String uuid = beaconQueryJson.get("uuid").toString().toUpperCase();
+        String major = beaconQueryJson.get("major").toString().toUpperCase();
+        String minor = beaconQueryJson.get("minor").toString().toUpperCase();
+        String secret = beaconQueryJson.get("secret").toString().toUpperCase();
         Scenario scenario = scenarioService.queryForScenario(uuid, major, minor, secret);
         // TODO do something intelligent instead of just returning the scenario
         return new ResponseEntity<Scenario>(scenario, HttpStatus.OK);
