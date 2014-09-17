@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Scenario;
 import com.aemreunal.service.ScenarioService;
@@ -44,8 +45,10 @@ public class APIController {
      *      secret: <project Secret>
      * }
      */
-    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Scenario> queryForScenario(@RequestBody JSONObject beaconQueryJson) {
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = "application/json; charset=UTF-8")
+    public ResponseEntity<Scenario> queryForScenario(@RequestBody JSONObject beaconQueryJson,
+                                                     UriComponentsBuilder builder) {
+        // TODO verify request JSON
         String uuid = (String) beaconQueryJson.get("uuid");
         String major = (String) beaconQueryJson.get("major");
         String minor = (String) beaconQueryJson.get("minor");
