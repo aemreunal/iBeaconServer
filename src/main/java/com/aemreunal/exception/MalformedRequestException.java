@@ -17,8 +17,8 @@ package com.aemreunal.exception;
  */
 public class MalformedRequestException extends NullPointerException {
 
-    public MalformedRequestException(String objectName) {
-        super("Your request to create an object of type \'" + objectName + "\' was malformed. Please try again.");
+    public MalformedRequestException() {
+        super("Your request is malformed. Please try again.");
     }
 }
 

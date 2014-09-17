@@ -84,7 +84,7 @@ public class UserController {
     // TODO verify JSON inputs
     private void verifyUserCreateJson(JSONObject userJson) throws MalformedRequestException {
         if (!userJson.containsKey("username") || !userJson.containsKey("password")) {
-            throw new MalformedRequestException("user");
+            throw new MalformedRequestException();
         }
     }
 
