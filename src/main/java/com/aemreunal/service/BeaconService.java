@@ -115,12 +115,14 @@ public class BeaconService {
                                  String minor,
                                  String projectSecret)
     throws BeaconNotFoundException {
-        Beacon beacon = (Beacon) beaconRepo.findOne(BeaconSpecs.beaconWithSpecification(null, uuid, major, minor));
-        if (beacon == null || !(passwordEncoder.matches(projectSecret, beacon.getProject().getProjectSecret()))) {
-            // Throw not found exception if it really doesn't exist or the secret is wrong.
-            throw new BeaconNotFoundException();
+        List beaconObjects = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(null, uuid, major, minor));
+        for (Object beaconObject : beaconObjects) {
+            Beacon beacon = (Beacon) beaconObject;
+            if(passwordEncoder.matches(projectSecret, beacon.getProject().getProjectSecret())) {
+                return beacon;
+            }
         }
-        return beacon;
+        throw new BeaconNotFoundException();
     }
 
     /**
