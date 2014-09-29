@@ -45,32 +45,36 @@ public class GlobalSettings {
     public static final String NON_ASCII_REGEX = ".*[^\\p{ASCII}].*";
 
     // User
-    public static final String USER_PATH_MAPPING                 = "/human";
-    public static final String USER_CREATE_MAPPING               = "/register";
-    public static final String USER_USERNAME_MAPPING             = "/{username}";
-    public static final String USER_SPECIFIC_MAPPING             = USER_PATH_MAPPING + USER_USERNAME_MAPPING;
+    public static final String USER_PATH_MAPPING                   = "/human";
+    public static final String USER_CREATE_MAPPING                 = "/register";
+    public static final String USER_USERNAME_MAPPING               = "/{username}";
+    public static final String USER_SPECIFIC_MAPPING               = USER_PATH_MAPPING + USER_USERNAME_MAPPING;
     // Project
-    public static final String PROJECT_PATH_MAPPING              = USER_SPECIFIC_MAPPING + "/projects";
-    public static final String PROJECT_ID_MAPPING                = "/{projectId}";
-    public static final String PROJECT_SPECIFIC_MAPPING          = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
+    public static final String PROJECT_PATH_MAPPING                = USER_SPECIFIC_MAPPING + "/projects";
+    public static final String PROJECT_ID_MAPPING                  = "/{projectId}";
+    public static final String PROJECT_SPECIFIC_MAPPING            = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
     // Beacon
-    public static final String BEACON_PATH_MAPPING               = PROJECT_SPECIFIC_MAPPING + "/beacons";
-    public static final String BEACON_ID_MAPPING                 = "/{beaconId}";
-    public static final String BEACON_SPECIFIC_MAPPING           = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
+    public static final String BEACON_PATH_MAPPING                 = PROJECT_SPECIFIC_MAPPING + "/beacons";
+    public static final String BEACON_ID_MAPPING                   = "/{beaconId}";
+    public static final String BEACON_SPECIFIC_MAPPING             = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
     // Beacon group
-    public static final String BEACONGROUP_PATH_MAPPING          = PROJECT_SPECIFIC_MAPPING + "/beacongroups";
-    public static final String BEACONGROUP_ID_MAPPING            = "/{beaconGroupId}";
-    public static final String BEACONGROUP_SPECIFIC_MAPPING      = BEACONGROUP_PATH_MAPPING + BEACONGROUP_ID_MAPPING;
-    public static final String BEACONGROUP_MEMBERS_MAPPING       = BEACONGROUP_ID_MAPPING + "/members";
-    public static final String BEACONGROUP_ADD_MEMBER_MAPPING    = BEACONGROUP_ID_MAPPING + "/addmember";
-    public static final String BEACONGROUP_REMOVE_MEMBER_MAPPING = BEACONGROUP_ID_MAPPING + "/removemember";
+    public static final String BEACONGROUP_PATH_MAPPING            = PROJECT_SPECIFIC_MAPPING + "/beacongroups";
+    public static final String BEACONGROUP_ID_MAPPING              = "/{beaconGroupId}";
+    public static final String BEACONGROUP_SPECIFIC_MAPPING        = BEACONGROUP_PATH_MAPPING + BEACONGROUP_ID_MAPPING;
+    public static final String BEACONGROUP_MEMBERS_MAPPING         = BEACONGROUP_ID_MAPPING + "/members";
+    public static final String BEACONGROUP_ADD_MEMBER_MAPPING      = BEACONGROUP_ID_MAPPING + "/addmember";
+    public static final String BEACONGROUP_REMOVE_MEMBER_MAPPING   = BEACONGROUP_ID_MAPPING + "/removemember";
     // Beacon
-    public static final String SCENARIO_PATH_MAPPING             = PROJECT_SPECIFIC_MAPPING + "/scenarios";
-    public static final String SCENARIO_ID_MAPPING               = "/{scenarioId}";
-    public static final String SCENARIO_SPECIFIC_MAPPING         = SCENARIO_PATH_MAPPING + SCENARIO_ID_MAPPING;
+    public static final String SCENARIO_PATH_MAPPING               = PROJECT_SPECIFIC_MAPPING + "/scenarios";
+    public static final String SCENARIO_ID_MAPPING                 = "/{scenarioId}";
+    public static final String SCENARIO_SPECIFIC_MAPPING           = SCENARIO_PATH_MAPPING + SCENARIO_ID_MAPPING;
+    public static final String SCENARIO_ADD_BEACON_MAPPING         = SCENARIO_ID_MAPPING + "/addbeacon";
+    public static final String SCENARIO_REMOVE_BEACON_MAPPING      = SCENARIO_ID_MAPPING + "/removebeacon";
+    public static final String SCENARIO_ADD_BEACONGROUP_MAPPING    = SCENARIO_ID_MAPPING + "/addbeacongroup";
+    public static final String SCENARIO_REMOVE_BEACONGROUP_MAPPING = SCENARIO_ID_MAPPING + "/removebeacongroup";
     // API
-    public static final String API_PATH_MAPPING                  = "/robot";
-    public static final String API_BEACON_QUERY_PATH_MAPPING     = "/querybeacon";
+    public static final String API_PATH_MAPPING                    = "/robot";
+    public static final String API_BEACON_QUERY_PATH_MAPPING       = "/querybeacon";
 
 
     //-------------------------------------------------------------------------------------------

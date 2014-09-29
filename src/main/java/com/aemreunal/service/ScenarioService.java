@@ -27,8 +27,7 @@ import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Scenario;
-import com.aemreunal.exception.scenario.BeaconDoesntHaveScenarioException;
-import com.aemreunal.exception.scenario.ScenarioNotFoundException;
+import com.aemreunal.exception.scenario.*;
 import com.aemreunal.repository.scenario.ScenarioRepo;
 
 @Transactional
@@ -39,6 +38,9 @@ public class ScenarioService {
 
     @Autowired
     private BeaconService beaconService;
+
+    @Autowired
+    private BeaconGroupService beaconGroupService;
 
     @Autowired
     private ScenarioRepo scenarioRepo;
@@ -82,7 +84,7 @@ public class ScenarioService {
                                      String major,
                                      String minor,
                                      String projectSecret)
-    throws BeaconDoesntHaveScenarioException {
+    throws NoScenarioForQueryException {
         Beacon beacon = beaconService.queryForBeacon(uuid, major, minor, projectSecret);
         Scenario scenario;
         if (beacon.getGroup() != null) {
@@ -91,12 +93,13 @@ public class ScenarioService {
             scenario = beacon.getScenario();
         }
         if (scenario == null) {
-            throw new BeaconDoesntHaveScenarioException(uuid, major, minor);
+            throw new NoScenarioForQueryException(uuid, major, minor);
         }
         return scenario;
     }
 
     public List<Beacon> getBeaconsInScenario(String username, Long projectId, Long scenarioId) {
+        // TODO use this.
         Scenario scenario = this.getScenario(username, projectId, scenarioId);
         List<Beacon> beacons = new ArrayList<Beacon>();
         for (Beacon beacon : scenario.getBeacons()) {
@@ -121,5 +124,61 @@ public class ScenarioService {
         Scenario scenario = this.getScenario(username, projectId, scenarioId);
         scenarioRepo.delete(scenario);
         return scenario;
+    }
+
+    public Beacon addBeaconToScenario(String username, Long projectId, Long scenarioId, Long beaconId)
+    throws BeaconHasScenarioException, BeaconWithGroupScenarioException {
+        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
+        Scenario scenario = getScenario(username, projectId, scenarioId);
+        if (beacon.getGroup() != null) {
+            throw new BeaconWithGroupScenarioException(beaconId, beacon.getGroup().getBeaconGroupId());
+        }
+        if (beacon.getScenario() != null) {
+            throw new BeaconHasScenarioException(beaconId, beacon.getScenario().getScenarioId());
+        }
+        beacon.setScenario(scenario);
+        beaconService.save(username, projectId, beacon);
+        return beacon;
+    }
+
+    public Beacon removeBeaconFromScenario(String username, Long projectId, Long scenarioId, Long beaconId)
+    throws BeaconDoesntHaveScenarioException, BeaconHasScenarioException, BeaconWithGroupScenarioException {
+        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
+        if (beacon.getGroup() != null) {
+            throw new BeaconWithGroupScenarioException(beaconId, beacon.getGroup().getBeaconGroupId());
+        }
+        if (beacon.getScenario() == null) {
+            throw new BeaconDoesntHaveScenarioException(beaconId, scenarioId);
+        } else if (!(beacon.getScenario().getScenarioId().equals(scenarioId))) {
+            throw new BeaconHasScenarioException(beaconId, beacon.getScenario().getScenarioId());
+        }
+        beacon.setScenario(null);
+        beaconService.save(username, projectId, beacon);
+        return beacon;
+    }
+
+    public BeaconGroup addBeaconGroupToScenario(String username, Long projectId, Long scenarioId, Long beaconGroupId)
+    throws BeaconGroupHasScenarioException {
+        BeaconGroup beaconGroup = beaconGroupService.getBeaconGroup(username, projectId, beaconGroupId);
+        Scenario scenario = getScenario(username, projectId, scenarioId);
+        if (beaconGroup.getScenario() != null) {
+            throw new BeaconGroupHasScenarioException(beaconGroupId, beaconGroup.getScenario().getScenarioId());
+        }
+        beaconGroup.setScenario(scenario);
+        beaconGroupService.save(username, projectId, beaconGroup);
+        return beaconGroup;
+    }
+
+    public BeaconGroup removeBeaconGroupFromScenario(String username, Long projectId, Long scenarioId, Long beaconGroupId)
+    throws BeaconGroupHasScenarioException, BeaconGroupDoesntHaveScenarioException {
+        BeaconGroup beaconGroup = beaconGroupService.getBeaconGroup(username, projectId, beaconGroupId);
+        if (beaconGroup.getScenario() == null) {
+            throw new BeaconGroupDoesntHaveScenarioException(beaconGroupId, scenarioId);
+        } else if (!(beaconGroup.getScenario().getScenarioId().equals(scenarioId))) {
+            throw new BeaconGroupHasScenarioException(beaconGroupId, beaconGroup.getScenario().getScenarioId());
+        }
+        beaconGroup.setScenario(null);
+        beaconGroupService.save(username, projectId, beaconGroup);
+        return beaconGroup;
     }
 }

@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import com.aemreunal.exception.scenario.ScenarioNotFoundException;
+import com.aemreunal.exception.scenario.*;
 import com.aemreunal.helper.JsonBuilder;
 
 @ControllerAdvice
@@ -39,6 +39,49 @@ public class ScenarioControllerAdvice {
                                                    .add("error", ex.getLocalizedMessage())
                                                    .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BeaconHasScenarioException.class)
+    public ResponseEntity<JSONObject> beaconHasScenarioExceptionHandler(BeaconHasScenarioException ex) {
+        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(BeaconDoesntHaveScenarioException.class)
+    public ResponseEntity<JSONObject> beaconDoesntHaveScenarioExceptionHandler(BeaconDoesntHaveScenarioException ex) {
+        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BeaconGroupHasScenarioException.class)
+    public ResponseEntity<JSONObject> beaconGroupHasScenarioExceptionHandler(BeaconGroupHasScenarioException ex) {
+        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(BeaconGroupDoesntHaveScenarioException.class)
+    public ResponseEntity<JSONObject> beaconGroupDoesntHaveScenarioExceptionHandler(BeaconGroupDoesntHaveScenarioException ex) {
+        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(BeaconWithGroupScenarioException.class)
+    public ResponseEntity<JSONObject> beaconWithGroupScenarioExceptionHandler(BeaconWithGroupScenarioException ex) {
+        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

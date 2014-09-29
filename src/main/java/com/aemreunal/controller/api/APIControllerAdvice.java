@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import com.aemreunal.exception.scenario.BeaconDoesntHaveScenarioException;
+import com.aemreunal.exception.scenario.NoScenarioForQueryException;
 import com.aemreunal.helper.JsonBuilder;
 
 /*
@@ -27,8 +27,8 @@ import com.aemreunal.helper.JsonBuilder;
 
 @ControllerAdvice
 public class APIControllerAdvice {
-    @ExceptionHandler(BeaconDoesntHaveScenarioException.class)
-    public ResponseEntity<JSONObject> beaconDoesntHaveScenarioExceptionHandler(BeaconDoesntHaveScenarioException ex) {
+    @ExceptionHandler(NoScenarioForQueryException.class)
+    public ResponseEntity<JSONObject> beaconDoesntHaveScenarioExceptionHandler(NoScenarioForQueryException ex) {
         JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
                                                    .add("error", ex.getLocalizedMessage())
                                                    .build();

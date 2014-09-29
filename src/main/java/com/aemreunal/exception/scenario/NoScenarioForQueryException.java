@@ -9,16 +9,15 @@ package com.aemreunal.exception.scenario;
  * @author Ahmet Emre Ünal *
  * S001974                 *
  *                         *
- * emre@aemreunal.com      *
+ * aemreunal@gmail.com     *
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
  ***************************
  */
 
-public class BeaconDoesntHaveScenarioException extends NullPointerException {
-
-    public BeaconDoesntHaveScenarioException(Long beaconId, Long scenarioId) {
-        super("The beacon with ID " + beaconId + " is not part of scenario with ID " + scenarioId + ". No modifications have been made.");
+public class NoScenarioForQueryException extends NullPointerException {
+    public NoScenarioForQueryException(String uuid, String major, String minor) {
+        super("Beacon with UUID: " + uuid + ", Major: " + major + ", Minor: " + minor + " doesn't have an associated scenario!");
     }
 }

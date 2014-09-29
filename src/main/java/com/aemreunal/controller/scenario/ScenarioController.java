@@ -28,7 +28,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.project.ProjectController;
 import com.aemreunal.controller.user.UserController;
+import com.aemreunal.domain.Beacon;
+import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Scenario;
+import com.aemreunal.exception.scenario.*;
 import com.aemreunal.service.ScenarioService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -86,6 +89,48 @@ public class ScenarioController {
         return new ResponseEntity<Scenario>(savedScenario, headers, HttpStatus.CREATED);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.SCENARIO_ADD_BEACON_MAPPING, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Beacon> addBeaconToScenario(@PathVariable String username,
+                                                      @PathVariable Long projectId,
+                                                      @PathVariable Long scenarioId,
+                                                      @RequestParam(value = "beaconId", required = true) Long beaconId)
+        throws BeaconHasScenarioException, BeaconWithGroupScenarioException {
+        Beacon beacon = scenarioService.addBeaconToScenario(username, projectId, scenarioId, beaconId);
+        return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_REMOVE_BEACON_MAPPING, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Beacon> removeBeaconFromScenario(@PathVariable String username,
+                                                           @PathVariable Long projectId,
+                                                           @PathVariable Long scenarioId,
+                                                           @RequestParam(value = "beaconId", required = true) Long beaconId)
+    throws BeaconDoesntHaveScenarioException, BeaconHasScenarioException, BeaconWithGroupScenarioException {
+        Beacon beacon = scenarioService.removeBeaconFromScenario(username, projectId, scenarioId, beaconId);
+        return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
+
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.SCENARIO_ADD_BEACONGROUP_MAPPING, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<BeaconGroup> addBeaconGroupToScenario(@PathVariable String username,
+                                                                @PathVariable Long projectId,
+                                                                @PathVariable Long scenarioId,
+                                                                @RequestParam(value = "beaconGroupId", required = true) Long beaconGroupId)
+    throws BeaconGroupHasScenarioException {
+        BeaconGroup beaconGroup = scenarioService.addBeaconGroupToScenario(username, projectId, scenarioId, beaconGroupId);
+        return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_REMOVE_BEACONGROUP_MAPPING, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<BeaconGroup> removeBeaconGroupFromScenario(@PathVariable String username,
+                                                                     @PathVariable Long projectId,
+                                                                     @PathVariable Long scenarioId,
+                                                                     @RequestParam(value = "beaconGroupId", required = true) Long beaconGroupId)
+    throws BeaconGroupHasScenarioException, BeaconGroupDoesntHaveScenarioException {
+        BeaconGroup beaconGroup = scenarioService.removeBeaconGroupFromScenario(username, projectId, scenarioId, beaconGroupId);
+        return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
+    }
+
+    // TODO add getting members
 
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Scenario> deleteScenario(@PathVariable String username,
