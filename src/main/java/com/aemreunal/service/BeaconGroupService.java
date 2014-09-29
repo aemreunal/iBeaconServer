@@ -119,7 +119,7 @@ public class BeaconGroupService {
         BeaconGroup beaconGroup = getBeaconGroup(username, projectId, beaconGroupId);
         Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
         if (beacon.getGroup() != null) {
-            throw new BeaconHasGroupException(beacon.getBeaconId(), beacon.getGroup().getBeaconGroupId());
+            throw new BeaconHasGroupException(beaconId, beacon.getGroup().getBeaconGroupId());
         }
         beacon.setGroup(beaconGroup);
         beaconService.save(username, projectId, beacon);
@@ -130,7 +130,7 @@ public class BeaconGroupService {
         BeaconGroup beaconGroup = getBeaconGroup(username, projectId, beaconGroupId);
         Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
         if (beacon.getGroup() == null) {
-            throw new BeaconDoesntHaveGroupException(beacon.getBeaconId(), beacon.getGroup().getBeaconGroupId());
+            throw new BeaconDoesntHaveGroupException(beacon.getBeaconId(), beaconGroupId);
         } else if(!(beacon.getGroup().getBeaconGroupId().equals(beaconGroupId))) {
             throw new BeaconHasGroupException(beaconId, beacon.getGroup().getBeaconGroupId());
         }
