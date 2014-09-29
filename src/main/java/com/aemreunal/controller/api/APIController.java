@@ -46,15 +46,10 @@ public class APIController {
      * }
      */
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = "application/json; charset=UTF-8")
-    public ResponseEntity<Scenario> queryForScenario(@RequestBody JSONObject beaconQueryJson) {
+    public ResponseEntity<JSONObject> queryForScenario(@RequestBody JSONObject beaconQueryJson) {
         verifyQueryRequest(beaconQueryJson);
-        String uuid = beaconQueryJson.get("uuid").toString().toUpperCase();
-        String major = beaconQueryJson.get("major").toString().toUpperCase();
-        String minor = beaconQueryJson.get("minor").toString().toUpperCase();
-        String secret = beaconQueryJson.get("secret").toString().toUpperCase();
-        Scenario scenario = scenarioService.queryForScenario(uuid, major, minor, secret);
-        // TODO do something intelligent instead of just returning the scenario
-        return new ResponseEntity<Scenario>(scenario, HttpStatus.OK);
+        Scenario scenario = getScenario(beaconQueryJson);
+        return new ResponseEntity<JSONObject>(scenario.generateQueryResponse(), HttpStatus.OK);
     }
 
     private void verifyQueryRequest(JSONObject beaconQueryJson) {
@@ -64,5 +59,13 @@ public class APIController {
             !beaconQueryJson.containsKey("secret")) {
             throw new MalformedRequestException();
         }
+    }
+
+    private Scenario getScenario(JSONObject beaconQueryJson) {
+        String uuid = beaconQueryJson.get("uuid").toString().toUpperCase();
+        String major = beaconQueryJson.get("major").toString().toUpperCase();
+        String minor = beaconQueryJson.get("minor").toString().toUpperCase();
+        String secret = beaconQueryJson.get("secret").toString().toUpperCase();
+        return scenarioService.queryForScenario(uuid, major, minor, secret);
     }
 }
