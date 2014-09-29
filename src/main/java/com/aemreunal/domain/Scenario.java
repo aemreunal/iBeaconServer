@@ -1,5 +1,7 @@
 package com.aemreunal.domain;
 
+import net.minidev.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -9,6 +11,7 @@ import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.config.CoreConfig;
+import com.aemreunal.helper.JsonBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -32,8 +35,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @ResponseBody
 @JsonIgnoreProperties(value = { "beacons", "project", "beaconGroups" })
 public class Scenario extends ResourceSupport implements Serializable {
-    public static final int NAME_MAX_LENGTH = 100;
-    public static final int DESCRIPTION_MAX_LENGTH = 1000;
+    public static final int NAME_MAX_LENGTH          = 100;
+    public static final int DESCRIPTION_MAX_LENGTH   = 1000;
+    public static final int MESSAGE_SHORT_MAX_LENGTH = 100;
+    public static final int MESSAGE_LONG_MAX_LENGTH  = 1000;
+    public static final int URL_MAX_LENGTH  = 500;
 
     /*
      *------------------------------------------------------------
@@ -107,7 +113,7 @@ public class Scenario extends ResourceSupport implements Serializable {
                fetch = FetchType.LAZY)
     @JoinTable(name = "projects_to_scenarios",
                joinColumns = @JoinColumn(name = "scenario_id"),
-               inverseJoinColumns = @JoinColumn(name="project_id"))
+               inverseJoinColumns = @JoinColumn(name = "project_id"))
     private Project project;
 
     public Project getProject() {
@@ -190,7 +196,6 @@ public class Scenario extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      */
 
-
     /*
      *------------------------------------------------------------
      * BEGIN: Scenario 'creationDate' attribute
@@ -205,11 +210,102 @@ public class Scenario extends ResourceSupport implements Serializable {
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
-
     /*
      * END: Scenario 'creationDate' attribute
      *------------------------------------------------------------
      */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Scenario 'messageShort' attribute
+     *
+     * This value is to be used as the notification string.
+     */
+    @Column(name = "message_short", nullable = false, length = MESSAGE_SHORT_MAX_LENGTH)
+    @Size(min = 0, max = MESSAGE_SHORT_MAX_LENGTH)
+    private String messageShort = "";
+
+    public String getMessageShort() {
+        return messageShort;
+    }
+
+    public void setMessageShort(String messageShort) {
+        this.messageShort = messageShort;
+    }
+
+    public boolean hasShortMessage() {
+        return !(messageShort.equals(""));
+    }
+    /*
+     * END: Scenario 'messageShort' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Scenario 'messageLong' attribute
+     *
+     * This value is to be used as the notification string.
+     */
+    @Column(name = "message_long", nullable = false, length = MESSAGE_LONG_MAX_LENGTH)
+    @Size(min = 0, max = MESSAGE_LONG_MAX_LENGTH)
+    private String messageLong = "";
+
+    public String getMessageLong() {
+        return messageLong;
+    }
+
+    public void setMessageLong(String messageLong) {
+        this.messageLong = messageLong;
+    }
+
+    public boolean hasLongMessage() {
+        return !(messageLong.equals(""));
+    }
+    /*
+     * END: Scenario 'messageLong' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Scenario 'url' attribute
+     *
+     * This value is to be used as the notification string.
+     */
+    @Column(name = "url", nullable = false, length = URL_MAX_LENGTH)
+    @Size(min = 0, max = URL_MAX_LENGTH)
+    private String url = "";
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public boolean hasUrl() {
+        return !(url.equals(""));
+    }
+    /*
+     * END: Scenario 'url' attribute
+     *------------------------------------------------------------
+     */
+
+    public JSONObject generateQueryResponse() {
+        JsonBuilder builder = new JsonBuilder();
+        if (hasShortMessage()) {
+            builder = builder.add("short", getMessageShort());
+        }
+        if (hasLongMessage()) {
+            builder = builder.add("long", getMessageLong());
+        }
+        if (hasUrl()) {
+            builder = builder.add("url", getUrl());
+        }
+        return builder.build();
+    }
 
     @PrePersist
     private void setInitialProperties() {
