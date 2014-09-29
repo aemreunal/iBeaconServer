@@ -84,7 +84,12 @@ public class ScenarioService {
                                      String projectSecret)
     throws BeaconDoesntHaveScenarioException {
         Beacon beacon = beaconService.queryForBeacon(uuid, major, minor, projectSecret);
-        Scenario scenario = beacon.getScenario();
+        Scenario scenario;
+        if (beacon.getGroup() != null) {
+            scenario = beacon.getGroup().getScenario();
+        } else {
+            scenario = beacon.getScenario();
+        }
         if (scenario == null) {
             throw new BeaconDoesntHaveScenarioException(uuid, major, minor);
         }
