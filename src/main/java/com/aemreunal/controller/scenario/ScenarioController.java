@@ -17,6 +17,7 @@ package com.aemreunal.controller.scenario;
  */
 
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
@@ -94,7 +95,7 @@ public class ScenarioController {
                                                       @PathVariable Long projectId,
                                                       @PathVariable Long scenarioId,
                                                       @RequestParam(value = "beaconId", required = true) Long beaconId)
-        throws BeaconHasScenarioException, BeaconWithGroupScenarioException {
+    throws BeaconHasScenarioException, BeaconWithGroupScenarioException {
         Beacon beacon = scenarioService.addBeaconToScenario(username, projectId, scenarioId, beaconId);
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
@@ -130,7 +131,22 @@ public class ScenarioController {
         return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
     }
 
-    // TODO add getting members
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.SCENARIO_MEMBER_BEACONS_MAPPING, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Set<Beacon>> getMemberBeacons(@PathVariable String username,
+                                                        @PathVariable Long projectId,
+                                                        @PathVariable Long scenarioId) {
+        Set<Beacon> beacons = scenarioService.getBeaconsInScenario(username, projectId, scenarioId);
+        return new ResponseEntity<Set<Beacon>>(beacons, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.SCENARIO_MEMBER_BEACONGROUPS_MAPPING, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Set<BeaconGroup>> getMemberBeaconGroups(@PathVariable String username,
+                                                                  @PathVariable Long projectId,
+                                                                  @PathVariable Long scenarioId) {
+        Set<BeaconGroup> beaconGroups = scenarioService.getBeaconGroupsInScenario(username, projectId, scenarioId);
+        return new ResponseEntity<Set<BeaconGroup>>(beaconGroups, HttpStatus.OK);
+
+    }
 
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Scenario> deleteScenario(@PathVariable String username,
