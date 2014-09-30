@@ -70,6 +70,7 @@ public class Scenario extends ResourceSupport implements Serializable {
      */
     @Column(name = "name", nullable = false, length = NAME_MAX_LENGTH)
     @Size(min = 1, max = NAME_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String name = "";
 
     public String getName() {
@@ -90,6 +91,7 @@ public class Scenario extends ResourceSupport implements Serializable {
      */
     @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
     @Size(max = DESCRIPTION_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String description = "";
 
     public String getDescription() {
@@ -114,6 +116,7 @@ public class Scenario extends ResourceSupport implements Serializable {
     @JoinTable(name = "projects_to_scenarios",
                joinColumns = @JoinColumn(name = "scenario_id"),
                inverseJoinColumns = @JoinColumn(name = "project_id"))
+    @Access(AccessType.PROPERTY)
     private Project project;
 
     public Project getProject() {
@@ -137,6 +140,7 @@ public class Scenario extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = Beacon.class,
                mappedBy = "scenario",
                fetch = FetchType.LAZY)
+    @Access(AccessType.PROPERTY)
     @OrderBy("beaconId")
     private Set<Beacon> beacons = new LinkedHashSet<>();
 
@@ -171,6 +175,7 @@ public class Scenario extends ResourceSupport implements Serializable {
                mappedBy = "scenario",
                fetch = FetchType.LAZY)
     @OrderBy(value = "beaconGroupId")
+    @Access(AccessType.PROPERTY)
     private Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
 
     public Set<BeaconGroup> getBeaconGroups() {
@@ -201,6 +206,7 @@ public class Scenario extends ResourceSupport implements Serializable {
      * BEGIN: Scenario 'creationDate' attribute
      */
     @Column(name = "creation_date", nullable = false)
+    @Access(AccessType.PROPERTY)
     private Date creationDate = null;
 
     public Date getCreationDate() {
@@ -223,6 +229,7 @@ public class Scenario extends ResourceSupport implements Serializable {
      */
     @Column(name = "message_short", nullable = false, length = MESSAGE_SHORT_MAX_LENGTH)
     @Size(min = 0, max = MESSAGE_SHORT_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String messageShort = "";
 
     public String getMessageShort() {
@@ -249,6 +256,7 @@ public class Scenario extends ResourceSupport implements Serializable {
      */
     @Column(name = "message_long", nullable = false, length = MESSAGE_LONG_MAX_LENGTH)
     @Size(min = 0, max = MESSAGE_LONG_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String messageLong = "";
 
     public String getMessageLong() {
@@ -275,6 +283,7 @@ public class Scenario extends ResourceSupport implements Serializable {
      */
     @Column(name = "url", nullable = false, length = URL_MAX_LENGTH)
     @Size(min = 0, max = URL_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String url = "";
 
     public String getUrl() {
