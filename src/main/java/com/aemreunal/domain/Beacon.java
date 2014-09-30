@@ -132,6 +132,7 @@ public class Beacon extends ResourceSupport implements Serializable {
      */
     @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
     @Size(max = DESCRIPTION_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String description = "";
 
     public String getDescription() {
@@ -156,8 +157,7 @@ public class Beacon extends ResourceSupport implements Serializable {
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
     @JoinTable(name = "beacon_groups_to_beacons",
                joinColumns = @JoinColumn(name = "beacon_id"),
-               inverseJoinColumns = @JoinColumn(name = "beacon_group_id")
-    )
+               inverseJoinColumns = @JoinColumn(name = "beacon_group_id"))
     @Access(AccessType.PROPERTY)
     private BeaconGroup group;
 
@@ -167,7 +167,6 @@ public class Beacon extends ResourceSupport implements Serializable {
     }
 
     public void setGroup(BeaconGroup group) {
-        CoreConfig.initLazily(group);
         this.group = group;
     }
     /*
@@ -185,8 +184,7 @@ public class Beacon extends ResourceSupport implements Serializable {
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
     @JoinTable(name = "projects_to_beacons",
                joinColumns = @JoinColumn(name = "beacon_id"),
-               inverseJoinColumns = @JoinColumn(name = "project_id")
-    )
+               inverseJoinColumns = @JoinColumn(name = "project_id"))
     @Access(AccessType.PROPERTY)
     private Project project;
 
@@ -196,7 +194,6 @@ public class Beacon extends ResourceSupport implements Serializable {
     }
 
     public void setProject(Project project) {
-        CoreConfig.initLazily(project);
         this.project = project;
     }
     /*
@@ -223,7 +220,6 @@ public class Beacon extends ResourceSupport implements Serializable {
     }
 
     public void setScenario(Scenario scenario) {
-        CoreConfig.initLazily(scenario);
         this.scenario = scenario;
     }
     /*
@@ -237,6 +233,7 @@ public class Beacon extends ResourceSupport implements Serializable {
      * BEGIN: Beacon 'creationDate' attribute
      */
     @Column(name = "creation_date", nullable = false)
+    @Access(AccessType.PROPERTY)
     private Date creationDate = null;
 
     public Date getCreationDate() {
