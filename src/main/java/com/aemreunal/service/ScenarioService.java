@@ -17,7 +17,9 @@ package com.aemreunal.service;
  */
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,19 +100,18 @@ public class ScenarioService {
         return scenario;
     }
 
-    public List<Beacon> getBeaconsInScenario(String username, Long projectId, Long scenarioId) {
-        // TODO use this.
+    public Set<Beacon> getBeaconsInScenario(String username, Long projectId, Long scenarioId) {
         Scenario scenario = this.getScenario(username, projectId, scenarioId);
-        List<Beacon> beacons = new ArrayList<Beacon>();
+        Set<Beacon> beacons = new LinkedHashSet<>();
         for (Beacon beacon : scenario.getBeacons()) {
             beacons.add(beacon);
         }
         return beacons;
     }
 
-    public List<BeaconGroup> getBeaconGroupsInScenario(String username, Long projectId, Long scenarioId) {
+    public Set<BeaconGroup> getBeaconGroupsInScenario(String username, Long projectId, Long scenarioId) {
         Scenario scenario = this.getScenario(username, projectId, scenarioId);
-        List<BeaconGroup> beaconGroups = new ArrayList<BeaconGroup>();
+        Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
         for (BeaconGroup beaconGroup : scenario.getBeaconGroups()) {
             beaconGroups.add(beaconGroup);
         }
