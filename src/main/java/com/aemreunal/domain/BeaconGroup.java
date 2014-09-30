@@ -64,6 +64,7 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
      */
     @Column(name = "name", nullable = false, length = NAME_MAX_LENGTH)
     @Size(min = 1, max = NAME_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String name = "";
 
     public String getName() {
@@ -84,6 +85,7 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
      */
     @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
     @Size(max = DESCRIPTION_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String description = "";
 
     public String getDescription() {
@@ -121,12 +123,17 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = Beacon.class,
                mappedBy = "group",
                fetch = FetchType.LAZY)
+    @Access(AccessType.PROPERTY)
     // TODO @JsonIgnoreProperties(value = {})
     private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
 
     public Set<Beacon> getBeacons() {
         CoreConfig.initLazily(beacons);
         return beacons;
+    }
+
+    public void setBeacons(Set<Beacon> beacons) {
+        this.beacons = beacons;
     }
 
     public void addBeacon(Beacon beacon) {
@@ -153,8 +160,8 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
     @JoinTable(name = "projects_to_beacon_groups",
                joinColumns = @JoinColumn(name = "beacon_group_id"),
-               inverseJoinColumns = @JoinColumn(name = "project_id")
-    )
+               inverseJoinColumns = @JoinColumn(name = "project_id"))
+    @Access(AccessType.PROPERTY)
     private Project project;
 
     public Project getProject() {
@@ -163,7 +170,6 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
     }
 
     public void setProject(Project project) {
-        CoreConfig.initLazily(project);
         this.project = project;
     }
     /*
@@ -190,7 +196,6 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
     }
 
     public void setScenario(Scenario scenario) {
-        CoreConfig.initLazily(scenario);
         this.scenario = scenario;
     }
     /*
@@ -204,6 +209,7 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
      * BEGIN: Beacon group 'creationDate' attribute
      */
     @Column(name = "creation_date", nullable = false)
+    @Access(AccessType.PROPERTY)
     private Date creationDate = null;
 
     public Date getCreationDate() {
