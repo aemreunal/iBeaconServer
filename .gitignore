@@ -16,6 +16,8 @@ hibernate-log.txt
 *.iws
 src/main/java/com/aemreunal/config/DatabaseSettings.java
 
+hibernate-log.txt.1
+
 data/
 
 src/test/resources/datasets/
