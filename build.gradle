@@ -98,9 +98,9 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-aop', version: springFrameworkVersion
     compile group: 'org.springframework', name: 'spring-webmvc', version: springFrameworkVersion
     compile group: 'org.springframework', name: 'spring-oxm', version: springFrameworkVersion
-    compile group: 'org.springframework.security', name: 'spring-security-config', version: springSecurityConfigVersion
-    compile group: 'org.springframework.security', name: 'spring-security-core', version: springSecurityCoreVersion
-    compile group: 'org.springframework.security', name: 'spring-security-web', version: springSecurityWebVersion
+//    compile group: 'org.springframework.security', name: 'spring-security-config', version: springSecurityConfigVersion
+//    compile group: 'org.springframework.security', name: 'spring-security-core', version: springSecurityCoreVersion
+//    compile group: 'org.springframework.security', name: 'spring-security-web', version: springSecurityWebVersion
     compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: springSecurityOAuth2Version
     compile group: 'org.springframework.hateoas', name: 'spring-hateoas', version: springHateoasVersion
 
