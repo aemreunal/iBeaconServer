@@ -1,9 +1,0 @@
-https://developer.apple.com/ibeacon/
-http://www.liquibase.org
-http://dbunit.sourceforge.net
-https://github.com/andreassimon/gradle-mysql-plugin
-https://bitbucket.org/coherentsoftware/gradle-databaseplugin
-
-Require both the project id & Project secret when making requests from a consuming app
-
-http://bcrypthashgenerator.apphb.com
