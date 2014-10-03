@@ -22,7 +22,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
@@ -36,15 +35,22 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 @ComponentScan(basePackages = { "com.aemreunal" })
 public class MVCConfig extends WebMvcConfigurerAdapter {
     // TODO find out what this class is used for
-
+/*
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
         // TODO Add security interceptor for HTTP to HTTPS redirect
         // http://docs.spring.io/spring/docs/4.0.0.RELEASE/spring-framework-reference/htmlsingle/#mvc-container-config
         // http://docs.spring.io/autorepo/docs/spring-framework/3.1.x/javadoc-api/org/springframework/web/WebApplicationInitializer.html
-//        registry.addInterceptor(new FilterSecurityInterceptor()).addPathPatterns("/secure/*");
-//        registry.addInterceptor().addPathPatterns("/secure/*");
+//        registry.addInterceptor(new FilterSecurityInterceptor()).addPathPatterns("/secure*//*");
+//        registry.addInterceptor().addPathPatterns("/secure*//*");
+    }*/
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        //Here we add our custom-configured HttpMessageConverter
+        converters.add(jacksonMessageConverter());
+        super.configureMessageConverters(converters);
     }
 
     public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
@@ -56,12 +62,5 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 
         messageConverter.setObjectMapper(mapper);
         return messageConverter;
-    }
-
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        //Here we add our custom-configured HttpMessageConverter
-        converters.add(jacksonMessageConverter());
-        super.configureMessageConverters(converters);
     }
 }
