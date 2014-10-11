@@ -9,6 +9,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.BeaconGroup;
 import com.aemreunal.domain.Project;
+import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.beaconGroup.BeaconDoesntHaveGroupException;
 import com.aemreunal.exception.beaconGroup.BeaconGroupNotFoundException;
 import com.aemreunal.exception.beaconGroup.BeaconHasGroupException;
@@ -43,6 +44,9 @@ public class BeaconGroupService {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ScenarioService scenarioService;
 
     /**
      * Saves/updates the given beacon group
@@ -118,8 +122,15 @@ public class BeaconGroupService {
     public BeaconGroup addBeaconToGroup(String username, Long projectId, Long beaconGroupId, Long beaconId) {
         BeaconGroup beaconGroup = getBeaconGroup(username, projectId, beaconGroupId);
         Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
-        if (beacon.getGroup() != null) {
-            throw new BeaconHasGroupException(beaconId, beacon.getGroup().getBeaconGroupId());
+        // Check pre-existing group
+        BeaconGroup currentGroup = beacon.getGroup();
+        if (currentGroup != null) {
+            throw new BeaconHasGroupException(beaconId, currentGroup.getBeaconGroupId());
+        }
+        // Check pre-existing scenario
+        Scenario currentScenario = beacon.getScenario();
+        if (currentScenario != null) {
+            scenarioService.removeBeaconFromScenario(username, projectId, currentScenario.getScenarioId(), beaconId);
         }
         beacon.setGroup(beaconGroup);
         beaconService.save(username, projectId, beacon);
