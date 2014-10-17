@@ -186,12 +186,13 @@ task setTestConfig(type: Copy) {
 }
 */
 
-build.dependsOn copyToLib
+assemble.dependsOn copyToLib
 
 // To run without testing, execute command:
+// (Only if war depends on build)
 // ./gradlew tomcatRunWar -x test -x compileTestJava
 
-tomcatRunWar.dependsOn.add(build)
+tomcatRunWar.dependsOn.add(assemble)
 tomcatRunWar.contextPath = 'iBeacon'
 tomcatRunWar.outputFile = new File("log.txt")
 
