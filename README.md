@@ -46,8 +46,10 @@ By executing `./gradlew war` (or `gradlew.bat war` for Windows), you can create 
 
 To use iBeacon server inside a Docker container:
 
-1. Follow the setup directions below to create the necessary Java source file
-2. Create the iBeacon server WAR file
+1. Follow the setup directions below to create the necessary Java source file.
+
+2. Create the iBeacon server WAR file.
+
 3. Take the files in the folder [Docker](https://github.com/aemreunal/iBeaconServer/tree/master/Docker) and the WAR file, put them inside a seperate folder. For example:
 
     ```
@@ -59,4 +61,5 @@ To use iBeacon server inside a Docker container:
     ```
 
 4. Run `docker build -t ibeaconserver .` to create a Docker image with the name `ibeaconserver`.
+
 5. Run `docker run -d -p 8080:8080 ibeaconserver` to run the Docker container.
