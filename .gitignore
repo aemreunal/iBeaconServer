@@ -22,3 +22,5 @@ src/test/resources/datasets/
 
 log.txt
 log.txt.lck
+
+Docker/Tomcat entropy problem.txt
