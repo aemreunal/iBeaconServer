@@ -21,7 +21,7 @@ public class GlobalSettings {
      * Used to set the global logging levels, like whether to log SQL queries or prints
      * inside methods.
      */
-    public static final boolean DEBUGGING = true;
+    public static final boolean DEBUGGING = false;
 
     /**
      * The BCrypt-hashed password field length (in User.class) is assumed to be 60 with a
