@@ -62,4 +62,4 @@ To use iBeacon server inside a Docker container:
 
 4. Run `docker build -t ibeaconserver .` to create a Docker image with the name `ibeaconserver`.
 
-5. Run `docker run -d -p 8080:8080 ibeaconserver` to run the Docker container.
+5. Run `docker run --restart=always -d -p 8080:8080 ibeaconserver` to run the Docker container.
