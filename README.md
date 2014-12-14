@@ -48,7 +48,7 @@ To use iBeacon server inside a Docker container:
 
 1. Follow the setup directions below to create the necessary Java source file
 2. Create the iBeacon server WAR file
-3. Take the files in the folder [Docker](iBeaconServer/blob/tree/master/Docker) and the WAR file, put them inside a seperate folder. For example:
+3. Take the files in the folder [Docker](https://github.com/aemreunal/iBeaconServer/tree/master/Docker) and the WAR file, put them inside a seperate folder. For example:
 
     ```
     ibeaconserver
