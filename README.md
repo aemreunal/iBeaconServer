@@ -50,7 +50,7 @@ To use iBeacon server inside a Docker container:
 
 2. Create the iBeacon server WAR file.
 
-3. Take the files in the folder [Docker](https://github.com/aemreunal/iBeaconServer/tree/master/Docker) and the WAR file, put them inside a seperate folder. For example:
+3. Take the files in the [Docker](https://github.com/aemreunal/iBeaconServer/tree/master/Docker) folder and the WAR file, put them inside a seperate folder. For example:
 
     ```
     ibeaconserver
