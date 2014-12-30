@@ -193,7 +193,7 @@ assemble.dependsOn copyToLib
 // ./gradlew tomcatRunWar -x test -x compileTestJava
 
 tomcatRunWar.dependsOn.add(assemble)
-tomcatRunWar.contextPath = 'iBeacon'
+tomcatRunWar.contextPath = ''
 tomcatRunWar.outputFile = new File("log.txt")
 
 // To use as backgrounds service. Use stop port to stop Tomcat in that case.
