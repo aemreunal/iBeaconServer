@@ -32,12 +32,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Beacon extends ResourceSupport implements Serializable {
     // UUID hex string (including dashes) is 36 characters long
     public static final int UUID_MAX_LENGTH        = 36;
-    // Major hex string is 4 characters long
-    public static final int MAJOR_MIN_LENGTH       = 1;
-    public static final int MAJOR_MAX_LENGTH       = 4;
-    // Minor hex string is 4 characters long
-    public static final int MINOR_MIN_LENGTH       = 1;
-    public static final int MINOR_MAX_LENGTH       = 4;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
 
     /*
@@ -88,17 +82,16 @@ public class Beacon extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Beacon 'Major' attribute
      */
-    @Column(name = "major", nullable = false, length = MAJOR_MAX_LENGTH)
-    @Size(min = MAJOR_MIN_LENGTH, max = MAJOR_MAX_LENGTH)
+    @Column(name = "major", nullable = false)
     @Access(AccessType.PROPERTY)
-    private String major = "";
+    private Integer major = -1;
 
-    public String getMajor() {
+    public Integer getMajor() {
         return major;
     }
 
-    public void setMajor(String major) {
-        this.major = major.toUpperCase();
+    public void setMajor(Integer major) {
+        this.major = major;
     }
     /*
      * END: Beacon 'Major' attribute
@@ -109,17 +102,16 @@ public class Beacon extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Beacon 'Minor' attribute
      */
-    @Column(name = "minor", nullable = false, length = MINOR_MAX_LENGTH)
-    @Size(min = MINOR_MIN_LENGTH, max = MINOR_MAX_LENGTH)
+    @Column(name = "minor", nullable = false)
     @Access(AccessType.PROPERTY)
-    private String minor = "";
+    private Integer minor = -1;
 
-    public String getMinor() {
+    public Integer getMinor() {
         return minor;
     }
 
-    public void setMinor(String minor) {
-        this.minor = minor.toUpperCase();
+    public void setMinor(Integer minor) {
+        this.minor = minor;
     }
     /*
      * END: Beacon 'Minor' attribute

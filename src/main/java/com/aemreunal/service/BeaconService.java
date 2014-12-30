@@ -48,7 +48,7 @@ public class BeaconService {
      * Saves/updates the given beacon
      *
      * @param beacon
-     *     The beacon to save/update
+     *         The beacon to save/update
      *
      * @return The saved/updated beacon
      */
@@ -61,7 +61,7 @@ public class BeaconService {
         Project project = projectService.findProjectById(username, projectId);
         if (beacon.getProject() == null) {
             // This means it hasn't been saved yet
-            if(beaconExists(username, projectId, beacon)) {
+            if (beaconExists(username, projectId, beacon)) {
                 // First, verify the beacon doesn't already exist
                 throw new BeaconAlreadyExistsException(beacon);
             }
@@ -79,22 +79,22 @@ public class BeaconService {
      * Finds beacons conforming to given specifications
      *
      * @param projectId
-     *     The project ID constraint
+     *         The project ID constraint
      * @param uuid
-     *     The UUID field constraint
+     *         The UUID field constraint
      * @param major
-     *     The Major field constraint
+     *         The Major field constraint
      * @param minor
-     *     The Minor field constraint
+     *         The Minor field constraint
      *
      * @return The list of beacons conforming to given constraints
      */
     public List<Beacon> findBeaconsBySpecs(String username,
                                            Long projectId,
                                            String uuid,
-                                           String major,
-                                           String minor)
-        throws BeaconNotFoundException {
+                                           Integer major,
+                                           Integer minor)
+            throws BeaconNotFoundException {
         List<Beacon> beacons = searchBeaconsBySpecs(username, projectId, uuid, major, minor);
         if (beacons.size() == 0) {
             throw new BeaconNotFoundException();
@@ -102,7 +102,7 @@ public class BeaconService {
         return beacons;
     }
 
-    private List<Beacon> searchBeaconsBySpecs(String username, Long projectId, String uuid, String major, String minor) {
+    private List<Beacon> searchBeaconsBySpecs(String username, Long projectId, String uuid, Integer major, Integer minor) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
         }
@@ -111,14 +111,14 @@ public class BeaconService {
     }
 
     public Beacon queryForBeacon(String uuid,
-                                 String major,
-                                 String minor,
+                                 Integer major,
+                                 Integer minor,
                                  String projectSecret)
     throws BeaconNotFoundException {
         List beaconObjects = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(null, uuid, major, minor));
         for (Object beaconObject : beaconObjects) {
             Beacon beacon = (Beacon) beaconObject;
-            if(passwordEncoder.matches(projectSecret, beacon.getProject().getProjectSecret())) {
+            if (passwordEncoder.matches(projectSecret, beacon.getProject().getProjectSecret())) {
                 return beacon;
             }
         }
@@ -130,18 +130,18 @@ public class BeaconService {
      * in a {@link com.aemreunal.domain.Project project}.
      *
      * @param username
-     *     The username of the {@link com.aemreunal.domain.User owner} of the project
+     *         The username of the {@link com.aemreunal.domain.User owner} of the project
      * @param projectId
-     *     The ID of the project
+     *         The ID of the project
      * @param beaconId
-     *     The ID of the beacon to find
+     *         The ID of the beacon to find
      *
      * @return The beacon
      *
      * @throws com.aemreunal.exception.beacon.BeaconNotFoundException
-     *     If the specified beacon does not exist.
+     *         If the specified beacon does not exist.
      * @throws com.aemreunal.exception.project.ProjectNotFoundException
-     *     If the specified project does not exist.
+     *         If the specified project does not exist.
      */
     public Beacon getBeacon(String username, Long projectId, Long beaconId) throws BeaconNotFoundException, ProjectNotFoundException {
         if (GlobalSettings.DEBUGGING) {
@@ -160,9 +160,9 @@ public class BeaconService {
      * {@link com.aemreunal.domain.Project project}.
      *
      * @param username
-     *     The username of the {@link com.aemreunal.domain.User owner} of the project
+     *         The username of the {@link com.aemreunal.domain.User owner} of the project
      * @param projectId
-     *     The ID of the project
+     *         The ID of the project
      *
      * @return The list of beacons that belong to a project. Returns an empty list if the
      * project has no beacons

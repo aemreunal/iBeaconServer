@@ -167,7 +167,7 @@ public class ProjectController {
         String username = project.getOwner().getUsername();
         Long projectId = project.getProjectId();
         project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withSelfRel());
-        project.getLinks().add(linkTo(methodOn(BeaconController.class).getBeaconsOfProject(username, projectId, "", "", "")).withRel("beacons"));
+        project.getLinks().add(linkTo(methodOn(BeaconController.class).getBeaconsOfProject(username, projectId, "", null, null)).withRel("beacons"));
         project.getLinks().add(linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(username, projectId, "")).withRel("groups"));
         project.getLinks().add(linkTo(methodOn(UserController.class).getUserByUsername(username)).withRel("owner"));
         return project;

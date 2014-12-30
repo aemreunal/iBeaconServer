@@ -78,9 +78,15 @@ public class BeaconController {
     public ResponseEntity<List<Beacon>> getBeaconsOfProject(@PathVariable String username,
                                                             @PathVariable Long projectId,
                                                             @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
-                                                            @RequestParam(value = "major", required = false, defaultValue = "") String major,
-                                                            @RequestParam(value = "minor", required = false, defaultValue = "") String minor) {
-        if (uuid.equals("") && major.equals("") && minor.equals("")) {
+                                                            @RequestParam(value = "major", required = false) Integer major,
+                                                            @RequestParam(value = "minor", required = false) Integer minor) {
+        if (major == null) {
+            major = -1;
+        }
+        if (minor == null) {
+            minor = -1;
+        }
+        if (uuid.equals("") && major.equals(-1) && minor.equals(-1)) {
             List<Beacon> beaconList = beaconService.getBeaconsOfProject(username, projectId);
             return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
         } else {

@@ -63,8 +63,8 @@ public class APIController {
 
     private Scenario getScenario(JSONObject beaconQueryJson) {
         String uuid = beaconQueryJson.get("uuid").toString().toUpperCase();
-        String major = beaconQueryJson.get("major").toString().toUpperCase();
-        String minor = beaconQueryJson.get("minor").toString().toUpperCase();
+        Integer major = Integer.valueOf(beaconQueryJson.get("major").toString());
+        Integer minor = Integer.valueOf(beaconQueryJson.get("minor").toString());
         String secret = beaconQueryJson.get("secret").toString().toUpperCase();
         return scenarioService.queryForScenario(uuid, major, minor, secret);
     }

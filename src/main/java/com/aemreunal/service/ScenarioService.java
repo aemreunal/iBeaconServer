@@ -83,8 +83,8 @@ public class ScenarioService {
     }
 
     public Scenario queryForScenario(String uuid,
-                                     String major,
-                                     String minor,
+                                     Integer major,
+                                     Integer minor,
                                      String projectSecret)
     throws NoScenarioForQueryException {
         Beacon beacon = beaconService.queryForBeacon(uuid, major, minor, projectSecret);

@@ -17,7 +17,7 @@ package com.aemreunal.exception.scenario;
  */
 
 public class NoScenarioForQueryException extends NullPointerException {
-    public NoScenarioForQueryException(String uuid, String major, String minor) {
+    public NoScenarioForQueryException(String uuid, Integer major, Integer minor) {
         super("Beacon with UUID: " + uuid + ", Major: " + major + ", Minor: " + minor + " doesn't have an associated scenario!");
     }
 }

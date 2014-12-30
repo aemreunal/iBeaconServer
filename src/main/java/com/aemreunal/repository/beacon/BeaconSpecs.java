@@ -39,7 +39,7 @@ public class BeaconSpecs {
      *
      * @return The specification of the beacon
      */
-    public static Specification<Beacon> beaconWithSpecification(final Long projectId, final String uuid, final String major, final String minor) {
+    public static Specification<Beacon> beaconWithSpecification(final Long projectId, final String uuid, final Integer major, final Integer minor) {
         return new Specification<Beacon>() {
             public Predicate toPredicate(Root<Beacon> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
                 ArrayList<Predicate> predicates = new ArrayList<Predicate>();
@@ -55,12 +55,12 @@ public class BeaconSpecs {
                     }
                 }
 
-                if (!major.equals("")) {
-                    predicates.add(builder.equal(root.get("major"), major.toUpperCase()));
+                if (!major.equals(-1)) {
+                    predicates.add(builder.equal(root.get("major"), major));
                 }
 
-                if (!minor.equals("")) {
-                    predicates.add(builder.equal(root.get("minor"), minor.toUpperCase()));
+                if (!minor.equals(-1)) {
+                    predicates.add(builder.equal(root.get("minor"), minor));
                 }
 
                 return builder.and(predicates.toArray(new Predicate[predicates.size()]));
