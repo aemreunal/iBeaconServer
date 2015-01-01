@@ -1,5 +1,7 @@
 # From official Tomcat 8 - JDK 8 Dockerfile:
-FROM java:8-jre
+FROM java:8-jdk
+
+MAINTAINER docker@aemreunal.com
 
 ENV CATALINA_HOME /usr/local/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
@@ -33,12 +35,37 @@ RUN curl -SL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz \
     && rm tomcat.tar.gz*
 
 # iBeacon server addition:
-# Delete other webapps
+
+# Install debconf, git, and locales
+RUN apt-get update && apt-get install -y \
+    debconf \
+    git \
+    locales
+
+# Set the locale
+ENV DEBIAN_FRONTEND noninteractive
+RUN dpkg-reconfigure locales \
+    && locale-gen C.UTF-8 \
+    && /usr/sbin/update-locale LANG=C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# Clone iBeaconServer repo
+RUN cd ~/ \
+    && git clone https://github.com/aemreunal/iBeaconServer.git
+
+# Add required DatabaseSettings.java source file to project
+COPY DatabaseSettings.java /root/iBeaconServer/src/main/java/com/aemreunal/config/DatabaseSettings.java
+# Create WAR file
+RUN cd ~/iBeaconServer/ \
+    && ./gradlew war
+
+# Delete other webapps in Tomcat
 RUN rm -rf $CATALINA_HOME/webapps/*
 # Add iBeacon server webapp as root webapp
-ADD iBeacon.war $CATALINA_HOME/webapps/ROOT.war
+RUN cd ~/iBeaconServer/ \
+    && cp build/libs/iBeacon.war $CATALINA_HOME/webapps/ROOT.war
 # Add non-secure random gen. env. option setter
-ADD setenv.sh $CATALINA_HOME/bin/setenv.sh
+COPY setenv.sh $CATALINA_HOME/bin/setenv.sh
 
 EXPOSE 8080
 
