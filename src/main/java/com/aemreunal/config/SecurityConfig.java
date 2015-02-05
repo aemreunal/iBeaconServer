@@ -1,8 +1,16 @@
 package com.aemreunal.config;
 
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /*
  ***************************
@@ -26,97 +34,38 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalAuthentication
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-//    @Autowired
-//    private BCryptPasswordEncoder encoder;
-
-//    @Override
-//    protected void registerAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//            .withUser("letsnosh").password("noshing").roles("USER");
-//    }
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeUrls()
-//            .antMatchers("/aggregators/**").hasRole("USER")
-//            .anyRequest().anonymous()
-//            .and()
-//            .httpBasic();
-//    }
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//            .antMatchers("/**").hasRole("USER")
-//            .anyRequest().anonymous()
-//            .and()
-//            .httpBasic().and().userDetailsService(new UserDetailsServiceImpl());
-////            .and()
-////            .formLogin()
-//        ;
-////        new UsernamePasswordAuthenticationToken("test", "test");
-//    }
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        /*auth.inMemoryAuthentication()
-//            .withUser("user")
-//            .password("password")
-//            .roles("USER")
-//            .and()
-//            .withUser("adminr")
-//            .password("password")
-//            .roles("ADMIN", "USER");*/
-////        auth.jdbcAuthentication().
-//        auth.userDetailsService(new UserDetailsServiceImpl()).passwordEncoder(encoder);
-//    }
-}
-/*
-
-@Service("userDetailsService")
-class UserDetailsServiceImpl implements UserDetailsService {
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
-    private UserService dao;
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
-    private Assembler   assembler;
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication()
+            .dataSource(dataSource)
+                .usersByUsernameQuery("SELECT username, password, '1' FROM users WHERE username = ?")
+                .authoritiesByUsernameQuery("SELECT username, 'ADMIN' FROM users WHERE username = ?")
+            .passwordEncoder(passwordEncoder)
+        ;
+    }
 
-    @Transactional
-    public UserDetails loadUserByUsername(String username)
-    throws UsernameNotFoundException, DataAccessException {
-
-        com.aemreunal.domain.User user = dao.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("user not found");
-        }
-
-        return assembler.buildUserFromUserEntity(user);
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/human/register").permitAll()
+                .anyRequest().authenticated()
+            .and()
+            .requiresChannel().antMatchers("**").requiresSecure()
+            .and()
+            .httpBasic()
+            .and()
+            .requestCache().disable()
+            .rememberMe().disable()
+            .headers().httpStrictTransportSecurity()
+            .and()
+            .csrf().disable();
     }
 }
-
-@Service("assembler")
-class Assembler {
-
-    @Transactional
-    public UserDetails buildUserFromUserEntity(com.aemreunal.domain.User userEntity) {
-        String username = userEntity.getUsername();
-        String password = userEntity.getPassword();
-        boolean enabled = true; // userEntity.isActive();
-        boolean accountNonExpired = true; // userEntity.isActive();
-        boolean credentialsNonExpired = true; // userEntity.isActive();
-        boolean accountNonLocked = true; // userEntity.isActive();
-
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-//        for (SecurityRoleEntity role : userEntity.getRoles()) {
-            authorities.add(*/
-/*new SimpleGrantedAuthority(role.getRoleName())*//*
-new SimpleGrantedAuthority("USER"));
-//        }
-
-        org.springframework.security.core.userdetails.User user = new User(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-        return user;
-    }
-}
-*/

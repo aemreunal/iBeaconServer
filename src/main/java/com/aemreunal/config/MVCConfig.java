@@ -35,8 +35,6 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 @EnableWebMvc
 @ComponentScan(basePackages = { "com.aemreunal" })
 public class MVCConfig extends WebMvcConfigurerAdapter {
-    // TODO find out what this class is used for
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);

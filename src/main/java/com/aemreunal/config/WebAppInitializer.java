@@ -28,27 +28,23 @@ import org.springframework.web.servlet.DispatcherServlet;
  */
 
 public class WebAppInitializer implements WebApplicationInitializer {
-    // TODO find out what this class is used for
-
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext webAppContext = new AnnotationConfigWebApplicationContext();
-//        webAppContext.register(CoreConfig.class, MVCConfig.class, SecurityConfig.class);
-        webAppContext.register(CoreConfig.class, MVCConfig.class);
+        webAppContext.register(CoreConfig.class, MVCConfig.class, SecurityConfig.class);
         servletContext.addListener(new ContextLoaderListener(webAppContext));
-//        servletContext.setInitParameter("defaultHtmlEscape", "true");
 
         AnnotationConfigWebApplicationContext dispatchCtx = new AnnotationConfigWebApplicationContext();
         ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(dispatchCtx));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
 
-//        configureSpringSecurity(servletContext, webAppContext);
+        configureSpringSecurity(servletContext, webAppContext);
     }
 
     private void configureSpringSecurity(ServletContext servletContext, WebApplicationContext rootContext) {
         FilterRegistration.Dynamic springSecurity = servletContext.addFilter("springSecurityFilterChain", new DelegatingFilterProxy("springSecurityFilterChain", rootContext));
-        springSecurity.addMappingForUrlPatterns(null, true, "/*");
+        springSecurity.addMappingForUrlPatterns(null, false, "/*");
     }
 
 }
