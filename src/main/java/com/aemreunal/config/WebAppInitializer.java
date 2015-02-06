@@ -39,12 +39,17 @@ public class WebAppInitializer implements WebApplicationInitializer {
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
 
-        configureSpringSecurity(servletContext, webAppContext);
+        addSecurityFilterToChain(servletContext, webAppContext);
+        addUserUrlFilterToChain(servletContext, webAppContext);
     }
 
-    private void configureSpringSecurity(ServletContext servletContext, WebApplicationContext rootContext) {
+    private void addSecurityFilterToChain(ServletContext servletContext, WebApplicationContext rootContext) {
         FilterRegistration.Dynamic springSecurity = servletContext.addFilter("springSecurityFilterChain", new DelegatingFilterProxy("springSecurityFilterChain", rootContext));
         springSecurity.addMappingForUrlPatterns(null, false, "/*");
     }
 
+    private void addUserUrlFilterToChain(ServletContext servletContext, WebApplicationContext rootContext) {
+        FilterRegistration.Dynamic userURLFilter = servletContext.addFilter("userUrlFilterChain", UserUrlFilter.class);
+        userURLFilter.addMappingForUrlPatterns(null, false, "/human/*");
+    }
 }
