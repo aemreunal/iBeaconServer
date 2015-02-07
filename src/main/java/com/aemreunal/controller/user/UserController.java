@@ -32,13 +32,12 @@ import com.aemreunal.service.UserService;
  */
 
 @Controller
-@RequestMapping(GlobalSettings.USER_PATH_MAPPING)
 public class UserController {
     @Autowired
     private UserService userService;
 
     /**
-     * Get the user with the specified username
+     * Get the user with the specified username.
      *
      * @param username
      *     The username of the user
@@ -55,10 +54,10 @@ public class UserController {
     }
 
     /**
-     * Create a new user
+     * Create a new user.
      * <p/>
      * User creation request JSON:<br/> {<br/> "username":"testuser12",<br/>
-     * "password":"test_password" }
+     * "password":"test_password"<br/>}
      *
      * @param userJson
      *     The user as a JSON object
@@ -109,12 +108,6 @@ public class UserController {
      *     The confirmation parameter
      *
      * @return The status of the deletion action
-     */
-    /*
-        TODO Instead of getting password via a parameter, just authenticate user with oauth:
-        Define: "/user/XXX has access to everyting beyond XXX/... if it authenticates with the
-        credentials of XXX" -> variable authentication.
-        @RequestParam(value = "password", required = true) String password
      */
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.USER_USERNAME_MAPPING)
     public ResponseEntity<User> deleteUser(

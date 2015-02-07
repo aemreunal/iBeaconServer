@@ -47,7 +47,7 @@ public class GlobalSettings {
     // User
     public static final String USER_PATH_MAPPING                    = "/human";
     public static final String USER_CREATE_MAPPING                  = "/register";
-    public static final String USER_USERNAME_MAPPING                = "/{username}";
+    public static final String USER_USERNAME_MAPPING                = USER_PATH_MAPPING + "/{username}";
     public static final String USER_SPECIFIC_MAPPING                = USER_PATH_MAPPING + USER_USERNAME_MAPPING;
     // Project
     public static final String PROJECT_PATH_MAPPING                 = USER_SPECIFIC_MAPPING + "/projects";
