@@ -23,8 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.codec.Base64;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
@@ -36,7 +36,7 @@ public class UserUrlFilter extends OncePerRequestFilter {
             String authUsername = getAuthUsername(request);
             String uriUsername = getUriUsername(requestURI);
             if (!authUsername.equals(uriUsername)) {
-                throw new AccessDeniedException("Unauthorized");
+                throw new PreAuthenticatedCredentialsNotFoundException("Unauthorized access.");
             }
         }
         filterChain.doFilter(request, response);
@@ -44,13 +44,17 @@ public class UserUrlFilter extends OncePerRequestFilter {
 
     private String getAuthUsername(HttpServletRequest request) {
         String authorizationString = request.getHeader("Authorization");
+        if (authorizationString == null) {
+            throw new PreAuthenticatedCredentialsNotFoundException("Unauthorized access. Please provide preemptive HTTP Basic authorization credentials with every request.");
+        }
         authorizationString = authorizationString.substring("Basic".length()).trim();
         String credentials = new String(Base64.decode(authorizationString.getBytes()), Charset.forName("UTF-8"));
         return (credentials.split(":",2))[0];
     }
 
     private String getUriUsername(String requestURI) {
-        requestURI = requestURI.substring("/human/".length());
+        // +1 to include the slash after "/human", for "/human/<username>"
+        requestURI = requestURI.substring(GlobalSettings.USER_PATH_MAPPING.length() + 1);
         int slashIndex = requestURI.indexOf('/');
         if (slashIndex == -1) {
             return requestURI;
