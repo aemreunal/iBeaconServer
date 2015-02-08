@@ -48,8 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .dataSource(dataSource)
                 .usersByUsernameQuery("SELECT username, password, '1' FROM users WHERE username = ?")
                 .authoritiesByUsernameQuery("SELECT username, 'ADMIN' FROM users WHERE username = ?")
-            .passwordEncoder(passwordEncoder)
-        ;
+            .passwordEncoder(passwordEncoder);
     }
 
     @Override
