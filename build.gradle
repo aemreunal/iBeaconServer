@@ -1,5 +1,5 @@
 buildscript {
-    def tomcatGradlePluginVersion = '1.2.4'
+    def tomcatGradlePluginVersion = '2.0'
     def propdepsPluginVersion = '0.0.7'
 
     repositories {
@@ -15,13 +15,13 @@ buildscript {
 
     // Dependencies used for building the gradle script itself
     dependencies {
-        classpath "org.gradle.api.plugins:gradle-tomcat-plugin:${tomcatGradlePluginVersion}"
+        classpath "com.bmuschko:gradle-tomcat-plugin:${tomcatGradlePluginVersion}"
         classpath "org.springframework.build.gradle:propdeps-plugin:${propdepsPluginVersion}"
     }
 }
 
 apply plugin: 'war'
-apply plugin: 'tomcat'
+apply plugin: 'com.bmuschko.tomcat'
 apply plugin: 'propdeps'
 apply plugin: 'propdeps-maven'
 apply plugin: 'propdeps-idea'
