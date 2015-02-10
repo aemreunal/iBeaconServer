@@ -52,7 +52,7 @@ public class BeaconGroupService {
      * Saves/updates the given beacon group
      *
      * @param beaconGroup
-     *     The beacon group to save/update
+     *         The beacon group to save/update
      *
      * @return The saved/updated beacon group
      */
@@ -92,9 +92,9 @@ public class BeaconGroupService {
      * Finds the beacon groups conforming to given specifications
      *
      * @param projectId
-     *     The project ID constraint
+     *         The project ID constraint
      * @param beaconGroupName
-     *     The name field constraint
+     *         The name field constraint
      *
      * @return The list of beacon groups conforming to given constraints
      */
@@ -154,9 +154,9 @@ public class BeaconGroupService {
      * Deletes the beacon group with the given ID and updates the beacons in the group.
      *
      * @param projectId
-     *     The ID of the project to delete the beacon from
+     *         The ID of the project to delete the beacon from
      * @param beaconGroupId
-     *     The ID of the beacon group to delete
+     *         The ID of the beacon group to delete
      *
      * @return Whether the beacon group was deleted or not
      */
