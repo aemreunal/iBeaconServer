@@ -104,6 +104,7 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Beacon group 'beacon list' attribute
      */
+
    /*
     *
     * Currently, Beacon is the owner of its relationship to BeaconGroup.
