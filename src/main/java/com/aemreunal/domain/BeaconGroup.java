@@ -151,6 +151,41 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
+     * BEGIN: Beacon group 'designated beacons' attribute
+     */
+
+    @OneToMany(targetEntity = Beacon.class,
+//               mappedBy = "group",
+               fetch = FetchType.LAZY)
+    @JoinTable(name = "designated_beacons_of_group",
+            joinColumns = @JoinColumn(name = "beacon_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "beacon_id"))
+    @Access(AccessType.PROPERTY)
+    private Set<Beacon> designatedBeacons = new LinkedHashSet<Beacon>();
+
+    public Set<Beacon> getDesignatedBeacons() {
+        CoreConfig.initLazily(designatedBeacons);
+        return designatedBeacons;
+    }
+
+    public void setDesignatedBeacons(Set<Beacon> designatedBeacons) {
+        this.designatedBeacons = designatedBeacons;
+    }
+
+    public void designateBeacon(Beacon beacon) {
+        getDesignatedBeacons().add(beacon);
+    }
+
+    public void undesignateBeacon(Beacon beacon) {
+        getDesignatedBeacons().remove(beacon);
+    }
+    /*
+     * END: Beacon group 'designated beacons' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
      * BEGIN: Beacon group 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
