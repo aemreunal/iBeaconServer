@@ -154,13 +154,11 @@ public class Scenario extends ResourceSupport implements Serializable {
     }
 
     public void addBeacon(Beacon beacon) {
-        CoreConfig.initLazily(beacons);
-        this.beacons.add(beacon);
+        getBeacons().add(beacon);
     }
 
     public void removeBeacon(Beacon beacon) {
-        CoreConfig.initLazily(beacons);
-        this.beacons.remove(beacon);
+        getBeacons().remove(beacon);
     }
     /*
      * END: Scenario 'beacons list' attribute
@@ -188,13 +186,11 @@ public class Scenario extends ResourceSupport implements Serializable {
     }
 
     public void addBeaconGroup(BeaconGroup beaconGroup) {
-        CoreConfig.initLazily(beaconGroups);
-        this.beaconGroups.add(beaconGroup);
+        getBeaconGroups().add(beaconGroup);
     }
 
     public void removeBeaconGroup(BeaconGroup beaconGroup) {
-        CoreConfig.initLazily(beaconGroups);
-        this.beaconGroups.remove(beaconGroup);
+        getBeaconGroups().remove(beaconGroup);
     }
     /*
      * END: Scenario 'beacon groups list' attribute

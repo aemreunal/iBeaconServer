@@ -138,13 +138,11 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
     }
 
     public void addBeacon(Beacon beacon) {
-        CoreConfig.initLazily(beacons);
-        this.beacons.add(beacon);
+        getBeacons().add(beacon);
     }
 
     public void removeBeacon(Beacon beacon) {
-        CoreConfig.initLazily(beacons);
-        this.beacons.remove(beacon);
+        getBeacons().remove(beacon);
     }
     /*
      * END: Beacon group 'beacon list' attribute
