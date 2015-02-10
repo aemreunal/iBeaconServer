@@ -165,12 +165,12 @@ public class BeaconGroupService {
             System.out.println("Deleting beacon group with ID = \'" + beaconGroupId + "\'");
         }
         BeaconGroup beaconGroup = this.getBeaconGroup(username, projectId, beaconGroupId);
-        updateBeaconsInGroup(beaconGroup, username, projectId);
+        removeBeaconsFromGroup(beaconGroup, username, projectId);
         beaconGroupRepo.delete(beaconGroup);
         return beaconGroup;
     }
 
-    private void updateBeaconsInGroup(BeaconGroup beaconGroup, String username, Long projectId) {
+    private void removeBeaconsFromGroup(BeaconGroup beaconGroup, String username, Long projectId) {
         for (Beacon beacon : beaconGroup.getBeacons()) {
             beacon.setGroup(null);
             beaconService.save(username, projectId, beacon);
