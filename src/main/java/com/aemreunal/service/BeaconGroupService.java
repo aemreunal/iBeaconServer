@@ -140,14 +140,51 @@ public class BeaconGroupService {
     public BeaconGroup removeBeaconFromGroup(String username, Long projectId, Long beaconGroupId, Long beaconId) {
         BeaconGroup beaconGroup = getBeaconGroup(username, projectId, beaconGroupId);
         Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
-        if (beacon.getGroup() == null) {
-            throw new BeaconDoesntHaveGroupException(beacon.getBeaconId(), beaconGroupId);
-        } else if(!(beacon.getGroup().getBeaconGroupId().equals(beaconGroupId))) {
-            throw new BeaconHasGroupException(beaconId, beacon.getGroup().getBeaconGroupId());
-        }
+        checkIfBeaconBelongsToGroup(beaconGroupId, beacon);
         beacon.setGroup(null);
         beaconService.save(username, projectId, beacon);
         return beaconGroup;
+    }
+
+    public BeaconGroup designateBeacon(String username, Long projectId, Long beaconGroupId, Long beaconId) {
+        BeaconGroup beaconGroup = getBeaconGroup(username, projectId, beaconGroupId);
+        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
+        checkIfBeaconBelongsToGroup(beaconGroupId, beacon);
+        beaconGroup.designateBeacon(beacon);
+        save(username, projectId, beaconGroup);
+        return beaconGroup;
+    }
+
+    /**
+     * Checks the relationship between a beacon and a beacon group. The relationship is
+     * valid if the beacon belongs to that group; in that case, no exception is thrown. If
+     * the beacon doesn't belong to any group, a {@link com.aemreunal.exception.beaconGroup.BeaconDoesntHaveGroupException
+     * BeaconDoesntHaveGroupException} is thrown. If the beacon belongs to another group,
+     * a BeaconHasGroupException {@link com.aemreunal.exception.beaconGroup.BeaconHasGroupException
+     * BeaconHasGroupException} is thrown.
+     *
+     * @param beaconGroupId
+     *         The ID of the group to check the relationship of
+     * @param beacon
+     *         The beacon object to check the relationship of
+     *
+     * @throws BeaconDoesntHaveGroupException
+     *         If the beacon doesn't belong to any group
+     * @throws BeaconHasGroupException
+     *         If the beacon belongs to another group, different from the one designated
+     *         with the parameter {@code beaconGroupId}
+     */
+    private void checkIfBeaconBelongsToGroup(Long beaconGroupId, Beacon beacon)
+            throws BeaconDoesntHaveGroupException, BeaconHasGroupException {
+        // Check group
+        BeaconGroup currentGroup = beacon.getGroup();
+        if (currentGroup == null) {
+            // Valid if the beacon doesn't have a group
+            throw new BeaconDoesntHaveGroupException(beacon.getBeaconId(), beaconGroupId);
+        } else if (!(currentGroup.getBeaconGroupId().equals(beaconGroupId))) {
+            // Valid if the beacon belongs to another group
+            throw new BeaconHasGroupException(beacon.getBeaconId(), beacon.getGroup().getBeaconGroupId());
+        }
     }
 
     /**
