@@ -35,38 +35,26 @@ def apnsVersion = '1.0.0.Beta3'
 def aspectJRTVersion = '1.8.1'
 def aspectJWeaverVersion = '1.8.1'
 def cglibVersion = '3.1'
-def dbUnitVersion = '2.5.0'
-def hamcrestAllVersion = '1.3'
-def hibernateEntityManagerVersion = '4.3.6.Final'
+def hibernateEntityManagerVersion = '4.3.8.Final'
 def hibernateJPAAPI21Version = '1.0.0.Final'
-def hibernateCoreVersion = '4.3.6.Final'
-def hibernateValidatorVersion = '5.1.1.Final'
-def jacksonCoreVersion = '2.4.1.1'
-def jacksonDatabindVersion = '2.4.1.3'
-def jacksonHibernateVersion = '2.4.0'
-def javaxJsonVersion = '1.0.4'
+def hibernateCoreVersion = '4.3.8.Final'
+def hibernateValidatorVersion = '5.1.3.Final'
+def jacksonCoreVersion = '2.5.1'
+def jacksonDatabindVersion = '2.5.1'
+def jacksonHibernateVersion = '2.5.1'
 def javaxServletAPIVersion = '3.1.0'
 def jaxbAPIVersion = '2.2.11'
 def jsonPathVersion = '0.9.1'
-def jsonTestVersion = '20140107'
-def junitVersion = '4.11'
-def logbackCoreVersion = '1.1.2'
-def mockitoAllVersion = '1.9.5'
-def mysqlConnectorJDBCVersion = '5.1.31'
-def restAssuredVersion = '2.3.2'
-def slf4jAPIVersion = '1.7.7'
-def slf4jLog4jVersion = '1.7.7'
-def slf4jSimpleVersion = '1.7.7'
+def mysqlConnectorJDBCVersion = '5.1.34'
+def slf4jLog4jVersion = '1.7.10'
 def springDataJPAVersion = '1.6.2.RELEASE'
 def springFrameworkVersion = '4.0.6.RELEASE'
 def springHateoasVersion = '0.15.0.RELEASE'
 def springSecurityOAuth2Version = '2.0.2.RELEASE'
-def springTestVersion = '4.0.6.RELEASE'
-def springSecurityConfigVersion = '3.2.5.RELEASE'
 def springSecurityCoreVersion = '3.2.5.RELEASE'
 def springSecurityWebVersion = '3.2.5.RELEASE'
-def tomcatVersion = '7.0.42'
-def wrapperGradleVersion = '2.0'
+def tomcatVersion = '7.0.59'
+def wrapperGradleVersion = '2.2.1'
 
 repositories {
     mavenCentral()
@@ -81,11 +69,7 @@ repositories {
 
 dependencies {
     // slf4j, used by Hibernate for logging
-    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jAPIVersion
-    compile group: 'org.slf4j', name: 'slf4j-simple', version: slf4jSimpleVersion
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jLog4jVersion
-
-    compile group: 'ch.qos.logback', name: 'logback-core', version: logbackCoreVersion
 
     providedCompile "javax.servlet:javax.servlet-api:${javaxServletAPIVersion}"
 
@@ -97,7 +81,6 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-aop', version: springFrameworkVersion
     compile group: 'org.springframework', name: 'spring-webmvc', version: springFrameworkVersion
     compile group: 'org.springframework', name: 'spring-oxm', version: springFrameworkVersion
-//    compile group: 'org.springframework.security', name: 'spring-security-config', version: springSecurityConfigVersion
     compile group: 'org.springframework.security', name: 'spring-security-core', version: springSecurityCoreVersion
     compile group: 'org.springframework.security', name: 'spring-security-web', version: springSecurityWebVersion
     compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: springSecurityOAuth2Version
@@ -116,17 +99,6 @@ dependencies {
 
     // MySQL
     compile group: 'mysql', name: 'mysql-connector-java', version: mysqlConnectorJDBCVersion
-
-    // Test
-    testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: restAssuredVersion
-    testCompile group: 'org.glassfish', name: 'javax.json', version: javaxJsonVersion
-    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: hamcrestAllVersion
-    testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoAllVersion
-    testCompile group: 'junit', name: 'junit-dep', version: junitVersion // Without Hamcrest
-    testCompile group: 'org.springframework', name: 'spring-test', version: springTestVersion
-//    testCompile group: 'junit', name: 'junit', version: junitVersion
-    testCompile group: 'org.json', name: 'json', version: jsonTestVersion
-    testCompile group: 'org.dbunit', name: 'dbunit', version: dbUnitVersion
 
     // Tomcat
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
@@ -155,6 +127,9 @@ task copyToLib(type: Copy) {
 tomcat {
 //    httpPort = 8080 // Default: 8080
 //    httpsPort = 8081 // Default: 8443
+
+//    To use as backgrounds service. Use stop port to stop Tomcat in that case.
+//    tomcatRunWar.daemon = true // Default: false
     enableSSL = true
 }
 
@@ -166,35 +141,10 @@ task listJars << {
     configurations.compile.each { File file -> println file.name }
 }
 
-/*
-task setProductionConfig(type: Copy) {
-    from "src/main/java/com/aemreunal/config"
-    into "../."
-    rename { String fileName ->
-        fileName.replace("Production", "CoreConfig")
-    }
-}
-
-task setTestConfig(type: Copy) {
-    from "src/main/java/com/aemreunal/config"
-    into "../."
-    rename { String fileName ->
-        fileName.replace("Test", "CoreConfig")
-    }
-}
-*/
-
 assemble.dependsOn copyToLib
-
-// To run without testing, execute command:
-// (Only if war depends on build)
-// ./gradlew tomcatRunWar -x test -x compileTestJava
 
 tomcatRunWar.dependsOn.add(assemble)
 tomcatRunWar.contextPath = ''
 tomcatRunWar.outputFile = new File("log.txt")
-
-// To use as backgrounds service. Use stop port to stop Tomcat in that case.
-// tomcatRunWar.daemon = true // Default: false
 
 println "Project is located in: " + projectDir
