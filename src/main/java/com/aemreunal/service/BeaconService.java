@@ -2,6 +2,7 @@ package com.aemreunal.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -169,10 +170,7 @@ public class BeaconService {
      */
     public List<Beacon> getBeaconsOfProject(String username, Long projectId) {
         Project project = projectService.findProjectById(username, projectId);
-        List<Beacon> beacons = new ArrayList<Beacon>();
-        for (Beacon beacon : project.getBeacons()) {
-            beacons.add(beacon);
-        }
+        List<Beacon> beacons = project.getBeacons().stream().collect(Collectors.toList());
         return beacons;
     }
 

@@ -40,31 +40,29 @@ public class BeaconSpecs {
      * @return The specification of the beacon
      */
     public static Specification<Beacon> beaconWithSpecification(final Long projectId, final String uuid, final Integer major, final Integer minor) {
-        return new Specification<Beacon>() {
-            public Predicate toPredicate(Root<Beacon> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                ArrayList<Predicate> predicates = new ArrayList<Predicate>();
-                if (projectId != null) {
-                    predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
-                }
-
-                if (!uuid.equals("")) {
-                    if (uuid.length() == Beacon.UUID_MAX_LENGTH) {
-                        predicates.add(builder.equal(root.get("uuid"), uuid.toUpperCase()));
-                    } else {
-                        predicates.add(builder.like(root.get("uuid").as(String.class), "%" + uuid.toUpperCase() + "%"));
-                    }
-                }
-
-                if (!major.equals(-1)) {
-                    predicates.add(builder.equal(root.get("major"), major));
-                }
-
-                if (!minor.equals(-1)) {
-                    predicates.add(builder.equal(root.get("minor"), minor));
-                }
-
-                return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+        return (root, query, builder) -> {
+            ArrayList<Predicate> predicates = new ArrayList<Predicate>();
+            if (projectId != null) {
+                predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
             }
+
+            if (!uuid.equals("")) {
+                if (uuid.length() == Beacon.UUID_MAX_LENGTH) {
+                    predicates.add(builder.equal(root.get("uuid"), uuid.toUpperCase()));
+                } else {
+                    predicates.add(builder.like(root.get("uuid").as(String.class), "%" + uuid.toUpperCase() + "%"));
+                }
+            }
+
+            if (!major.equals(-1)) {
+                predicates.add(builder.equal(root.get("major"), major));
+            }
+
+            if (!minor.equals(-1)) {
+                predicates.add(builder.equal(root.get("minor"), minor));
+            }
+
+            return builder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
 
@@ -79,17 +77,15 @@ public class BeaconSpecs {
      * @return The specification of the beacon
      */
     public static Specification<Beacon> beaconExistsSpecification(final Long projectId, final Long beaconId) {
-        return new Specification<Beacon>() {
-            public Predicate toPredicate(Root<Beacon> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                ArrayList<Predicate> predicates = new ArrayList<Predicate>();
-                // Project specification
-                predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
+        return (root, query, builder) -> {
+            ArrayList<Predicate> predicates = new ArrayList<Predicate>();
+            // Project specification
+            predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
 
-                // Beacon specification
-                predicates.add(builder.equal(root.get("beaconId"), beaconId));
+            // Beacon specification
+            predicates.add(builder.equal(root.get("beaconId"), beaconId));
 
-                return builder.and(predicates.toArray(new Predicate[predicates.size()]));
-            }
+            return builder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
 }

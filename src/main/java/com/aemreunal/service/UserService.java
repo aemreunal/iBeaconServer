@@ -139,31 +139,6 @@ public class UserService {
     }
 
     /**
-     * Checks whether the specified user exists and if so, authenticates this user. If the
-     * authentication fails either because the user is not found or the password is
-     * incorrect, 'null' will be returned.
-     *
-     * @param username
-     *     The username of the user to authenticate
-     * @param rawPassword
-     *     The raw password of the user to authenticate
-     *
-     * @return If authentication is successful, the user is returned
-     */
-    // TODO Should we specify whether the username or password was wrong or not? Would it cause a possible security breach?
-    public User authenticateAndFindUser(String username, String rawPassword) {
-        User user = findByUsername(username);
-        if (user == null) {
-            return null;
-        }
-        if (passwordEncoder.matches(rawPassword, user.getPassword())) {
-            return user;
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Deletes the user with the given username and deletes everything (projects, etc.)
      * associated with the user
      *

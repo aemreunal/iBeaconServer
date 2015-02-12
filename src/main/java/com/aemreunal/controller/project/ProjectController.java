@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.beacon.BeaconController;
-import com.aemreunal.controller.beaconGroup.BeaconGroupController;
+import com.aemreunal.controller.region.RegionController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Project;
 import com.aemreunal.service.ProjectService;
@@ -168,13 +168,13 @@ public class ProjectController {
         Long projectId = project.getProjectId();
         project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withSelfRel());
         project.getLinks().add(linkTo(methodOn(BeaconController.class).getBeaconsOfProject(username, projectId, "", null, null)).withRel("beacons"));
-        project.getLinks().add(linkTo(methodOn(BeaconGroupController.class).viewBeaconGroupsOfProject(username, projectId, "")).withRel("groups"));
+        project.getLinks().add(linkTo(methodOn(RegionController.class).viewRegionsOfProject(username, projectId, "")).withRel("regions"));
         project.getLinks().add(linkTo(methodOn(UserController.class).getUserByUsername(username)).withRel("owner"));
         return project;
     }
 
     /**
-     * Delete the specified project, along with all the beacons, beacon groups and
+     * Delete the specified project, along with all the beacons, regions and
      * scenarios in the project.
      * <p/>
      * To delete the project, confirmation must be supplied as a URI parameter, in the

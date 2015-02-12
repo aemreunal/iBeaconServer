@@ -141,28 +141,28 @@ public class Beacon extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Beacon 'group' attribute
+     * BEGIN: Beacon 'region' attribute
      */
-    @ManyToOne(targetEntity = BeaconGroup.class,
-               fetch = FetchType.LAZY,
-               optional = true)
+    @ManyToOne(targetEntity = Region.class,
+            fetch = FetchType.LAZY,
+            optional = true)
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
-    @JoinTable(name = "beacon_groups_to_beacons",
-               joinColumns = @JoinColumn(name = "beacon_id"),
-               inverseJoinColumns = @JoinColumn(name = "beacon_group_id"))
+    @JoinTable(name = "regions_to_beacons",
+            joinColumns = @JoinColumn(name = "beacon_id"),
+            inverseJoinColumns = @JoinColumn(name = "region_id"))
     @Access(AccessType.PROPERTY)
-    private BeaconGroup group;
+    private Region region;
 
-    public BeaconGroup getGroup() {
-        CoreConfig.initLazily(group);
-        return group;
+    public Region getRegion() {
+        CoreConfig.initLazily(region);
+        return region;
     }
 
-    public void setGroup(BeaconGroup group) {
-        this.group = group;
+    public void setRegion(Region region) {
+        this.region = region;
     }
     /*
-     * END: Beacon 'group' attribute
+     * END: Beacon 'region' attribute
      *------------------------------------------------------------
      */
 
@@ -171,12 +171,12 @@ public class Beacon extends ResourceSupport implements Serializable {
      * BEGIN: Beacon 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
-               fetch = FetchType.LAZY,
-               optional = false)
+            fetch = FetchType.LAZY,
+            optional = false)
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
     @JoinTable(name = "projects_to_beacons",
-               joinColumns = @JoinColumn(name = "beacon_id"),
-               inverseJoinColumns = @JoinColumn(name = "project_id"))
+            joinColumns = @JoinColumn(name = "beacon_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
     @Access(AccessType.PROPERTY)
     private Project project;
 
@@ -198,11 +198,11 @@ public class Beacon extends ResourceSupport implements Serializable {
      * BEGIN: Beacon 'scenario' attribute
      */
     @ManyToOne(targetEntity = Scenario.class,
-               fetch = FetchType.LAZY,
-               optional = false)
+            fetch = FetchType.LAZY,
+            optional = false)
     @JoinTable(name = "scenarios_to_beacons",
-               joinColumns = @JoinColumn(name = "beacon_id"),
-               inverseJoinColumns = @JoinColumn(name = "scenario_id"))
+            joinColumns = @JoinColumn(name = "beacon_id"),
+            inverseJoinColumns = @JoinColumn(name = "scenario_id"))
     @Access(AccessType.PROPERTY)
     private Scenario scenario;
 

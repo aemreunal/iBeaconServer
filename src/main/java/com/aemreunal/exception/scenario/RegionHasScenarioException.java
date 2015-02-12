@@ -1,4 +1,4 @@
-package com.aemreunal.exception.beaconGroup;
+package com.aemreunal.exception.scenario;
 
 /*
  ***************************
@@ -9,15 +9,16 @@ package com.aemreunal.exception.beaconGroup;
  * @author Ahmet Emre Ünal *
  * S001974                 *
  *                         *
- * aemreunal@gmail.com     *
+ * emre@aemreunal.com      *
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
  ***************************
  */
 
-public class BeaconHasGroupException extends IllegalStateException {
-    public BeaconHasGroupException(Long beaconId, Long beaconGroupId) {
-        super("The beacon with ID " + beaconId + " belongs to group with ID " + beaconGroupId + ". No modifications have been made.");
+public class RegionHasScenarioException extends IllegalStateException {
+
+    public RegionHasScenarioException(Long regionId, Long scenarioId) {
+        super("The region with ID " + regionId + " is part of scenario with ID " + scenarioId + ". No modifications have been made.");
     }
 }

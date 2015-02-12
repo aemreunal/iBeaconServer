@@ -38,18 +38,16 @@ public class ProjectSpecs {
      * @return The specification of the project
      */
     public static Specification<Project> projectWithSpecification(final User owner, final String projectName) {
-        return new Specification<Project>() {
-            public Predicate toPredicate(Root<Project> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                ArrayList<Predicate> predicates = new ArrayList<Predicate>();
+        return (root, query, builder) -> {
+            ArrayList<Predicate> predicates = new ArrayList<Predicate>();
 
-                predicates.add(builder.equal(root.get("owner").as(User.class), owner));
+            predicates.add(builder.equal(root.get("owner").as(User.class), owner));
 
-                if (!projectName.equals("")) {
-                    predicates.add(builder.like(builder.upper(root.get("name").as(String.class)), "%" + projectName.toUpperCase() + "%"));
-                }
-
-                return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+            if (!projectName.equals("")) {
+                predicates.add(builder.like(builder.upper(root.get("name").as(String.class)), "%" + projectName.toUpperCase() + "%"));
             }
+
+            return builder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
 

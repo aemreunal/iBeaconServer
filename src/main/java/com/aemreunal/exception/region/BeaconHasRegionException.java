@@ -1,4 +1,4 @@
-package com.aemreunal.exception.beaconGroup;
+package com.aemreunal.exception.region;
 
 /*
  ***************************
@@ -16,12 +16,8 @@ package com.aemreunal.exception.beaconGroup;
  ***************************
  */
 
-public class BeaconGroupNotFoundException extends NullPointerException  {
-    public BeaconGroupNotFoundException() {
-        super("The requested beacon group can not be found!");
-    }
-
-    public BeaconGroupNotFoundException(Long beaconGroupId) {
-        super("The requested beacon group with ID " + beaconGroupId + " can not be found!");
+public class BeaconHasRegionException extends IllegalStateException {
+    public BeaconHasRegionException(Long beaconId, Long regionId) {
+        super("The beacon with ID " + beaconId + " belongs to region with ID " + regionId + ". No modifications have been made.");
     }
 }

@@ -152,7 +152,7 @@ public class ProjectService {
     /**
      * Deletes the {@link com.aemreunal.domain.Project project} with the given ID and
      * deletes the {@link com.aemreunal.domain.Beacon beacons} and {@link
-     * com.aemreunal.domain.BeaconGroup beacon groups} in the project.
+     * com.aemreunal.domain.Region regions} in the project.
      *
      * @param username
      *     The username of the owner of the project

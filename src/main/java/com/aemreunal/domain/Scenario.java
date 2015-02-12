@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "scenarios")
 @ResponseBody
-@JsonIgnoreProperties(value = { "beacons", "project", "beaconGroups" })
+@JsonIgnoreProperties(value = { "beacons", "project", "regions" })
 public class Scenario extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH          = 100;
     public static final int DESCRIPTION_MAX_LENGTH   = 1000;
@@ -152,14 +152,6 @@ public class Scenario extends ResourceSupport implements Serializable {
     public void setBeacons(Set<Beacon> beacons) {
         this.beacons = beacons;
     }
-
-    public void addBeacon(Beacon beacon) {
-        getBeacons().add(beacon);
-    }
-
-    public void removeBeacon(Beacon beacon) {
-        getBeacons().remove(beacon);
-    }
     /*
      * END: Scenario 'beacons list' attribute
      *------------------------------------------------------------
@@ -167,33 +159,25 @@ public class Scenario extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Scenario 'beacon groups list' attribute
+     * BEGIN: Scenario 'regions list' attribute
      */
-    @OneToMany(targetEntity = BeaconGroup.class,
-               mappedBy = "scenario",
-               fetch = FetchType.LAZY)
-    @OrderBy(value = "beaconGroupId")
+    @OneToMany(targetEntity = Region.class,
+            mappedBy = "scenario",
+            fetch = FetchType.LAZY)
+    @OrderBy(value = "regionId")
     @Access(AccessType.PROPERTY)
-    private Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
+    private Set<Region> regions = new LinkedHashSet<>();
 
-    public Set<BeaconGroup> getBeaconGroups() {
-        CoreConfig.initLazily(beaconGroups);
-        return beaconGroups;
+    public Set<Region> getRegions() {
+        CoreConfig.initLazily(regions);
+        return regions;
     }
 
-    public void setBeaconGroups(Set<BeaconGroup> beaconGroups) {
-        this.beaconGroups = beaconGroups;
-    }
-
-    public void addBeaconGroup(BeaconGroup beaconGroup) {
-        getBeaconGroups().add(beaconGroup);
-    }
-
-    public void removeBeaconGroup(BeaconGroup beaconGroup) {
-        getBeaconGroups().remove(beaconGroup);
+    public void setRegions(Set<Region> regions) {
+        this.regions = regions;
     }
     /*
-     * END: Scenario 'beacon groups list' attribute
+     * END: Scenario 'regions list' attribute
      *------------------------------------------------------------
      */
 

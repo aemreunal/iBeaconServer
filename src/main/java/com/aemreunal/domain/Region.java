@@ -28,39 +28,39 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 
 @Entity
-@Table(name = "beacon_groups")
+@Table(name = "regions")
 @ResponseBody
 @JsonIgnoreProperties(value = { "beacons", "project" })
-public class BeaconGroup extends ResourceSupport implements Serializable {
+public class Region extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Beacon group 'ID' attribute
+     * BEGIN: Region 'ID' attribute
      */
     @Id
-    @Column(name = "beacon_group_id")
+    @Column(name = "region_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     @OrderColumn
     @Access(AccessType.PROPERTY)
-    private Long beaconGroupId;
+    private Long regionId;
 
-    public Long getBeaconGroupId() {
-        return beaconGroupId;
+    public Long getRegionId() {
+        return regionId;
     }
 
-    public void setBeaconGroupId(Long beaconGroupId) {
-        this.beaconGroupId = beaconGroupId;
+    public void setRegionId(Long regionId) {
+        this.regionId = regionId;
     }
     /*
-     * END: Beacon group 'ID' attribute
+     * END: Region 'ID' attribute
      *------------------------------------------------------------
      */
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Beacon group 'name' attribute
+     * BEGIN: Region 'name' attribute
      */
     @Column(name = "name", nullable = false, length = NAME_MAX_LENGTH)
     @Size(min = 1, max = NAME_MAX_LENGTH)
@@ -75,13 +75,13 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
         this.name = name;
     }
     /*
-     * END: Beacon group 'name' attribute
+     * END: Region 'name' attribute
      *------------------------------------------------------------
      */
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Beacon group 'description' attribute
+     * BEGIN: Region 'description' attribute
      */
     @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
     @Size(max = DESCRIPTION_MAX_LENGTH)
@@ -96,33 +96,33 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
         this.description = description;
     }
     /*
-     * END: Beacon group 'description' attribute
+     * END: Region 'description' attribute
      *------------------------------------------------------------
      */
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Beacon group 'beacon list' attribute
+     * BEGIN: Region 'beacon list' attribute
      */
 
    /*
     *
-    * Currently, Beacon is the owner of its relationship to BeaconGroup.
+    * Currently, Beacon is the owner of its relationship to Region.
     * ManyToOne are (almost) always the owner side of a bidirectional relationship in the JPA spec
     *
-    * Should Beacon even know/care about which group(s) it belongs to?
+    * Should Beacon even know/care about which region(s) it belongs to?
     *
     * Correct mapping: 2.2.5.3.1.1. Bidirectional
     * http://docs.jboss.org/hibernate/stable/annotations/reference/en/html/entity.html
     *
-    @JoinTable(name="beacon_group_members",
-               joinColumns = @JoinColumn(name="beacon_group_id"),
+    @JoinTable(name="region_members",
+               joinColumns = @JoinColumn(name="region_id"),
                inverseJoinColumns = @JoinColumn(name="beacon_id")
     )
     // TODO:XNYLXIWD determine who should own this relationship
     */
     @OneToMany(targetEntity = Beacon.class,
-               mappedBy = "group",
+               mappedBy = "region",
                fetch = FetchType.LAZY)
     @Access(AccessType.PROPERTY)
     // TODO @JsonIgnoreProperties(value = {})
@@ -145,20 +145,19 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
         getBeacons().remove(beacon);
     }
     /*
-     * END: Beacon group 'beacon list' attribute
+     * END: Region 'beacon list' attribute
      *------------------------------------------------------------
      */
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Beacon group 'designated beacons' attribute
+     * BEGIN: Region 'designated beacons' attribute
      */
 
     @OneToMany(targetEntity = Beacon.class,
-//               mappedBy = "group",
                fetch = FetchType.LAZY)
-    @JoinTable(name = "designated_beacons_of_group",
-            joinColumns = @JoinColumn(name = "beacon_group_id"),
+    @JoinTable(name = "designated_beacons_of_region",
+            joinColumns = @JoinColumn(name = "region_id"),
             inverseJoinColumns = @JoinColumn(name = "beacon_id"))
     @Access(AccessType.PROPERTY)
     private Set<Beacon> designatedBeacons = new LinkedHashSet<Beacon>();
@@ -180,20 +179,20 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
         getDesignatedBeacons().remove(beacon);
     }
     /*
-     * END: Beacon group 'designated beacons' attribute
+     * END: Region 'designated beacons' attribute
      *------------------------------------------------------------
      */
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Beacon group 'project' attribute
+     * BEGIN: Region 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
                optional = false,
                fetch = FetchType.LAZY)
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
-    @JoinTable(name = "projects_to_beacon_groups",
-               joinColumns = @JoinColumn(name = "beacon_group_id"),
+    @JoinTable(name = "projects_to_regions",
+               joinColumns = @JoinColumn(name = "region_id"),
                inverseJoinColumns = @JoinColumn(name = "project_id"))
     @Access(AccessType.PROPERTY)
     private Project project;
@@ -207,19 +206,19 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
         this.project = project;
     }
     /*
-     * END: Beacon group 'project' attribute
+     * END: Region 'project' attribute
      *------------------------------------------------------------
      */
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Beacon group 'scenario' attribute
+     * BEGIN: Region 'scenario' attribute
      */
     @ManyToOne(targetEntity = Scenario.class,
                fetch = FetchType.LAZY,
                optional = false)
-    @JoinTable(name = "scenarios_to_beacon_groups",
-               joinColumns = @JoinColumn(name = "beacon_group_id"),
+    @JoinTable(name = "scenarios_to_regions",
+               joinColumns = @JoinColumn(name = "region_id"),
                inverseJoinColumns = @JoinColumn(name = "scenario_id"))
     @Access(AccessType.PROPERTY)
     private Scenario scenario;
@@ -233,14 +232,14 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
         this.scenario = scenario;
     }
     /*
-     * END: Beacon group 'scenario' attribute
+     * END: Region 'scenario' attribute
      *------------------------------------------------------------
      */
 
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Beacon group 'creationDate' attribute
+     * BEGIN: Region 'creationDate' attribute
      */
     @Column(name = "creation_date", nullable = false)
     @Access(AccessType.PROPERTY)
@@ -255,7 +254,7 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
     }
 
     /*
-     * END: Beacon group 'creationDate' attribute
+     * END: Region 'creationDate' attribute
      *------------------------------------------------------------
      */
 
@@ -269,10 +268,10 @@ public class BeaconGroup extends ResourceSupport implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof BeaconGroup)) {
+        if (!(obj instanceof Region)) {
             return false;
         } else {
-            return ((BeaconGroup) obj).getBeaconGroupId().equals(this.getBeaconGroupId());
+            return ((Region) obj).getRegionId().equals(this.getRegionId());
         }
     }
 }

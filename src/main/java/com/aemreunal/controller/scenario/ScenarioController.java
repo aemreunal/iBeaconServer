@@ -30,7 +30,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.project.ProjectController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
-import com.aemreunal.domain.BeaconGroup;
+import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.scenario.*;
 import com.aemreunal.service.ScenarioService;
@@ -95,7 +95,7 @@ public class ScenarioController {
                                                       @PathVariable Long projectId,
                                                       @PathVariable Long scenarioId,
                                                       @RequestParam(value = "beaconId", required = true) Long beaconId)
-    throws BeaconHasScenarioException, BeaconWithGroupScenarioException {
+    throws BeaconHasScenarioException, BeaconWithRegionScenarioException {
         Beacon beacon = scenarioService.addBeaconToScenario(username, projectId, scenarioId, beaconId);
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
@@ -105,30 +105,30 @@ public class ScenarioController {
                                                            @PathVariable Long projectId,
                                                            @PathVariable Long scenarioId,
                                                            @RequestParam(value = "beaconId", required = true) Long beaconId)
-    throws BeaconDoesntHaveScenarioException, BeaconHasScenarioException, BeaconWithGroupScenarioException {
+    throws BeaconDoesNotHaveScenarioException, BeaconHasScenarioException, BeaconWithRegionScenarioException {
         Beacon beacon = scenarioService.removeBeaconFromScenario(username, projectId, scenarioId, beaconId);
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
 
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.SCENARIO_ADD_BEACONGROUP_MAPPING, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<BeaconGroup> addBeaconGroupToScenario(@PathVariable String username,
-                                                                @PathVariable Long projectId,
-                                                                @PathVariable Long scenarioId,
-                                                                @RequestParam(value = "beaconGroupId", required = true) Long beaconGroupId)
-    throws BeaconGroupHasScenarioException {
-        BeaconGroup beaconGroup = scenarioService.addBeaconGroupToScenario(username, projectId, scenarioId, beaconGroupId);
-        return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.SCENARIO_ADD_REGION_MAPPING, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Region> addRegionToScenario(@PathVariable String username,
+                                                      @PathVariable Long projectId,
+                                                      @PathVariable Long scenarioId,
+                                                      @RequestParam(value = "regionId", required = true) Long regionId)
+    throws RegionHasScenarioException {
+        Region region = scenarioService.addRegionToScenario(username, projectId, scenarioId, regionId);
+        return new ResponseEntity<Region>(region, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_REMOVE_BEACONGROUP_MAPPING, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<BeaconGroup> removeBeaconGroupFromScenario(@PathVariable String username,
-                                                                     @PathVariable Long projectId,
-                                                                     @PathVariable Long scenarioId,
-                                                                     @RequestParam(value = "beaconGroupId", required = true) Long beaconGroupId)
-    throws BeaconGroupHasScenarioException, BeaconGroupDoesntHaveScenarioException {
-        BeaconGroup beaconGroup = scenarioService.removeBeaconGroupFromScenario(username, projectId, scenarioId, beaconGroupId);
-        return new ResponseEntity<BeaconGroup>(beaconGroup, HttpStatus.OK);
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.SCENARIO_REMOVE_REGION_MAPPING, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Region> removeRegionFromScenario(@PathVariable String username,
+                                                           @PathVariable Long projectId,
+                                                           @PathVariable Long scenarioId,
+                                                           @RequestParam(value = "regionId", required = true) Long regionId)
+    throws RegionHasScenarioException, RegionDoesNotHaveScenarioException {
+        Region region = scenarioService.removeRegionFromScenario(username, projectId, scenarioId, regionId);
+        return new ResponseEntity<Region>(region, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.SCENARIO_MEMBER_BEACONS_MAPPING, produces = "application/json;charset=UTF-8")
@@ -139,12 +139,12 @@ public class ScenarioController {
         return new ResponseEntity<Set<Beacon>>(beacons, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.SCENARIO_MEMBER_BEACONGROUPS_MAPPING, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Set<BeaconGroup>> getMemberBeaconGroups(@PathVariable String username,
-                                                                  @PathVariable Long projectId,
-                                                                  @PathVariable Long scenarioId) {
-        Set<BeaconGroup> beaconGroups = scenarioService.getBeaconGroupsInScenario(username, projectId, scenarioId);
-        return new ResponseEntity<Set<BeaconGroup>>(beaconGroups, HttpStatus.OK);
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.SCENARIO_MEMBER_REGION_MAPPING, produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Set<Region>> getMemberRegions(@PathVariable String username,
+                                                        @PathVariable Long projectId,
+                                                        @PathVariable Long scenarioId) {
+        Set<Region> regions = scenarioService.getRegionsInScenario(username, projectId, scenarioId);
+        return new ResponseEntity<Set<Region>>(regions, HttpStatus.OK);
 
     }
 

@@ -16,9 +16,9 @@ package com.aemreunal.exception.scenario;
  ***************************
  */
 
-public class BeaconGroupHasScenarioException extends IllegalStateException {
+public class RegionDoesNotHaveScenarioException extends IllegalStateException {
 
-    public BeaconGroupHasScenarioException(Long beaconGroupId, Long scenarioId) {
-        super("The beacon group with ID " + beaconGroupId + " is part of scenario with ID " + scenarioId + ". No modifications have been made.");
+    public RegionDoesNotHaveScenarioException(Long regionId, Long scenarioId) {
+        super("The region with ID " + regionId + " is not part of scenario with ID " + scenarioId + ". No modifications have been made.");
     }
 }

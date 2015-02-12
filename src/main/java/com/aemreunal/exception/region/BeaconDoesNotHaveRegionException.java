@@ -1,4 +1,4 @@
-package com.aemreunal.exception.beaconGroup;
+package com.aemreunal.exception.region;
 
 /*
  ***************************
@@ -16,8 +16,8 @@ package com.aemreunal.exception.beaconGroup;
  ***************************
  */
 
-public class BeaconDoesntHaveGroupException extends IllegalStateException {
-    public BeaconDoesntHaveGroupException(Long beaconId, Long beaconGroupId) {
-        super("The beacon with ID " + beaconId + " doesn't belong to the group with ID " + beaconGroupId + ". No modifications have been made.");
+public class BeaconDoesNotHaveRegionException extends IllegalStateException {
+    public BeaconDoesNotHaveRegionException(Long beaconId, Long regionId) {
+        super("The beacon with ID " + beaconId + " doesn't belong to the region with ID " + regionId + ". No modifications have been made.");
     }
 }

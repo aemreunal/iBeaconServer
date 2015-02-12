@@ -28,7 +28,7 @@ public class ProjectInfo {
     public String     name          = "";
     public String     description   = "";
     public List<Long> beacons       = new ArrayList<>();
-    public List<Long> beaconGroups  = new ArrayList<>();
+    public List<Long> regions       = new ArrayList<>();
     public List<Long> scenarios     = new ArrayList<>();
 
     public ProjectInfo(String ownerUsername, Long projectId, String secret, String name, String description) {
@@ -65,12 +65,12 @@ public class ProjectInfo {
         beacons.remove(beaconId);
     }
 
-    public void addBeaconGroup(Long beaconGroupId) {
-        beacons.add(beaconGroupId);
+    public void addRegion(Long regionId) {
+        beacons.add(regionId);
     }
 
-    public void removeBeaconGroup(Long beaconGroupId) {
-        beacons.remove(beaconGroupId);
+    public void removeregion(Long regionId) {
+        beacons.remove(regionId);
     }
 
     public void addScenario(Long scenarioId) {
@@ -90,7 +90,7 @@ public class ProjectInfo {
         info += "\tName: \'" + name + "\'\n";
         info += "\tDescription: \'" + description + "\'\n";
         info += "\tBeacons: " + beacons + "\n";
-        info += "\tBeacon Groups: " + beaconGroups + "\n";
+        info += "\tRegions: " + regions + "\n";
         info += "\tScenarios: " + scenarios + "\n";
         return info;
     }

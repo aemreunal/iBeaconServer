@@ -42,7 +42,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "projects")
 @ResponseBody
-@JsonIgnoreProperties(value = { "beacons", "beaconGroups", "scenarios", "projectSecret", "owner" })
+@JsonIgnoreProperties(value = { "beacons", "regions", "scenarios", "projectSecret", "owner" })
 public class Project extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -198,30 +198,25 @@ public class Project extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Project 'beacon groups list' attribute
+     * BEGIN: Project 'region list' attribute
      */
-    @OneToMany(targetEntity = BeaconGroup.class,
-               mappedBy = "project",
-               orphanRemoval = true,
-               fetch = FetchType.LAZY)
-    @OrderBy(value = "beaconGroupId")
-    private Set<BeaconGroup> beaconGroups = new LinkedHashSet<>();
+    @OneToMany(targetEntity = Region.class,
+            mappedBy = "project",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @OrderBy(value = "regionId")
+    private Set<Region> regions = new LinkedHashSet<>();
 
-    public Set<BeaconGroup> getBeaconGroups() {
-        CoreConfig.initLazily(beaconGroups);
-        return beaconGroups;
+    public Set<Region> getRegions() {
+        CoreConfig.initLazily(regions);
+        return regions;
     }
 
-    public void setBeaconGroups(Set<BeaconGroup> beaconGroups) {
-        this.beaconGroups = beaconGroups;
-    }
-
-    public void addBeaconGroup(BeaconGroup beaconGroup) {
-        CoreConfig.initLazily(beaconGroups);
-        this.beaconGroups.add(beaconGroup);
+    public void setRegions(Set<Region> regions) {
+        this.regions = regions;
     }
     /*
-     * END: Project 'beacon groups list' attribute
+     * END: Project 'region list' attribute
      *------------------------------------------------------------
      */
 
@@ -230,9 +225,9 @@ public class Project extends ResourceSupport implements Serializable {
      * BEGIN: Project 'scenarios list' attribute
      */
     @OneToMany(targetEntity = Scenario.class,
-               mappedBy = "project",
-               orphanRemoval = true,
-               fetch = FetchType.LAZY)
+            mappedBy = "project",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
     @OrderBy(value = "scenarioId")
     private Set<Scenario> scenarios = new LinkedHashSet<>();
 
@@ -275,12 +270,6 @@ public class Project extends ResourceSupport implements Serializable {
 
     @PrePersist
     private void setInitialProperties() {
-        /*
-        // Generate project secret key
-        if (projectSecret.equals("")) {
-            this.setProjectSecret(UUID.randomUUID().toString());
-        }
-        */
         // Set project creation date
         if (creationDate == null) {
             setCreationDate(new Date());

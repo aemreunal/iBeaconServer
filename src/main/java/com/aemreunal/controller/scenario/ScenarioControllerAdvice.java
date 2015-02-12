@@ -50,25 +50,16 @@ public class ScenarioControllerAdvice {
     }
 
 
-    @ExceptionHandler(BeaconDoesntHaveScenarioException.class)
-    public ResponseEntity<JSONObject> beaconDoesntHaveScenarioExceptionHandler(BeaconDoesntHaveScenarioException ex) {
+    @ExceptionHandler(BeaconDoesNotHaveScenarioException.class)
+    public ResponseEntity<JSONObject> beaconDoesNotHaveScenarioExceptionHandler(BeaconDoesNotHaveScenarioException ex) {
         JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
                                                    .add("error", ex.getLocalizedMessage())
                                                    .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(BeaconGroupHasScenarioException.class)
-    public ResponseEntity<JSONObject> beaconGroupHasScenarioExceptionHandler(BeaconGroupHasScenarioException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
-        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
-    }
-
-
-    @ExceptionHandler(BeaconGroupDoesntHaveScenarioException.class)
-    public ResponseEntity<JSONObject> beaconGroupDoesntHaveScenarioExceptionHandler(BeaconGroupDoesntHaveScenarioException ex) {
+    @ExceptionHandler(RegionHasScenarioException.class)
+    public ResponseEntity<JSONObject> regionHasScenarioExceptionHandler(RegionHasScenarioException ex) {
         JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
                                                    .add("error", ex.getLocalizedMessage())
                                                    .build();
@@ -76,8 +67,17 @@ public class ScenarioControllerAdvice {
     }
 
 
-    @ExceptionHandler(BeaconWithGroupScenarioException.class)
-    public ResponseEntity<JSONObject> beaconWithGroupScenarioExceptionHandler(BeaconWithGroupScenarioException ex) {
+    @ExceptionHandler(RegionDoesNotHaveScenarioException.class)
+    public ResponseEntity<JSONObject> regionDoesNotHaveScenarioExceptionHandler(RegionDoesNotHaveScenarioException ex) {
+        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
+        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(BeaconWithRegionScenarioException.class)
+    public ResponseEntity<JSONObject> beaconWithRegionScenarioExceptionHandler(BeaconWithRegionScenarioException ex) {
         JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
                                                    .add("error", ex.getLocalizedMessage())
                                                    .build();

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.beaconGroup.BeaconGroupController;
+import com.aemreunal.controller.region.RegionController;
 import com.aemreunal.controller.project.ProjectController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
@@ -45,9 +45,9 @@ public class BeaconController {
      * Get all the {@link com.aemreunal.domain.Beacon beacons} that belong to the
      * specified {@link com.aemreunal.domain.Project project}. Returns an empty list if no
      * beacons are present in the project.
-     * <p/>
+     * <p>
      * {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
-     * <p/>
+     * <p>
      * Optionally, certain parameters may be specified to get a refined search. These
      * paramters are: <li><b>UUID:</b> The UUID constraint. Can be specified with the
      * "{@code?uuid=...}" URI parameter. Any continuous part of thes UUID attribute may be
@@ -57,15 +57,15 @@ public class BeaconController {
      * parameter.</li>
      *
      * @param username
-     *     The username of the owner of the project
+     *         The username of the owner of the project
      * @param projectId
-     *     The ID of the project
+     *         The ID of the project
      * @param uuid
-     *     (Optional) The UUID constraint for the beacon search
+     *         (Optional) The UUID constraint for the beacon search
      * @param major
-     *     (Optional) The Major constraint for the beacon search
+     *         (Optional) The Major constraint for the beacon search
      * @param minor
-     *     (Optional) The Minor constraint for the beacon search
+     *         (Optional) The Minor constraint for the beacon search
      *
      * @return If no optional parameters are specified, returns all the beacons that
      * belong to a project (an empty list if the project has no beacons). If optional
@@ -99,11 +99,11 @@ public class BeaconController {
      * Get the beacon with the specified ID
      *
      * @param username
-     *     The username of the owner of the project
+     *         The username of the owner of the project
      * @param projectId
-     *     The ID of the project
+     *         The ID of the project
      * @param beaconId
-     *     The ID of the beacon
+     *         The ID of the beacon
      *
      * @return The beacon
      */
@@ -120,28 +120,24 @@ public class BeaconController {
         beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).getBeacon(username, projectId, beacon.getBeaconId())).withSelfRel());
         beacon.add(ControllerLinkBuilder.linkTo(methodOn(UserController.class).getUserByUsername(username)).withRel("owner"));
         beacon.add(ControllerLinkBuilder.linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withRel("project"));
-        if (beacon.getGroup() != null) {
-            beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconGroupController.class).viewBeaconGroup(username, projectId, beacon.getGroup().getBeaconGroupId())).withRel("group"));
+        if (beacon.getRegion() != null) {
+            beacon.add(ControllerLinkBuilder.linkTo(methodOn(RegionController.class).viewRegion(username, projectId, beacon.getRegion().getRegionId())).withRel("region"));
         }
+        // TODO add scenario link
     }
 
     /**
      * Create a new beacon in project
-     * <p/>
-     * Create JSON:<br/>
-     * {<br/>
-     *     "uuid":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",<br/>
-     *     "major":"1",<br/>
-     *     "minor":"2",<br/>
-     *     "description":"Test beacon"<br/>
-     * }
+     * <p>
+     * Create JSON:<br/> {<br/> "uuid":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",<br/>
+     * "major":"1",<br/> "minor":"2",<br/> "description":"Test beacon"<br/> }
      *
      * @param projectId
-     *     The ID of the project to create the beacon in
+     *         The ID of the project to create the beacon in
      * @param beaconJson
-     *     The beacon as JSON object
+     *         The beacon as JSON object
      * @param builder
-     *     The URI builder for post-creation redirect
+     *         The URI builder for post-creation redirect
      *
      * @return The created beacon
      */
@@ -154,9 +150,9 @@ public class BeaconController {
 
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
-                                   "\' major = \'" + savedBeacon.getMajor() +
-                                   "\' minor = \'" + savedBeacon.getMinor() +
-                                   "\' in project with ID = \'" + projectId + "\'");
+                                       "\' major = \'" + savedBeacon.getMajor() +
+                                       "\' minor = \'" + savedBeacon.getMinor() +
+                                       "\' in project with ID = \'" + projectId + "\'");
         }
         addLinks(username, projectId, savedBeacon);
         return buildCreateResponse(username, builder, savedBeacon);
@@ -166,23 +162,23 @@ public class BeaconController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path(GlobalSettings.BEACON_SPECIFIC_MAPPING)
                                    .buildAndExpand(
-                                       username,
-                                       savedBeacon.getProject().getProjectId().toString(),
-                                       savedBeacon.getBeaconId().toString())
+                                           username,
+                                           savedBeacon.getProject().getProjectId().toString(),
+                                           savedBeacon.getBeaconId().toString())
                                    .toUri());
         return new ResponseEntity<Beacon>(savedBeacon, headers, HttpStatus.CREATED);
     }
 
     /**
      * Delete the specified beacon
-     * <p/>
+     * <p>
      * To delete the beacon, confirmation must be supplied as a URI parameter, in the form
      * of "?confirm=yes". If not supplied, the beacon will not be deleted.
      *
      * @param projectId
-     *     The ID of the project
+     *         The ID of the project
      * @param beaconId
-     *     The ID of the beacon
+     *         The ID of the beacon
      *
      * @return The status of deletion action
      */
