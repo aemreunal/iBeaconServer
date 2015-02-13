@@ -114,8 +114,24 @@ public class ScenarioService {
             System.out.println("Deleting scenario with ID = \'" + scenarioId + "\'");
         }
         Scenario scenario = this.getScenario(username, projectId, scenarioId);
+        removeAllRegionsFromScenario(username, projectId, scenario);
+        removeAllBeaconsFromScenario(username, projectId, scenario);
         scenarioRepo.delete(scenario);
         return scenario;
+    }
+
+    private void removeAllRegionsFromScenario(String username, Long projectId, Scenario scenario) {
+        for (Region region : scenario.getRegions()) {
+            region.setScenario(null);
+            regionService.save(username, projectId, region);
+        }
+    }
+
+    private void removeAllBeaconsFromScenario(String username, Long projectId, Scenario scenario) {
+        for (Beacon beacon : scenario.getBeacons()) {
+            beacon.setScenario(null);
+            beaconService.save(username, projectId, beacon);
+        }
     }
 
     public Beacon addBeaconToScenario(String username, Long projectId, Long scenarioId, Long beaconId)
