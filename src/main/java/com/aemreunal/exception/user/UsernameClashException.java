@@ -17,7 +17,6 @@ package com.aemreunal.exception.user;
  */
 
 public class UsernameClashException extends IllegalArgumentException {
-
     public UsernameClashException(String causingUsername) {
         super("Username \'" + causingUsername + "\' is already taken. Please choose another username." );
     }

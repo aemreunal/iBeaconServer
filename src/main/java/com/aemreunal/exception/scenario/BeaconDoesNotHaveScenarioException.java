@@ -17,7 +17,6 @@ package com.aemreunal.exception.scenario;
  */
 
 public class BeaconDoesNotHaveScenarioException extends NullPointerException {
-
     public BeaconDoesNotHaveScenarioException(Long beaconId, Long scenarioId) {
         super("The beacon with ID " + beaconId + " is not part of scenario with ID " + scenarioId + ". No modifications have been made.");
     }

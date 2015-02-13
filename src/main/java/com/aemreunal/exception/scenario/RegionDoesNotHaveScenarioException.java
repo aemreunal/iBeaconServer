@@ -17,7 +17,6 @@ package com.aemreunal.exception.scenario;
  */
 
 public class RegionDoesNotHaveScenarioException extends IllegalStateException {
-
     public RegionDoesNotHaveScenarioException(Long regionId, Long scenarioId) {
         super("The region with ID " + regionId + " is not part of scenario with ID " + scenarioId + ". No modifications have been made.");
     }

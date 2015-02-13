@@ -17,7 +17,6 @@ package com.aemreunal.exception.scenario;
  */
 
 public class BeaconHasScenarioException extends IllegalStateException {
-
     public BeaconHasScenarioException(Long beaconId, Long scenarioId) {
         super("The beacon with ID " + beaconId + " is part of scenario with ID " + scenarioId + ". No modifications have been made.");
     }

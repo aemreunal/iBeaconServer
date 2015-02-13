@@ -17,12 +17,7 @@ package com.aemreunal.exception.scenario;
  */
 
 public class ScenarioNotFoundException  extends NullPointerException {
-    public ScenarioNotFoundException() {
-        super("The requested Scenario can not be found!");
-    }
-
     public ScenarioNotFoundException(Long scenarioId) {
         super("The requested Scenario with ID " + scenarioId + " can not be found!");
     }
-
 }
