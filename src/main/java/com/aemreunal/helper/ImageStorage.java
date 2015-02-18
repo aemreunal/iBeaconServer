@@ -16,10 +16,7 @@ package com.aemreunal.helper;
  ***************************
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.UUID;
 import com.aemreunal.config.GlobalSettings;
@@ -130,6 +127,71 @@ public class ImageStorage {
         return true;
     }
 
+    /**
+     * Loads the specified image file and returns the bytes of the image file in a
+     * <code>byte[]</code>.
+     *
+     * @param username
+     *         The username of whoever is loading the image.
+     * @param projectId
+     *         The ID of the project which the region (the image belongs to) is a part
+     *         of.
+     * @param regionId
+     *         The ID of the region of the image.
+     * @param imageFileName
+     *         The name of the image file to be loaded.
+     *
+     * @return A <code>byte[]</code> if the image file has been successfully loaded and
+     * read, <code>null</code> otherwise.
+     */
+    public byte[] loadImage(String username, String projectId, String regionId, String imageFileName) {
+        String filePath = getFilePath(username, projectId, regionId);
+        File imageFile = new File(filePath + imageFileName);
+        if (!imageFile.exists()) {
+            System.err.println("Image file does not exist!");
+            return null;
+        }
+        // Can safely cast from long to int, as image file will never exceed
+        // 2^32 bytes (Which would've used 64 bits of long).
+        byte[] imageAsBytes = new byte[(int) imageFile.length()];
+        if (!loadImageFromFile(imageFile, imageAsBytes)) {
+            System.err.println("Unable to load image file!");
+            return null;
+        }
+        return imageAsBytes;
+    }
+
+    private boolean loadImageFromFile(File imageFile, byte[] imageAsBytes) {
+        try {
+            FileInputStream stream = new FileInputStream(imageFile);
+            stream.read(imageAsBytes);
+            stream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Deletes the specified image file.
+     *
+     * @param username
+     *         The username of whoever is deleting the image.
+     * @param projectId
+     *         The ID of the project which the region (the image belongs to) is a part
+     *         of.
+     * @param regionId
+     *         The ID of the region of the image.
+     * @param imageFileName
+     *         The name of the image file to be deleted.
+     *
+     * @return <code>true</code> if image file has been successfully deleted,
+     * <code>false</code> otherwise.
+     */
     public boolean deleteImage(String username, String projectId, String regionId, String imageFileName) {
         String filePath = getFilePath(username, projectId, regionId);
         File imageFile = new File(filePath + imageFileName);
