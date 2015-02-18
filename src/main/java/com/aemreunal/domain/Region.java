@@ -105,21 +105,20 @@ public class Region extends ResourceSupport implements Serializable {
      * BEGIN: Region 'Map image' attribute
      */
 
-    @Column(name = "map_image_name", nullable = true, columnDefinition = "mediumblob")
-    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "map_image_name", nullable = true)
     @Access(AccessType.PROPERTY)
-    private Byte[] mapImage;
+    private String mapImage;
 
-    public Byte[] getMapImage() {
+    public String getMapImage() {
         return mapImage;
     }
 
-    public void setMapImage(Byte[] mapImage) {
+    public void setMapImage(String mapImage) {
         this.mapImage = mapImage;
     }
 
     public boolean mapImageIsSet() {
-        return mapImage != null;
+        return getMapImage() != null && !getMapImage().isEmpty();
     }
 
     /*
