@@ -48,9 +48,9 @@ public class ProjectService {
      * owner of the project when the project is first created (saved/persisted).
      *
      * @param username
-     *     The username of the owner of the project
+     *         The username of the owner of the project
      * @param project
-     *     The project to save/update
+     *         The project to save/update
      *
      * @return The saved/updated project
      */
@@ -66,7 +66,7 @@ public class ProjectService {
 
     /**
      * Resets the project secret.
-     * <p/>
+     * <p>
      * Generates a new secret UUID, encodes it with BCrypt and stores it encoded but
      * returns the plaintext, so that it can be shown to the user.
      *
@@ -85,8 +85,8 @@ public class ProjectService {
      * {@link com.aemreunal.domain.User User} with the specified username.
      *
      * @param ownerUsername
-     *     The username of the {@link com.aemreunal.domain.User User} to find the projects
-     *     of
+     *         The username of the {@link com.aemreunal.domain.User User} to find the
+     *         projects of
      *
      * @return The list of projects that belong to the {@link com.aemreunal.domain.User
      * User} with the specified username
@@ -104,9 +104,9 @@ public class ProjectService {
      * Find projects conforming to specifications
      *
      * @param username
-     *     The username of the owner of the projects to search for
+     *         The username of the owner of the projects to search for
      * @param projectName
-     *     The project Name field constraint
+     *         The project Name field constraint
      *
      * @return The list of projects conforming to given constraints
      */
@@ -128,9 +128,9 @@ public class ProjectService {
      * Finds the project with the given ID
      *
      * @param username
-     *     The username of the owner of the project
+     *         The username of the owner of the project
      * @param projectId
-     *     The ID of the project to search for
+     *         The ID of the project to search for
      *
      * @return The project the given ID
      *
@@ -155,9 +155,9 @@ public class ProjectService {
      * com.aemreunal.domain.Region regions} in the project.
      *
      * @param username
-     *     The username of the owner of the project
+     *         The username of the owner of the project
      * @param projectId
-     *     The ID of the project to delete
+     *         The ID of the project to delete
      *
      * @return The deleted project
      */

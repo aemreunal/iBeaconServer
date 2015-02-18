@@ -17,10 +17,7 @@ package com.aemreunal.repository.beacon;
  */
 
 import java.util.ArrayList;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import com.aemreunal.domain.Beacon;
 
@@ -29,13 +26,13 @@ public class BeaconSpecs {
      * Creates the Beacon search specification from the given attributes
      *
      * @param projectId
-     *     The project ID to search in. Could be NULL for API queries.
+     *         The project ID to search in. Could be NULL for API queries.
      * @param uuid
-     *     The UUID attribute to search for
+     *         The UUID attribute to search for
      * @param major
-     *     The major attribute to search for
+     *         The major attribute to search for
      * @param minor
-     *     The minor attribute to search for
+     *         The minor attribute to search for
      *
      * @return The specification of the beacon
      */
@@ -70,9 +67,9 @@ public class BeaconSpecs {
      * Creates the 'Beacon exists' search specification from the given attributes
      *
      * @param projectId
-     *     The project ID to search in
+     *         The project ID to search in
      * @param beaconId
-     *     The ID of the beacon to find
+     *         The ID of the beacon to find
      *
      * @return The specification of the beacon
      */

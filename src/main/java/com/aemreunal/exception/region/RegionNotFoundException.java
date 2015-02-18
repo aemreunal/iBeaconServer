@@ -16,7 +16,7 @@ package com.aemreunal.exception.region;
  ***************************
  */
 
-public class RegionNotFoundException extends NullPointerException  {
+public class RegionNotFoundException extends NullPointerException {
     public RegionNotFoundException() {
         super("The requested region can not be found!");
     }

@@ -54,9 +54,9 @@ public class APIController {
 
     private void verifyQueryRequest(JSONObject beaconQueryJson) {
         if (!beaconQueryJson.containsKey("uuid") ||
-            !beaconQueryJson.containsKey("major") ||
-            !beaconQueryJson.containsKey("minor") ||
-            !beaconQueryJson.containsKey("secret")) {
+                !beaconQueryJson.containsKey("major") ||
+                !beaconQueryJson.containsKey("minor") ||
+                !beaconQueryJson.containsKey("secret")) {
             throw new MalformedRequestException();
         }
     }

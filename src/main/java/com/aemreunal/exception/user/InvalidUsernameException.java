@@ -16,7 +16,7 @@ package com.aemreunal.exception.user;
  ***************************
  */
 
-public class InvalidUsernameException extends IllegalArgumentException  {
+public class InvalidUsernameException extends IllegalArgumentException {
     public InvalidUsernameException(String causingUsername, String reason) {
         super("Username \'" + causingUsername + "\' is invalid! " + reason);
     }

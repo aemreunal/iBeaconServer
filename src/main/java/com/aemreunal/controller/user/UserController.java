@@ -40,13 +40,13 @@ public class UserController {
      * Get the user with the specified username.
      *
      * @param username
-     *     The username of the user
+     *         The username of the user
      *
      * @return The user
      */
     @RequestMapping(method = RequestMethod.GET,
-                    value = GlobalSettings.USER_USERNAME_MAPPING,
-                    produces = "application/json; charset=UTF-8")
+            value = GlobalSettings.USER_USERNAME_MAPPING,
+            produces = "application/json; charset=UTF-8")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username);
         return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -54,14 +54,14 @@ public class UserController {
 
     /**
      * Create a new user.
-     * <p/>
+     * <p>
      * User creation request JSON:<br/> {<br/> "username":"testuser12",<br/>
      * "password":"test_password"<br/>}
      *
      * @param userJson
-     *     The user as a JSON object
+     *         The user as a JSON object
      * @param builder
-     *     The URI builder for post-creation redirect
+     *         The URI builder for post-creation redirect
      *
      * @return The created project
      *
@@ -70,7 +70,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.USER_CREATE_MAPPING, produces = "application/json; charset=UTF-8")
     public ResponseEntity<User> createUser(@RequestBody JSONObject userJson,
                                            UriComponentsBuilder builder)
-        throws UsernameClashException, MalformedRequestException {
+            throws UsernameClashException, MalformedRequestException {
         verifyUserCreateJson(userJson);
         User savedUser = userService.save(new User(userJson));
         if (GlobalSettings.DEBUGGING) {
@@ -90,28 +90,28 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path(GlobalSettings.USER_SPECIFIC_MAPPING)
                                    .buildAndExpand(
-                                       savedUser.getUsername())
+                                           savedUser.getUsername())
                                    .toUri());
         return new ResponseEntity<User>(savedUser, headers, HttpStatus.CREATED);
     }
 
     /**
      * Delete the specified user, along with all the projects belonging to user.
-     * <p/>
+     * <p>
      * To delete the user, confirmation must be supplied as a URI parameter, in the form
      * of "?confirm=yes". If not supplied, the user will not be deleted.
      *
      * @param username
-     *     The username of the user to delete
+     *         The username of the user to delete
      * @param confirmation
-     *     The confirmation parameter
+     *         The confirmation parameter
      *
      * @return The status of the deletion action
      */
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.USER_USERNAME_MAPPING)
     public ResponseEntity<User> deleteUser(
-        @PathVariable String username,
-        @RequestParam(value = "confirm", required = true) String confirmation) {
+            @PathVariable String username,
+            @RequestParam(value = "confirm", required = true) String confirmation) {
         if (confirmation.toLowerCase().equals("yes")) {
             User user = userService.delete(username);
             return new ResponseEntity<User>(user, HttpStatus.OK);

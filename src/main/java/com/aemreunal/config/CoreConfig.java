@@ -41,6 +41,12 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 @EnableTransactionManagement
 @ComponentScan(basePackages = { "com.aemreunal" })
 public class CoreConfig {
+    public static void initLazily(Object proxy) {
+        if (!Hibernate.isInitialized(proxy)) {
+            Hibernate.initialize(proxy);
+        }
+    }
+
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
@@ -103,11 +109,5 @@ public class CoreConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(GlobalSettings.BCRYPT_LOG_FACTOR);
-    }
-
-    public static void initLazily(Object proxy) {
-        if(!Hibernate.isInitialized(proxy)) {
-            Hibernate.initialize(proxy);
-        }
     }
 }

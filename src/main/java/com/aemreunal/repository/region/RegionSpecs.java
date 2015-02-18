@@ -40,9 +40,9 @@ public class RegionSpecs {
      * Creates the 'region exists' search specification from the given attributes
      *
      * @param projectId
-     *     The project ID to search in
+     *         The project ID to search in
      * @param regionId
-     *     The ID of the region to find
+     *         The ID of the region to find
      *
      * @return The specification of the region
      */

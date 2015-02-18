@@ -49,7 +49,7 @@ public class UserUrlFilter extends OncePerRequestFilter {
         }
         authorizationString = authorizationString.substring("Basic".length()).trim();
         String credentials = new String(Base64.decode(authorizationString.getBytes()), Charset.forName("UTF-8"));
-        return (credentials.split(":",2))[0];
+        return (credentials.split(":", 2))[0];
     }
 
     private String getUriUsername(String requestURI) {

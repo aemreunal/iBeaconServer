@@ -82,9 +82,9 @@ public class ScenarioController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path(GlobalSettings.SCENARIO_SPECIFIC_MAPPING)
                                    .buildAndExpand(
-                                       username,
-                                       savedScenario.getProject().getProjectId(),
-                                       savedScenario.getScenarioId()
+                                           username,
+                                           savedScenario.getProject().getProjectId(),
+                                           savedScenario.getScenarioId()
                                    )
                                    .toUri());
         return new ResponseEntity<Scenario>(savedScenario, headers, HttpStatus.CREATED);

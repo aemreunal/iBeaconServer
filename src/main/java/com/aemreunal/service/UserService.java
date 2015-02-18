@@ -41,7 +41,7 @@ public class UserService {
      * Saves/updates the given user
      *
      * @param user
-     *     The user to save/update
+     *         The user to save/update
      *
      * @return The saved/updated user
      */
@@ -64,17 +64,17 @@ public class UserService {
     /**
      * Checks whether the specified username is correct (whether it already exists,
      * whether it contains spaces or not, etc.).
-     * <p/>
+     * <p>
      * Usernames must: <li>Be less than {@value com.aemreunal.domain.User#USERNAME_MAX_LENGTH}
      * characters</li> <li>Start with a letter</li> <li>Not have any spaces</li> <li>Not
      * have any non-ASCII characters</li> <li>Not be the same as any existing
      * username</li>
      *
      * @param username
-     *     The username to check
+     *         The username to check
      *
      * @throws InvalidUsernameException
-     *     When the username is invalid due to reasons stated above
+     *         When the username is invalid due to reasons stated above
      */
     private void verifyUsernameCorrectness(String username) throws InvalidUsernameException {
         if (username.length() > User.USERNAME_MAX_LENGTH) {
@@ -103,10 +103,10 @@ public class UserService {
      * Check whether the given username is already taken or not
      *
      * @param username
-     *     The username of the user to check
+     *         The username of the user to check
      *
      * @throws UsernameClashException
-     *     When the username already exists
+     *         When the username already exists
      */
     public void verifyUsernameUniqueness(String username) throws UsernameClashException {
         if (GlobalSettings.DEBUGGING) {
@@ -122,7 +122,7 @@ public class UserService {
      * Find the user with the given username
      *
      * @param username
-     *     The username of the user to search for
+     *         The username of the user to search for
      *
      * @return The user with the given username
      */
@@ -143,7 +143,7 @@ public class UserService {
      * associated with the user
      *
      * @param username
-     *     The username of the user to delete
+     *         The username of the user to delete
      *
      * @return Whether the user was deleted or not
      */

@@ -1,6 +1,5 @@
 package com.aemreunal.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
@@ -170,8 +169,7 @@ public class BeaconService {
      */
     public List<Beacon> getBeaconsOfProject(String username, Long projectId) {
         Project project = projectService.findProjectById(username, projectId);
-        List<Beacon> beacons = project.getBeacons().stream().collect(Collectors.toList());
-        return beacons;
+        return project.getBeacons().stream().collect(Collectors.toList());
     }
 
     public Beacon delete(String username, Long projectId, Long beaconId) {

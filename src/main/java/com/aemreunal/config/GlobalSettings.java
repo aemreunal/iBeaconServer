@@ -86,12 +86,12 @@ public class GlobalSettings {
     /**
      * These strings provide the image storage locations.
      */
-    public static final String USER_HOME_FOLDER_PATH = System.getProperty("user.home");
-    public static final String ROOT_STORAGE_FOLDER_DIRECTORY_NAME = "ibeacon_server_storage";
+    public static final String USER_HOME_FOLDER_PATH               = System.getProperty("user.home");
+    public static final String ROOT_STORAGE_FOLDER_DIRECTORY_NAME  = "ibeacon_server_storage";
     public static final String IMAGE_STORAGE_FOLDER_DIRECTORY_NAME = "map_images";
-    public static final String IMAGE_STORAGE_FOLDER_PATH = USER_HOME_FOLDER_PATH + "/" +
-                                                           ROOT_STORAGE_FOLDER_DIRECTORY_NAME + "/" +
-                                                           IMAGE_STORAGE_FOLDER_DIRECTORY_NAME + "/";
+    public static final String IMAGE_STORAGE_FOLDER_PATH           = USER_HOME_FOLDER_PATH + "/" +
+            ROOT_STORAGE_FOLDER_DIRECTORY_NAME + "/" +
+            IMAGE_STORAGE_FOLDER_DIRECTORY_NAME + "/";
 
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.hbm2ddl.auto"

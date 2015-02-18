@@ -17,10 +17,7 @@ package com.aemreunal.repository.project;
  */
 
 import java.util.ArrayList;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.User;
@@ -31,9 +28,9 @@ public class ProjectSpecs {
      * Creates the Project search specification from the given attributes
      *
      * @param owner
-     *     The owner of the projects to search in
+     *         The owner of the projects to search in
      * @param projectName
-     *     The Project Name attribute to search for
+     *         The Project Name attribute to search for
      *
      * @return The specification of the project
      */

@@ -49,9 +49,9 @@ public class ProjectController {
      * name
      *
      * @param username
-     *     The username of the owner of the projects
+     *         The username of the owner of the projects
      * @param projectName
-     *     (Optional) The name of the project
+     *         (Optional) The name of the project
      *
      * @return All existing projects (Optionally, all that match the given criteria)
      */
@@ -69,9 +69,9 @@ public class ProjectController {
      * Returns the list of projects that match a given criteria
      *
      * @param username
-     *     The username of the owner of the projects
+     *         The username of the owner of the projects
      * @param projectName
-     *     (Optional) The name of the project
+     *         (Optional) The name of the project
      *
      * @return The list of projects that match the given criteria
      */
@@ -84,7 +84,7 @@ public class ProjectController {
      * Get the project with the specified ID
      *
      * @param projectId
-     *     The ID of the project
+     *         The ID of the project
      *
      * @return The project
      */
@@ -97,7 +97,7 @@ public class ProjectController {
 
     /**
      * Creates a new project from the submitted JSON object in the request body.
-     * <p/>
+     * <p>
      * In the case of a constraint violation occurring during the save operation, a {@link
      * ConstraintViolationException} will be thrown from the {@link
      * com.aemreunal.service.ProjectService#save(String, com.aemreunal.domain.Project)
@@ -108,9 +108,9 @@ public class ProjectController {
      * ProjectControllerAdvice} class.
      *
      * @param projectFromJson
-     *     The project as JSON object
+     *         The project as JSON object
      * @param builder
-     *     The URI builder for post-creation redirect
+     *         The URI builder for post-creation redirect
      *
      * @return The created project
      */
@@ -133,11 +133,11 @@ public class ProjectController {
      * with {@link net.minidev.json.JSONObject JSONObject} type.
      *
      * @param builder
-     *     The URI builder for post-creation redirect
+     *         The URI builder for post-creation redirect
      * @param savedProject
-     *     The project to create the response for
+     *         The project to create the response for
      * @param projectSecret
-     *     The secret of the project
+     *         The secret of the project
      *
      * @return The {@link org.springframework.http.ResponseEntity ResponseEntity} for this
      * project
@@ -146,8 +146,8 @@ public class ProjectController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path(GlobalSettings.PROJECT_SPECIFIC_MAPPING)
                                    .buildAndExpand(
-                                       savedProject.getOwner().getUsername(),
-                                       savedProject.getProjectId().toString())
+                                           savedProject.getOwner().getUsername(),
+                                           savedProject.getProjectId().toString())
                                    .toUri());
         return new ResponseEntity<JSONObject>(savedProject.getCreateResponse(projectSecret), headers, HttpStatus.CREATED);
     }
@@ -156,7 +156,7 @@ public class ProjectController {
      * Adds the HATEOAS links to the {@link com.aemreunal.domain.Project Project} object.
      *
      * @param project
-     *     Project to add the links to
+     *         Project to add the links to
      *
      * @return The project with links added
      *
@@ -174,18 +174,18 @@ public class ProjectController {
     }
 
     /**
-     * Delete the specified project, along with all the beacons, regions and
-     * scenarios in the project.
-     * <p/>
+     * Delete the specified project, along with all the beacons, regions and scenarios in
+     * the project.
+     * <p>
      * To delete the project, confirmation must be supplied as a URI parameter, in the
      * form of "?confirm=yes". If not supplied, the project will not be deleted.
      *
      * @param username
-     *     The username of the owner of the project to delete
+     *         The username of the owner of the project to delete
      * @param projectId
-     *     The ID of the project to delete
+     *         The ID of the project to delete
      * @param confirmation
-     *     The confirmation parameter
+     *         The confirmation parameter
      *
      * @return
      */

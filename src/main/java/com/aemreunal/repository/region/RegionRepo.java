@@ -2,8 +2,8 @@ package com.aemreunal.repository.region;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
-import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Project;
+import com.aemreunal.domain.Region;
 
 /*
  **************************

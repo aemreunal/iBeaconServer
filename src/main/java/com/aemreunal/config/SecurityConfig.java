@@ -2,9 +2,7 @@ package com.aemreunal.config;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,17 +44,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
             .dataSource(dataSource)
-                .usersByUsernameQuery("SELECT username, password, '1' FROM users WHERE username = ?")
-                .authoritiesByUsernameQuery("SELECT username, 'ADMIN' FROM users WHERE username = ?")
+            .usersByUsernameQuery("SELECT username, password, '1' FROM users WHERE username = ?")
+            .authoritiesByUsernameQuery("SELECT username, 'ADMIN' FROM users WHERE username = ?")
             .passwordEncoder(passwordEncoder);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/register").permitAll()
-                .antMatchers("/robot/*").permitAll()
-                .anyRequest().authenticated()
+            .antMatchers("/register").permitAll()
+            .antMatchers("/robot/*").permitAll()
+            .anyRequest().authenticated()
             .and()
             .requiresChannel().antMatchers("**").requiresSecure()
             .and()
