@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "regions")
 @ResponseBody
-@JsonIgnoreProperties(value = { "beacons", "project" })
+@JsonIgnoreProperties(value = { "beacons", "project", "mapImage" })
 public class Region extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -102,28 +102,55 @@ public class Region extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
+     * BEGIN: Region 'Map image' attribute
+     */
+
+    @Column(name = "map_image_name", nullable = true, columnDefinition = "mediumblob")
+    @Basic(fetch = FetchType.LAZY)
+    @Access(AccessType.PROPERTY)
+    private Byte[] mapImage;
+
+    public Byte[] getMapImage() {
+        return mapImage;
+    }
+
+    public void setMapImage(Byte[] mapImage) {
+        this.mapImage = mapImage;
+    }
+
+    public boolean mapImageIsSet() {
+        return mapImage != null;
+    }
+
+    /*
+     * END: Region 'Map image' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
      * BEGIN: Region 'beacon list' attribute
      */
 
-   /*
-    *
-    * Currently, Beacon is the owner of its relationship to Region.
-    * ManyToOne are (almost) always the owner side of a bidirectional relationship in the JPA spec
-    *
-    * Should Beacon even know/care about which region(s) it belongs to?
-    *
-    * Correct mapping: 2.2.5.3.1.1. Bidirectional
-    * http://docs.jboss.org/hibernate/stable/annotations/reference/en/html/entity.html
-    *
-    @JoinTable(name="region_members",
-               joinColumns = @JoinColumn(name="region_id"),
-               inverseJoinColumns = @JoinColumn(name="beacon_id")
-    )
-    // TODO:XNYLXIWD determine who should own this relationship
-    */
+    /*
+     *
+     * Currently, Beacon is the owner of its relationship to Region.
+     * ManyToOne are (almost) always the owner side of a bidirectional relationship in the JPA spec
+     *
+     * Should Beacon even know/care about which region(s) it belongs to?
+     *
+     * Correct mapping: 2.2.5.3.1.1. Bidirectional
+     * http://docs.jboss.org/hibernate/stable/annotations/reference/en/html/entity.html
+     *
+     @JoinTable(name="region_members",
+                joinColumns = @JoinColumn(name="region_id"),
+                inverseJoinColumns = @JoinColumn(name="beacon_id")
+     )
+     // TODO:XNYLXIWD determine who should own this relationship
+     */
     @OneToMany(targetEntity = Beacon.class,
-               mappedBy = "region",
-               fetch = FetchType.LAZY)
+            mappedBy = "region",
+            fetch = FetchType.LAZY)
     @Access(AccessType.PROPERTY)
     // TODO @JsonIgnoreProperties(value = {})
     private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
@@ -155,7 +182,7 @@ public class Region extends ResourceSupport implements Serializable {
      */
 
     @OneToMany(targetEntity = Beacon.class,
-               fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY)
     @JoinTable(name = "designated_beacons_of_region",
             joinColumns = @JoinColumn(name = "region_id"),
             inverseJoinColumns = @JoinColumn(name = "beacon_id"))
@@ -188,12 +215,12 @@ public class Region extends ResourceSupport implements Serializable {
      * BEGIN: Region 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
-               optional = false,
-               fetch = FetchType.LAZY)
+            optional = false,
+            fetch = FetchType.LAZY)
     // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
     @JoinTable(name = "projects_to_regions",
-               joinColumns = @JoinColumn(name = "region_id"),
-               inverseJoinColumns = @JoinColumn(name = "project_id"))
+            joinColumns = @JoinColumn(name = "region_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
     @Access(AccessType.PROPERTY)
     private Project project;
 
@@ -215,11 +242,11 @@ public class Region extends ResourceSupport implements Serializable {
      * BEGIN: Region 'scenario' attribute
      */
     @ManyToOne(targetEntity = Scenario.class,
-               fetch = FetchType.LAZY,
-               optional = false)
+            fetch = FetchType.LAZY,
+            optional = false)
     @JoinTable(name = "scenarios_to_regions",
-               joinColumns = @JoinColumn(name = "region_id"),
-               inverseJoinColumns = @JoinColumn(name = "scenario_id"))
+            joinColumns = @JoinColumn(name = "region_id"),
+            inverseJoinColumns = @JoinColumn(name = "scenario_id"))
     @Access(AccessType.PROPERTY)
     private Scenario scenario;
 
