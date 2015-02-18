@@ -44,6 +44,10 @@ public class GlobalSettings {
      */
     public static final String NON_ASCII_REGEX = ".*[^\\p{ASCII}].*";
 
+
+    /**
+     * These strings provide the URIs of the controllers.
+     */
     // User
     public static final String USER_PATH_MAPPING               = "/human";
     public static final String USER_CREATE_MAPPING             = "/register";
@@ -78,6 +82,15 @@ public class GlobalSettings {
     public static final String API_PATH_MAPPING                = "/robot";
     public static final String API_BEACON_QUERY_PATH_MAPPING   = "/querybeacon";
 
+    /**
+     * These strings provide the image storage locations.
+     */
+    public static final String USER_HOME_FOLDER_PATH = System.getProperty("user.home");
+    public static final String ROOT_STORAGE_FOLDER_DIRECTORY_NAME = "ibeacon_server_storage";
+    public static final String IMAGE_STORAGE_FOLDER_DIRECTORY_NAME = "map_images";
+    public static final String IMAGE_STORAGE_FOLDER_PATH = USER_HOME_FOLDER_PATH + "/" +
+                                                           ROOT_STORAGE_FOLDER_DIRECTORY_NAME + "/" +
+                                                           IMAGE_STORAGE_FOLDER_DIRECTORY_NAME + "/";
 
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.hbm2ddl.auto"
