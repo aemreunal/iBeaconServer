@@ -68,6 +68,7 @@ public class GlobalSettings {
     public static final String REGION_MEMBERS_MAPPING          = REGION_ID_MAPPING + "/members";
     public static final String REGION_ADD_MEMBER_MAPPING       = REGION_ID_MAPPING + "/addmember";
     public static final String REGION_REMOVE_MEMBER_MAPPING    = REGION_ID_MAPPING + "/removemember";
+    public static final String REGION_UPLOAD_MAP_IMAGE_MAPPING = REGION_ID_MAPPING + "/uploadmapimage";
     // Beacon
     public static final String SCENARIO_PATH_MAPPING           = PROJECT_SPECIFIC_MAPPING + "/scenarios";
     public static final String SCENARIO_ID_MAPPING             = "/{scenarioId}";
