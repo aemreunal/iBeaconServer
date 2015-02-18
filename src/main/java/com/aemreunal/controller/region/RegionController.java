@@ -20,6 +20,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class RegionController {
      *
      * @return The list of regions that belong to the project with the specified ID
      */
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Region>> viewRegionsOfProject(@PathVariable String username,
                                                              @PathVariable Long projectId,
                                                              @RequestParam(value = "name", required = false, defaultValue = "") String regionName) {
@@ -66,7 +67,7 @@ public class RegionController {
      *
      * @return The region
      */
-    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_ID_MAPPING, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_ID_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Region> viewRegion(@PathVariable String username,
                                              @PathVariable Long projectId,
                                              @PathVariable Long regionId) {
@@ -86,7 +87,7 @@ public class RegionController {
      * @return The list of beacons that belong to the region
      */
     // TODO maybe return just the list of Beacon IDs, queried from regions_to_beacon
-    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_MEMBERS_MAPPING, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_MEMBERS_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Beacon>> viewRegionMembers(@PathVariable String username,
                                                           @PathVariable Long projectId,
                                                           @PathVariable Long regionId) {
@@ -108,7 +109,7 @@ public class RegionController {
      * @return The created region
      */
     // TODO {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
-    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Region> createRegionInProject(@PathVariable String username,
                                                         @PathVariable Long projectId,
                                                         @RequestBody Region regionJson,
@@ -150,7 +151,7 @@ public class RegionController {
      *
      * @return The added region
      */
-    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.REGION_ADD_MEMBER_MAPPING, produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.REGION_ADD_MEMBER_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Region> addBeaconToRegion(@PathVariable String username,
                                                     @PathVariable Long projectId,
                                                     @PathVariable Long regionId,
@@ -175,7 +176,7 @@ public class RegionController {
      *
      * @return The removed region
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.REGION_REMOVE_MEMBER_MAPPING, produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.REGION_REMOVE_MEMBER_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Region> removeBeaconFromRegion(@PathVariable String username,
                                                          @PathVariable Long projectId,
                                                          @PathVariable Long regionId,
@@ -195,7 +196,7 @@ public class RegionController {
      *
      * @return The deleted region
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.REGION_ID_MAPPING, produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.REGION_ID_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Region> deleteRegion(@PathVariable String username,
                                                @PathVariable Long projectId,
                                                @PathVariable Long regionId,
