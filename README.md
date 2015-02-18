@@ -58,6 +58,6 @@ To use iBeacon server inside a Docker container:
 
 2. Fill the database server information in the DatabaseSettings.java file.
 
-3. Run `docker build -t ibeaconserver .` (mind the last dot) to create a Docker image with the name `ibeaconserver`.
+3. Run `docker build --no-cache=true -t ibeaconserver .` (mind the last dot) to create a Docker image with the name `ibeaconserver`. The ```--no-cache=true``` argument is used to tell Docker not to use cached images so that Docker always pulls the latest code from GitHub. (This argument will be removed when Docker introduces the ```NOCACHE``` command)
 
-4. Run `docker run --restart=always -d -p 8080:8080 ibeaconserver` to run the Docker container.
+4. Run `docker run --restart=always -d -p 8080:8080 -v $(pwd)/ibeacon_server_storage:/root/ibeacon_server_storage ibeaconserver` to run the Docker container.
