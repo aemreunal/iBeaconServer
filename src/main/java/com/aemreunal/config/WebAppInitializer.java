@@ -30,25 +30,32 @@ import org.springframework.web.servlet.DispatcherServlet;
 public class WebAppInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
+        initDispatchContext(servletContext);
+        initWebAppContext(servletContext);
+    }
+
+    private void initDispatchContext(ServletContext servletContext) {
+        AnnotationConfigWebApplicationContext dispatchContext = new AnnotationConfigWebApplicationContext();
+        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(dispatchContext));
+        dispatcher.setLoadOnStartup(1);
+        dispatcher.addMapping("/");
+    }
+
+    private void initWebAppContext(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext webAppContext = new AnnotationConfigWebApplicationContext();
         webAppContext.register(CoreConfig.class, MVCConfig.class, SecurityConfig.class);
         servletContext.addListener(new ContextLoaderListener(webAppContext));
 
-        AnnotationConfigWebApplicationContext dispatchCtx = new AnnotationConfigWebApplicationContext();
-        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(dispatchCtx));
-        dispatcher.setLoadOnStartup(1);
-        dispatcher.addMapping("/");
-
         addSecurityFilterToChain(servletContext, webAppContext);
-        addUserUrlFilterToChain(servletContext, webAppContext);
+        addUserUrlFilterToChain(servletContext);
     }
 
-    private void addSecurityFilterToChain(ServletContext servletContext, WebApplicationContext rootContext) {
-        FilterRegistration.Dynamic springSecurity = servletContext.addFilter("springSecurityFilterChain", new DelegatingFilterProxy("springSecurityFilterChain", rootContext));
+    private void addSecurityFilterToChain(ServletContext servletContext, WebApplicationContext webAppContext) {
+        FilterRegistration.Dynamic springSecurity = servletContext.addFilter("springSecurityFilterChain", new DelegatingFilterProxy("springSecurityFilterChain", webAppContext));
         springSecurity.addMappingForUrlPatterns(null, false, "/*");
     }
 
-    private void addUserUrlFilterToChain(ServletContext servletContext, WebApplicationContext rootContext) {
+    private void addUserUrlFilterToChain(ServletContext servletContext) {
         FilterRegistration.Dynamic userURLFilter = servletContext.addFilter("userUrlFilterChain", UserUrlFilter.class);
         userURLFilter.addMappingForUrlPatterns(null, false, "/human/*");
     }

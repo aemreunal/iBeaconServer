@@ -34,7 +34,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan(basePackages = { "com.aemreunal" })
 public class MVCConfig extends WebMvcConfigurerAdapter {
     @Autowired
-    public MappingJackson2HttpMessageConverter jacksonMessageConverter;
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
