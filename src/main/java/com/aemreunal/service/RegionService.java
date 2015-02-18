@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
-import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Project;
+import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.region.BeaconDoesNotHaveRegionException;
 import com.aemreunal.exception.region.BeaconHasRegionException;
 import com.aemreunal.exception.region.RegionNotFoundException;
+import com.aemreunal.helper.ImageStorage;
 import com.aemreunal.repository.region.RegionRepo;
 import com.aemreunal.repository.region.RegionSpecs;
 
@@ -48,6 +49,9 @@ public class RegionService {
 
     @Autowired
     private ScenarioService scenarioService;
+
+    @Autowired
+    private ImageStorage imageStorage;
 
     /**
      * Saves/updates the given region
@@ -154,11 +158,11 @@ public class RegionService {
     }
 
     /**
-     * Checks the relationship between a beacon and a region. The relationship is
-     * valid if the beacon belongs to that region; in that case, no exception is thrown. If
-     * the beacon doesn't belong to any region, a {@link com.aemreunal.exception.region.BeaconDoesNotHaveRegionException
-     * BeaconDoesNotHaveRegionException} is thrown. If the beacon belongs to another region,
-     * a BeaconHasRegionException {@link com.aemreunal.exception.region.BeaconHasRegionException
+     * Checks the relationship between a beacon and a region. The relationship is valid if
+     * the beacon belongs to that region; in that case, no exception is thrown. If the
+     * beacon doesn't belong to any region, a {@link com.aemreunal.exception.region.BeaconDoesNotHaveRegionException
+     * BeaconDoesNotHaveRegionException} is thrown. If the beacon belongs to another
+     * region, a BeaconHasRegionException {@link com.aemreunal.exception.region.BeaconHasRegionException
      * BeaconHasRegionException} is thrown.
      *
      * @param regionId
@@ -186,6 +190,33 @@ public class RegionService {
     }
 
     /**
+     * Saves the map image (provided with the {@code mapImageInBytes} parameter) to disk
+     * and saves the name of the image file to the region object. If the region already
+     * has an image, it is overwritten.
+     *
+     * @param username
+     *         The username of the owner of the project.
+     * @param projectId
+     *         The ID of the project to which the region belongs.
+     * @param regionId
+     *         The ID of the region to save the image of.
+     * @param mapImageInBytes
+     *         The image file as a {@code byte[]}.
+     *
+     * @return The updated region object.
+     */
+    public Region setMapImage(String username, Long projectId, Long regionId, byte[] mapImageInBytes) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Setting map image of region with ID = \'" + regionId + "\'");
+        }
+        Region region = this.getRegion(username, projectId, regionId);
+        String savedImageName = imageStorage.saveImage(username, projectId, regionId, region.getMapImageFileName(), mapImageInBytes);
+        region.setMapImageFileName(savedImageName);
+        save(username, projectId, region);
+        return region;
+    }
+
+    /**
      * Deletes the region with the given ID and updates the beacons in the region.
      *
      * @param projectId
@@ -201,8 +232,13 @@ public class RegionService {
         }
         Region region = this.getRegion(username, projectId, regionId);
         removeBeaconsFromRegion(region, username, projectId);
+        removeRegionImage(username, projectId, region);
         regionRepo.delete(region);
         return region;
+    }
+
+    private void removeRegionImage(String username, Long projectId, Region region) {
+        imageStorage.deleteImage(username, projectId, region.getRegionId(), region.getMapImageFileName());
     }
 
     private void removeBeaconsFromRegion(Region region, String username, Long projectId) {

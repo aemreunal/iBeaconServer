@@ -10,6 +10,7 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.config.CoreConfig;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /*
  **************************
@@ -30,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "regions")
 @ResponseBody
-@JsonIgnoreProperties(value = { "beacons", "project", "mapImage" })
+@JsonIgnoreProperties(value = { "beacons", "project", "mapImageFileName", "designatedBeacons" })
 public class Region extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -107,18 +108,19 @@ public class Region extends ResourceSupport implements Serializable {
 
     @Column(name = "map_image_name", nullable = true)
     @Access(AccessType.PROPERTY)
-    private String mapImage;
+    private String mapImageFileName = null;
 
-    public String getMapImage() {
-        return mapImage;
+    public String getMapImageFileName() {
+        return mapImageFileName;
     }
 
-    public void setMapImage(String mapImage) {
-        this.mapImage = mapImage;
+    public void setMapImageFileName(String mapImageFileName) {
+        this.mapImageFileName = mapImageFileName;
     }
 
+    @JsonSerialize
     public boolean mapImageIsSet() {
-        return getMapImage() != null && !getMapImage().isEmpty();
+        return getMapImageFileName() != null && !getMapImageFileName().isEmpty();
     }
 
     /*
@@ -189,11 +191,12 @@ public class Region extends ResourceSupport implements Serializable {
     private Set<Beacon> designatedBeacons = new LinkedHashSet<Beacon>();
 
     public Set<Beacon> getDesignatedBeacons() {
-        CoreConfig.initLazily(designatedBeacons);
-        return designatedBeacons;
+        CoreConfig.initLazily(this.designatedBeacons);
+        return this.designatedBeacons;
     }
 
     public void setDesignatedBeacons(Set<Beacon> designatedBeacons) {
+        CoreConfig.initLazily(this.designatedBeacons);
         this.designatedBeacons = designatedBeacons;
     }
 

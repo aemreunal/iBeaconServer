@@ -16,6 +16,7 @@ package com.aemreunal.controller.region;
  **************************
  */
 
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
@@ -185,6 +187,33 @@ public class RegionController {
         return new ResponseEntity<Region>(region, HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.REGION_UPLOAD_MAP_IMAGE_MAPPING,
+            consumes = MediaType.ALL_VALUE)
+    public ResponseEntity<Region> uploadRegionMapImage(@PathVariable String username,
+                                                       @PathVariable Long projectId,
+                                                       @PathVariable Long regionId,
+                                                       @RequestPart(value = "mapImage") MultipartFile file) {
+        byte[] fileBytes;
+        if (!file.isEmpty() && fileTypeIsImage(file)) {
+            try {
+                fileBytes = file.getBytes();
+            } catch (IOException e) {
+                return new ResponseEntity<Region>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity<Region>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        }
+        Region region = regionService.setMapImage(username, projectId, regionId, fileBytes);
+        return new ResponseEntity<Region>(region, HttpStatus.OK);
+    }
+
+    private boolean fileTypeIsImage(MultipartFile file) {
+        String type = file.getContentType();
+        return type.equalsIgnoreCase("image/jpg") ||
+                type.equalsIgnoreCase("image/jpeg") ||
+                type.equalsIgnoreCase("image/png") ||
+                type.equalsIgnoreCase("image/gif");
+    }
 
     /**
      * Delete the specified region

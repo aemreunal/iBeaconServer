@@ -48,7 +48,7 @@ public class ImageStorage {
      *
      * @return The name of the saved image file.
      */
-    public String saveImage(String username, String projectId, String regionId, String existingImageName, byte[] imageAsBytes) {
+    public String saveImage(String username, Long projectId, Long regionId, String existingImageName, byte[] imageAsBytes) {
         File imageFile;
         String fileName;
         String filePath = getFilePath(username, projectId, regionId);
@@ -144,7 +144,7 @@ public class ImageStorage {
      * @return A <code>byte[]</code> if the image file has been successfully loaded and
      * read, <code>null</code> otherwise.
      */
-    public byte[] loadImage(String username, String projectId, String regionId, String imageFileName) {
+    public byte[] loadImage(String username, Long projectId, Long regionId, String imageFileName) {
         String filePath = getFilePath(username, projectId, regionId);
         File imageFile = new File(filePath + imageFileName);
         if (!imageFile.exists()) {
@@ -192,7 +192,7 @@ public class ImageStorage {
      * @return <code>true</code> if image file has been successfully deleted,
      * <code>false</code> otherwise.
      */
-    public boolean deleteImage(String username, String projectId, String regionId, String imageFileName) {
+    public boolean deleteImage(String username, Long projectId, Long regionId, String imageFileName) {
         String filePath = getFilePath(username, projectId, regionId);
         File imageFile = new File(filePath + imageFileName);
         try {
@@ -204,7 +204,7 @@ public class ImageStorage {
         return true;
     }
 
-    private String getFilePath(String username, String projectId, String regionId) {
-        return GlobalSettings.IMAGE_STORAGE_FOLDER_PATH + username + "/" + projectId + "/" + regionId + "/";
+    private String getFilePath(String username, Long projectId, Long regionId) {
+        return GlobalSettings.IMAGE_STORAGE_FOLDER_PATH + username + "/" + projectId.toString() + "/" + regionId.toString() + "/";
     }
 }
