@@ -56,7 +56,7 @@ def springSecurityCoreVersion = '3.2.5.RELEASE'
 def springSecurityOAuth2Version = '2.0.6.RELEASE'
 def springSecurityWebVersion = '3.2.5.RELEASE'
 def tomcatVersion = '7.0.59'
-def wrapperGradleVersion = '2.2.1'
+def wrapperGradleVersion = '2.3'
 
 repositories {
     mavenCentral()
