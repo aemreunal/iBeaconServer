@@ -92,7 +92,7 @@ public class CoreConfig {
         dataSource.setDriverClassName(DatabaseSettings.DB_DRIVER_CLASS_NAME);
         dataSource.setUrl(DatabaseSettings.DB_URL);
         dataSource.setUsername(DatabaseSettings.DB_USERNAME);
-//        dataSource.setPassword(DatabaseSettings.DB_PASSWORD);
+        dataSource.setPassword(DatabaseSettings.DB_PASSWORD);
         return dataSource;
     }
 

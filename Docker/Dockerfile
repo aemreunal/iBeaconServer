@@ -9,7 +9,7 @@ RUN mkdir -p "$CATALINA_HOME"
 WORKDIR $CATALINA_HOME
 
 # see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
-RUN gpg --keyserver pgp.mit.edu --recv-keys \
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
     05AB33110949707C93A279E3D3EFE6B686867BA6 \
     07E48665A34DCAFAE522E5E6266191C37C037D42 \
     47309207D818FFD8DCD3F83F1931D684307A10A5 \
@@ -24,7 +24,7 @@ RUN gpg --keyserver pgp.mit.edu --recv-keys \
     F7DA48BB64BCB84ECBA7EE6935CD23C10D498E23
 
 ENV TOMCAT_MAJOR 8
-ENV TOMCAT_VERSION 8.0.15
+ENV TOMCAT_VERSION 8.0.18
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
 RUN curl -SL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz \
@@ -48,6 +48,12 @@ RUN dpkg-reconfigure locales \
     && locale-gen C.UTF-8 \
     && /usr/sbin/update-locale LANG=C.UTF-8
 ENV LC_ALL C.UTF-8
+
+# Stop caching from this point forward
+# This is done to ensure that the latest code is pulled
+# from GitHub.
+# NOTE: Disabled until integrated to Docker!
+#NOCACHE
 
 # Clone iBeaconServer repo
 RUN cd ~/ \
