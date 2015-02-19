@@ -65,8 +65,8 @@ ENV LC_ALL C.UTF-8
 RUN cd ~/ \
     && git clone https://github.com/aemreunal/iBeaconServer.git
 
-# Add required DatabaseSettings.java source file to project
-COPY DatabaseSettings.java /root/iBeaconServer/src/main/java/com/aemreunal/config/DatabaseSettings.java
+# Add required database settings property file to project
+COPY db.properties /root/iBeaconServer/db.properties
 # Create WAR file
 RUN cd ~/iBeaconServer/ \
     && ./gradlew war
