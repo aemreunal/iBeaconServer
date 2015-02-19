@@ -52,12 +52,13 @@ To use iBeacon server inside a Docker container:
     ibeaconserver
        \
         |-- DatabaseSettings.java
+        |-- deploy.sh
         |-- Dockerfile
+        |-- server.xml
         |-- setenv.sh
+        |-- web.xml
     ```
 
 2. Fill the database server information in the DatabaseSettings.java file.
 
-3. Run `docker build --no-cache=true -t ibeaconserver .` (mind the last dot) to create a Docker image with the name `ibeaconserver`. The ```--no-cache=true``` argument is used to tell Docker not to use cached images so that Docker always pulls the latest code from GitHub. (This argument will be removed when Docker introduces the ```NOCACHE``` command)
-
-4. Run `docker run --restart=always -d -p 8080:8080 -v $HOME/ibeacon_server_storage:/root/ibeacon_server_storage ibeaconserver` to run the Docker container.
+3. Run the `deploy.sh` script, which will create the necessary folders and the keystore used by the Tomcat instance inside the container, build the Docker container, and run it. The default settings are not really secure (like the keystore settings) but it will provide a good starting point. These settings should be changed by the user for proper security.

@@ -36,6 +36,12 @@ RUN curl -SL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz \
 
 # iBeacon server addition:
 
+# Copy custom server.xml and web.xml to Tomcat conf
+RUN rm $CATALINA_HOME/conf/server.xml
+COPY server.xml $CATALINA_HOME/conf/server.xml
+RUN rm $CATALINA_HOME/conf/web.xml
+COPY web.xml $CATALINA_HOME/conf/web.xml
+
 # Install debconf, git, and locales
 RUN apt-get update && apt-get install -y \
     debconf \
