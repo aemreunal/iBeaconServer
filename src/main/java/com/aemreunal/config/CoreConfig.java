@@ -43,12 +43,17 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 @EnableTransactionManagement
 @ComponentScan(basePackages = { "com.aemreunal" })
 public class CoreConfig {
+    // Limit maximum upload size to 1572864 Bytes (= 1.5 MB)
+    public static final long MAX_UPLOAD_SIZE_BYTES = 1572864;
+
     @Autowired
     private DataSource dataSource;
 
     @Autowired
     private HibernateJpaVendorAdapter vendorAdapter;
 
+    // Required for @PropertySource and @Value value injection, as seen
+    // in DatabaseSettings.java
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
@@ -82,7 +87,9 @@ public class CoreConfig {
 
     @Bean
     public MultipartResolver multipartResolver() {
-        return new CommonsMultipartResolver();
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setMaxUploadSize(MAX_UPLOAD_SIZE_BYTES);
+        return resolver;
     }
 
     private Properties jpaProperties() {
