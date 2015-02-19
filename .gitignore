@@ -21,4 +21,4 @@ log.txt.lck
 
 Docker/Tomcat entropy problem.txt
 *.txt.1
-db_production.properties
+*.properties
