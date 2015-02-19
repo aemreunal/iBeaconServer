@@ -11,9 +11,7 @@ import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Scenario;
-import com.aemreunal.exception.region.BeaconDoesNotHaveRegionException;
-import com.aemreunal.exception.region.BeaconHasRegionException;
-import com.aemreunal.exception.region.RegionNotFoundException;
+import com.aemreunal.exception.region.*;
 import com.aemreunal.helper.ImageStorage;
 import com.aemreunal.repository.region.RegionRepo;
 import com.aemreunal.repository.region.RegionSpecs;
@@ -205,15 +203,34 @@ public class RegionService {
      *
      * @return The updated region object.
      */
-    public Region setMapImage(String username, Long projectId, Long regionId, byte[] mapImageInBytes) {
+    public Region setMapImage(String username, Long projectId, Long regionId, byte[] mapImageInBytes) throws MapImageSaveException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Setting map image of region with ID = \'" + regionId + "\'");
         }
         Region region = this.getRegion(username, projectId, regionId);
         String savedImageName = imageStorage.saveImage(username, projectId, regionId, region.getMapImageFileName(), mapImageInBytes);
+        if (savedImageName == null) {
+            throw new MapImageSaveException(projectId, regionId);
+        }
         region.setMapImageFileName(savedImageName);
         save(username, projectId, region);
         return region;
+    }
+
+    public byte[] getMapImage(String username, Long projectId, Long regionId) throws MapImageLoadException, MapImageNotSetException {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Getting map image of region with ID = \'" + regionId + "\'");
+        }
+        Region region = this.getRegion(username, projectId, regionId);
+        String mapImageFileName = region.getMapImageFileName();
+        if (mapImageFileName == null) {
+            throw new MapImageNotSetException(projectId, regionId);
+        }
+        byte[] mapImage = imageStorage.loadImage(username, projectId, regionId, mapImageFileName);
+        if (mapImage == null) {
+            throw new MapImageLoadException(projectId, regionId);
+        }
+        return mapImage;
     }
 
     /**

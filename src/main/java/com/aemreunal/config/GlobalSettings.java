@@ -49,50 +49,51 @@ public class GlobalSettings {
      * These strings provide the URIs of the controllers.
      */
     // User
-    public static final String USER_PATH_MAPPING               = "/human";
-    public static final String USER_CREATE_MAPPING             = "/register";
-    public static final String USER_USERNAME_MAPPING           = USER_PATH_MAPPING + "/{username}";
-    public static final String USER_SPECIFIC_MAPPING           = USER_USERNAME_MAPPING;
+    public static final String USER_PATH_MAPPING                 = "/human";
+    public static final String USER_CREATE_MAPPING               = "/register";
+    public static final String USER_USERNAME_MAPPING             = USER_PATH_MAPPING + "/{username}";
+    public static final String USER_SPECIFIC_MAPPING             = USER_USERNAME_MAPPING;
     // Project
-    public static final String PROJECT_PATH_MAPPING            = USER_SPECIFIC_MAPPING + "/projects";
-    public static final String PROJECT_ID_MAPPING              = "/{projectId}";
-    public static final String PROJECT_SPECIFIC_MAPPING        = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
+    public static final String PROJECT_PATH_MAPPING              = USER_SPECIFIC_MAPPING + "/projects";
+    public static final String PROJECT_ID_MAPPING                = "/{projectId}";
+    public static final String PROJECT_SPECIFIC_MAPPING          = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
     // Beacon
-    public static final String BEACON_PATH_MAPPING             = PROJECT_SPECIFIC_MAPPING + "/beacons";
-    public static final String BEACON_ID_MAPPING               = "/{beaconId}";
-    public static final String BEACON_SPECIFIC_MAPPING         = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
+    public static final String BEACON_PATH_MAPPING               = PROJECT_SPECIFIC_MAPPING + "/beacons";
+    public static final String BEACON_ID_MAPPING                 = "/{beaconId}";
+    public static final String BEACON_SPECIFIC_MAPPING           = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
     // Region
-    public static final String REGION_PATH_MAPPING             = PROJECT_SPECIFIC_MAPPING + "/regions";
-    public static final String REGION_ID_MAPPING               = "/{regionId}";
-    public static final String REGION_SPECIFIC_MAPPING         = REGION_PATH_MAPPING + REGION_ID_MAPPING;
-    public static final String REGION_MEMBERS_MAPPING          = REGION_ID_MAPPING + "/members";
-    public static final String REGION_ADD_MEMBER_MAPPING       = REGION_ID_MAPPING + "/addmember";
-    public static final String REGION_REMOVE_MEMBER_MAPPING    = REGION_ID_MAPPING + "/removemember";
-    public static final String REGION_UPLOAD_MAP_IMAGE_MAPPING = REGION_ID_MAPPING + "/uploadmapimage";
+    public static final String REGION_PATH_MAPPING               = PROJECT_SPECIFIC_MAPPING + "/regions";
+    public static final String REGION_ID_MAPPING                 = "/{regionId}";
+    public static final String REGION_SPECIFIC_MAPPING           = REGION_PATH_MAPPING + REGION_ID_MAPPING;
+    public static final String REGION_MEMBERS_MAPPING            = REGION_ID_MAPPING + "/members";
+    public static final String REGION_ADD_MEMBER_MAPPING         = REGION_ID_MAPPING + "/addmember";
+    public static final String REGION_REMOVE_MEMBER_MAPPING      = REGION_ID_MAPPING + "/removemember";
+    public static final String REGION_UPLOAD_MAP_IMAGE_MAPPING   = REGION_ID_MAPPING + "/uploadmapimage";
+    public static final String REGION_DOWNLOAD_MAP_IMAGE_MAPPING = REGION_ID_MAPPING + "/mapimage";
     // Beacon
-    public static final String SCENARIO_PATH_MAPPING           = PROJECT_SPECIFIC_MAPPING + "/scenarios";
-    public static final String SCENARIO_ID_MAPPING             = "/{scenarioId}";
-    public static final String SCENARIO_SPECIFIC_MAPPING       = SCENARIO_PATH_MAPPING + SCENARIO_ID_MAPPING;
-    public static final String SCENARIO_MEMBER_BEACONS_MAPPING = SCENARIO_ID_MAPPING + "/beacons";
-    public static final String SCENARIO_MEMBER_REGION_MAPPING  = SCENARIO_ID_MAPPING + "/regions";
-    public static final String SCENARIO_ADD_BEACON_MAPPING     = SCENARIO_ID_MAPPING + "/addbeacon";
-    public static final String SCENARIO_REMOVE_BEACON_MAPPING  = SCENARIO_ID_MAPPING + "/removebeacon";
-    public static final String SCENARIO_ADD_REGION_MAPPING     = SCENARIO_ID_MAPPING + "/addregion";
-    public static final String SCENARIO_REMOVE_REGION_MAPPING  = SCENARIO_ID_MAPPING + "/removeregion";
+    public static final String SCENARIO_PATH_MAPPING             = PROJECT_SPECIFIC_MAPPING + "/scenarios";
+    public static final String SCENARIO_ID_MAPPING               = "/{scenarioId}";
+    public static final String SCENARIO_SPECIFIC_MAPPING         = SCENARIO_PATH_MAPPING + SCENARIO_ID_MAPPING;
+    public static final String SCENARIO_MEMBER_BEACONS_MAPPING   = SCENARIO_ID_MAPPING + "/beacons";
+    public static final String SCENARIO_MEMBER_REGION_MAPPING    = SCENARIO_ID_MAPPING + "/regions";
+    public static final String SCENARIO_ADD_BEACON_MAPPING       = SCENARIO_ID_MAPPING + "/addbeacon";
+    public static final String SCENARIO_REMOVE_BEACON_MAPPING    = SCENARIO_ID_MAPPING + "/removebeacon";
+    public static final String SCENARIO_ADD_REGION_MAPPING       = SCENARIO_ID_MAPPING + "/addregion";
+    public static final String SCENARIO_REMOVE_REGION_MAPPING    = SCENARIO_ID_MAPPING + "/removeregion";
     // API
-    public static final String API_PATH_MAPPING                = "/robot";
-    public static final String API_BEACON_QUERY_PATH_MAPPING   = "/querybeacon";
+    public static final String API_PATH_MAPPING                  = "/robot";
 
+    public static final String API_BEACON_QUERY_PATH_MAPPING       = "/querybeacon";
     /**
      * These strings provide the image storage locations.
      */
     public static final String USER_HOME_FOLDER_PATH               = System.getProperty("user.home");
     public static final String ROOT_STORAGE_FOLDER_DIRECTORY_NAME  = "ibeacon_server_storage";
     public static final String IMAGE_STORAGE_FOLDER_DIRECTORY_NAME = "map_images";
-    public static final String IMAGE_STORAGE_FOLDER_PATH           = USER_HOME_FOLDER_PATH + "/" +
+
+    public static final String IMAGE_STORAGE_FOLDER_PATH = USER_HOME_FOLDER_PATH + "/" +
             ROOT_STORAGE_FOLDER_DIRECTORY_NAME + "/" +
             IMAGE_STORAGE_FOLDER_DIRECTORY_NAME + "/";
-
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.hbm2ddl.auto"
     //
@@ -107,24 +108,24 @@ public class GlobalSettings {
     // create: creates the schema, destroying previous data.
     // create-drop: drop the schema at the end of the session.
     //----------------------------------------
-    public static final String HBM2DDL_PROPERTY = "update";
+    public static final String HBM2DDL_PROPERTY          = "update";
+
     //-------------------------------------------------------------------------------------------
 
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.show_sql"
     //----------------------------------------
-    public static final String SHOW_SQL_PROPERTY = String.valueOf(DEBUGGING);
-
+    public static final String  SHOW_SQL_PROPERTY = String.valueOf(DEBUGGING);
     // Used for the JDBC adapter
-    public static final boolean SHOW_SQL = DEBUGGING;
-    //-------------------------------------------------------------------------------------------
+    public static final boolean SHOW_SQL          = DEBUGGING;
 
+    //-------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.format_sql"
     //----------------------------------------
     public static final Object FORMAT_SQL_PROPERTY = "true";
-    //-------------------------------------------------------------------------------------------
 
+    //-------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.dialect"
     //----------------------------------------

@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import com.aemreunal.exception.region.BeaconHasRegionException;
-import com.aemreunal.exception.region.RegionNotFoundException;
+import org.springframework.web.multipart.MultipartException;
+import com.aemreunal.exception.region.*;
 import com.aemreunal.helper.JsonBuilder;
 
 /*
@@ -31,17 +31,27 @@ public class RegionControllerAdvice {
 
     @ExceptionHandler(RegionNotFoundException.class)
     public ResponseEntity<JSONObject> regionNotFoundExceptionHandler(RegionNotFoundException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "region")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
-        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(BeaconHasRegionException.class)
-    public ResponseEntity<JSONObject> beaconHasRegionExceptionHandler(BeaconHasRegionException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "region")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
-        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler({BeaconHasRegionException.class, MapImageNotSetException.class})
+    public ResponseEntity<JSONObject> badRequestExceptionHandler(Exception ex) {
+        return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({MapImageSaveException.class, MapImageLoadException.class})
+    public ResponseEntity<JSONObject> internalErrorExceptionHandler(Exception ex) {
+        return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<JSONObject> multipartRequestExceptionHandler(MultipartException ex) {
+        return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.BAD_REQUEST);
+    }
+
+    private JSONObject getErrorResponseBody(Exception ex) {
+        return new JsonBuilder().add("reason", "region")
+                                .add("error", ex.getLocalizedMessage())
+                                .build();
     }
 }

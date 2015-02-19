@@ -12,7 +12,6 @@ hibernate-log.txt
 
 *.iws
 
-src/main/java/com/aemreunal/config/DatabaseSettings.java
 DevResources/
 
 src/test/resources/datasets/
@@ -22,3 +21,4 @@ log.txt.lck
 
 Docker/Tomcat entropy problem.txt
 *.txt.1
+db_production.properties

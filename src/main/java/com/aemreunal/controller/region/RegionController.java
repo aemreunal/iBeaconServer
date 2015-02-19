@@ -30,6 +30,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Region;
+import com.aemreunal.exception.region.MapImageLoadException;
+import com.aemreunal.exception.region.MapImageNotSetException;
+import com.aemreunal.exception.region.MapImageSaveException;
 import com.aemreunal.service.RegionService;
 
 @Controller
@@ -192,7 +195,8 @@ public class RegionController {
     public ResponseEntity<Region> uploadRegionMapImage(@PathVariable String username,
                                                        @PathVariable Long projectId,
                                                        @PathVariable Long regionId,
-                                                       @RequestPart(value = "mapImage") MultipartFile file) {
+                                                       @RequestPart(value = "mapImage") MultipartFile file)
+    throws MapImageSaveException {
         byte[] fileBytes;
         if (!file.isEmpty() && fileTypeIsImage(file)) {
             try {
@@ -204,7 +208,7 @@ public class RegionController {
             return new ResponseEntity<Region>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
         }
         Region region = regionService.setMapImage(username, projectId, regionId, fileBytes);
-        return new ResponseEntity<Region>(region, HttpStatus.OK);
+        return new ResponseEntity<Region>(region, HttpStatus.CREATED);
     }
 
     private boolean fileTypeIsImage(MultipartFile file) {

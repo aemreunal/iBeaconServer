@@ -3,12 +3,13 @@ package com.aemreunal.config;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -42,29 +43,27 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 @EnableTransactionManagement
 @ComponentScan(basePackages = { "com.aemreunal" })
 public class CoreConfig {
-    public static void initLazily(Object proxy) {
-        if (!Hibernate.isInitialized(proxy)) {
-            Hibernate.initialize(proxy);
-        }
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private HibernateJpaVendorAdapter vendorAdapter;
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(vendorAdapter());
+        factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("com.aemreunal.domain");
-        factory.setDataSource(dataSource());
+        factory.setDataSource(dataSource);
         factory.setJpaProperties(jpaProperties());
         return factory;
     }
 
-    private HibernateJpaVendorAdapter vendorAdapter() {
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setDatabase(DatabaseSettings.DB_TYPE);
-        vendorAdapter.setGenerateDdl(true);
-        vendorAdapter.setShowSql(GlobalSettings.SHOW_SQL);
-        return vendorAdapter;
-    }
 
     @Bean
     public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
@@ -86,16 +85,6 @@ public class CoreConfig {
         return new CommonsMultipartResolver();
     }
 
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(DatabaseSettings.DB_DRIVER_CLASS_NAME);
-        dataSource.setUrl(DatabaseSettings.DB_URL);
-        dataSource.setUsername(DatabaseSettings.DB_USERNAME);
-        dataSource.setPassword(DatabaseSettings.DB_PASSWORD);
-        return dataSource;
-    }
-
     private Properties jpaProperties() {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", GlobalSettings.DB_DIALECT_PROPERTY);
@@ -115,5 +104,11 @@ public class CoreConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(GlobalSettings.BCRYPT_LOG_FACTOR);
+    }
+
+    public static void initLazily(Object proxy) {
+        if (!Hibernate.isInitialized(proxy)) {
+            Hibernate.initialize(proxy);
+        }
     }
 }
