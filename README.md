@@ -5,7 +5,7 @@ Server application for iBeacon management.
 
 ## Setting up
 
-You need to have MySQL running, with an empty database. The server will set the database tables up itself. To point the server to the correct database, you have to fill the correct values (like the database credentials, IP address, etc.) in the property file called ```db.properties```, located at the root of the repository.
+You need to have MySQL running, with an empty database. The server will set the database tables up itself. To point the server to the correct database, you have to fill the correct values (like the database credentials, IP address, etc.) in the property file called ```db.properties``` and put it to the root of the repository.
 
 A dummy ```db.properties``` file is provided in the [Docker](https://github.com/aemreunal/iBeaconServer/tree/master/Docker) folder.
 
