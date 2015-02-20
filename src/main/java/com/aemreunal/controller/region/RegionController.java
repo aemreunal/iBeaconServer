@@ -191,7 +191,7 @@ public class RegionController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.REGION_UPLOAD_MAP_IMAGE_MAPPING,
-            consumes = MediaType.ALL_VALUE)
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Region> uploadRegionMapImage(@PathVariable String username,
                                                        @PathVariable Long projectId,
                                                        @PathVariable Long regionId,
