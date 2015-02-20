@@ -19,9 +19,23 @@ package com.aemreunal.helper;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.exception.region.MapImageDeleteException;
+import com.aemreunal.exception.region.MapImageSaveException;
+import com.aemreunal.exception.region.MultipartFileReadException;
 
 public class ImageStorage {
+
+    public String saveImage(String username, Long projectId, Long regionId, String existingImageName, MultipartFile imageFile) throws MultipartFileReadException, MapImageDeleteException, MapImageSaveException {
+        byte[] fileBytes;
+        try {
+            fileBytes = imageFile.getBytes();
+        } catch (IOException e) {
+            throw new MultipartFileReadException(projectId, regionId);
+        }
+        return saveImage(username, projectId, regionId, existingImageName, fileBytes);
+    }
 
     /**
      * Saves the given image (in bytes) to the filesystem and returns the name of the
@@ -48,7 +62,8 @@ public class ImageStorage {
      *
      * @return The name of the saved image file.
      */
-    public String saveImage(String username, Long projectId, Long regionId, String existingImageName, byte[] imageAsBytes) {
+    public String saveImage(String username, Long projectId, Long regionId, String existingImageName, byte[] imageAsBytes)
+            throws MapImageSaveException, MapImageDeleteException {
         File imageFile;
         String fileName;
         String filePath = getFilePath(username, projectId, regionId);
@@ -57,7 +72,7 @@ public class ImageStorage {
         if (existingImageName != null) {
             if (!deleteImage(username, projectId, regionId, existingImageName)) {
                 System.err.println("Unable to delete existing image!");
-                return null;
+                throw new MapImageDeleteException(projectId, regionId);
             }
         }
 
@@ -71,19 +86,19 @@ public class ImageStorage {
         // if it doesn't exist
         if (!createParentFolder(imageFile)) {
             System.err.println("Unable to create parent folder!");
-            return null;
+            throw new MapImageSaveException(projectId, regionId);
         }
 
         // Create the new image file
         if (!createFile(imageFile)) {
             System.err.println("Unable to create file!");
-            return null;
+            throw new MapImageSaveException(projectId, regionId);
         }
 
         // Write the image bytes to the new file
         if (!writeImageToFile(imageAsBytes, imageFile)) {
             System.err.println("Unable to write image to file!");
-            return null;
+            throw new MapImageSaveException(projectId, regionId);
         }
         return fileName;
     }

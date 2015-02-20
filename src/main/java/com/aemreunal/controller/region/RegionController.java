@@ -16,7 +16,6 @@ package com.aemreunal.controller.region;
  **************************
  */
 
-import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -30,9 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Region;
-import com.aemreunal.exception.region.MapImageLoadException;
-import com.aemreunal.exception.region.MapImageNotSetException;
-import com.aemreunal.exception.region.MapImageSaveException;
+import com.aemreunal.exception.region.*;
 import com.aemreunal.service.RegionService;
 
 @Controller
@@ -196,18 +193,8 @@ public class RegionController {
                                                        @PathVariable Long projectId,
                                                        @PathVariable Long regionId,
                                                        @RequestPart(value = "mapImage") MultipartFile file)
-    throws MapImageSaveException {
-        byte[] fileBytes;
-        if (!file.isEmpty() && fileTypeIsImage(file)) {
-            try {
-                fileBytes = file.getBytes();
-            } catch (IOException e) {
-                return new ResponseEntity<Region>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } else {
-            return new ResponseEntity<Region>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
-        }
-        Region region = regionService.setMapImage(username, projectId, regionId, fileBytes);
+    throws MapImageSaveException, MultipartFileReadException, MapImageDeleteException, WrongFileTypeSubmittedException {
+        Region region = regionService.setMapImage(username, projectId, regionId, file);
         return new ResponseEntity<Region>(region, HttpStatus.CREATED);
     }
 
@@ -219,14 +206,6 @@ public class RegionController {
                                          @PathVariable Long regionId)
     throws MapImageNotSetException, MapImageLoadException {
         return regionService.getMapImage(username, projectId, regionId);
-    }
-
-    private boolean fileTypeIsImage(MultipartFile file) {
-        String type = file.getContentType();
-        return type.equalsIgnoreCase("image/jpg") ||
-                type.equalsIgnoreCase("image/jpeg") ||
-                type.equalsIgnoreCase("image/png") ||
-                type.equalsIgnoreCase("image/gif");
     }
 
     /**

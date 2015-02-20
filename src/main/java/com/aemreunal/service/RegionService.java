@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
@@ -198,23 +199,33 @@ public class RegionService {
      *         The ID of the project to which the region belongs.
      * @param regionId
      *         The ID of the region to save the image of.
-     * @param mapImageInBytes
-     *         The image file as a {@code byte[]}.
+     * @param imageFile
+     *         The image file as a {@link org.springframework.web.multipart.MultipartFile
+     *         MultipartFile}.
      *
      * @return The updated region object.
      */
-    public Region setMapImage(String username, Long projectId, Long regionId, byte[] mapImageInBytes) throws MapImageSaveException {
+    public Region setMapImage(String username, Long projectId, Long regionId, MultipartFile imageFile)
+            throws MapImageSaveException, MultipartFileReadException, MapImageDeleteException, WrongFileTypeSubmittedException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Setting map image of region with ID = \'" + regionId + "\'");
         }
-        Region region = this.getRegion(username, projectId, regionId);
-        String savedImageName = imageStorage.saveImage(username, projectId, regionId, region.getMapImageFileName(), mapImageInBytes);
-        if (savedImageName == null) {
-            throw new MapImageSaveException(projectId, regionId);
+        if (imageFile.isEmpty() || !fileTypeIsImage(imageFile)) {
+            throw new WrongFileTypeSubmittedException(projectId, regionId);
         }
+        Region region = this.getRegion(username, projectId, regionId);
+        String savedImageName = imageStorage.saveImage(username, projectId, regionId, region.getMapImageFileName(), imageFile);
         region.setMapImageFileName(savedImageName);
         save(username, projectId, region);
         return region;
+    }
+
+    private boolean fileTypeIsImage(MultipartFile file) {
+        String type = file.getContentType();
+        return type.equalsIgnoreCase("image/jpg") ||
+                type.equalsIgnoreCase("image/jpeg") ||
+                type.equalsIgnoreCase("image/png") ||
+                type.equalsIgnoreCase("image/gif");
     }
 
     public byte[] getMapImage(String username, Long projectId, Long regionId) throws MapImageLoadException, MapImageNotSetException {

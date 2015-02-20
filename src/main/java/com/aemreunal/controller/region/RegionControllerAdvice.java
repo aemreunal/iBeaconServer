@@ -39,14 +39,19 @@ public class RegionControllerAdvice {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({MapImageSaveException.class, MapImageLoadException.class})
+    @ExceptionHandler({MapImageSaveException.class, MapImageLoadException.class, MapImageDeleteException.class})
     public ResponseEntity<JSONObject> internalErrorExceptionHandler(Exception ex) {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(MultipartException.class)
+    @ExceptionHandler({MultipartException.class, MultipartFileReadException.class})
     public ResponseEntity<JSONObject> multipartRequestExceptionHandler(MultipartException ex) {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongFileTypeSubmittedException.class)
+    public ResponseEntity<JSONObject> wrongFileTypeSubmittedExceptionHandler(WrongFileTypeSubmittedException ex) {
+        return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
     private JSONObject getErrorResponseBody(Exception ex) {
