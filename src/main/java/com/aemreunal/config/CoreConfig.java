@@ -9,7 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -19,8 +18,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import com.aemreunal.helper.ImageStorage;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 
 /*
  **************************
@@ -47,9 +44,11 @@ public class CoreConfig {
     public static final long MAX_UPLOAD_SIZE_BYTES = 1572864;
 
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     private DataSource dataSource;
 
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     private HibernateJpaVendorAdapter vendorAdapter;
 
     // Required for @PropertySource and @Value value injection, as seen
@@ -67,17 +66,6 @@ public class CoreConfig {
         factory.setDataSource(dataSource);
         factory.setJpaProperties(jpaProperties());
         return factory;
-    }
-
-
-    @Bean
-    public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
-        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
-        ObjectMapper mapper = new ObjectMapper();
-        //Registering Hibernate4Module to support lazy objects
-        mapper.registerModule(new Hibernate4Module());
-        messageConverter.setObjectMapper(mapper);
-        return messageConverter;
     }
 
     @Bean

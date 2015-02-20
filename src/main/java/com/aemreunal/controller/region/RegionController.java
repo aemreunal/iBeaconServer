@@ -211,6 +211,36 @@ public class RegionController {
         return new ResponseEntity<Region>(region, HttpStatus.CREATED);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_DOWNLOAD_MAP_IMAGE_MAPPING, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public byte[] downloadRegionMapImage(@PathVariable String username,
+                                         @PathVariable Long projectId,
+                                         @PathVariable Long regionId)
+    throws MapImageNotSetException, MapImageLoadException {
+        return regionService.getMapImage(username, projectId, regionId);
+    }
+
+
+//    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_DOWNLOAD_MAP_IMAGE_MAPPING)
+//    public void downloadRegionMapImage(@PathVariable String username,
+//                                       @PathVariable Long projectId,
+//                                       @PathVariable Long regionId,
+//                                       HttpServletResponse response)
+//    throws MapImageNotSetException, MapImageLoadException {
+//        byte[] imageAsBytes = regionService.getMapImage(username, projectId, regionId);
+//        ByteArrayInputStream stream = new ByteArrayInputStream(imageAsBytes);
+//        try {
+//            response.setContentLength(imageAsBytes.length);
+//            response.setContentType("image/jpeg");
+//            response.setStatus(HttpStatus.OK.value());
+//            IOUtils.copy(stream, response.getOutputStream());
+//            response.flushBuffer();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     private boolean fileTypeIsImage(MultipartFile file) {
         String type = file.getContentType();
         return type.equalsIgnoreCase("image/jpg") ||
