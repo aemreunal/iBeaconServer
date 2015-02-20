@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
@@ -183,6 +184,10 @@ public class ImageStorage {
         File imageFile = new File(filePath + imageFileName);
         try {
             Files.delete(imageFile.toPath());
+        } catch (NoSuchFileException e) {
+            System.err.println("WARNING: Image file for user: " + username + ", project: "
+                                       + projectId + ", region " + regionId + ", file name: "
+                                       + imageFileName + " does not exist, nothing to delete!");
         } catch (IOException e) {
             System.err.println("Unable to delete the image!");
             throw new MapImageDeleteException(projectId, regionId);
