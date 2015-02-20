@@ -266,7 +266,14 @@ public class RegionService {
     }
 
     private void removeRegionImage(String username, Long projectId, Region region) {
-        imageStorage.deleteImage(username, projectId, region.getRegionId(), region.getMapImageFileName());
+        try {
+            imageStorage.deleteImage(username, projectId, region.getRegionId(), region.getMapImageFileName());
+        } catch (MapImageDeleteException e) {
+            System.err.println("WARNING: Image file for user: " + username + ", project: "
+                                       + projectId + ", region " + region.getRegionId() + ", file name: "
+                                       + region.getMapImageFileName() + " could not be deleted! " +
+                                       "May need to be deleted manually!");
+        }
     }
 
     private void removeBeaconsFromRegion(Region region, String username, Long projectId) {
