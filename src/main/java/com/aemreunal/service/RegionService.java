@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -222,10 +223,9 @@ public class RegionService {
 
     private boolean fileTypeIsImage(MultipartFile file) {
         String type = file.getContentType();
-        return type.equalsIgnoreCase("image/jpg") ||
-                type.equalsIgnoreCase("image/jpeg") ||
-                type.equalsIgnoreCase("image/png") ||
-                type.equalsIgnoreCase("image/gif");
+        return type.equalsIgnoreCase(MediaType.IMAGE_JPEG_VALUE) ||
+                type.equalsIgnoreCase(MediaType.IMAGE_PNG_VALUE) ||
+                type.equalsIgnoreCase(MediaType.IMAGE_GIF_VALUE);
     }
 
     public byte[] getMapImage(String username, Long projectId, Long regionId) throws MapImageLoadException, MapImageNotSetException {
