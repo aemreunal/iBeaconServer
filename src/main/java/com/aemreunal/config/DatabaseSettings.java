@@ -70,6 +70,7 @@ public class DatabaseSettings {
         // http://www.mchange.com/projects/c3p0/#configuration
         // http://stackoverflow.com/questions/12446266/c3p0-configurations-where-and-how
         // http://www.javacodegeeks.com/2014/05/adding-c3po-connection-pooling-in-spring-jdbc.html
+        // http://stackoverflow.com/questions/23480106/my-springhibernate-app-does-not-closes-jdbc-connections
         return dataSource;
     }
 
