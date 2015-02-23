@@ -1,15 +1,5 @@
 package com.aemreunal.config;
 
-
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.jpa.vendor.Database;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-
 /*
  ***************************
  * Copyright (c) 2014      *
@@ -26,11 +16,19 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
  ***************************
  */
 
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import com.mysql.jdbc.Driver;
+
 @Configuration
 @PropertySource("file:db.properties")
 public class DatabaseSettings {
-    private static final String DB_DRIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
-
     @Value("${db.username}")
     private String dbUsername;
 
@@ -49,7 +47,7 @@ public class DatabaseSettings {
     @Bean
     public HibernateJpaVendorAdapter vendorAdapter() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setDatabase(DatabaseSettings.DB_TYPE);
+        vendorAdapter.setDatabase(Database.MYSQL);
         vendorAdapter.setGenerateDdl(true);
         vendorAdapter.setShowSql(GlobalSettings.SHOW_SQL);
         return vendorAdapter;
@@ -58,16 +56,18 @@ public class DatabaseSettings {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(DB_DRIVER_CLASS_NAME);
+        dataSource.setDriverClassName(Driver.class.getName());
         dataSource.setUrl(getDbUrl());
         dataSource.setUsername(dbUsername);
         dataSource.setPassword(dbPassword);
         return dataSource;
     }
 
+    // We need to call this dynamically and can't make it a field,
+    // as the other fields this depends on are assigned dynamically
+    // during runtime via '@Value'
     private String getDbUrl() {
         return "jdbc:mysql://" + dbIp + ":" + dbPort + "/" + dbName + "?useUnicode=true&characterEncoding=UTF-8";
     }
 
-    public static final Database DB_TYPE = Database.MYSQL;
 }
