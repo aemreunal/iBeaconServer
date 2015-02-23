@@ -39,6 +39,7 @@ def aspectJWeaverVersion = '1.8.5'
 def cglibVersion = '3.1'
 def commonsFileUploadVersion = '1.3.1'
 def commonsIoVersion = '2.4'
+def hibernateC3P0Version = '4.3.8.Final'
 def hibernateCoreVersion = '4.3.8.Final'
 def hibernateEntityManagerVersion = '4.3.8.Final'
 def hibernateJPAAPI21Version = '1.0.0.Final'
@@ -100,6 +101,7 @@ dependencies {
     compile group: 'org.aspectj', name: 'aspectjweaver', version: aspectJWeaverVersion
 
     // Hibernate
+    compile group: 'org.hibernate', name: 'hibernate-c3p0', version: hibernateC3P0Version
     compile group: 'org.hibernate', name: 'hibernate-core', version: hibernateCoreVersion
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateEntityManagerVersion
     compile group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion

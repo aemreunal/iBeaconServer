@@ -16,14 +16,15 @@ package com.aemreunal.config;
  ***************************
  */
 
+import java.beans.PropertyVetoException;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.mysql.jdbc.Driver;
 
 @Configuration
@@ -55,18 +56,24 @@ public class DatabaseSettings {
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(Driver.class.getName());
-        dataSource.setUrl(getDbUrl());
-        dataSource.setUsername(dbUsername);
+        ComboPooledDataSource dataSource = new ComboPooledDataSource();
+        try {
+            dataSource.setDriverClass(Driver.class.getName());
+        } catch (PropertyVetoException e) {
+            System.err.println("Unable to set data source driver class!\nWill exit now.");
+            System.exit(-1);
+        }
+        dataSource.setJdbcUrl(getJdbcUrl());
+        dataSource.setUser(dbUsername);
         dataSource.setPassword(dbPassword);
+        // TODO better configure data source: http://www.mchange.com/projects/c3p0/#configuration
         return dataSource;
     }
 
     // We need to call this dynamically and can't make it a field,
     // as the other fields this depends on are assigned dynamically
     // during runtime via '@Value'
-    private String getDbUrl() {
+    private String getJdbcUrl() {
         return "jdbc:mysql://" + dbIp + ":" + dbPort + "/" + dbName + "?useUnicode=true&characterEncoding=UTF-8";
     }
 
