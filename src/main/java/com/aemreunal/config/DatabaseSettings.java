@@ -66,7 +66,10 @@ public class DatabaseSettings {
         dataSource.setJdbcUrl(getJdbcUrl());
         dataSource.setUser(dbUsername);
         dataSource.setPassword(dbPassword);
-        // TODO better configure data source: http://www.mchange.com/projects/c3p0/#configuration
+        // TODO better configure data source:
+        // http://www.mchange.com/projects/c3p0/#configuration
+        // http://stackoverflow.com/questions/12446266/c3p0-configurations-where-and-how
+        // http://www.javacodegeeks.com/2014/05/adding-c3po-connection-pooling-in-spring-jdbc.html
         return dataSource;
     }
 
