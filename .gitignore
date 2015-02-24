@@ -3,13 +3,10 @@
 build/
 data/
 out/
+logs/
 *.iml
 *.log
-
-hibernate-log.txt
-
 *.ipr
-
 *.iws
 
 DevResources/
@@ -20,6 +17,8 @@ log.txt
 log.txt.lck
 
 Docker/Tomcat entropy problem.txt
+
 *.txt.1
+
 *.properties
-tomcat-log.txt*
+
