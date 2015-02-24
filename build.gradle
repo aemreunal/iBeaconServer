@@ -23,10 +23,9 @@ buildscript {
 }
 
 apply plugin: 'base'
-apply plugin: 'com.bmuschko.tomcat'
+apply plugin: 'com.bmuschko.tomcat' // https://github.com/bmuschko/gradle-tomcat-plugin
 apply plugin: 'com.github.ben-manes.versions' // https://github.com/ben-manes/gradle-versions-plugin
 apply plugin: 'java'
-apply plugin: 'jetty'
 apply plugin: 'propdeps'
 apply plugin: 'propdeps-idea'
 apply plugin: 'propdeps-maven'
@@ -132,13 +131,7 @@ task copyToLib(type: Copy) {
     from configurations.runtime
 }
 
-// Tomcat configuration, via https://github.com/bmuschko/gradle-tomcat-plugin
 tomcat {
-//    httpPort = 8080 // Default: 8080
-//    httpsPort = 8081 // Default: 8443
-
-//    To use as backgrounds service. Use stop port to stop Tomcat in that case.
-//    tomcatRunWar.daemon = true // Default: false
     enableSSL = true
 }
 
@@ -154,6 +147,6 @@ assemble.dependsOn copyToLib
 
 tomcatRunWar.dependsOn.add(assemble)
 tomcatRunWar.contextPath = ''
-tomcatRunWar.outputFile = new File("log.txt")
+tomcatRunWar.outputFile = new File("tomcat-log.txt")
 
 println "Project is located in: " + projectDir

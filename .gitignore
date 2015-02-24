@@ -22,3 +22,4 @@ log.txt.lck
 Docker/Tomcat entropy problem.txt
 *.txt.1
 *.properties
+tomcat-log.txt*
