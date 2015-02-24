@@ -16,9 +16,9 @@ buildscript {
 
     // Dependencies used for building the gradle script itself
     dependencies {
-        classpath "com.bmuschko:gradle-tomcat-plugin:${tomcatGradlePluginVersion}"
-        classpath "org.springframework.build.gradle:propdeps-plugin:${propdepsPluginVersion}"
-        classpath "com.github.ben-manes:gradle-versions-plugin:${gradleVersionsPluginVersion}"
+        classpath group: 'com.bmuschko', name: 'gradle-tomcat-plugin', version: tomcatGradlePluginVersion
+        classpath group: 'org.springframework.build.gradle', name: 'propdeps-plugin', version: propdepsPluginVersion
+        classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: gradleVersionsPluginVersion
     }
 }
 
@@ -102,7 +102,6 @@ dependencies {
 
     // Hibernate
     compile group: 'org.hibernate', name: 'hibernate-c3p0', version: hibernateC3P0Version
-    compile group: 'org.hibernate', name: 'hibernate-core', version: hibernateCoreVersion
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: hibernateEntityManagerVersion
     compile group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion
     compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: hibernateJPAAPI21Version
