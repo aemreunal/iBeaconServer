@@ -32,13 +32,6 @@ public class GlobalSettings {
     public static final int BCRYPT_LOG_FACTOR = 10;
 
     /**
-     * This context path is defined inside the gradle build script, named 'build.gradle'.
-     * This value only reflects that one and if that context path is changed, this must be
-     * changed as well, since tests rely on the correctness of this value.
-     */
-    public static final String BASE_CONTEXT_PATH = "iBeacon";
-
-    /**
      * This regex matches if the given string contains a non-ASCII character. It, however,
      * does not match punctuation, so while "Hellö" matches this regex, "Hello!" won't.
      */
@@ -82,8 +75,9 @@ public class GlobalSettings {
     public static final String SCENARIO_REMOVE_REGION_MAPPING    = SCENARIO_ID_MAPPING + "/removeregion";
     // API
     public static final String API_PATH_MAPPING                  = "/robot";
+    public static final String API_BEACON_QUERY_PATH_MAPPING     = "/querybeacon";
 
-    public static final String API_BEACON_QUERY_PATH_MAPPING       = "/querybeacon";
+
     /**
      * These strings provide the image storage locations.
      */
@@ -94,6 +88,18 @@ public class GlobalSettings {
     public static final String IMAGE_STORAGE_FOLDER_PATH = USER_HOME_FOLDER_PATH + "/" +
             ROOT_STORAGE_FOLDER_DIRECTORY_NAME + "/" +
             IMAGE_STORAGE_FOLDER_DIRECTORY_NAME + "/";
+
+    /**
+     * These strings provide package names for annotation-based scanning.
+     */
+    public static final String BASE_PACKAGE_NAME       = "com.aemreunal";
+    // This must be the path of the package which holds the entity classes.
+    // The Entity Manager Factory scans the package designated by this string
+    // to map entities.
+    public static final String ENTITY_PACKAGE_NAME     = BASE_PACKAGE_NAME + ".domain";
+    public static final String REPOSITORY_PACKAGE_NAME = BASE_PACKAGE_NAME + ".repository";
+
+
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.hbm2ddl.auto"
     //
@@ -103,32 +109,46 @@ public class GlobalSettings {
     //
     // Values: "validate" | "update" | "create" | "create-drop"
     //
-    // validate: validate the schema, makes no changes to the database.
-    // update: update the schema.
-    // create: creates the schema, destroying previous data.
+    // validate:    validate the schema, makes no changes to the database.
+    // update:      update the schema.
+    // create:      creates the schema, destroying previous data.
     // create-drop: drop the schema at the end of the session.
     //----------------------------------------
-    public static final String HBM2DDL_PROPERTY          = "update";
-
+    public static final String HBM2DDL_KEY      = "hibernate.hbm2ddl.auto";
+    public static final String HBM2DDL_PROPERTY = "update";
     //-------------------------------------------------------------------------------------------
+
 
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.show_sql"
     //----------------------------------------
-    public static final String  SHOW_SQL_PROPERTY = String.valueOf(DEBUGGING);
-    // Used for the JDBC adapter
-    public static final boolean SHOW_SQL          = DEBUGGING;
-
+    public static final String SHOW_SQL_KEY      = "hibernate.show_sql";
+    public static final String SHOW_SQL_PROPERTY = String.valueOf(DEBUGGING);
     //-------------------------------------------------------------------------------------------
+
+
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.format_sql"
     //----------------------------------------
+    public static final String FORMAT_SQL_KEY      = "hibernate.format_sql";
     public static final Object FORMAT_SQL_PROPERTY = "true";
-
     //-------------------------------------------------------------------------------------------
+
+
     //-------------------------------------------------------------------------------------------
     // Property name: "hibernate.dialect"
     //----------------------------------------
+    public static final String DB_DIALECT_KEY      = "hibernate.dialect";
     public static final String DB_DIALECT_PROPERTY = "org.hibernate.dialect.MySQL5InnoDBDialect";
+    //-------------------------------------------------------------------------------------------
+
+
+    //-------------------------------------------------------------------------------------------
+    // Property name: "Multipart max upload size"
+    //
+    // This value limits the maximum Multipart upload size to the designated
+    // value. Files larger than this will be rejected.
+    //----------------------------------------
+    public static final long MAX_UPLOAD_SIZE_BYTES = 1572864; // 1572864 Bytes (= 1.5 MB)
     //-------------------------------------------------------------------------------------------
 }

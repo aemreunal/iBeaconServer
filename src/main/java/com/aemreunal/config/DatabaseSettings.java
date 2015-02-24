@@ -17,6 +17,7 @@ package com.aemreunal.config;
  */
 
 import java.beans.PropertyVetoException;
+import java.util.Properties;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -50,10 +51,15 @@ public class DatabaseSettings {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabase(Database.MYSQL);
         vendorAdapter.setGenerateDdl(true);
-        vendorAdapter.setShowSql(GlobalSettings.SHOW_SQL);
         return vendorAdapter;
     }
 
+
+    // TODO better configure data source:
+    // http://www.mchange.com/projects/c3p0/#configuration
+    // http://stackoverflow.com/questions/12446266/c3p0-configurations-where-and-how
+    // http://www.javacodegeeks.com/2014/05/adding-c3po-connection-pooling-in-spring-jdbc.html
+    // http://stackoverflow.com/questions/23480106/my-springhibernate-app-does-not-closes-jdbc-connections
     @Bean
     public DataSource dataSource() {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
@@ -66,12 +72,17 @@ public class DatabaseSettings {
         dataSource.setJdbcUrl(getJdbcUrl());
         dataSource.setUser(dbUsername);
         dataSource.setPassword(dbPassword);
-        // TODO better configure data source:
-        // http://www.mchange.com/projects/c3p0/#configuration
-        // http://stackoverflow.com/questions/12446266/c3p0-configurations-where-and-how
-        // http://www.javacodegeeks.com/2014/05/adding-c3po-connection-pooling-in-spring-jdbc.html
-        // http://stackoverflow.com/questions/23480106/my-springhibernate-app-does-not-closes-jdbc-connections
         return dataSource;
+    }
+
+    @Bean
+    public Properties jpaProperties() {
+        Properties properties = new Properties();
+        properties.put(GlobalSettings.DB_DIALECT_KEY, GlobalSettings.DB_DIALECT_PROPERTY);
+        properties.put(GlobalSettings.SHOW_SQL_KEY, GlobalSettings.SHOW_SQL_PROPERTY);
+        properties.put(GlobalSettings.FORMAT_SQL_KEY, GlobalSettings.FORMAT_SQL_PROPERTY);
+        properties.put(GlobalSettings.HBM2DDL_KEY, GlobalSettings.HBM2DDL_PROPERTY);
+        return properties;
     }
 
     // We need to call this dynamically and can't make it a field,

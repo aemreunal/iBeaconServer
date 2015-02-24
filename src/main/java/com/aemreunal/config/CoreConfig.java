@@ -36,13 +36,10 @@ import com.aemreunal.helper.ImageStorage;
  */
 
 @Configuration
-@EnableJpaRepositories(basePackages = { "com.aemreunal.repository" })
+@EnableJpaRepositories(GlobalSettings.REPOSITORY_PACKAGE_NAME)
 @EnableTransactionManagement
-@ComponentScan(basePackages = { "com.aemreunal" })
+@ComponentScan(GlobalSettings.BASE_PACKAGE_NAME)
 public class CoreConfig {
-    // Limit maximum upload size to 1572864 Bytes (= 1.5 MB)
-    public static final long MAX_UPLOAD_SIZE_BYTES = 1572864;
-
     @Autowired
     @SuppressWarnings("SpringJavaAutowiringInspection")
     private DataSource dataSource;
@@ -51,6 +48,10 @@ public class CoreConfig {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     private HibernateJpaVendorAdapter vendorAdapter;
 
+    @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    private Properties jpaProperties;
+
     // Required for @PropertySource and @Value value injection, as seen
     // in DatabaseSettings.java
     @Bean
@@ -58,35 +59,16 @@ public class CoreConfig {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
+    // This factory scans for @Entity classes and creates the appropriate
+    // mapping and wiring.
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan("com.aemreunal.domain");
+        factory.setPackagesToScan(GlobalSettings.ENTITY_PACKAGE_NAME);
         factory.setDataSource(dataSource);
-        factory.setJpaProperties(jpaProperties());
+        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setJpaProperties(jpaProperties);
         return factory;
-    }
-
-    @Bean
-    public ImageStorage imageStorage() {
-        return new ImageStorage();
-    }
-
-    @Bean
-    public MultipartResolver multipartResolver() {
-        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-        resolver.setMaxUploadSize(MAX_UPLOAD_SIZE_BYTES);
-        return resolver;
-    }
-
-    private Properties jpaProperties() {
-        Properties properties = new Properties();
-        properties.put("hibernate.dialect", GlobalSettings.DB_DIALECT_PROPERTY);
-        properties.put("hibernate.show_sql", GlobalSettings.SHOW_SQL_PROPERTY);
-        properties.put("hibernate.format_sql", GlobalSettings.FORMAT_SQL_PROPERTY);
-        properties.put("hibernate.hbm2ddl.auto", GlobalSettings.HBM2DDL_PROPERTY);
-        return properties;
     }
 
     @Bean
@@ -96,6 +78,21 @@ public class CoreConfig {
         return transactionManager;
     }
 
+    // Used for resolving Multipart file uploads.
+    @Bean
+    public MultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setMaxUploadSize(GlobalSettings.MAX_UPLOAD_SIZE_BYTES);
+        return resolver;
+    }
+
+    // Used for storing images in the filesystem.
+    @Bean
+    public ImageStorage imageStorage() {
+        return new ImageStorage();
+    }
+
+    // Used for encrypting passwords.
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(GlobalSettings.BCRYPT_LOG_FACTOR);
