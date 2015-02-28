@@ -164,14 +164,6 @@ public class Region extends ResourceSupport implements Serializable {
     public void setBeacons(Set<Beacon> beacons) {
         this.beacons = beacons;
     }
-
-    public void addBeacon(Beacon beacon) {
-        getBeacons().add(beacon);
-    }
-
-    public void removeBeacon(Beacon beacon) {
-        getBeacons().remove(beacon);
-    }
     /*
      * END: Region 'beacon list' attribute
      *------------------------------------------------------------
@@ -201,10 +193,12 @@ public class Region extends ResourceSupport implements Serializable {
     }
 
     public void designateBeacon(Beacon beacon) {
+        markAsUpdated();
         getDesignatedBeacons().add(beacon);
     }
 
     public void undesignateBeacon(Beacon beacon) {
+        markAsUpdated();
         getDesignatedBeacons().remove(beacon);
     }
     /*
@@ -265,7 +259,6 @@ public class Region extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      */
 
-
     /*
      *------------------------------------------------------------
      * BEGIN: Region 'creationDate' attribute
@@ -287,11 +280,37 @@ public class Region extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      */
 
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Region 'lastUpdateDate' attribute
+     */
+    @Column(name = "last_update_date", nullable = false)
+    @Access(AccessType.PROPERTY)
+    private Date lastUpdatedDate = null;
+
+    public Date getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(Date lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    public void markAsUpdated() {
+        setLastUpdatedDate(new Date());
+    }
+    /*
+     * END: Region 'lastUpdateDate' attribute
+     *------------------------------------------------------------
+     */
+
     @PrePersist
     private void setInitialProperties() {
         // Set beacon creation date
         if (creationDate == null) {
-            setCreationDate(new Date());
+            Date now = new Date();
+            setCreationDate(now);
+            setLastUpdatedDate(now);
         }
     }
 
