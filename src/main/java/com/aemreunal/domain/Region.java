@@ -130,7 +130,7 @@ public class Region extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Region 'beacon list' attribute
+     * BEGIN: Region 'beacons' attribute
      */
 
     /*
@@ -153,7 +153,6 @@ public class Region extends ResourceSupport implements Serializable {
             mappedBy = "region",
             fetch = FetchType.LAZY)
     @Access(AccessType.PROPERTY)
-    // TODO @JsonIgnoreProperties(value = {})
     private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
 
     public Set<Beacon> getBeacons() {
@@ -165,7 +164,7 @@ public class Region extends ResourceSupport implements Serializable {
         this.beacons = beacons;
     }
     /*
-     * END: Region 'beacon list' attribute
+     * END: Region 'beacons' attribute
      *------------------------------------------------------------
      */
 
