@@ -67,7 +67,11 @@ public class RegionService {
         }
         Project project = projectService.findProjectById(username, projectId);
         if (region.getProject() == null) {
+            // Region is created
             region.setProject(project);
+        } else {
+            // Region is only updated
+            region.markAsUpdated();
         }
         return regionRepo.save(region);
     }
@@ -135,6 +139,7 @@ public class RegionService {
             scenarioService.removeBeaconFromScenario(username, projectId, currentScenario.getScenarioId(), beaconId);
         }
         beacon.setRegion(region);
+        region.markAsUpdated();
         beaconService.save(username, projectId, beacon);
         return region;
     }
@@ -144,6 +149,7 @@ public class RegionService {
         Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
         checkIfBeaconBelongsToRegion(regionId, beacon);
         beacon.setRegion(null);
+        region.markAsUpdated();
         beaconService.save(username, projectId, beacon);
         return region;
     }
@@ -153,6 +159,7 @@ public class RegionService {
         Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
         checkIfBeaconBelongsToRegion(regionId, beacon);
         region.designateBeacon(beacon);
+        region.markAsUpdated();
         save(username, projectId, region);
         return region;
     }
@@ -217,6 +224,7 @@ public class RegionService {
         Region region = this.getRegion(username, projectId, regionId);
         String savedImageName = imageStorage.saveImage(username, projectId, regionId, region.getMapImageFileName(), imageFile);
         region.setMapImageFileName(savedImageName);
+        // Save marks the region as updated
         save(username, projectId, region);
         return region;
     }
@@ -244,6 +252,12 @@ public class RegionService {
         return mapImage;
     }
 
+    public void setRegionScenario(String username, Long projectId, Region region, Scenario scenario) {
+        region.setScenario(scenario);
+        region.markAsUpdated();
+        save(username, projectId, region);
+    }
+
     /**
      * Deletes the region with the given ID and updates the beacons in the region.
      *
@@ -259,7 +273,7 @@ public class RegionService {
             System.out.println("Deleting region with ID = \'" + regionId + "\'");
         }
         Region region = this.getRegion(username, projectId, regionId);
-        removeBeaconsFromRegion(region, username, projectId);
+        removeAllBeaconsFromRegion(region, username, projectId);
         removeRegionImage(username, projectId, region);
         regionRepo.delete(region);
         return region;
@@ -276,7 +290,7 @@ public class RegionService {
         }
     }
 
-    private void removeBeaconsFromRegion(Region region, String username, Long projectId) {
+    private void removeAllBeaconsFromRegion(Region region, String username, Long projectId) {
         for (Beacon beacon : region.getBeacons()) {
             beacon.setRegion(null);
             beaconService.save(username, projectId, beacon);

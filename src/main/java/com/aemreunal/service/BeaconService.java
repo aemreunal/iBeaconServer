@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
+import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
@@ -170,6 +171,11 @@ public class BeaconService {
     public List<Beacon> getBeaconsOfProject(String username, Long projectId) {
         Project project = projectService.findProjectById(username, projectId);
         return project.getBeacons().stream().collect(Collectors.toList());
+    }
+
+    public void setBeaconScenario(String username, Long projectId, Beacon beacon, Scenario scenario, ScenarioService scenarioService) {
+        beacon.setScenario(scenario);
+        save(username, projectId, beacon);
     }
 
     public Beacon delete(String username, Long projectId, Long beaconId) {
