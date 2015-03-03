@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.controller.beacon.BeaconController;
 import com.aemreunal.controller.region.RegionController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Project;
@@ -59,7 +58,7 @@ public class ProjectController {
     public ResponseEntity<List<Project>> getAllProjectsOfUser(@PathVariable String username,
                                                               @RequestParam(value = "name", required = false, defaultValue = "") String projectName) {
         if (projectName.equals("")) {
-            return new ResponseEntity<List<Project>>(projectService.findAllProjectsOf(username), HttpStatus.OK);
+            return new ResponseEntity<List<Project>>(projectService.getAllProjectsOf(username), HttpStatus.OK);
         } else {
             return getProjectsWithMatchingCriteria(username, projectName);
         }
@@ -91,7 +90,7 @@ public class ProjectController {
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.PROJECT_ID_MAPPING, produces = "application/json;charset=UTF-8")
     public ResponseEntity<Project> getProjectById(@PathVariable String username,
                                                   @PathVariable Long projectId) {
-        Project project = projectService.findProjectById(username, projectId);
+        Project project = projectService.getProject(username, projectId);
         return new ResponseEntity<Project>(addLinks(project), HttpStatus.OK);
     }
 
@@ -167,7 +166,6 @@ public class ProjectController {
         String username = project.getOwner().getUsername();
         Long projectId = project.getProjectId();
         project.getLinks().add(linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withSelfRel());
-        project.getLinks().add(linkTo(methodOn(BeaconController.class).getBeaconsOfProject(username, projectId, "", null, null)).withRel("beacons"));
         project.getLinks().add(linkTo(methodOn(RegionController.class).viewRegionsOfProject(username, projectId, "")).withRel("regions"));
         project.getLinks().add(linkTo(methodOn(UserController.class).getUserByUsername(username)).withRel("owner"));
         return project;

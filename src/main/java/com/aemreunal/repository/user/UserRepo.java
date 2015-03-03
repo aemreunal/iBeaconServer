@@ -18,8 +18,10 @@ package com.aemreunal.repository.user;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import com.aemreunal.domain.User;
 
+@Repository
 public interface UserRepo extends CrudRepository<User, Long>, JpaSpecificationExecutor {
     User findByUsername(String username);
 }

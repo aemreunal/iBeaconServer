@@ -18,9 +18,11 @@ package com.aemreunal.repository.scenario;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Scenario;
 
+@Repository
 public interface ScenarioRepo extends CrudRepository<Scenario, Long>, JpaSpecificationExecutor {
     public Scenario findByScenarioIdAndProject(Long scenarioId, Project project);
 }

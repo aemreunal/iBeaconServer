@@ -234,32 +234,6 @@ public class Region extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Region 'scenario' attribute
-     */
-    @ManyToOne(targetEntity = Scenario.class,
-            fetch = FetchType.LAZY,
-            optional = false)
-    @JoinTable(name = "scenarios_to_regions",
-            joinColumns = @JoinColumn(name = "region_id"),
-            inverseJoinColumns = @JoinColumn(name = "scenario_id"))
-    @Access(AccessType.PROPERTY)
-    private Scenario scenario;
-
-    public Scenario getScenario() {
-        CoreConfig.initLazily(scenario);
-        return scenario;
-    }
-
-    public void setScenario(Scenario scenario) {
-        this.scenario = scenario;
-    }
-    /*
-     * END: Region 'scenario' attribute
-     *------------------------------------------------------------
-     */
-
-    /*
-     *------------------------------------------------------------
      * BEGIN: Region 'creationDate' attribute
      */
     @Column(name = "creation_date", nullable = false)
@@ -315,10 +289,7 @@ public class Region extends ResourceSupport implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Region)) {
-            return false;
-        } else {
-            return ((Region) obj).getRegionId().equals(this.getRegionId());
-        }
+        return (obj instanceof Region)
+                && ((Region) obj).getRegionId().equals(this.getRegionId());
     }
 }

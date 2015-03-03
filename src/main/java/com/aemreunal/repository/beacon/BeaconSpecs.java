@@ -25,22 +25,32 @@ public class BeaconSpecs {
     /**
      * Creates the Beacon search specification from the given attributes
      *
+     * @param username
+     *         The username to search for. Could be NULL for API queries.
      * @param projectId
-     *         The project ID to search in. Could be NULL for API queries.
+     *         The project ID to search for. Could be NULL for API queries.
+     * @param regionId
+     *         The region ID to search for. Could be NULL for API queries.
      * @param uuid
-     *         The UUID attribute to search for
+     *         The UUID attribute to search for.
      * @param major
-     *         The major attribute to search for
+     *         The major attribute to search for.
      * @param minor
-     *         The minor attribute to search for
+     *         The minor attribute to search for.
      *
      * @return The specification of the beacon
      */
-    public static Specification<Beacon> beaconWithSpecification(final Long projectId, final String uuid, final Integer major, final Integer minor) {
+    public static Specification<Beacon> beaconWithSpecification(final String username, final Long projectId, final Long regionId, final String uuid, final Integer major, final Integer minor) {
         return (root, query, builder) -> {
             ArrayList<Predicate> predicates = new ArrayList<Predicate>();
+            if (username != null) {
+                predicates.add(builder.equal(root.get("region").get("project").get("owner").get("username").as(String.class), username));
+            }
             if (projectId != null) {
-                predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
+                predicates.add(builder.equal(root.get("region").get("project").get("projectId"), projectId));
+            }
+            if (regionId != null) {
+                predicates.add(builder.equal(root.get("region").get("regionId"), regionId));
             }
 
             if (!uuid.equals("")) {
@@ -66,18 +76,18 @@ public class BeaconSpecs {
     /**
      * Creates the 'Beacon exists' search specification from the given attributes
      *
-     * @param projectId
-     *         The project ID to search in
+     * @param regionId
+     *         The region ID to search in
      * @param beaconId
      *         The ID of the beacon to find
      *
      * @return The specification of the beacon
      */
-    public static Specification<Beacon> beaconExistsSpecification(final Long projectId, final Long beaconId) {
+    public static Specification<Beacon> beaconExistsSpecification(final Long regionId, final Long beaconId) {
         return (root, query, builder) -> {
             ArrayList<Predicate> predicates = new ArrayList<Predicate>();
-            // Project specification
-            predicates.add(builder.equal(root.get("project").get("projectId"), projectId));
+            // Region specification
+            predicates.add(builder.equal(root.get("region").get("regionId"), regionId));
 
             // Beacon specification
             predicates.add(builder.equal(root.get("beaconId"), beaconId));

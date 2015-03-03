@@ -21,7 +21,8 @@ import com.aemreunal.domain.User;
 
 public class UserSpecs {
     /**
-     * Creates the User search specification by the given username.
+     * Creates the User search specification by the given username. Currently used for
+     * searching whether a given username is unique.
      *
      * @param username
      *         The username of the User to find

@@ -34,11 +34,6 @@ public class RegionControllerAdvice {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({BeaconHasRegionException.class, MapImageNotSetException.class})
-    public ResponseEntity<JSONObject> badRequestExceptionHandler(Exception ex) {
-        return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler({MapImageSaveException.class, MapImageLoadException.class, MapImageDeleteException.class})
     public ResponseEntity<JSONObject> internalErrorExceptionHandler(Exception ex) {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.INTERNAL_SERVER_ERROR);

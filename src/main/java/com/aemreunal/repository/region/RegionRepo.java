@@ -2,6 +2,7 @@ package com.aemreunal.repository.region;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Region;
 
@@ -21,7 +22,7 @@ import com.aemreunal.domain.Region;
  **************************
  */
 
-// extends CrudRepository<Object type, Object ID type>
+@Repository
 public interface RegionRepo extends CrudRepository<Region, Long>, JpaSpecificationExecutor {
     Region findByRegionIdAndProject(Long regionId, Project project);
 }

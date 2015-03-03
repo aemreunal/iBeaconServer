@@ -164,40 +164,6 @@ public class Project extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Project 'beacons list' attribute
-     */
-    @OneToMany(targetEntity = Beacon.class,
-               mappedBy = "project",
-               orphanRemoval = true,
-               fetch = FetchType.LAZY)
-    /*
-     * To eliminate duplicates without using Sets, use:
-     * @Fetch(FetchMode.SUBSELECT)
-     * via: http://doctorjw.wordpress.com/2012/01/11/hibernate-collections-and-duplicate-objects/
-     */
-    @OrderBy("beaconId")
-    private Set<Beacon> beacons = new LinkedHashSet<>();
-
-    public Set<Beacon> getBeacons() {
-        CoreConfig.initLazily(beacons);
-        return beacons;
-    }
-
-    public void setBeacons(Set<Beacon> beacons) {
-        this.beacons = beacons;
-    }
-
-    public void addBeacon(Beacon beacon) {
-        CoreConfig.initLazily(beacons);
-        this.beacons.add(beacon);
-    }
-    /*
-     * END: Project 'beacons list' attribute
-     *------------------------------------------------------------
-     */
-
-    /*
-     *------------------------------------------------------------
      * BEGIN: Project 'region list' attribute
      */
     @OneToMany(targetEntity = Region.class,

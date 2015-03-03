@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.project.ProjectController;
 import com.aemreunal.controller.region.RegionController;
+import com.aemreunal.controller.scenario.ScenarioController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.service.BeaconService;
@@ -74,12 +76,13 @@ public class BeaconController {
      * BeaconNotFoundException} if no beacons match the constraints.
      */
     @Transactional
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<List<Beacon>> getBeaconsOfProject(@PathVariable String username,
-                                                            @PathVariable Long projectId,
-                                                            @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
-                                                            @RequestParam(value = "major", required = false) Integer major,
-                                                            @RequestParam(value = "minor", required = false) Integer minor) {
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Beacon>> getBeaconsOfRegion(@PathVariable String username,
+                                                           @PathVariable Long projectId,
+                                                           @PathVariable Long regionId,
+                                                           @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
+                                                           @RequestParam(value = "major", required = false) Integer major,
+                                                           @RequestParam(value = "minor", required = false) Integer minor) {
         if (major == null) {
             major = -1;
         }
@@ -87,10 +90,10 @@ public class BeaconController {
             minor = -1;
         }
         if (uuid.equals("") && major.equals(-1) && minor.equals(-1)) {
-            List<Beacon> beaconList = beaconService.getBeaconsOfProject(username, projectId);
+            List<Beacon> beaconList = beaconService.getBeaconsOfRegion(username, projectId, regionId);
             return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
         } else {
-            List<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, uuid, major, minor);
+            List<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, regionId, uuid, major, minor);
             return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
         }
     }
@@ -107,30 +110,31 @@ public class BeaconController {
      *
      * @return The beacon
      */
-    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACON_ID_MAPPING, produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACON_ID_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Beacon> getBeacon(@PathVariable String username,
                                             @PathVariable Long projectId,
+                                            @PathVariable Long regionId,
                                             @PathVariable Long beaconId) {
-        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
-        addLinks(username, projectId, beacon);
+        Beacon beacon = beaconService.getBeacon(username, projectId, regionId, beaconId);
+        addLinks(username, projectId, regionId, beacon);
         return new ResponseEntity<Beacon>(beacon, HttpStatus.OK);
     }
 
-    private void addLinks(String username, Long projectId, Beacon beacon) {
-        beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).getBeacon(username, projectId, beacon.getBeaconId())).withSelfRel());
+    private void addLinks(String username, Long projectId, Long regionId, Beacon beacon) {
+        beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).getBeacon(username, projectId, regionId, beacon.getBeaconId())).withSelfRel());
         beacon.add(ControllerLinkBuilder.linkTo(methodOn(UserController.class).getUserByUsername(username)).withRel("owner"));
         beacon.add(ControllerLinkBuilder.linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withRel("project"));
-        if (beacon.getRegion() != null) {
-            beacon.add(ControllerLinkBuilder.linkTo(methodOn(RegionController.class).viewRegion(username, projectId, beacon.getRegion().getRegionId())).withRel("region"));
+        beacon.add(ControllerLinkBuilder.linkTo(methodOn(RegionController.class).viewRegion(username, projectId, beacon.getRegion().getRegionId())).withRel("region"));
+        if (beacon.getScenario() != null) {
+            beacon.add(ControllerLinkBuilder.linkTo(methodOn(ScenarioController.class).getScenario(username, projectId, beacon.getScenario().getScenarioId())).withRel("scenario"));
         }
-        // TODO add scenario link
     }
 
     /**
-     * Create a new beacon in project
+     * Create a new beacon in region.
      * <p>
-     * Create JSON:<br/> {<br/> "uuid":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",<br/>
-     * "major":"1",<br/> "minor":"2",<br/> "description":"Test beacon"<br/> }
+     * Region creation request JSON:<br/> {<br/> "uuid":"12345678-1234-1234-1234-123456789012",<br/>
+     * "major":"1",<br/> "minor":"2",<br/> "description":"Beacon description"<br/>}
      *
      * @param projectId
      *         The ID of the project to create the beacon in
@@ -141,20 +145,20 @@ public class BeaconController {
      *
      * @return The created beacon
      */
-    @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Beacon> createBeaconInProject(@PathVariable String username,
-                                                        @PathVariable Long projectId,
-                                                        @RequestBody Beacon beaconJson,
-                                                        UriComponentsBuilder builder) {
-        Beacon savedBeacon = beaconService.save(username, projectId, beaconJson);
-
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Beacon> createBeacon(@PathVariable String username,
+                                               @PathVariable Long projectId,
+                                               @PathVariable Long regionId,
+                                               @RequestBody Beacon beaconJson,
+                                               UriComponentsBuilder builder) {
+        Beacon savedBeacon = beaconService.save(username, projectId, regionId, beaconJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
                                        "\' major = \'" + savedBeacon.getMajor() +
                                        "\' minor = \'" + savedBeacon.getMinor() +
                                        "\' in project with ID = \'" + projectId + "\'");
         }
-        addLinks(username, projectId, savedBeacon);
+        addLinks(username, projectId, regionId, savedBeacon);
         return buildCreateResponse(username, builder, savedBeacon);
     }
 
@@ -163,7 +167,8 @@ public class BeaconController {
         headers.setLocation(builder.path(GlobalSettings.BEACON_SPECIFIC_MAPPING)
                                    .buildAndExpand(
                                            username,
-                                           savedBeacon.getProject().getProjectId().toString(),
+                                           savedBeacon.getRegion().getProject().getProjectId().toString(),
+                                           savedBeacon.getRegion().getRegionId().toString(),
                                            savedBeacon.getBeaconId().toString())
                                    .toUri());
         return new ResponseEntity<Beacon>(savedBeacon, headers, HttpStatus.CREATED);
@@ -185,10 +190,11 @@ public class BeaconController {
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACON_ID_MAPPING)
     public ResponseEntity<Beacon> deleteBeacon(@PathVariable String username,
                                                @PathVariable Long projectId,
+                                               @PathVariable Long regionId,
                                                @PathVariable Long beaconId,
                                                @RequestParam(value = "confirm", required = true) String confirmation) {
         if (confirmation.toLowerCase().equals("yes")) {
-            Beacon deletedBeacon = beaconService.delete(username, projectId, beaconId);
+            Beacon deletedBeacon = beaconService.delete(username, projectId, regionId, beaconId);
             return new ResponseEntity<Beacon>(deletedBeacon, HttpStatus.OK);
         } else {
             return new ResponseEntity<Beacon>(HttpStatus.PRECONDITION_FAILED);

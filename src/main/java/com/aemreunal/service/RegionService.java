@@ -1,6 +1,5 @@
 package com.aemreunal.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Region;
-import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.region.*;
 import com.aemreunal.helper.ImageStorage;
 import com.aemreunal.repository.region.RegionRepo;
@@ -48,9 +46,6 @@ public class RegionService {
     private ProjectService projectService;
 
     @Autowired
-    private ScenarioService scenarioService;
-
-    @Autowired
     private ImageStorage imageStorage;
 
     /**
@@ -65,7 +60,7 @@ public class RegionService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving region with ID = \'" + region.getRegionId() + "\'");
         }
-        Project project = projectService.findProjectById(username, projectId);
+        Project project = projectService.getProject(username, projectId);
         if (region.getProject() == null) {
             // Region is created
             region.setProject(project);
@@ -77,19 +72,15 @@ public class RegionService {
     }
 
     public List<Region> getAllRegionsOf(String username, Long projectId) {
-        Project project = projectService.findProjectById(username, projectId);
-        List<Region> regions = new ArrayList<Region>();
-        for (Region region : project.getRegions()) {
-            regions.add(region);
-        }
-        return regions;
+        Project project = projectService.getProject(username, projectId);
+        return project.getRegions().stream().collect(Collectors.toList());
     }
 
     public Region getRegion(String username, Long projectId, Long regionId) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding region with ID = \'" + regionId + "\'");
         }
-        Project project = projectService.findProjectById(username, projectId);
+        Project project = projectService.getProject(username, projectId);
         Region region = regionRepo.findByRegionIdAndProject(regionId, project);
         if (region == null) {
             throw new RegionNotFoundException(regionId);
@@ -111,7 +102,7 @@ public class RegionService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding regions with projectID = \'" + projectId + "\' and name =\'" + regionName + "\'");
         }
-        Project project = projectService.findProjectById(username, projectId);
+        Project project = projectService.getProject(username, projectId);
         List<Region> regions = regionRepo.findAll(RegionSpecs.regionWithSpecification(project.getProjectId(), regionName));
         if (regions.size() == 0) {
             throw new RegionNotFoundException();
@@ -121,79 +112,16 @@ public class RegionService {
 
     public List<Beacon> getMembersOfRegion(String username, Long projectId, Long regionId) {
         Region region = this.getRegion(username, projectId, regionId);
-        List<Beacon> beaconList = region.getBeacons().stream().collect(Collectors.toList());
-        return beaconList;
-    }
-
-    public Region addBeaconToRegion(String username, Long projectId, Long regionId, Long beaconId) {
-        Region region = getRegion(username, projectId, regionId);
-        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
-        // Check pre-existing region
-        Region currentRegion = beacon.getRegion();
-        if (currentRegion != null) {
-            throw new BeaconHasRegionException(beaconId, currentRegion.getRegionId());
-        }
-        // Check pre-existing scenario
-        Scenario currentScenario = beacon.getScenario();
-        if (currentScenario != null) {
-            scenarioService.removeBeaconFromScenario(username, projectId, currentScenario.getScenarioId(), beaconId);
-        }
-        beacon.setRegion(region);
-        region.markAsUpdated();
-        beaconService.save(username, projectId, beacon);
-        return region;
-    }
-
-    public Region removeBeaconFromRegion(String username, Long projectId, Long regionId, Long beaconId) {
-        Region region = getRegion(username, projectId, regionId);
-        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
-        checkIfBeaconBelongsToRegion(regionId, beacon);
-        beacon.setRegion(null);
-        region.markAsUpdated();
-        beaconService.save(username, projectId, beacon);
-        return region;
+        return region.getBeacons().stream().collect(Collectors.toList());
     }
 
     public Region designateBeacon(String username, Long projectId, Long regionId, Long beaconId) {
         Region region = getRegion(username, projectId, regionId);
-        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
-        checkIfBeaconBelongsToRegion(regionId, beacon);
+        Beacon beacon = beaconService.getBeacon(username, projectId, regionId, beaconId);
         region.designateBeacon(beacon);
         region.markAsUpdated();
         save(username, projectId, region);
         return region;
-    }
-
-    /**
-     * Checks the relationship between a beacon and a region. The relationship is valid if
-     * the beacon belongs to that region; in that case, no exception is thrown. If the
-     * beacon doesn't belong to any region, a {@link com.aemreunal.exception.region.BeaconDoesNotHaveRegionException
-     * BeaconDoesNotHaveRegionException} is thrown. If the beacon belongs to another
-     * region, a BeaconHasRegionException {@link com.aemreunal.exception.region.BeaconHasRegionException
-     * BeaconHasRegionException} is thrown.
-     *
-     * @param regionId
-     *         The ID of the region to check the relationship of
-     * @param beacon
-     *         The beacon object to check the relationship of
-     *
-     * @throws com.aemreunal.exception.region.BeaconDoesNotHaveRegionException
-     *         If the beacon doesn't belong to any region
-     * @throws com.aemreunal.exception.region.BeaconHasRegionException
-     *         If the beacon belongs to another region, different from the one designated
-     *         with the parameter {@code regionId}
-     */
-    private void checkIfBeaconBelongsToRegion(Long regionId, Beacon beacon)
-            throws BeaconDoesNotHaveRegionException, BeaconHasRegionException {
-        // Check region
-        Region currentRegion = beacon.getRegion();
-        if (currentRegion == null) {
-            // Valid if the beacon doesn't have a region
-            throw new BeaconDoesNotHaveRegionException(beacon.getBeaconId(), regionId);
-        } else if (!(currentRegion.getRegionId().equals(regionId))) {
-            // Valid if the beacon belongs to another region
-            throw new BeaconHasRegionException(beacon.getBeaconId(), beacon.getRegion().getRegionId());
-        }
     }
 
     /**
@@ -252,12 +180,6 @@ public class RegionService {
         return mapImage;
     }
 
-    public void setRegionScenario(String username, Long projectId, Region region, Scenario scenario) {
-        region.setScenario(scenario);
-        region.markAsUpdated();
-        save(username, projectId, region);
-    }
-
     /**
      * Deletes the region with the given ID and updates the beacons in the region.
      *
@@ -273,7 +195,7 @@ public class RegionService {
             System.out.println("Deleting region with ID = \'" + regionId + "\'");
         }
         Region region = this.getRegion(username, projectId, regionId);
-        removeAllBeaconsFromRegion(region, username, projectId);
+        removeAllBeaconsFromRegion(username, projectId, region);
         removeRegionImage(username, projectId, region);
         regionRepo.delete(region);
         return region;
@@ -290,10 +212,10 @@ public class RegionService {
         }
     }
 
-    private void removeAllBeaconsFromRegion(Region region, String username, Long projectId) {
+    private void removeAllBeaconsFromRegion(String username, Long projectId, Region region) {
         for (Beacon beacon : region.getBeacons()) {
             beacon.setRegion(null);
-            beaconService.save(username, projectId, beacon);
+            beaconService.save(username, projectId, region.getRegionId(), beacon);
         }
     }
 }

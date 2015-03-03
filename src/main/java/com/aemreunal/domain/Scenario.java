@@ -159,30 +159,6 @@ public class Scenario extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Scenario 'regions list' attribute
-     */
-    @OneToMany(targetEntity = Region.class,
-            mappedBy = "scenario",
-            fetch = FetchType.LAZY)
-    @OrderBy(value = "regionId")
-    @Access(AccessType.PROPERTY)
-    private Set<Region> regions = new LinkedHashSet<>();
-
-    public Set<Region> getRegions() {
-        CoreConfig.initLazily(regions);
-        return regions;
-    }
-
-    public void setRegions(Set<Region> regions) {
-        this.regions = regions;
-    }
-    /*
-     * END: Scenario 'regions list' attribute
-     *------------------------------------------------------------
-     */
-
-    /*
-     *------------------------------------------------------------
      * BEGIN: Scenario 'creationDate' attribute
      */
     @Column(name = "creation_date", nullable = false)

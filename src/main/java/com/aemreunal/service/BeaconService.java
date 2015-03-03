@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
-import com.aemreunal.domain.Project;
+import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
+import com.aemreunal.exception.region.RegionNotFoundException;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
 
@@ -37,7 +38,7 @@ import com.aemreunal.repository.beacon.BeaconSpecs;
 @Service
 public class BeaconService {
     @Autowired
-    private ProjectService projectService;
+    private RegionService regionService;
 
     @Autowired
     private BeaconRepo beaconRepo;
@@ -53,34 +54,42 @@ public class BeaconService {
      *
      * @return The saved/updated beacon
      */
-    public Beacon save(String username, Long projectId, Beacon beacon) throws ConstraintViolationException, BeaconAlreadyExistsException {
+    public Beacon save(String username, Long projectId, Long regionId, Beacon beacon)
+            throws ConstraintViolationException, BeaconAlreadyExistsException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         }
-        // Even though the 'project' variable is only used inside the if-clause,
-        // the Project is found no matter what to ensure it exists and legitimate.
-        Project project = projectService.findProjectById(username, projectId);
-        if (beacon.getProject() == null) {
+        Region region = regionService.getRegion(username, projectId, regionId);
+        if (beacon.getRegion() == null) {
             // This means it hasn't been saved yet
-            if (beaconExists(username, projectId, beacon)) {
+            if (beaconExists(username, projectId, regionId, beacon)) {
                 // First, verify the beacon doesn't already exist
                 throw new BeaconAlreadyExistsException(beacon);
             }
-            beacon.setProject(project);
+            beacon.setRegion(region);
         }
         return beaconRepo.save(beacon);
     }
 
-    private boolean beaconExists(String username, Long projectId, Beacon beacon) {
-        List<Beacon> beacons = searchBeaconsBySpecs(username, projectId, beacon.getUuid(), beacon.getMajor(), beacon.getMinor());
+    private boolean beaconExists(String username, Long projectId, Long regionId, Beacon beacon) {
+        List<Beacon> beacons;
+        try {
+            beacons = findBeaconsBySpecs(username, projectId, regionId, beacon.getUuid(), beacon.getMajor(), beacon.getMinor());
+        } catch (BeaconNotFoundException e) {
+            return false;
+        }
         return beacons.size() != 0;
     }
 
     /**
      * Finds beacons conforming to given specifications
      *
+     * @param username
+     *         The username constraint
      * @param projectId
      *         The project ID constraint
+     * @param regionId
+     *         The region ID constraint
      * @param uuid
      *         The UUID field constraint
      * @param major
@@ -90,36 +99,23 @@ public class BeaconService {
      *
      * @return The list of beacons conforming to given constraints
      */
-    public List<Beacon> findBeaconsBySpecs(String username,
-                                           Long projectId,
-                                           String uuid,
-                                           Integer major,
-                                           Integer minor)
+    public List<Beacon> findBeaconsBySpecs(String username, Long projectId, Long regionId, String uuid, Integer major, Integer minor)
             throws BeaconNotFoundException {
-        List<Beacon> beacons = searchBeaconsBySpecs(username, projectId, uuid, major, minor);
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
+        }
+        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(username, projectId, regionId, uuid, major, minor));
         if (beacons.size() == 0) {
             throw new BeaconNotFoundException();
         }
         return beacons;
     }
 
-    private List<Beacon> searchBeaconsBySpecs(String username, Long projectId, String uuid, Integer major, Integer minor) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
-        }
-        Project project = projectService.findProjectById(username, projectId);
-        return beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(project.getProjectId(), uuid, major, minor));
-    }
-
-    public Beacon queryForBeacon(String uuid,
-                                 Integer major,
-                                 Integer minor,
-                                 String projectSecret)
+    public Beacon queryForBeacon(String uuid, Integer major, Integer minor, String projectSecret)
     throws BeaconNotFoundException {
-        List beaconObjects = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(null, uuid, major, minor));
-        for (Object beaconObject : beaconObjects) {
-            Beacon beacon = (Beacon) beaconObject;
-            if (passwordEncoder.matches(projectSecret, beacon.getProject().getProjectSecret())) {
+        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(null, null, null, uuid, major, minor));
+        for (Beacon beacon : beacons) {
+            if (passwordEncoder.matches(projectSecret, beacon.getRegion().getProject().getProjectSecret())) {
                 return beacon;
             }
         }
@@ -127,13 +123,15 @@ public class BeaconService {
     }
 
     /**
-     * Finds the {@link com.aemreunal.domain.Beacon beacon} with the specified projectId
-     * in a {@link com.aemreunal.domain.Project project}.
+     * Finds the {@link com.aemreunal.domain.Beacon beacon} with the specified beaconId in
+     * a {@link com.aemreunal.domain.Region region}.
      *
      * @param username
      *         The username of the {@link com.aemreunal.domain.User owner} of the project
      * @param projectId
      *         The ID of the project
+     * @param regionId
+     *         The ID of the region
      * @param beaconId
      *         The ID of the beacon to find
      *
@@ -143,13 +141,15 @@ public class BeaconService {
      *         If the specified beacon does not exist.
      * @throws com.aemreunal.exception.project.ProjectNotFoundException
      *         If the specified project does not exist.
+     * @throws com.aemreunal.exception.region.RegionNotFoundException
+     *         If the specified region does not exist.
      */
-    public Beacon getBeacon(String username, Long projectId, Long beaconId) throws BeaconNotFoundException, ProjectNotFoundException {
+    public Beacon getBeacon(String username, Long projectId, Long regionId, Long beaconId) throws BeaconNotFoundException, ProjectNotFoundException, RegionNotFoundException {
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + projectId + "\'");
+            System.out.println("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + projectId + "\' and in region = \'" + regionId + "\'");
         }
-        Project project = projectService.findProjectById(username, projectId);
-        Beacon beacon = beaconRepo.findByBeaconIdAndProject(beaconId, project);
+        Region region = regionService.getRegion(username, projectId, regionId);
+        Beacon beacon = beaconRepo.findByBeaconIdAndRegion(beaconId, region);
         if (beacon == null) {
             throw new BeaconNotFoundException(beaconId);
         }
@@ -158,32 +158,35 @@ public class BeaconService {
 
     /**
      * Returns the list of {@link com.aemreunal.domain.Beacon beacons} that belong to a
-     * {@link com.aemreunal.domain.Project project}.
+     * {@link com.aemreunal.domain.Region region}.
      *
      * @param username
-     *         The username of the {@link com.aemreunal.domain.User owner} of the project
+     *         The username of the {@link com.aemreunal.domain.User owner} of the
+     *         project.
      * @param projectId
-     *         The ID of the project
+     *         The ID of the project.
+     * @param regionId
+     *         The ID of the region.
      *
-     * @return The list of beacons that belong to a project. Returns an empty list if the
-     * project has no beacons
+     * @return The list of beacons that belong to a region. Returns an empty list if the
+     * region has no beacons.
      */
-    public List<Beacon> getBeaconsOfProject(String username, Long projectId) {
-        Project project = projectService.findProjectById(username, projectId);
-        return project.getBeacons().stream().collect(Collectors.toList());
+    public List<Beacon> getBeaconsOfRegion(String username, Long projectId, Long regionId) {
+        Region region = regionService.getRegion(username, projectId, regionId);
+        return region.getBeacons().stream().collect(Collectors.toList());
     }
 
-    public void setBeaconScenario(String username, Long projectId, Beacon beacon, Scenario scenario, ScenarioService scenarioService) {
+    public void setBeaconScenario(String username, Long projectId, Long regionId, Beacon beacon, Scenario scenario) {
         beacon.setScenario(scenario);
-        save(username, projectId, beacon);
+        save(username, projectId, regionId, beacon);
     }
 
-    public Beacon delete(String username, Long projectId, Long beaconId) {
+    public Beacon delete(String username, Long projectId, Long regionId, Long beaconId) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting beacon with ID = \'" + beaconId + "\'");
         }
-
-        Beacon beacon = this.getBeacon(username, projectId, beaconId);
+        // Retrieving beacon to ensure that beacon exists and is part of this user/project/region etc.
+        Beacon beacon = getBeacon(username, projectId, regionId, beaconId);
         beaconRepo.delete(beaconId);
         return beacon;
     }

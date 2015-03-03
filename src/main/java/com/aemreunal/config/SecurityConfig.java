@@ -35,35 +35,38 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalAuthentication
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     private DataSource dataSource;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
             .dataSource(dataSource)
-            .usersByUsernameQuery("SELECT username, password, '1' FROM users WHERE username = ?")
-            .authoritiesByUsernameQuery("SELECT username, 'ADMIN' FROM users WHERE username = ?")
+            .usersByUsernameQuery(GlobalSettings.USERS_FOR_AUTH_QUERY)
+            .authoritiesByUsernameQuery(GlobalSettings.AUTHORITY_OF_USER_QUERY)
             .passwordEncoder(passwordEncoder);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .antMatchers("/register").permitAll()
-            .antMatchers("/robot/*").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .requiresChannel().antMatchers("**").requiresSecure()
-            .and()
-            .httpBasic()
-            .and()
-            .requestCache().disable()
-            .rememberMe().disable()
-            .headers().httpStrictTransportSecurity()
-            .and()
-            .csrf().disable();
+            .antMatchers(GlobalSettings.USER_CREATE_MAPPING).permitAll()
+                // TODO is the * necessary?
+                .antMatchers(GlobalSettings.API_PATH_MAPPING + "/*").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .requiresChannel().antMatchers("**").requiresSecure()
+                .and()
+                .httpBasic()
+                .and()
+                .requestCache().disable()
+                .rememberMe().disable()
+                .headers().httpStrictTransportSecurity()
+                .and()
+                .csrf().disable();
     }
 }

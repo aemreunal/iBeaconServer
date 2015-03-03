@@ -33,7 +33,7 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "com.aemreunal" })
+@ComponentScan(GlobalSettings.BASE_PACKAGE_NAME)
 public class MVCConfig extends WebMvcConfigurerAdapter {
     public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
         MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
@@ -48,13 +48,9 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         return new ByteArrayHttpMessageConverter();
     }
 
-//    public FormHttpMessageConverter formHttpMessageConverter() {
-//        return new FormHttpMessageConverter();
-//    }
-
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        //Here we add our custom-configured HttpMessageConverters
+        // Add our custom-configured HttpMessageConverters
         converters.add(jacksonMessageConverter());
         converters.add(byteArrayHttpMessageConverter());
         super.configureMessageConverters(converters);

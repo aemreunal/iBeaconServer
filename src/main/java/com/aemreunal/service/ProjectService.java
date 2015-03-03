@@ -91,7 +91,7 @@ public class ProjectService {
      * @return The list of projects that belong to the {@link com.aemreunal.domain.User
      * User} with the specified username
      */
-    public List<Project> findAllProjectsOf(String ownerUsername) {
+    public List<Project> getAllProjectsOf(String ownerUsername) {
         User owner = userService.findByUsername(ownerUsername);
         List<Project> projectList = new ArrayList<Project>();
         for (Project project : owner.getProjects()) {
@@ -136,7 +136,7 @@ public class ProjectService {
      *
      * @throws ProjectNotFoundException
      */
-    public Project findProjectById(String username, Long projectId) throws ProjectNotFoundException {
+    public Project getProject(String username, Long projectId) throws ProjectNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding project with ID = \'" + projectId + "\'");
         }
@@ -165,7 +165,7 @@ public class ProjectService {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting project with ID = \'" + projectId + "\'");
         }
-        Project project = this.findProjectById(username, projectId);
+        Project project = this.getProject(username, projectId);
         projectRepo.delete(project);
         return project;
     }

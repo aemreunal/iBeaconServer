@@ -27,9 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
-import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Scenario;
-import com.aemreunal.exception.scenario.*;
+import com.aemreunal.exception.scenario.BeaconDoesNotHaveScenarioException;
+import com.aemreunal.exception.scenario.BeaconHasScenarioException;
+import com.aemreunal.exception.scenario.NoScenarioForQueryException;
+import com.aemreunal.exception.scenario.ScenarioNotFoundException;
 import com.aemreunal.repository.scenario.ScenarioRepo;
 
 @Transactional
@@ -42,9 +44,6 @@ public class ScenarioService {
     private BeaconService beaconService;
 
     @Autowired
-    private RegionService regionService;
-
-    @Autowired
     private ScenarioRepo scenarioRepo;
 
     public Scenario save(String username, Long projectId, Scenario scenario) throws ConstraintViolationException {
@@ -53,7 +52,7 @@ public class ScenarioService {
         }
         // Even though the 'project' variable is only used inside the if-clause,
         // the Project is found no matter what to ensure it exists and legitimate.
-        Project project = projectService.findProjectById(username, projectId);
+        Project project = projectService.getProject(username, projectId);
         if (scenario.getProject() == null) {
             // This means it hasn't been saved yet
             scenario.setProject(project);
@@ -62,16 +61,15 @@ public class ScenarioService {
     }
 
     public List<Scenario> getScenariosOfProject(String username, Long projectId) {
-        Project project = projectService.findProjectById(username, projectId);
-        List<Scenario> scenarios = project.getScenarios().stream().collect(Collectors.toList());
-        return scenarios;
+        Project project = projectService.getProject(username, projectId);
+        return project.getScenarios().stream().collect(Collectors.toList());
     }
 
     public Scenario getScenario(String username, Long projectId, Long scenarioId) throws ScenarioNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding scenario with ID = \'" + scenarioId + "\' in project = \'" + projectId + "\'");
         }
-        Project project = projectService.findProjectById(username, projectId);
+        Project project = projectService.getProject(username, projectId);
         Scenario scenario = scenarioRepo.findByScenarioIdAndProject(scenarioId, project);
         if (scenario == null) {
             throw new ScenarioNotFoundException(scenarioId);
@@ -82,13 +80,7 @@ public class ScenarioService {
     public Scenario queryForScenario(String uuid, Integer major, Integer minor, String projectSecret)
     throws NoScenarioForQueryException {
         Beacon beacon = beaconService.queryForBeacon(uuid, major, minor, projectSecret);
-        Scenario scenario;
-        // TODO fix for 'beacon in region' update
-        if (beacon.getRegion() != null) {
-            scenario = beacon.getRegion().getScenario();
-        } else {
-            scenario = beacon.getScenario();
-        }
+        Scenario scenario = beacon.getScenario();
         if (scenario == null) {
             throw new NoScenarioForQueryException(uuid, major, minor);
         }
@@ -100,26 +92,14 @@ public class ScenarioService {
         return scenario.getBeacons().stream().collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    public Set<Region> getRegionsInScenario(String username, Long projectId, Long scenarioId) {
-        Scenario scenario = this.getScenario(username, projectId, scenarioId);
-        return scenario.getRegions().stream().collect(Collectors.toCollection(LinkedHashSet::new));
-    }
-
     public Scenario delete(String username, Long projectId, Long scenarioId) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Deleting scenario with ID = \'" + scenarioId + "\'");
         }
         Scenario scenario = this.getScenario(username, projectId, scenarioId);
-        removeAllRegionsFromScenario(username, projectId, scenario);
         removeAllBeaconsFromScenario(username, projectId, scenario);
         scenarioRepo.delete(scenario);
         return scenario;
-    }
-
-    private void removeAllRegionsFromScenario(String username, Long projectId, Scenario scenario) {
-        for (Region region : scenario.getRegions()) {
-            removeRegionFromScenario(username, projectId, scenario.getScenarioId(),region);
-        }
     }
 
     private void removeAllBeaconsFromScenario(String username, Long projectId, Scenario scenario) {
@@ -129,72 +109,34 @@ public class ScenarioService {
     }
 
     public Beacon addBeaconToScenario(String username, Long projectId, Long scenarioId, Long beaconId)
-    throws BeaconHasScenarioException, BeaconWithRegionScenarioException {
-        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
+    throws BeaconHasScenarioException {
+        Beacon beacon = beaconService.getBeacon(username, projectId, scenarioId, beaconId);
         return addBeaconToScenario(username, projectId, scenarioId, beacon);
     }
 
     private Beacon addBeaconToScenario(String username, Long projectId, Long scenarioId, Beacon beacon) {
-        Scenario scenario = getScenario(username, projectId, scenarioId);
-        if (beacon.getRegion() != null) {
-            throw new BeaconWithRegionScenarioException(beacon.getBeaconId(), beacon.getRegion().getRegionId());
-        }
         if (beacon.getScenario() != null) {
             throw new BeaconHasScenarioException(beacon.getBeaconId(), beacon.getScenario().getScenarioId());
         }
-        beaconService.setBeaconScenario(username, projectId, beacon, scenario, this);
+        Scenario scenario = getScenario(username, projectId, scenarioId);
+        beaconService.setBeaconScenario(username, projectId, beacon.getRegion().getRegionId(), beacon, scenario);
         return beacon;
     }
 
     public Beacon removeBeaconFromScenario(String username, Long projectId, Long scenarioId, Long beaconId)
-    throws BeaconDoesNotHaveScenarioException, BeaconHasScenarioException, BeaconWithRegionScenarioException {
-        Beacon beacon = beaconService.getBeacon(username, projectId, beaconId);
+    throws BeaconDoesNotHaveScenarioException, BeaconHasScenarioException {
+        Beacon beacon = beaconService.getBeacon(username, projectId, scenarioId, beaconId);
         removeBeaconFromScenario(username, projectId, scenarioId, beacon);
         return beacon;
     }
 
     public Beacon removeBeaconFromScenario(String username, Long projectId, Long scenarioId, Beacon beacon) {
-        if (beacon.getRegion() != null) {
-            throw new BeaconWithRegionScenarioException(beacon.getBeaconId(), beacon.getRegion().getRegionId());
-        }
         if (beacon.getScenario() == null) {
             throw new BeaconDoesNotHaveScenarioException(beacon.getBeaconId(), scenarioId);
         } else if (!(beacon.getScenario().getScenarioId().equals(scenarioId))) {
             throw new BeaconHasScenarioException(beacon.getBeaconId(), beacon.getScenario().getScenarioId());
         }
-        beaconService.setBeaconScenario(username, projectId, beacon, null, this);
+        beaconService.setBeaconScenario(username, projectId, beacon.getRegion().getRegionId(), beacon, null);
         return beacon;
     }
-
-    public Region addRegionToScenario(String username, Long projectId, Long scenarioId, Long regionId)
-    throws RegionHasScenarioException {
-        Region region = regionService.getRegion(username, projectId, regionId);
-        return addRegionToScenario(username, projectId, scenarioId, region);
-    }
-
-    public Region addRegionToScenario(String username, Long projectId, Long scenarioId, Region region) {
-        Scenario scenario = getScenario(username, projectId, scenarioId);
-        if (region.getScenario() != null) {
-            throw new RegionHasScenarioException(region.getRegionId(), region.getScenario().getScenarioId());
-        }
-        regionService.setRegionScenario(username, projectId, region, scenario);
-        return region;
-    }
-
-    public Region removeRegionFromScenario(String username, Long projectId, Long scenarioId, Long regionId)
-    throws RegionHasScenarioException, RegionDoesNotHaveScenarioException {
-        Region region = regionService.getRegion(username, projectId, regionId);
-        return removeRegionFromScenario(username, projectId, scenarioId, region);
-    }
-
-    public Region removeRegionFromScenario(String username, Long projectId, Long scenarioId, Region region) {
-        if (region.getScenario() == null) {
-            throw new RegionDoesNotHaveScenarioException(region.getRegionId(), scenarioId);
-        } else if (!(region.getScenario().getScenarioId().equals(scenarioId))) {
-            throw new RegionHasScenarioException(region.getRegionId(), region.getScenario().getScenarioId());
-        }
-        regionService.setRegionScenario(username, projectId, region, null);
-        return region;
-    }
-
 }

@@ -58,32 +58,6 @@ public class ScenarioControllerAdvice {
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(RegionHasScenarioException.class)
-    public ResponseEntity<JSONObject> regionHasScenarioExceptionHandler(RegionHasScenarioException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
-        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
-    }
-
-
-    @ExceptionHandler(RegionDoesNotHaveScenarioException.class)
-    public ResponseEntity<JSONObject> regionDoesNotHaveScenarioExceptionHandler(RegionDoesNotHaveScenarioException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
-        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
-    }
-
-
-    @ExceptionHandler(BeaconWithRegionScenarioException.class)
-    public ResponseEntity<JSONObject> beaconWithRegionScenarioExceptionHandler(BeaconWithRegionScenarioException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
-        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<JSONObject> constraintViolationExceptionHandler(ConstraintViolationException ex) {
         JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
