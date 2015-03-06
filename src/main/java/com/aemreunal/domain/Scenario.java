@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "scenarios")
 @ResponseBody
-@JsonIgnoreProperties(value = { "beacons", "project", "regions" })
+@JsonIgnoreProperties(value = { "beacons", "project" })
 public class Scenario extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH          = 100;
     public static final int DESCRIPTION_MAX_LENGTH   = 1000;
