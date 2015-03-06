@@ -99,6 +99,7 @@ public class BeaconService {
      *
      * @return The list of beacons conforming to given constraints
      */
+    @Transactional(readOnly = true)
     public List<Beacon> findBeaconsBySpecs(String username, Long projectId, Long regionId, String uuid, Integer major, Integer minor)
             throws BeaconNotFoundException {
         if (GlobalSettings.DEBUGGING) {
@@ -111,6 +112,7 @@ public class BeaconService {
         return beacons;
     }
 
+    @Transactional(readOnly = true)
     public Beacon queryForBeacon(String uuid, Integer major, Integer minor, String projectSecret)
     throws BeaconNotFoundException {
         List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(null, null, null, uuid, major, minor));
@@ -144,6 +146,7 @@ public class BeaconService {
      * @throws com.aemreunal.exception.region.RegionNotFoundException
      *         If the specified region does not exist.
      */
+    @Transactional(readOnly = true)
     public Beacon getBeacon(String username, Long projectId, Long regionId, Long beaconId) throws BeaconNotFoundException, ProjectNotFoundException, RegionNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + projectId + "\' and in region = \'" + regionId + "\'");
@@ -171,6 +174,7 @@ public class BeaconService {
      * @return The list of beacons that belong to a region. Returns an empty list if the
      * region has no beacons.
      */
+    @Transactional(readOnly = true)
     public List<Beacon> getBeaconsOfRegion(String username, Long projectId, Long regionId) {
         Region region = regionService.getRegion(username, projectId, regionId);
         return region.getBeacons().stream().collect(Collectors.toList());

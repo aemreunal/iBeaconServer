@@ -60,11 +60,13 @@ public class ScenarioService {
         return scenarioRepo.save(scenario);
     }
 
+    @Transactional(readOnly = true)
     public List<Scenario> getScenariosOfProject(String username, Long projectId) {
         Project project = projectService.getProject(username, projectId);
         return project.getScenarios().stream().collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public Scenario getScenario(String username, Long projectId, Long scenarioId) throws ScenarioNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding scenario with ID = \'" + scenarioId + "\' in project = \'" + projectId + "\'");
@@ -77,6 +79,7 @@ public class ScenarioService {
         return scenario;
     }
 
+    @Transactional(readOnly = true)
     public Scenario queryForScenario(String uuid, Integer major, Integer minor, String projectSecret)
     throws NoScenarioForQueryException {
         Beacon beacon = beaconService.queryForBeacon(uuid, major, minor, projectSecret);
@@ -87,6 +90,7 @@ public class ScenarioService {
         return scenario;
     }
 
+    @Transactional(readOnly = true)
     public Set<Beacon> getBeaconsInScenario(String username, Long projectId, Long scenarioId) {
         Scenario scenario = this.getScenario(username, projectId, scenarioId);
         return scenario.getBeacons().stream().collect(Collectors.toCollection(LinkedHashSet::new));

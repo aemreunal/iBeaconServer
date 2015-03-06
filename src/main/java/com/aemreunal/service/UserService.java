@@ -108,6 +108,7 @@ public class UserService {
      * @throws UsernameClashException
      *         When the username already exists
      */
+    @Transactional(readOnly = true)
     public void verifyUsernameUniqueness(String username) throws UsernameClashException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Checking whether username = \'" + username + "\' is taken");
@@ -126,6 +127,7 @@ public class UserService {
      *
      * @return The user with the given username
      */
+    @Transactional(readOnly = true)
     public User findByUsername(String username) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding user with username = \'" + username + "\'");

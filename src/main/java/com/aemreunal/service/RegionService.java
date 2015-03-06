@@ -71,11 +71,13 @@ public class RegionService {
         return regionRepo.save(region);
     }
 
+    @Transactional(readOnly = true)
     public List<Region> getAllRegionsOf(String username, Long projectId) {
         Project project = projectService.getProject(username, projectId);
         return project.getRegions().stream().collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public Region getRegion(String username, Long projectId, Long regionId) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding region with ID = \'" + regionId + "\'");
@@ -98,6 +100,7 @@ public class RegionService {
      *
      * @return The list of regions conforming to given constraints
      */
+    @Transactional(readOnly = true)
     public List<Region> findRegionsBySpecs(String username, Long projectId, String regionName) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding regions with projectID = \'" + projectId + "\' and name =\'" + regionName + "\'");
@@ -110,6 +113,7 @@ public class RegionService {
         return regions;
     }
 
+    @Transactional(readOnly = true)
     public List<Beacon> getMembersOfRegion(String username, Long projectId, Long regionId) {
         Region region = this.getRegion(username, projectId, regionId);
         return region.getBeacons().stream().collect(Collectors.toList());
@@ -164,6 +168,7 @@ public class RegionService {
                 type.equalsIgnoreCase(MediaType.IMAGE_GIF_VALUE);
     }
 
+    @Transactional(readOnly = true)
     public byte[] getMapImage(String username, Long projectId, Long regionId) throws MapImageLoadException, MapImageNotSetException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Getting map image of region with ID = \'" + regionId + "\'");

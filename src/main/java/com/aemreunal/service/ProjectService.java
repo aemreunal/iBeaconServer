@@ -91,6 +91,7 @@ public class ProjectService {
      * @return The list of projects that belong to the {@link com.aemreunal.domain.User
      * User} with the specified username
      */
+    @Transactional(readOnly = true)
     public List<Project> getAllProjectsOf(String ownerUsername) {
         User owner = userService.findByUsername(ownerUsername);
         List<Project> projectList = new ArrayList<Project>();
@@ -110,6 +111,7 @@ public class ProjectService {
      *
      * @return The list of projects conforming to given constraints
      */
+    @Transactional(readOnly = true)
     public List<Project> findProjectsBySpecs(String username, String projectName) {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding projects with Project Name = \'" + projectName + "\'");
@@ -136,6 +138,7 @@ public class ProjectService {
      *
      * @throws ProjectNotFoundException
      */
+    @Transactional(readOnly = true)
     public Project getProject(String username, Long projectId) throws ProjectNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding project with ID = \'" + projectId + "\'");
