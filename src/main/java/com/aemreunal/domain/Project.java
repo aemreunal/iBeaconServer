@@ -166,7 +166,8 @@ public class Project extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = Region.class,
             mappedBy = "project",
             orphanRemoval = true,
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @OrderBy(value = "regionId")
     private Set<Region> regions = new LinkedHashSet<>();
 

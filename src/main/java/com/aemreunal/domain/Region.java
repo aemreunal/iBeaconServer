@@ -150,7 +150,8 @@ public class Region extends ResourceSupport implements Serializable {
      */
     @OneToMany(targetEntity = Beacon.class,
             mappedBy = "region",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @Access(AccessType.PROPERTY)
     private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
 
