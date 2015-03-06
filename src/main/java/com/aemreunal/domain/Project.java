@@ -190,7 +190,8 @@ public class Project extends ResourceSupport implements Serializable {
     @OneToMany(targetEntity = Scenario.class,
             mappedBy = "project",
             orphanRemoval = true,
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @OrderBy(value = "scenarioId")
     private Set<Scenario> scenarios = new LinkedHashSet<>();
 
