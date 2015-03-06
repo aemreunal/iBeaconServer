@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.config.CoreConfig;
 import com.aemreunal.helper.JsonBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -120,12 +119,10 @@ public class Scenario extends ResourceSupport implements Serializable {
     private Project project;
 
     public Project getProject() {
-        CoreConfig.initLazily(project);
         return project;
     }
 
     public void setProject(Project project) {
-        CoreConfig.initLazily(project);
         this.project = project;
     }
     /*
@@ -145,7 +142,6 @@ public class Scenario extends ResourceSupport implements Serializable {
     private Set<Beacon> beacons = new LinkedHashSet<>();
 
     public Set<Beacon> getBeacons() {
-        CoreConfig.initLazily(beacons);
         return beacons;
     }
 

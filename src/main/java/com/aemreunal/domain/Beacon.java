@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.config.CoreConfig;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
@@ -154,7 +153,6 @@ public class Beacon extends ResourceSupport implements Serializable {
     private Region region;
 
     public Region getRegion() {
-        CoreConfig.initLazily(region);
         return region;
     }
 
@@ -180,7 +178,6 @@ public class Beacon extends ResourceSupport implements Serializable {
     private Scenario scenario;
 
     public Scenario getScenario() {
-        CoreConfig.initLazily(scenario);
         return scenario;
     }
 

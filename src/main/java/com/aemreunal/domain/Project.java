@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.config.CoreConfig;
 import com.aemreunal.helper.JsonBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -147,12 +146,10 @@ public class Project extends ResourceSupport implements Serializable {
     private User owner;
 
     public User getOwner() {
-        CoreConfig.initLazily(owner);
         return owner;
     }
 
     public void setOwner(User owner) {
-        CoreConfig.initLazily(owner);
         this.owner = owner;
     }
 
@@ -174,7 +171,6 @@ public class Project extends ResourceSupport implements Serializable {
     private Set<Region> regions = new LinkedHashSet<>();
 
     public Set<Region> getRegions() {
-        CoreConfig.initLazily(regions);
         return regions;
     }
 
@@ -198,12 +194,10 @@ public class Project extends ResourceSupport implements Serializable {
     private Set<Scenario> scenarios = new LinkedHashSet<>();
 
     public Set<Scenario> getScenarios() {
-        CoreConfig.initLazily(scenarios);
         return scenarios;
     }
 
     public void setScenarios(Set<Scenario> scenarios) {
-        CoreConfig.initLazily(scenarios);
         this.scenarios = scenarios;
     }
     /*

@@ -128,12 +128,10 @@ public class User extends ResourceSupport implements Serializable {
     private Set<Project> projects = new LinkedHashSet<>();
 
     public Set<Project> getProjects() {
-        CoreConfig.initLazily(projects);
         return projects;
     }
 
     public void setProjects(Set<Project> projects) {
-        CoreConfig.initLazily(projects);
         this.projects = projects;
     }
     /*

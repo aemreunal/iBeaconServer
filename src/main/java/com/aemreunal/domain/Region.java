@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.config.CoreConfig;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -156,7 +155,6 @@ public class Region extends ResourceSupport implements Serializable {
     private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
 
     public Set<Beacon> getBeacons() {
-        CoreConfig.initLazily(beacons);
         return beacons;
     }
 
@@ -182,12 +180,10 @@ public class Region extends ResourceSupport implements Serializable {
     private Set<Beacon> designatedBeacons = new LinkedHashSet<Beacon>();
 
     public Set<Beacon> getDesignatedBeacons() {
-        CoreConfig.initLazily(this.designatedBeacons);
         return this.designatedBeacons;
     }
 
     public void setDesignatedBeacons(Set<Beacon> designatedBeacons) {
-        CoreConfig.initLazily(this.designatedBeacons);
         this.designatedBeacons = designatedBeacons;
     }
 
@@ -220,7 +216,6 @@ public class Region extends ResourceSupport implements Serializable {
     private Project project;
 
     public Project getProject() {
-        CoreConfig.initLazily(project);
         return project;
     }
 

@@ -2,7 +2,6 @@ package com.aemreunal.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -96,11 +95,5 @@ public class CoreConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(GlobalSettings.BCRYPT_LOG_FACTOR);
-    }
-
-    public static void initLazily(Object proxy) {
-        if (!Hibernate.isInitialized(proxy)) {
-            Hibernate.initialize(proxy);
-        }
     }
 }
