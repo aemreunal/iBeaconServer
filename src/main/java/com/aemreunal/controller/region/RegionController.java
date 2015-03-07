@@ -209,13 +209,14 @@ public class RegionController {
      *         If the map image couldn't be loaded from the filesystem.
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_MAP_IMAGE_MAPPING, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public byte[] downloadRegionMapImage(@PathVariable String username,
+    // When RegionNotFoundException is triggered as a result of this method, an HttpMediaTypeNotAcceptableException
+    // exception is raised. It's not raised if the exception handler also returns ResponseEntity<byte[]>.
+    // TODO Fix.
+    public ResponseEntity<byte[]> downloadRegionMapImage(@PathVariable String username,
                                          @PathVariable Long projectId,
                                          @PathVariable Long regionId)
             throws MapImageNotSetException, MapImageLoadException {
-        return regionService.getMapImage(username, projectId, regionId);
+        return new ResponseEntity<byte[]>(regionService.getMapImage(username, projectId, regionId), HttpStatus.OK);
     }
 
     /**

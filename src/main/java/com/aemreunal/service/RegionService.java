@@ -169,7 +169,8 @@ public class RegionService {
     }
 
     @Transactional(readOnly = true)
-    public byte[] getMapImage(String username, Long projectId, Long regionId) throws MapImageLoadException, MapImageNotSetException {
+    public byte[] getMapImage(String username, Long projectId, Long regionId)
+    throws MapImageLoadException, MapImageNotSetException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Getting map image of region with ID = \'" + regionId + "\'");
         }

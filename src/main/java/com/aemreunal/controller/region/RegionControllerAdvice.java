@@ -1,14 +1,5 @@
 package com.aemreunal.controller.region;
 
-import net.minidev.json.JSONObject;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.multipart.MultipartException;
-import com.aemreunal.exception.region.*;
-import com.aemreunal.helper.JsonBuilder;
 
 /*
  ***************************
@@ -25,6 +16,15 @@ import com.aemreunal.helper.JsonBuilder;
  * aemreunal.com           *
  ***************************
  */
+import net.minidev.json.JSONObject;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MultipartException;
+import com.aemreunal.exception.region.*;
+import com.aemreunal.helper.JsonBuilder;
 
 @ControllerAdvice
 public class RegionControllerAdvice {
