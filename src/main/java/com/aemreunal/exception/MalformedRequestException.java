@@ -15,7 +15,12 @@ package com.aemreunal.exception;
  * aemreunal.com           *
  ***************************
  */
-public class MalformedRequestException extends NullPointerException {
+public class MalformedRequestException /*extends Throwable*/ extends RuntimeException {
+
+    // http://normanmaurer.me/blog/2013/11/09/The-hidden-performance-costs-of-instantiating-Throwables/
+//    public MalformedRequestException() {
+//        super("Your request is malformed. Please try again.", null, true, false);
+//    }
 
     public MalformedRequestException() {
         super("Your request is malformed. Please try again.");
