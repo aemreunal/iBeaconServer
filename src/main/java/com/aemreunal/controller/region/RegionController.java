@@ -49,9 +49,9 @@ public class RegionController {
      * @return The list of regions that belong to the project.
      */
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Region>> viewRegionsOfProject(@PathVariable String username,
-                                                             @PathVariable Long projectId,
-                                                             @RequestParam(value = "name", required = false, defaultValue = "") String regionName) {
+    public ResponseEntity<List<Region>> getRegionsOfProject(@PathVariable String username,
+                                                            @PathVariable Long projectId,
+                                                            @RequestParam(value = "name", required = false, defaultValue = "") String regionName) {
         if (regionName.equals("")) {
             List<Region> regions = regionService.getAllRegionsOf(username, projectId);
             return new ResponseEntity<List<Region>>(regions, HttpStatus.OK);
@@ -74,9 +74,9 @@ public class RegionController {
      * @return The region.
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_ID_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Region> viewRegion(@PathVariable String username,
-                                             @PathVariable Long projectId,
-                                             @PathVariable Long regionId) {
+    public ResponseEntity<Region> getRegion(@PathVariable String username,
+                                            @PathVariable Long projectId,
+                                            @PathVariable Long regionId) {
         Region region = regionService.getRegion(username, projectId, regionId);
         // TODO add links
         return new ResponseEntity<Region>(region, HttpStatus.OK);
@@ -96,9 +96,9 @@ public class RegionController {
      */
     // TODO maybe return just the list of Beacon IDs, queried from regions_to_beacon
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_MEMBERS_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Beacon>> viewRegionMembers(@PathVariable String username,
-                                                          @PathVariable Long projectId,
-                                                          @PathVariable Long regionId) {
+    public ResponseEntity<List<Beacon>> getRegionBeacons(@PathVariable String username,
+                                                         @PathVariable Long projectId,
+                                                         @PathVariable Long regionId) {
         List<Beacon> beaconList = regionService.getMembersOfRegion(username, projectId, regionId);
         return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
     }

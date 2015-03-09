@@ -124,7 +124,7 @@ public class BeaconController {
         beacon.add(ControllerLinkBuilder.linkTo(methodOn(BeaconController.class).getBeacon(username, projectId, regionId, beacon.getBeaconId())).withSelfRel());
         beacon.add(ControllerLinkBuilder.linkTo(methodOn(UserController.class).getUserByUsername(username)).withRel("owner"));
         beacon.add(ControllerLinkBuilder.linkTo(methodOn(ProjectController.class).getProjectById(username, projectId)).withRel("project"));
-        beacon.add(ControllerLinkBuilder.linkTo(methodOn(RegionController.class).viewRegion(username, projectId, beacon.getRegion().getRegionId())).withRel("region"));
+        beacon.add(ControllerLinkBuilder.linkTo(methodOn(RegionController.class).getRegion(username, projectId, beacon.getRegion().getRegionId())).withRel("region"));
         if (beacon.getScenario() != null) {
             beacon.add(ControllerLinkBuilder.linkTo(methodOn(ScenarioController.class).getScenario(username, projectId, beacon.getScenario().getScenarioId())).withRel("scenario"));
         }
