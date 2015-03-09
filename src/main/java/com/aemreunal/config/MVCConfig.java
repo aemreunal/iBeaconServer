@@ -17,6 +17,8 @@ package com.aemreunal.config;
  */
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -35,6 +37,13 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 @EnableWebMvc
 @ComponentScan(GlobalSettings.BASE_PACKAGE_NAME)
 public class MVCConfig extends WebMvcConfigurerAdapter {
+    @Autowired
+    public MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+    @Autowired
+    public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter;
+
+    @Bean
     public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
         MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
         ObjectMapper mapper = new ObjectMapper();
@@ -44,6 +53,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         return messageConverter;
     }
 
+    @Bean
     public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
         return new ByteArrayHttpMessageConverter();
     }
@@ -51,8 +61,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         // Add our custom-configured HttpMessageConverters
-        converters.add(jacksonMessageConverter());
-        converters.add(byteArrayHttpMessageConverter());
+        converters.add(jacksonMessageConverter);
+        converters.add(byteArrayHttpMessageConverter);
         super.configureMessageConverters(converters);
     }
 }
