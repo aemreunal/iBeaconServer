@@ -164,6 +164,49 @@ public class Beacon extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      */
 
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Beacon 'X coordinate' attribute
+     */
+    @Column(name = "x_coordinate", nullable = false)
+    @Access(AccessType.PROPERTY)
+    private Integer xCoordinate;
+
+    public Integer getxCoordinate() {
+        return xCoordinate;
+    }
+
+    public void setxCoordinate(Integer xCoordinate) {
+        this.xCoordinate = xCoordinate;
+    }
+    /*
+     * END: Beacon 'X coordinate' attribute
+     *------------------------------------------------------------
+     */
+
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Beacon 'Y coordinate' attribute
+     */
+    @Column(name = "y_coordinate", nullable = false)
+    @Access(AccessType.PROPERTY)
+    private Integer yCoordinate;
+
+    public Integer getyCoordinate() {
+        return yCoordinate;
+    }
+
+    public void setyCoordinate(Integer yCoordinate) {
+        this.yCoordinate = yCoordinate;
+    }
+    /*
+     * END: Beacon 'Y coordinate' attribute
+     *------------------------------------------------------------
+     */
+
+
     /*
      *------------------------------------------------------------
      * BEGIN: Beacon 'scenario' attribute
@@ -188,6 +231,33 @@ public class Beacon extends ResourceSupport implements Serializable {
      * END: Beacon 'scenario' attribute
      *------------------------------------------------------------
      */
+
+
+//    /*
+//     *------------------------------------------------------------
+//     * BEGIN: Beacon 'designated' attribute
+//     */
+//    @ManyToOne(targetEntity = Scenario.class,
+//            fetch = FetchType.LAZY,
+//            optional = false)
+//    @JoinTable(name = "scenarios_to_beacons",
+//            joinColumns = @JoinColumn(name = "beacon_id"),
+//            inverseJoinColumns = @JoinColumn(name = "scenario_id"))
+//    @Access(AccessType.PROPERTY)
+//    private Scenario scenario;
+//
+//    public Scenario getScenario() {
+//        CoreConfig.initLazily(scenario);
+//        return scenario;
+//    }
+//
+//    public void setScenario(Scenario scenario) {
+//        this.scenario = scenario;
+//    }
+//    /*
+//     * END: Beacon 'designated' attribute
+//     *------------------------------------------------------------
+//     */
 
 
     /*
@@ -221,10 +291,9 @@ public class Beacon extends ResourceSupport implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Beacon)) {
-            return false;
-        } else {
+        if (obj instanceof Beacon) {
             return ((Beacon) obj).getBeaconId() == this.getBeaconId();
         }
+        return false;
     }
 }

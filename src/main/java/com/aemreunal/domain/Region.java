@@ -172,7 +172,7 @@ public class Region extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Region 'designated beacons' attribute
      */
-
+// TODO Maybe make beacons a map from Beacon->bool, indicating designated
     @OneToMany(targetEntity = Beacon.class,
             fetch = FetchType.LAZY)
     @JoinTable(name = "designated_beacons_of_region",
