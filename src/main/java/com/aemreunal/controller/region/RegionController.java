@@ -104,29 +104,50 @@ public class RegionController {
     }
 
     /**
-     * Create a new region in project.
+     * Create a new region in project. The [REST] method accepts the region JSON and the
+     * region image file as Multipart files. The region JSON Multipart file must be named
+     * {@code region} and the region image Multipart file must be named {@code image}.
      * <p>
-     * Region creation request JSON:<br/> {<br/> "name":"Region name",<br/>
-     * "description":"Region description"<br/>}
+     * For the image file, the method accepts {@link org.springframework.http.MediaType#IMAGE_JPEG
+     * JPEG}, {@link org.springframework.http.MediaType#IMAGE_PNG PNG}, and {@link
+     * org.springframework.http.MediaType#IMAGE_GIF GIF} images. The image size must be <=
+     * {@link com.aemreunal.config.GlobalSettings#MAX_UPLOAD_SIZE_BYTES
+     * MAX_UPLOAD_SIZE_BYTES} Bytes.
      *
      * @param username
-     *         The username of the owner of the region.
+     *         The username of the owner of the project.
      * @param projectId
-     *         The ID of the project to create the region in.
-     * @param regionJson
-     *         The region as a JSON object.
+     *         The ID of the project the region belongs to.
+     * @param region
+     *         The region object to be created.
+     * @param imageMultipartFile
+     *         The region map image file as a {@link org.springframework.web.multipart.MultipartFile
+     *         MultipartFile}.
      * @param builder
      *         The URI builder for post-creation redirect.
      *
-     * @return The created region
+     * @return The created region as JSON.
+     *
+     * @throws WrongFileTypeSubmittedException
+     *         The file type of the {@link org.springframework.web.multipart.MultipartFile
+     *         MultipartFile} file, submitted as the region map image is of some other
+     *         type than
+     * @throws MapImageSaveException
+     *         If the server is unable to save the region map image.
+     * @throws MapImageDeleteException
+     *         If the region map image being replaced couldn't be deleted by the server.
+     * @throws MultipartFileReadException
+     *         If the Multipart file couldn't be read.
      */
-    // TODO {@literal @}Transactional mark via http://stackoverflow.com/questions/11812432/spring-data-hibernate
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Region> createRegionInProject(@PathVariable String username,
-                                                        @PathVariable Long projectId,
-                                                        @RequestBody Region regionJson,
-                                                        UriComponentsBuilder builder) {
-        Region savedRegion = regionService.save(username, projectId, regionJson);
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Region> createRegion(@PathVariable String username,
+                                               @PathVariable Long projectId,
+                                               @RequestPart(value = "region") Region region,
+                                               @RequestPart(value = "image") MultipartFile imageMultipartFile,
+                                               UriComponentsBuilder builder)
+            throws WrongFileTypeSubmittedException, MapImageSaveException, MapImageDeleteException, MultipartFileReadException {
+        Region savedRegion = regionService.save(username, projectId, region);
+        savedRegion = regionService.setMapImage(username, projectId, savedRegion, imageMultipartFile);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved region with ID = \'" + savedRegion.getRegionId() +
                                        "\' name = \'" + savedRegion.getName() +
@@ -145,50 +166,6 @@ public class RegionController {
                                            savedRegion.getRegionId())
                                    .toUri());
         return new ResponseEntity<Region>(savedRegion, headers, HttpStatus.CREATED);
-    }
-
-    /**
-     * Upload the region map image. The [REST] method accepts the image file as a
-     * Multipart file. The Multipart file must be named {@code mapImage}.
-     * <p>
-     * The method accepts {@link org.springframework.http.MediaType#IMAGE_JPEG JPEG},
-     * {@link org.springframework.http.MediaType#IMAGE_PNG PNG}, and {@link
-     * org.springframework.http.MediaType#IMAGE_GIF GIF} images. The image size must be <=
-     * {@link com.aemreunal.config.GlobalSettings#MAX_UPLOAD_SIZE_BYTES
-     * MAX_UPLOAD_SIZE_BYTES} Bytes.
-     *
-     * @param username
-     *         The username of the owner of the region.
-     * @param projectId
-     *         The ID of the project the region belongs to.
-     * @param regionId
-     *         The ID of the region.
-     * @param file
-     *         The region map image file as a {@link org.springframework.web.multipart.MultipartFile
-     *         MultipartFile}.
-     *
-     * @return The updated region.
-     *
-     * @throws MapImageSaveException
-     *         If the server is unable to save the region map image.
-     * @throws MultipartFileReadException
-     *         If the Multipart file couldn't be read.
-     * @throws MapImageDeleteException
-     *         If the region map image being replaced couldn't be deleted by the server.
-     * @throws WrongFileTypeSubmittedException
-     *         The file type of the {@link org.springframework.web.multipart.MultipartFile
-     *         MultipartFile} file, submitted as the region map image is of some other
-     *         type than
-     */
-    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.REGION_MAP_IMAGE_MAPPING,
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Region> uploadRegionMapImage(@PathVariable String username,
-                                                       @PathVariable Long projectId,
-                                                       @PathVariable Long regionId,
-                                                       @RequestPart(value = "mapImage") MultipartFile file)
-            throws MapImageSaveException, MultipartFileReadException, MapImageDeleteException, WrongFileTypeSubmittedException {
-        Region region = regionService.setMapImage(username, projectId, regionId, file);
-        return new ResponseEntity<Region>(region, HttpStatus.CREATED);
     }
 
     /**
@@ -213,8 +190,8 @@ public class RegionController {
     // exception is raised. It's not raised if the exception handler also returns ResponseEntity<byte[]>.
     // TODO Fix.
     public ResponseEntity<byte[]> downloadRegionMapImage(@PathVariable String username,
-                                         @PathVariable Long projectId,
-                                         @PathVariable Long regionId)
+                                                         @PathVariable Long projectId,
+                                                         @PathVariable Long regionId)
             throws MapImageNotSetException, MapImageLoadException {
         return new ResponseEntity<byte[]>(regionService.getMapImage(username, projectId, regionId), HttpStatus.OK);
     }

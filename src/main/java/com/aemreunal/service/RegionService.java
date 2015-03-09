@@ -49,12 +49,17 @@ public class RegionService {
     private ImageStorage imageStorage;
 
     /**
-     * Saves/updates the given region
+     * Saves/updates the given region. If the region does not exist in the database,
+     * persists it in the database.
      *
+     * @param username
+     *         The username of the owner of the project.
+     * @param projectId
+     *         The ID of the project which the region resides in.
      * @param region
-     *         The region to save/update
+     *         The region to be saved/updated.
      *
-     * @return The saved/updated region
+     * @return The saved/updated region.
      */
     public Region save(String username, Long projectId, Region region) {
         if (GlobalSettings.DEBUGGING) {
@@ -137,28 +142,26 @@ public class RegionService {
      *         The username of the owner of the project.
      * @param projectId
      *         The ID of the project to which the region belongs.
-     * @param regionId
-     *         The ID of the region to save the image of.
+     * @param region
+     *         The region to save the image of.
      * @param imageFile
      *         The image file as a {@link org.springframework.web.multipart.MultipartFile
      *         MultipartFile}.
      *
      * @return The updated region object.
      */
-    public Region setMapImage(String username, Long projectId, Long regionId, MultipartFile imageFile)
+    public Region setMapImage(String username, Long projectId, Region region, MultipartFile imageFile)
             throws MapImageSaveException, MultipartFileReadException, MapImageDeleteException, WrongFileTypeSubmittedException {
         if (GlobalSettings.DEBUGGING) {
-            System.out.println("Setting map image of region with ID = \'" + regionId + "\'");
+            System.out.println("Setting map image of region with ID = \'" + region.getRegionId() + "\'");
         }
         if (imageFile.isEmpty() || !fileTypeIsImage(imageFile)) {
-            throw new WrongFileTypeSubmittedException(projectId, regionId);
+            throw new WrongFileTypeSubmittedException(projectId, region.getRegionId());
         }
-        Region region = this.getRegion(username, projectId, regionId);
-        String savedImageName = imageStorage.saveImage(username, projectId, regionId, region.getMapImageFileName(), imageFile);
+        String savedImageName = imageStorage.saveImage(username, projectId, region.getRegionId(), region.getMapImageFileName(), imageFile);
         region.setMapImageFileName(savedImageName);
         // Save marks the region as updated
-        save(username, projectId, region);
-        return region;
+        return this.save(username, projectId, region);
     }
 
     private boolean fileTypeIsImage(MultipartFile file) {
