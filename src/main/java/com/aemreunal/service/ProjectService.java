@@ -41,7 +41,7 @@ public class ProjectService {
     private ProjectRepo projectRepo;
 
     @Autowired
-    private BCryptPasswordEncoder encoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
     /**
      * Saves/updates the given project. The given username parameter is used to set the
@@ -74,7 +74,7 @@ public class ProjectService {
      */
     public String resetSecret(String username, Project project) throws ProjectNotFoundException {
         String secret = UUID.randomUUID().toString().toUpperCase();
-        project.setProjectSecret(encoder.encode(secret));
+        project.setProjectSecret(passwordEncoder.encode(secret));
         this.save(username, project);
         return secret;
     }
@@ -150,6 +150,21 @@ public class ProjectService {
             throw new ProjectNotFoundException();
         }
         return project;
+    }
+
+    @Transactional(readOnly = true)
+    public Project queryForProject(Long projectId, String projectSecret)
+    throws ProjectNotFoundException {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Querying for project with ID = \'" + projectId + "\'");
+        }
+        Project project = projectRepo.findOne(projectId);
+        if (project != null) {
+            if (passwordEncoder.matches(projectSecret, project.getProjectSecret())) {
+                return project;
+            }
+        }
+        throw new ProjectNotFoundException();
     }
 
     /**

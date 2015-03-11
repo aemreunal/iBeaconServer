@@ -4,14 +4,17 @@ import net.minidev.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.MalformedRequestException;
+import com.aemreunal.service.ProjectService;
 import com.aemreunal.service.ScenarioService;
 
 /*
@@ -34,7 +37,44 @@ import com.aemreunal.service.ScenarioService;
 @RequestMapping(GlobalSettings.API_PATH_MAPPING)
 public class APIController {
     @Autowired
+    private ProjectService projectService;
+
+    @Autowired
     private ScenarioService scenarioService;
+
+    // TODO get entire project info via secret
+    // Update the database on client app launch
+    // 1) Get available regions
+    // 1.1) If new regions are present, get them, their beacons, their images
+    // 2) Check for updates to existing regions
+    // 2.1) If updates are found, download them (like 1.1).
+
+    /*
+     * Project query JSON example:
+     * {
+     *      "projectId": <project ID>
+     *      "secret":    <project Secret>
+     * }
+     */
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_PROJECT_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Project> queryForProject(@RequestBody JSONObject projectQueryJson) {
+        verifyProjectQueryRequest(projectQueryJson);
+        Project project = getProject(projectQueryJson);
+        return new ResponseEntity<Project>(project, HttpStatus.OK);
+    }
+
+    private void verifyProjectQueryRequest(JSONObject projectQueryJson) {
+        if (!projectQueryJson.containsKey("projectId") ||
+                !projectQueryJson.containsKey("secret")) {
+            throw new MalformedRequestException();
+        }
+    }
+
+    private Project getProject(JSONObject projectQueryJson) {
+        Long projectId = Long.valueOf(projectQueryJson.get("projectId").toString());
+        String secret = projectQueryJson.get("secret").toString().toUpperCase();
+        return projectService.queryForProject(projectId, secret);
+    }
 
     /*
      * Beacon query JSON example:
@@ -45,14 +85,14 @@ public class APIController {
      *      "secret": <project Secret>
      * }
      */
-    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = "application/json; charset=UTF-8")
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JSONObject> queryForScenario(@RequestBody JSONObject beaconQueryJson) {
-        verifyQueryRequest(beaconQueryJson);
+        verifyBeaconQueryRequest(beaconQueryJson);
         Scenario scenario = getScenario(beaconQueryJson);
         return new ResponseEntity<JSONObject>(scenario.generateQueryResponse(), HttpStatus.OK);
     }
 
-    private void verifyQueryRequest(JSONObject beaconQueryJson) {
+    private void verifyBeaconQueryRequest(JSONObject beaconQueryJson) {
         if (!beaconQueryJson.containsKey("uuid") ||
                 !beaconQueryJson.containsKey("major") ||
                 !beaconQueryJson.containsKey("minor") ||
