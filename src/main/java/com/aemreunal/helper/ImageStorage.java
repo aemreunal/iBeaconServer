@@ -16,6 +16,7 @@ package com.aemreunal.helper;
  ***************************
  */
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.UUID;
+import javax.imageio.ImageIO;
 import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.exception.region.MapImageDeleteException;
@@ -56,12 +58,15 @@ public class ImageStorage {
      *         The image as a {@link org.springframework.web.multipart.MultipartFile
      *         MultipartFile}.
      *
-     * @return The name of the saved image file.
+     * @return The properties of the saved image file as a {@code String[]} object. These
+     * properties, along with their index in the returned {@code String[]} object, are:
+     * <ul> <li>0: Image name</li> <li>1: Image width</li> <li>2: Image height</li> </ul>
      */
-    public String saveImage(String username, Long projectId, Long regionId, String existingImageName, MultipartFile imageMultipartFile) throws MultipartFileReadException, MapImageDeleteException, MapImageSaveException {
+    public String[] saveImage(String username, Long projectId, Long regionId, String existingImageName, MultipartFile imageMultipartFile) throws MultipartFileReadException, MapImageDeleteException, MapImageSaveException {
         File imageFile;
         String fileName;
         String filePath = getFilePath(username, projectId, regionId);
+        String[] imageProperties = new String[3];
 
         // Delete pre-existing image file
         deleteImage(username, projectId, regionId, existingImageName);
@@ -82,7 +87,10 @@ public class ImageStorage {
         // Write the image bytes to the new file
         writeImageToFile(projectId, regionId, imageMultipartFile, imageFile);
 
-        return fileName;
+        // Read the image properties to get dimensions
+        readImageProperties(projectId, regionId, imageFile, imageProperties);
+
+        return imageProperties;
     }
 
     private void createParentFolder(Long projectId, Long regionId, File imageFile) throws MapImageSaveException {
@@ -112,6 +120,19 @@ public class ImageStorage {
             imageMultipartFile.transferTo(imageFile);
         } catch (IOException e) {
             System.err.println("Unable to write image to file!");
+            throw new MapImageSaveException(projectId, regionId);
+        }
+    }
+
+    private void readImageProperties(Long projectId, Long regionId, File imageFile, String[] imageProperties)
+    throws MapImageSaveException {
+        imageProperties[0] = imageFile.getName();
+        try {
+            BufferedImage image = ImageIO.read(imageFile);
+            imageProperties[1] = String.valueOf(image.getWidth());
+            imageProperties[2] = String.valueOf(image.getHeight());
+        } catch (IOException e) {
+            System.err.println("Unable to read image to get dimensions!");
             throw new MapImageSaveException(projectId, regionId);
         }
     }
@@ -177,7 +198,7 @@ public class ImageStorage {
      *         provided, the method will do nothing and return.
      */
     public void deleteImage(String username, Long projectId, Long regionId, String imageFileName) throws MapImageDeleteException {
-        if (imageFileName == null) {
+        if (imageFileName == null || imageFileName.equals("")) {
             return;
         }
         String filePath = getFilePath(username, projectId, regionId);

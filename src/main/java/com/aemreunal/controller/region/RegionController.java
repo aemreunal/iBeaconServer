@@ -146,8 +146,7 @@ public class RegionController {
                                                @RequestPart(value = "image") MultipartFile imageMultipartFile,
                                                UriComponentsBuilder builder)
             throws WrongFileTypeSubmittedException, MapImageSaveException, MapImageDeleteException, MultipartFileReadException {
-        Region savedRegion = regionService.save(username, projectId, region);
-        savedRegion = regionService.setMapImage(username, projectId, savedRegion, imageMultipartFile);
+        Region savedRegion = regionService.saveNewRegion(username, projectId, region, imageMultipartFile);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved region with ID = \'" + savedRegion.getRegionId() +
                                        "\' name = \'" + savedRegion.getName() +

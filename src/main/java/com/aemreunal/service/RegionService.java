@@ -76,6 +76,72 @@ public class RegionService {
         return regionRepo.save(region);
     }
 
+    /**
+     * Creates and saves the newly created region, along with its image.
+     *
+     * @param username
+     *         The username of the owner of the project.
+     * @param projectId
+     *         The ID of the project which the region resides in.
+     * @param region
+     *         The region to be created and saved.
+     * @param imageMultipartFile
+     *         The image of the region as a {@link org.springframework.web.multipart.MultipartFile
+     *         MultipartFile}.
+     *
+     * @return The saved region.
+     *
+     * @throws WrongFileTypeSubmittedException
+     * @throws MapImageSaveException
+     * @throws MapImageDeleteException
+     * @throws MultipartFileReadException
+     */
+    public Region saveNewRegion(String username, Long projectId, Region region, MultipartFile imageMultipartFile)
+            throws WrongFileTypeSubmittedException, MapImageSaveException, MapImageDeleteException, MultipartFileReadException {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Creating new region for user = \'" + username + "\' and project = \'" + projectId + "\'");
+        }
+        // Region must be saved prior to setting the map image, as the map
+        // image storage in filesystem depends on region and project IDs.
+        region = this.save(username, projectId, region);
+        return setMapImage(username, projectId, region, imageMultipartFile);
+    }
+
+    /**
+     * Saves the map image (provided with the {@code mapImageInBytes} parameter) to disk
+     * and sets the name of the image file to the region object. If the region already has
+     * an image, it is overwritten. The region is NOT saved.
+     *
+     * @param username
+     *         The username of the owner of the project.
+     * @param projectId
+     *         The ID of the project to which the region belongs.
+     * @param region
+     *         The region to save the image of.
+     * @param imageFile
+     *         The image file as a {@link org.springframework.web.multipart.MultipartFile
+     *         MultipartFile}.
+     *
+     * @return The updated region object.
+     *
+     * @throws WrongFileTypeSubmittedException
+     * @throws MapImageSaveException
+     * @throws MapImageDeleteException
+     * @throws MultipartFileReadException
+     */
+    private Region setMapImage(String username, Long projectId, Region region, MultipartFile imageFile)
+            throws MapImageSaveException, MultipartFileReadException, MapImageDeleteException, WrongFileTypeSubmittedException {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println("Setting map image of region with ID = \'" + region.getRegionId() + "\'");
+        }
+        if (imageFile.isEmpty() || !fileTypeIsImage(imageFile)) {
+            throw new WrongFileTypeSubmittedException(projectId, region.getRegionId());
+        }
+        String[] savedImageProperties = imageStorage.saveImage(username, projectId, region.getRegionId(), region.getMapImageFileName(), imageFile);
+        region.setImageProperties(savedImageProperties);
+        return this.save(username, projectId, region);
+    }
+
     @Transactional(readOnly = true)
     public List<Region> getAllRegionsOf(String username, Long projectId) {
         Project project = projectService.getProject(username, projectId);
@@ -128,40 +194,8 @@ public class RegionService {
         Region region = getRegion(username, projectId, regionId);
         Beacon beacon = beaconService.getBeacon(username, projectId, regionId, beaconId);
         region.designateBeacon(beacon);
-        region.markAsUpdated();
-        save(username, projectId, region);
+        this.save(username, projectId, region); // Saving marks the region as updated.
         return region;
-    }
-
-    /**
-     * Saves the map image (provided with the {@code mapImageInBytes} parameter) to disk
-     * and saves the name of the image file to the region object. If the region already
-     * has an image, it is overwritten.
-     *
-     * @param username
-     *         The username of the owner of the project.
-     * @param projectId
-     *         The ID of the project to which the region belongs.
-     * @param region
-     *         The region to save the image of.
-     * @param imageFile
-     *         The image file as a {@link org.springframework.web.multipart.MultipartFile
-     *         MultipartFile}.
-     *
-     * @return The updated region object.
-     */
-    public Region setMapImage(String username, Long projectId, Region region, MultipartFile imageFile)
-            throws MapImageSaveException, MultipartFileReadException, MapImageDeleteException, WrongFileTypeSubmittedException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Setting map image of region with ID = \'" + region.getRegionId() + "\'");
-        }
-        if (imageFile.isEmpty() || !fileTypeIsImage(imageFile)) {
-            throw new WrongFileTypeSubmittedException(projectId, region.getRegionId());
-        }
-        String savedImageName = imageStorage.saveImage(username, projectId, region.getRegionId(), region.getMapImageFileName(), imageFile);
-        region.setMapImageFileName(savedImageName);
-        // Save marks the region as updated
-        return this.save(username, projectId, region);
     }
 
     private boolean fileTypeIsImage(MultipartFile file) {
@@ -204,7 +238,6 @@ public class RegionService {
             System.out.println("Deleting region with ID = \'" + regionId + "\'");
         }
         Region region = this.getRegion(username, projectId, regionId);
-        removeAllBeaconsFromRegion(username, projectId, region);
         removeRegionImage(username, projectId, region);
         regionRepo.delete(region);
         return region;
@@ -218,13 +251,6 @@ public class RegionService {
                                        + projectId + ", region " + region.getRegionId() + ", file name: "
                                        + region.getMapImageFileName() + " could not be deleted! " +
                                        "May need to be deleted manually!");
-        }
-    }
-
-    private void removeAllBeaconsFromRegion(String username, Long projectId, Region region) {
-        for (Beacon beacon : region.getBeacons()) {
-            beacon.setRegion(null);
-            beaconService.save(username, projectId, region.getRegionId(), beacon);
         }
     }
 }

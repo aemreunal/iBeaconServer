@@ -61,12 +61,13 @@ public class BeaconService {
         }
         Region region = regionService.getRegion(username, projectId, regionId);
         if (beacon.getRegion() == null) {
-            // This means it hasn't been saved yet
+            // This means it hasn't been created yet
             if (beaconExists(username, projectId, regionId, beacon)) {
                 // First, verify the beacon doesn't already exist
                 throw new BeaconAlreadyExistsException(beacon);
             }
             beacon.setRegion(region);
+            // TODO check for X & Y coordinates against region width & height
         }
         return beaconRepo.save(beacon);
     }

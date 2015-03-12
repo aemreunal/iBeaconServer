@@ -104,10 +104,9 @@ public class Region extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Region 'Map image' attribute
      */
-
-    @Column(name = "map_image_name", nullable = true)
+    @Column(name = "map_image_name", nullable = false)
     @Access(AccessType.PROPERTY)
-    private String mapImageFileName = null;
+    private String mapImageFileName = "";
 
     public String getMapImageFileName() {
         return mapImageFileName;
@@ -121,9 +120,52 @@ public class Region extends ResourceSupport implements Serializable {
     public boolean mapImageIsSet() {
         return getMapImageFileName() != null && !getMapImageFileName().isEmpty();
     }
-
     /*
      * END: Region 'Map image' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Region 'region width' attribute
+     *
+     * Represents region width in width of the image as pixels.
+     */
+    @Column(name = "region_width", nullable = false)
+    @Access(AccessType.PROPERTY)
+    private Integer regionWidth = 0;
+
+    public Integer getRegionWidth() {
+        return regionWidth;
+    }
+
+    public void setRegionWidth(Integer regionWidth) {
+        this.regionWidth = regionWidth;
+    }
+    /*
+     * END: Region 'region width' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Region 'region height' attribute
+     *
+     * Represents region height in height of the image as pixels.
+     */
+    @Column(name = "region_height", nullable = false)
+    @Access(AccessType.PROPERTY)
+    private Integer regionHeight = 0;
+
+    public Integer getRegionHeight() {
+        return regionHeight;
+    }
+
+    public void setRegionHeight(Integer regionHeight) {
+        this.regionHeight = regionHeight;
+    }
+    /*
+     * END: Region 'region height' attribute
      *------------------------------------------------------------
      */
 
@@ -282,6 +324,12 @@ public class Region extends ResourceSupport implements Serializable {
             setCreationDate(now);
             setLastUpdatedDate(now);
         }
+    }
+
+    public void setImageProperties(String[] imageProperties) {
+        this.setMapImageFileName(imageProperties[0]);
+        this.setRegionWidth(Integer.valueOf(imageProperties[1]));
+        this.setRegionHeight(Integer.valueOf(imageProperties[2]));
     }
 
     @Override
