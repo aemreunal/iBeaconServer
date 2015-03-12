@@ -332,6 +332,14 @@ public class Region extends ResourceSupport implements Serializable {
         this.setRegionHeight(Integer.valueOf(imageProperties[2]));
     }
 
+    public boolean beaconCoordsAreValid(Beacon beacon) {
+        Integer beaconX = beacon.getxCoordinate();
+        Integer beaconY = beacon.getyCoordinate();
+        boolean xIsValid = beaconX >= 0 && beaconX < this.getRegionWidth();
+        boolean yIsValid = beaconY >= 0 && beaconY < this.getRegionHeight();
+        return xIsValid && yIsValid;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Region)

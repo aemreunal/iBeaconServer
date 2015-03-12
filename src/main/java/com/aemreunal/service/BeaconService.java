@@ -11,6 +11,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Scenario;
+import com.aemreunal.exception.MalformedRequestException;
 import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
@@ -38,9 +39,11 @@ import com.aemreunal.repository.beacon.BeaconSpecs;
 @Service
 public class BeaconService {
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     private RegionService regionService;
 
     @Autowired
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     private BeaconRepo beaconRepo;
 
     @Autowired
@@ -65,9 +68,11 @@ public class BeaconService {
             if (beaconExists(username, projectId, regionId, beacon)) {
                 // First, verify the beacon doesn't already exist
                 throw new BeaconAlreadyExistsException(beacon);
+            } else if (!region.beaconCoordsAreValid(beacon)) {
+                // Check whether the beacon coordinates are valid
+                throw new MalformedRequestException();
             }
             beacon.setRegion(region);
-            // TODO check for X & Y coordinates against region width & height
         }
         return beaconRepo.save(beacon);
     }
