@@ -1,6 +1,7 @@
 package com.aemreunal.service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -185,9 +186,9 @@ public class RegionService {
     }
 
     @Transactional(readOnly = true)
-    public List<Beacon> getMembersOfRegion(String username, Long projectId, Long regionId) {
+    public Set<Beacon> getMembersOfRegion(String username, Long projectId, Long regionId) {
         Region region = this.getRegion(username, projectId, regionId);
-        return region.getBeacons().stream().collect(Collectors.toList());
+        return region.getBeacons().stream().collect(Collectors.toSet());
     }
 
     private boolean fileTypeIsImage(MultipartFile file) {

@@ -17,6 +17,7 @@ package com.aemreunal.controller.region;
  */
 
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -96,11 +97,11 @@ public class RegionController {
      */
     // TODO maybe return just the list of Beacon IDs, queried from regions_to_beacon
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_MEMBERS_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Beacon>> getRegionBeacons(@PathVariable String username,
+    public ResponseEntity<Set<Beacon>> getRegionBeacons(@PathVariable String username,
                                                          @PathVariable Long projectId,
                                                          @PathVariable Long regionId) {
-        List<Beacon> beaconList = regionService.getMembersOfRegion(username, projectId, regionId);
-        return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
+        Set<Beacon> beaconSet = regionService.getMembersOfRegion(username, projectId, regionId);
+        return new ResponseEntity<Set<Beacon>>(beaconSet, HttpStatus.OK);
     }
 
     /**

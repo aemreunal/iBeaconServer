@@ -1,6 +1,7 @@
 package com.aemreunal.service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,13 +84,14 @@ public class BeaconService {
     }
 
     private boolean beaconExists(String username, Long projectId, Long regionId, Beacon beacon) {
-        List<Beacon> beacons;
+        Set<Beacon> beacons;
         try {
             beacons = findBeaconsBySpecs(username, projectId, regionId, beacon.getUuid(), beacon.getMajor(), beacon.getMinor());
+            return beacons.size() != 0;
         } catch (BeaconNotFoundException e) {
-            return false;
+            System.err.println("No such beacon has been found. Will return false;");
         }
-        return beacons.size() != 0;
+        return false;
     }
 
     /**
@@ -111,7 +113,7 @@ public class BeaconService {
      * @return The list of beacons conforming to given constraints
      */
     @Transactional(readOnly = true)
-    public List<Beacon> findBeaconsBySpecs(String username, Long projectId, Long regionId, String uuid, Integer major, Integer minor)
+    public Set<Beacon> findBeaconsBySpecs(String username, Long projectId, Long regionId, String uuid, Integer major, Integer minor)
             throws BeaconNotFoundException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
@@ -120,7 +122,7 @@ public class BeaconService {
         if (beacons.size() == 0) {
             throw new BeaconNotFoundException();
         }
-        return beacons;
+        return beacons.stream().collect(Collectors.toSet());
     }
 
     @Transactional(readOnly = true)
@@ -186,9 +188,8 @@ public class BeaconService {
      * region has no beacons.
      */
     @Transactional(readOnly = true)
-    public List<Beacon> getBeaconsOfRegion(String username, Long projectId, Long regionId) {
-        Region region = regionService.getRegion(username, projectId, regionId);
-        return region.getBeacons().stream().collect(Collectors.toList());
+    public Set<Beacon> getBeaconsOfRegion(String username, Long projectId, Long regionId) {
+        return regionService.getMembersOfRegion(username, projectId, regionId);
     }
 
     public void setBeaconScenario(String username, Long projectId, Long regionId, Beacon beacon, Scenario scenario) {

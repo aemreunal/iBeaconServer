@@ -1,6 +1,7 @@
 package com.aemreunal.controller.beacon;
 
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
@@ -77,7 +78,7 @@ public class BeaconController {
      */
     @Transactional
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Beacon>> getBeaconsOfRegion(@PathVariable String username,
+    public ResponseEntity<Set<Beacon>> getBeaconsOfRegion(@PathVariable String username,
                                                            @PathVariable Long projectId,
                                                            @PathVariable Long regionId,
                                                            @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
@@ -90,11 +91,11 @@ public class BeaconController {
             minor = -1;
         }
         if (uuid.equals("") && major.equals(-1) && minor.equals(-1)) {
-            List<Beacon> beaconList = beaconService.getBeaconsOfRegion(username, projectId, regionId);
-            return new ResponseEntity<List<Beacon>>(beaconList, HttpStatus.OK);
+            Set<Beacon> beaconSet = beaconService.getBeaconsOfRegion(username, projectId, regionId);
+            return new ResponseEntity<Set<Beacon>>(beaconSet, HttpStatus.OK);
         } else {
-            List<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, regionId, uuid, major, minor);
-            return new ResponseEntity<List<Beacon>>(beacons, HttpStatus.OK);
+            Set<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, regionId, uuid, major, minor);
+            return new ResponseEntity<Set<Beacon>>(beacons, HttpStatus.OK);
         }
     }
 
