@@ -58,23 +58,28 @@ public class BeaconService {
      * @return The saved/updated beacon
      */
     public Beacon save(String username, Long projectId, Long regionId, Beacon beacon)
-            throws ConstraintViolationException, BeaconAlreadyExistsException {
+            throws ConstraintViolationException, BeaconAlreadyExistsException, MalformedRequestException {
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         }
         Region region = regionService.getRegion(username, projectId, regionId);
         if (beacon.getRegion() == null) {
             // This means it hasn't been created yet
-            if (beaconExists(username, projectId, regionId, beacon)) {
-                // First, verify the beacon doesn't already exist
-                throw new BeaconAlreadyExistsException(beacon);
-            } else if (!region.beaconCoordsAreValid(beacon)) {
-                // Check whether the beacon coordinates are valid
-                throw new MalformedRequestException();
-            }
+            validateBeacon(username, projectId, regionId, beacon, region);
             beacon.setRegion(region);
         }
         return beaconRepo.save(beacon);
+    }
+
+    private void validateBeacon(String username, Long projectId, Long regionId, Beacon beacon, Region region)
+    throws BeaconAlreadyExistsException, MalformedRequestException {
+        if (beaconExists(username, projectId, regionId, beacon)) {
+            // First, verify the beacon doesn't already exist
+            throw new BeaconAlreadyExistsException(beacon);
+        } else if (!region.beaconCoordsAreValid(beacon)) {
+            // Check whether the beacon coordinates are valid
+            throw new MalformedRequestException();
+        }
     }
 
     private boolean beaconExists(String username, Long projectId, Long regionId, Beacon beacon) {

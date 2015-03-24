@@ -190,14 +190,6 @@ public class RegionService {
         return region.getBeacons().stream().collect(Collectors.toList());
     }
 
-    public Region designateBeacon(String username, Long projectId, Long regionId, Long beaconId) {
-        Region region = getRegion(username, projectId, regionId);
-        Beacon beacon = beaconService.getBeacon(username, projectId, regionId, beaconId);
-        region.designateBeacon(beacon);
-        this.save(username, projectId, region); // Saving marks the region as updated.
-        return region;
-    }
-
     private boolean fileTypeIsImage(MultipartFile file) {
         String type = file.getContentType();
         return type.equalsIgnoreCase(MediaType.IMAGE_JPEG_VALUE) ||

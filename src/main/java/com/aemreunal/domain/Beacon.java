@@ -25,6 +25,8 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+// To not mark getters & setters as unused, as they're being used by Spring & Hibernate
+@SuppressWarnings("UnusedDeclaration")
 
 @Entity
 @Table(name = "beacons")
@@ -235,31 +237,25 @@ public class Beacon extends ResourceSupport implements Serializable {
      */
 
 
-//    /*
-//     *------------------------------------------------------------
-//     * BEGIN: Beacon 'designated' attribute
-//     */
-//    @ManyToOne(targetEntity = Scenario.class,
-//            fetch = FetchType.LAZY,
-//            optional = false)
-//    @JoinTable(name = "scenarios_to_beacons",
-//            joinColumns = @JoinColumn(name = "beacon_id"),
-//            inverseJoinColumns = @JoinColumn(name = "scenario_id"))
-//    @Access(AccessType.PROPERTY)
-//    private Scenario scenario;
-//
-//    public Scenario getScenario() {
-//        CoreConfig.initLazily(scenario);
-//        return scenario;
-//    }
-//
-//    public void setScenario(Scenario scenario) {
-//        this.scenario = scenario;
-//    }
-//    /*
-//     * END: Beacon 'designated' attribute
-//     *------------------------------------------------------------
-//     */
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Beacon 'designated' attribute
+     */
+    @Column(name = "designated", nullable = false)
+    @Access(AccessType.PROPERTY)
+    private Boolean designated = false;
+
+    public Boolean getDesignated() {
+        return designated;
+    }
+
+    public void setDesignated(Boolean designated) {
+        this.designated = designated;
+    }
+    /*
+     * END: Beacon 'designated' attribute
+     *------------------------------------------------------------
+     */
 
 
     /*

@@ -133,13 +133,23 @@ public class BeaconController {
     /**
      * Create a new beacon in region.
      * <p>
-     * Region creation request JSON:<br/> {<br/> "uuid":"12345678-1234-1234-1234-123456789012",<br/>
-     * "major":"1",<br/> "minor":"2",<br/> "description":"Beacon description"<br/>}
+     * Beacon creation request JSON:
+     * <pre>
+     * {
+     *   "uuid":"12345678-1234-1234-1234-123456789012",
+     *   "major":"1",
+     *   "minor":"2",
+     *   "xCoordinate":"150"
+     *   "yCoordinate":"120"
+     *   "designated":"true"
+     *   "description":"Beacon description"
+     * }
+     * </pre>
      *
      * @param projectId
      *         The ID of the project to create the beacon in
-     * @param beaconJson
-     *         The beacon as JSON object
+     * @param beaconFromJson
+     *         The beacon parsed from the JSON object
      * @param builder
      *         The URI builder for post-creation redirect
      *
@@ -149,9 +159,9 @@ public class BeaconController {
     public ResponseEntity<Beacon> createBeacon(@PathVariable String username,
                                                @PathVariable Long projectId,
                                                @PathVariable Long regionId,
-                                               @RequestBody Beacon beaconJson,
+                                               @RequestBody Beacon beaconFromJson,
                                                UriComponentsBuilder builder) {
-        Beacon savedBeacon = beaconService.save(username, projectId, regionId, beaconJson);
+        Beacon savedBeacon = beaconService.save(username, projectId, regionId, beaconFromJson);
         if (GlobalSettings.DEBUGGING) {
             System.out.println("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
                                        "\' major = \'" + savedBeacon.getMajor() +
