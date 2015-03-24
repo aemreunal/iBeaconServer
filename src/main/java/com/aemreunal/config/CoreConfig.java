@@ -37,18 +37,15 @@ import com.aemreunal.helper.ImageStorage;
 @Configuration
 @EnableJpaRepositories(GlobalSettings.REPOSITORY_PACKAGE_NAME)
 @EnableTransactionManagement
-@ComponentScan(GlobalSettings.BASE_PACKAGE_NAME)
+@ComponentScan("com.aemreunal")
 public class CoreConfig {
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     private DataSource dataSource;
 
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     private HibernateJpaVendorAdapter vendorAdapter;
 
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     private Properties jpaProperties;
 
     // Required for @PropertySource and @Value value injection, as seen

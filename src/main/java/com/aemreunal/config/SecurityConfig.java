@@ -35,14 +35,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalAuthentication
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     private DataSource dataSource;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
             .dataSource(dataSource)

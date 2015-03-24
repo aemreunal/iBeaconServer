@@ -40,11 +40,9 @@ import com.aemreunal.repository.beacon.BeaconSpecs;
 @Service
 public class BeaconService {
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     private RegionService regionService;
 
     @Autowired
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     private BeaconRepo beaconRepo;
 
     @Autowired
