@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /*
  **************************
- * Copyright (c) 2014     *
+ * Copyright (c) 2015     *
  *                        *
  * This code belongs to:  *
  *                        *
@@ -212,41 +212,6 @@ public class Region extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
-     * BEGIN: Region 'designated beacons' attribute
-     */
-// TODO Maybe make beacons a map from Beacon->bool, indicating designated
-    @OneToMany(targetEntity = Beacon.class,
-            fetch = FetchType.LAZY)
-    @JoinTable(name = "designated_beacons_of_region",
-            joinColumns = @JoinColumn(name = "region_id"),
-            inverseJoinColumns = @JoinColumn(name = "beacon_id"))
-    @Access(AccessType.PROPERTY)
-    private Set<Beacon> designatedBeacons = new LinkedHashSet<Beacon>();
-
-    public Set<Beacon> getDesignatedBeacons() {
-        return this.designatedBeacons;
-    }
-
-    public void setDesignatedBeacons(Set<Beacon> designatedBeacons) {
-        this.designatedBeacons = designatedBeacons;
-    }
-
-    public void designateBeacon(Beacon beacon) {
-        markAsUpdated();
-        getDesignatedBeacons().add(beacon);
-    }
-
-    public void undesignateBeacon(Beacon beacon) {
-        markAsUpdated();
-        getDesignatedBeacons().remove(beacon);
-    }
-    /*
-     * END: Region 'designated beacons' attribute
-     *------------------------------------------------------------
-     */
-
-    /*
-     *------------------------------------------------------------
      * BEGIN: Region 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
@@ -315,6 +280,9 @@ public class Region extends ResourceSupport implements Serializable {
      * END: Region 'lastUpdateDate' attribute
      *------------------------------------------------------------
      */
+
+//    @LastModifiedDate
+//    @CreatedDate
 
     @PrePersist
     private void setInitialProperties() {

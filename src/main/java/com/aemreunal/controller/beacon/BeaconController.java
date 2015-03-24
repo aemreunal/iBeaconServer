@@ -23,7 +23,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /*
  **************************
- * Copyright (c) 2014     *
+ * Copyright (c) 2015     *
  *                        *
  * This code belongs to:  *
  *                        *

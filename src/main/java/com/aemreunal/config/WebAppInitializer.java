@@ -13,7 +13,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 /*
  **************************
- * Copyright (c) 2014     *
+ * Copyright (c) 2015     *
  *                        *
  * This code belongs to:  *
  *                        *

@@ -2,7 +2,7 @@ package com.aemreunal.exception;
 
 /*
  ***************************
- * Copyright (c) 2014      *
+ * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
  *                         *
