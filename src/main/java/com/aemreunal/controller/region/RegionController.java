@@ -17,7 +17,6 @@ package com.aemreunal.controller.region;
  */
 
 import java.util.List;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Region;
 import com.aemreunal.exception.region.*;
 import com.aemreunal.service.RegionService;
@@ -81,27 +79,6 @@ public class RegionController {
         Region region = regionService.getRegion(username, projectId, regionId);
         // TODO add links
         return new ResponseEntity<Region>(region, HttpStatus.OK);
-    }
-
-    /**
-     * Get beacons that belong to the specified region.
-     *
-     * @param username
-     *         The username of the owner of the region.
-     * @param projectId
-     *         The ID of the project the region belongs to.
-     * @param regionId
-     *         The ID of the region.
-     *
-     * @return The list of beacons that belong to the region.
-     */
-    // TODO maybe return just the list of Beacon IDs, queried from regions_to_beacon
-    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_MEMBERS_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Beacon>> getRegionBeacons(@PathVariable String username,
-                                                         @PathVariable Long projectId,
-                                                         @PathVariable Long regionId) {
-        Set<Beacon> beaconSet = regionService.getMembersOfRegion(username, projectId, regionId);
-        return new ResponseEntity<Set<Beacon>>(beaconSet, HttpStatus.OK);
     }
 
     /**

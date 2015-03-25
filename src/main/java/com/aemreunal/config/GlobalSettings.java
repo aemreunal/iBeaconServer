@@ -54,7 +54,6 @@ public class GlobalSettings {
     public static final String REGION_PATH_MAPPING               = PROJECT_SPECIFIC_MAPPING + "/regions";
     public static final String REGION_ID_MAPPING                 = "/{regionId}";
     public static final String REGION_SPECIFIC_MAPPING           = REGION_PATH_MAPPING + REGION_ID_MAPPING;
-    public static final String REGION_MEMBERS_MAPPING            = REGION_ID_MAPPING + "/members";
     public static final String REGION_MAP_IMAGE_MAPPING          = REGION_ID_MAPPING + "/mapimage";
     // Beacon
     public static final String BEACON_PATH_MAPPING               = REGION_SPECIFIC_MAPPING + "/beacons";
