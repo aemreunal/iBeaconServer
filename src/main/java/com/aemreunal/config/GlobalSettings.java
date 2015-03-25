@@ -162,8 +162,6 @@ public class GlobalSettings {
     }
 
     public static void err(String log) {
-        if (GlobalSettings.DEBUGGING) {
-            System.err.println(log);
-        }
+        System.err.println(log);
     }
 }
