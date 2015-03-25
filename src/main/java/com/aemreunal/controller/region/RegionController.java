@@ -117,7 +117,7 @@ public class RegionController {
      * @throws MultipartFileReadException
      *         If the Multipart file couldn't be read.
      */
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Region> createRegion(@PathVariable String username,
                                                @PathVariable Long projectId,
                                                @RequestPart(value = "region") Region region,
