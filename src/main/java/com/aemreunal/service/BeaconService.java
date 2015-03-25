@@ -58,9 +58,7 @@ public class BeaconService {
      */
     public Beacon save(String username, Long projectId, Long regionId, Beacon beacon)
             throws ConstraintViolationException, BeaconAlreadyExistsException, MalformedRequestException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
-        }
+        GlobalSettings.log("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         Region region = regionService.getRegion(username, projectId, regionId);
         if (beacon.getRegion() == null) {
             // This means it hasn't been created yet
@@ -159,9 +157,7 @@ public class BeaconService {
      */
     @Transactional(readOnly = true)
     public Beacon getBeacon(String username, Long projectId, Long regionId, Long beaconId) throws BeaconNotFoundException, ProjectNotFoundException, RegionNotFoundException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + projectId + "\' and in region = \'" + regionId + "\'");
-        }
+        GlobalSettings.log("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + projectId + "\' and in region = \'" + regionId + "\'");
         Region region = regionService.getRegion(username, projectId, regionId);
         Beacon beacon = beaconRepo.findByBeaconIdAndRegion(beaconId, region);
         if (beacon == null) {
@@ -196,9 +192,7 @@ public class BeaconService {
     }
 
     public Beacon delete(String username, Long projectId, Long regionId, Long beaconId) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Deleting beacon with ID = \'" + beaconId + "\'");
-        }
+        GlobalSettings.log("Deleting beacon with ID = \'" + beaconId + "\'");
         // Retrieving beacon to ensure that beacon exists and is part of this user/project/region etc.
         Beacon beacon = getBeacon(username, projectId, regionId, beaconId);
         beaconRepo.delete(beaconId);

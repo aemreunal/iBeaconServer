@@ -55,9 +55,7 @@ public class ProjectService {
      * @return The saved/updated project
      */
     public Project save(String username, Project project) throws ConstraintViolationException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saving project with ID = \'" + project.getProjectId() + "\'");
-        }
+        GlobalSettings.log("Saving project with ID = \'" + project.getProjectId() + "\'");
         if (project.getOwner() == null) {
             project.setOwner(userService.findByUsername(username));
         }
@@ -113,10 +111,7 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public List<Project> findProjectsBySpecs(String username, String projectName) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding projects with Project Name = \'" + projectName + "\'");
-        }
-
+        GlobalSettings.log("Finding projects with Project Name = \'" + projectName + "\'");
         User owner = userService.findByUsername(username);
         List<Project> projects = projectRepo.findAll(ProjectSpecs.projectWithSpecification(owner, projectName));
         if (projects.size() == 0) {
@@ -140,9 +135,7 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public Project getProject(String username, Long projectId) throws ProjectNotFoundException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding project with ID = \'" + projectId + "\'");
-        }
+        GlobalSettings.log("Finding project with ID = \'" + projectId + "\'");
         // Verify owner exists
         User owner = userService.findByUsername(username);
         Project project = projectRepo.findByOwnerAndProjectId(owner, projectId);
@@ -155,9 +148,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public Project queryForProject(Long projectId, String projectSecret)
     throws ProjectNotFoundException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Querying for project with ID = \'" + projectId + "\'");
-        }
+        GlobalSettings.log("Querying for project with ID = \'" + projectId + "\'");
         Project project = projectRepo.findOne(projectId);
         if (project != null) {
             if (passwordEncoder.matches(projectSecret, project.getProjectSecret())) {
@@ -180,9 +171,7 @@ public class ProjectService {
      * @return The deleted project
      */
     public Project delete(String username, Long projectId) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Deleting project with ID = \'" + projectId + "\'");
-        }
+        GlobalSettings.log("Deleting project with ID = \'" + projectId + "\'");
         Project project = this.getProject(username, projectId);
         projectRepo.delete(project);
         return project;

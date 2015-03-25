@@ -148,11 +148,9 @@ public class RegionController {
                                                UriComponentsBuilder builder)
             throws WrongFileTypeSubmittedException, MapImageSaveException, MapImageDeleteException, MultipartFileReadException {
         Region savedRegion = regionService.saveNewRegion(username, projectId, region, imageMultipartFile);
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved region with ID = \'" + savedRegion.getRegionId() +
-                                       "\' name = \'" + savedRegion.getName() +
-                                       "\' in project with ID = \'" + projectId + "\'");
-        }
+        GlobalSettings.log("Saved region with ID = \'" + savedRegion.getRegionId() +
+                               "\' name = \'" + savedRegion.getName() +
+                               "\' in project with ID = \'" + projectId + "\'");
 
         return buildCreateResponse(username, builder, savedRegion);
     }

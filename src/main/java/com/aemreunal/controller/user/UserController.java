@@ -73,9 +73,7 @@ public class UserController {
             throws UsernameClashException, MalformedRequestException {
         verifyUserCreateJson(userJson);
         User savedUser = userService.save(new User(userJson));
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved user with username = \'" + savedUser.getUsername() + "\' ID = \'" + savedUser.getUserId() + "\'");
-        }
+        GlobalSettings.log("Saved user with username = \'" + savedUser.getUsername() + "\' ID = \'" + savedUser.getUserId() + "\'");
         return buildCreateResponse(builder, savedUser);
     }
 

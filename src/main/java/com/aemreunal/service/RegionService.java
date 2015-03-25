@@ -63,9 +63,7 @@ public class RegionService {
      * @return The saved/updated region.
      */
     public Region save(String username, Long projectId, Region region) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saving region with ID = \'" + region.getRegionId() + "\'");
-        }
+        GlobalSettings.log("Saving region with ID = \'" + region.getRegionId() + "\'");
         Project project = projectService.getProject(username, projectId);
         if (region.getProject() == null) {
             // Region is created
@@ -99,9 +97,7 @@ public class RegionService {
      */
     public Region saveNewRegion(String username, Long projectId, Region region, MultipartFile imageMultipartFile)
             throws WrongFileTypeSubmittedException, MapImageSaveException, MapImageDeleteException, MultipartFileReadException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Creating new region for user = \'" + username + "\' and project = \'" + projectId + "\'");
-        }
+        GlobalSettings.log("Creating new region for user = \'" + username + "\' and project = \'" + projectId + "\'");
         // Region must be saved prior to setting the map image, as the map
         // image storage in filesystem depends on region and project IDs.
         region = this.save(username, projectId, region);
@@ -132,9 +128,7 @@ public class RegionService {
      */
     private Region setMapImage(String username, Long projectId, Region region, MultipartFile imageFile)
             throws MapImageSaveException, MultipartFileReadException, MapImageDeleteException, WrongFileTypeSubmittedException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Setting map image of region with ID = \'" + region.getRegionId() + "\'");
-        }
+        GlobalSettings.log("Setting map image of region with ID = \'" + region.getRegionId() + "\'");
         if (imageFile.isEmpty() || !fileTypeIsImage(imageFile)) {
             throw new WrongFileTypeSubmittedException(projectId, region.getRegionId());
         }
@@ -151,9 +145,7 @@ public class RegionService {
 
     @Transactional(readOnly = true)
     public Region getRegion(String username, Long projectId, Long regionId) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding region with ID = \'" + regionId + "\'");
-        }
+        GlobalSettings.log("Finding region with ID = \'" + regionId + "\'");
         Project project = projectService.getProject(username, projectId);
         Region region = regionRepo.findByRegionIdAndProject(regionId, project);
         if (region == null) {
@@ -174,9 +166,7 @@ public class RegionService {
      */
     @Transactional(readOnly = true)
     public List<Region> findRegionsBySpecs(String username, Long projectId, String regionName) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding regions with projectID = \'" + projectId + "\' and name =\'" + regionName + "\'");
-        }
+        GlobalSettings.log("Finding regions with projectID = \'" + projectId + "\' and name =\'" + regionName + "\'");
         Project project = projectService.getProject(username, projectId);
         List<Region> regions = regionRepo.findAll(RegionSpecs.regionWithSpecification(project.getProjectId(), regionName));
         if (regions.size() == 0) {
@@ -201,9 +191,7 @@ public class RegionService {
     @Transactional(readOnly = true)
     public byte[] getMapImage(String username, Long projectId, Long regionId)
     throws MapImageLoadException, MapImageNotSetException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Getting map image of region with ID = \'" + regionId + "\'");
-        }
+        GlobalSettings.log("Getting map image of region with ID = \'" + regionId + "\'");
         Region region = this.getRegion(username, projectId, regionId);
         String mapImageFileName = region.getMapImageFileName();
         if (mapImageFileName == null) {
@@ -227,9 +215,7 @@ public class RegionService {
      * @return Whether the region was deleted or not
      */
     public Region delete(String username, Long projectId, Long regionId) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Deleting region with ID = \'" + regionId + "\'");
-        }
+        GlobalSettings.log("Deleting region with ID = \'" + regionId + "\'");
         Region region = this.getRegion(username, projectId, regionId);
         removeRegionImage(username, projectId, region);
         regionRepo.delete(region);

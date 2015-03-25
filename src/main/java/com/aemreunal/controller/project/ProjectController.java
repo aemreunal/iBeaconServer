@@ -119,9 +119,7 @@ public class ProjectController {
                                                     @RequestBody Project projectFromJson,
                                                     UriComponentsBuilder builder) {
         Project savedProject = projectService.save(username, projectFromJson);
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
-        }
+        GlobalSettings.log("Saved project with Name = \'" + savedProject.getName() + "\' ID = \'" + savedProject.getProjectId() + "\'");
         String projectSecret = projectService.resetSecret(username, savedProject);
         return buildCreateResponse(builder, addLinks(savedProject), projectSecret);
     }

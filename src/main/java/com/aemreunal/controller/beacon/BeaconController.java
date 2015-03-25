@@ -162,12 +162,10 @@ public class BeaconController {
                                                @RequestBody Beacon beaconFromJson,
                                                UriComponentsBuilder builder) {
         Beacon savedBeacon = beaconService.save(username, projectId, regionId, beaconFromJson);
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
-                                       "\' major = \'" + savedBeacon.getMajor() +
-                                       "\' minor = \'" + savedBeacon.getMinor() +
-                                       "\' in project with ID = \'" + projectId + "\'");
-        }
+        GlobalSettings.log("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
+                               "\' major = \'" + savedBeacon.getMajor() +
+                               "\' minor = \'" + savedBeacon.getMinor() +
+                               "\' in project with ID = \'" + projectId + "\'");
         addLinks(username, projectId, regionId, savedBeacon);
         return buildCreateResponse(username, builder, savedBeacon);
     }

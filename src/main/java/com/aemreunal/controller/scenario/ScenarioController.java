@@ -72,9 +72,7 @@ public class ScenarioController {
                                                    @RequestBody Scenario scenarioFromJson,
                                                    UriComponentsBuilder builder) {
         Scenario savedScenario = scenarioService.save(username, projectId, scenarioFromJson);
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saved scenario with Name = \'" + savedScenario.getName() + "\' ID = \'" + savedScenario.getScenarioId() + "\'");
-        }
+        GlobalSettings.log("Saved scenario with Name = \'" + savedScenario.getName() + "\' ID = \'" + savedScenario.getScenarioId() + "\'");
         return buildCreateResponse(username, builder, savedScenario);
     }
 

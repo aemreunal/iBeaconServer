@@ -55,9 +55,7 @@ public class UserService {
         verifyUsernameCorrectness(user.getUsername());
         verifyUsernameUniqueness(user.getUsername());
 
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saving user with ID = \'" + user.getUserId() + "\'");
-        }
+        GlobalSettings.log("Saving user with ID = \'" + user.getUserId() + "\'");
         return userRepo.save(user);
     }
 
@@ -110,9 +108,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public void verifyUsernameUniqueness(String username) throws UsernameClashException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Checking whether username = \'" + username + "\' is taken");
-        }
+        GlobalSettings.log("Checking whether username = \'" + username + "\' is taken");
         if (userRepo.count(UserSpecs.usernameSpecification(username)) != 0) {
             // The specified username already exists
             throw new UsernameClashException(username);
@@ -129,9 +125,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding user with username = \'" + username + "\'");
-        }
+        GlobalSettings.log("Finding user with username = \'" + username + "\'");
         verifyUsernameCorrectness(username);
         User user = userRepo.findByUsername(username);
         if (user == null) {
@@ -150,9 +144,7 @@ public class UserService {
      * @return Whether the user was deleted or not
      */
     public User delete(String username) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Deleting user with username = \'" + username + "\'");
-        }
+        GlobalSettings.log("Deleting user with username = \'" + username + "\'");
         User userToDelete = findByUsername(username);
         userRepo.delete(userToDelete);
         return userToDelete;

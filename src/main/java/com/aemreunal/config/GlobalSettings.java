@@ -154,4 +154,17 @@ public class GlobalSettings {
      */
     public static final String USERS_FOR_AUTH_QUERY    = "SELECT username, password, '1' FROM users WHERE username = ?";
     public static final String AUTHORITY_OF_USER_QUERY = "SELECT username, 'ADMIN' FROM users WHERE username = ?";
+
+
+    public static void log(String log) {
+        if (GlobalSettings.DEBUGGING) {
+            System.out.println(log);
+        }
+    }
+
+    public static void err(String log) {
+        if (GlobalSettings.DEBUGGING) {
+            System.err.println(log);
+        }
+    }
 }

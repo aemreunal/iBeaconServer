@@ -47,9 +47,7 @@ public class ScenarioService {
     private ScenarioRepo scenarioRepo;
 
     public Scenario save(String username, Long projectId, Scenario scenario) throws ConstraintViolationException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Saving scenario with ID = \'" + scenario.getScenarioId() + "\'");
-        }
+        GlobalSettings.log("Saving scenario with ID = \'" + scenario.getScenarioId() + "\'");
         // Even though the 'project' variable is only used inside the if-clause,
         // the Project is found no matter what to ensure it exists and legitimate.
         Project project = projectService.getProject(username, projectId);
@@ -68,9 +66,7 @@ public class ScenarioService {
 
     @Transactional(readOnly = true)
     public Scenario getScenario(String username, Long projectId, Long scenarioId) throws ScenarioNotFoundException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding scenario with ID = \'" + scenarioId + "\' in project = \'" + projectId + "\'");
-        }
+        GlobalSettings.log("Finding scenario with ID = \'" + scenarioId + "\' in project = \'" + projectId + "\'");
         Project project = projectService.getProject(username, projectId);
         Scenario scenario = scenarioRepo.findByScenarioIdAndProject(scenarioId, project);
         if (scenario == null) {
@@ -97,9 +93,7 @@ public class ScenarioService {
     }
 
     public Scenario delete(String username, Long projectId, Long scenarioId) {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Deleting scenario with ID = \'" + scenarioId + "\'");
-        }
+        GlobalSettings.log("Deleting scenario with ID = \'" + scenarioId + "\'");
         Scenario scenario = this.getScenario(username, projectId, scenarioId);
         removeAllBeaconsFromScenario(username, projectId, scenario);
         scenarioRepo.delete(scenario);
