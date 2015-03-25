@@ -16,8 +16,17 @@ package com.aemreunal.exception.region;
  ***************************
  */
 
-public class MapImageSaveException extends Exception {
+public class MapImageSaveException extends Throwable {
     public MapImageSaveException(Long projectId, Long regionId) {
-        super("Unable to save map image of project " + projectId + ", region " + regionId + "!");
+        super(createCauseMessage(projectId, regionId), null, true, false);
+    }
+
+    public static String createCauseMessage(Long projectId, Long regionId) {
+        String message = "Unable to save ";
+        if (regionId != null) {
+            return message + "map image of project " + projectId + ", region " + regionId + "!";
+        } else {
+            return message + "a navigation image of project " + projectId + "!";
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Region;
 import com.aemreunal.exception.region.*;
+import com.aemreunal.helper.ImageProperties;
 import com.aemreunal.helper.ImageStorage;
 import com.aemreunal.repository.region.RegionRepo;
 import com.aemreunal.repository.region.RegionSpecs;
@@ -132,7 +133,7 @@ public class RegionService {
         if (imageFile.isEmpty() || !fileTypeIsImage(imageFile)) {
             throw new WrongFileTypeSubmittedException(projectId, region.getRegionId());
         }
-        String[] savedImageProperties = imageStorage.saveImage(username, projectId, region.getRegionId(), region.getMapImageFileName(), imageFile);
+        ImageProperties savedImageProperties = imageStorage.saveImage(username, projectId, region.getRegionId(), imageFile);
         region.setImageProperties(savedImageProperties);
         return this.save(username, projectId, region);
     }

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.aemreunal.helper.ImageProperties;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -294,10 +295,10 @@ public class Region extends ResourceSupport implements Serializable {
         }
     }
 
-    public void setImageProperties(String[] imageProperties) {
-        this.setMapImageFileName(imageProperties[0]);
-        this.setRegionWidth(Integer.valueOf(imageProperties[1]));
-        this.setRegionHeight(Integer.valueOf(imageProperties[2]));
+    public void setImageProperties(ImageProperties imageProperties) {
+        this.setMapImageFileName(imageProperties.getImageFileName());
+        this.setRegionWidth(imageProperties.getImageWidth());
+        this.setRegionHeight(imageProperties.getImageHeight());
     }
 
     public boolean beaconCoordsAreValid(Beacon beacon) {

@@ -35,13 +35,20 @@ import com.aemreunal.exception.region.MultipartFileReadException;
 public class ImageStorage {
 
     /**
-     * Saves the given image to the filesystem and returns the name of the saved image
-     * file.
+     * Saves the given image to the filesystem and returns the properties of the saved
+     * image file as an {@link ImageProperties ImageProperties} object.
      * <p>
-     * The method saves images under the home folder of the user, inside the <code>{@value
-     * com.aemreunal.config.GlobalSettings#ROOT_STORAGE_FOLDER_DIRECTORY_NAME}</code>
-     * folder, <code>{@value com.aemreunal.config.GlobalSettings#IMAGE_STORAGE_FOLDER_DIRECTORY_NAME}</code>
-     * sub folder. If the folder does not exist, it will be created.
+     * The method saves images under the home folder of the user, inside the:<pre>
+     * ~/{@value com.aemreunal.config.GlobalSettings#ROOT_STORAGE_FOLDER_DIRECTORY_NAME}/{@value
+     * com.aemreunal.config.GlobalSettings#IMAGE_STORAGE_FOLDER_DIRECTORY_NAME}/</pre>
+     * folder. The regular region images will be put in a sub-folder structure like:<pre>
+     * &lt;user name&gt;/&lt;project ID&gt;/&lt;region ID&gt;/</pre> under the main
+     * storage folder. Inter-region navigation images will be put directly under
+     * the:<pre>
+     * &lt;user name&gt;/&lt;project ID&gt;/</pre> folder, without any region-specific
+     * foldering.
+     * <p>
+     * If any of the folders above do not exist, they will be created.
      *
      * @param username
      *         The username of whoever is saving the image.
@@ -49,35 +56,24 @@ public class ImageStorage {
      *         The ID of the project which the region (the image belongs to) is a part
      *         of.
      * @param regionId
-     *         The ID of the region of the image.
-     * @param existingImageName
-     *         If an image of a similar function already exists, the name of that image
-     *         file should be given with this parameter. When this parameter is not
-     *         <code>null</code>, this file is deleted prior to saving the new one.
+     *         The ID of the region of the image. When saving an inter-region navigation
+     *         image, this value should be {@code null}.
      * @param imageMultipartFile
-     *         The image as a {@link org.springframework.web.multipart.MultipartFile
-     *         MultipartFile}.
+     *         The image as a {@link MultipartFile MultipartFile}.
      *
-     * @return The properties of the saved image file as a {@code String[]} object. These
-     * properties, along with their index in the returned {@code String[]} object, are:
-     * <ul> <li>0: Image name</li> <li>1: Image width</li> <li>2: Image height</li> </ul>
+     * @return The properties of the saved image file as an {@link ImageProperties
+     * ImageProperties} object. These properties are: <ul> <li>Image name</li> <li>Image
+     * width</li> <li>Image height</li> </ul>
      */
-    public String[] saveImage(String username, Long projectId, Long regionId, String existingImageName, MultipartFile imageMultipartFile) throws MultipartFileReadException, MapImageDeleteException, MapImageSaveException {
-        File imageFile;
-        String fileName;
+    public ImageProperties saveImage(String username, Long projectId, Long regionId, MultipartFile imageMultipartFile)
+            throws MultipartFileReadException, MapImageDeleteException, MapImageSaveException {
+        // Get the file path from the username, project ID, and region ID attributes
         String filePath = getFilePath(username, projectId, regionId);
-        String[] imageProperties = new String[3];
-
-        // Delete pre-existing image file
-        deleteImage(username, projectId, regionId, existingImageName);
 
         // Ensure unique file name
-        do {
-            fileName = UUID.randomUUID().toString();
-            imageFile = new File(filePath + fileName);
-        } while (imageFile.exists());
+        File imageFile = getUniqueFile(filePath);
 
-        // Check for the existence of the parent folder and create
+        // Check for the existence of the parent folder and create it
         // if it doesn't exist
         createParentFolder(projectId, regionId, imageFile);
 
@@ -88,9 +84,16 @@ public class ImageStorage {
         writeImageToFile(projectId, regionId, imageMultipartFile, imageFile);
 
         // Read the image properties to get dimensions
-        readImageProperties(projectId, regionId, imageFile, imageProperties);
+        return readImageProperties(projectId, regionId, imageFile);
+    }
 
-        return imageProperties;
+    private File getUniqueFile(String filePath) {
+        File imageFile;
+        do {
+            String fileName = UUID.randomUUID().toString();
+            imageFile = new File(filePath + fileName);
+        } while (imageFile.exists());
+        return imageFile;
     }
 
     private void createParentFolder(Long projectId, Long regionId, File imageFile) throws MapImageSaveException {
@@ -124,13 +127,11 @@ public class ImageStorage {
         }
     }
 
-    private void readImageProperties(Long projectId, Long regionId, File imageFile, String[] imageProperties)
+    private ImageProperties readImageProperties(Long projectId, Long regionId, File imageFile)
     throws MapImageSaveException {
-        imageProperties[0] = imageFile.getName();
         try {
             BufferedImage image = ImageIO.read(imageFile);
-            imageProperties[1] = String.valueOf(image.getWidth());
-            imageProperties[2] = String.valueOf(image.getHeight());
+            return new ImageProperties(imageFile.getName(), image.getWidth(), image.getHeight());
         } catch (IOException e) {
             System.err.println("Unable to read image to get dimensions!");
             throw new MapImageSaveException(projectId, regionId);
@@ -155,7 +156,9 @@ public class ImageStorage {
      * read, <code>null</code> otherwise.
      */
     public byte[] loadImage(String username, Long projectId, Long regionId, String imageFileName) throws MapImageLoadException {
+        // Get the file path from the username, project ID, and region ID attributes
         String filePath = getFilePath(username, projectId, regionId);
+        // Get the image file
         File imageFile = new File(filePath + imageFileName);
         if (!imageFile.exists()) {
             System.err.println("Image file does not exist!");
@@ -166,7 +169,7 @@ public class ImageStorage {
 
     private byte[] loadImageFromFile(Long projectId, Long regionId, File imageFile) throws MapImageLoadException {
         // Can safely cast from long to int, as image file will never exceed
-        // 2^32 bytes (Which would've used 64 bits of long).
+        // 2^32 bytes (which would've required the use of a 64 bit long).
         byte[] imageAsBytes = new byte[(int) imageFile.length()];
         try {
             FileInputStream stream = new FileInputStream(imageFile);
@@ -201,21 +204,27 @@ public class ImageStorage {
         if (imageFileName == null || imageFileName.equals("")) {
             return;
         }
+        // Get the file path from the username, project ID, and region ID attributes
         String filePath = getFilePath(username, projectId, regionId);
+        // Get the image file
         File imageFile = new File(filePath + imageFileName);
         try {
             Files.delete(imageFile.toPath());
         } catch (NoSuchFileException e) {
-            System.err.println("WARNING: Image file for user: " + username + ", project: "
+            GlobalSettings.err("WARNING: Image file for user: " + username + ", project: "
                                        + projectId + ", region " + regionId + ", file name: "
                                        + imageFileName + " does not exist, nothing to delete!");
         } catch (IOException e) {
-            System.err.println("Unable to delete the image!");
+            GlobalSettings.err("Unable to delete the image!");
             throw new MapImageDeleteException(projectId, regionId);
         }
     }
 
     private String getFilePath(String username, Long projectId, Long regionId) {
-        return GlobalSettings.IMAGE_STORAGE_FOLDER_PATH + username + "/" + projectId.toString() + "/" + regionId.toString() + "/";
+        if (regionId != null) {
+            return GlobalSettings.IMAGE_STORAGE_FOLDER_PATH + username + "/" + projectId.toString() + "/" + regionId.toString() + "/";
+        } else {
+            return GlobalSettings.IMAGE_STORAGE_FOLDER_PATH + username + "/" + projectId.toString() + "/";
+        }
     }
 }
