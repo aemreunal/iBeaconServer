@@ -80,20 +80,15 @@ public class BeaconController {
     public ResponseEntity<Set<Beacon>> getBeaconsOfRegion(@PathVariable String username,
                                                            @PathVariable Long projectId,
                                                            @PathVariable Long regionId,
-                                                           @RequestParam(value = "uuid", required = false, defaultValue = "") String uuid,
+                                                           @RequestParam(value = "uuid", required = false) String uuid,
                                                            @RequestParam(value = "major", required = false) Integer major,
-                                                           @RequestParam(value = "minor", required = false) Integer minor) {
-        if (major == null) {
-            major = -1;
-        }
-        if (minor == null) {
-            minor = -1;
-        }
-        if (uuid.equals("") && major.equals(-1) && minor.equals(-1)) {
+                                                           @RequestParam(value = "minor", required = false) Integer minor,
+                                                           @RequestParam(value = "designated", required = false) Boolean designated) {
+        if (uuid == null && major == null && minor == null && designated == null) {
             Set<Beacon> beaconSet = beaconService.getBeaconsOfRegion(username, projectId, regionId);
             return new ResponseEntity<Set<Beacon>>(beaconSet, HttpStatus.OK);
         } else {
-            Set<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, regionId, uuid, major, minor);
+            Set<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, regionId, uuid, major, minor, designated);
             return new ResponseEntity<Set<Beacon>>(beacons, HttpStatus.OK);
         }
     }

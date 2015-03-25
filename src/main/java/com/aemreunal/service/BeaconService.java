@@ -82,10 +82,10 @@ public class BeaconService {
     private boolean beaconExists(String username, Long projectId, Long regionId, Beacon beacon) {
         Set<Beacon> beacons;
         try {
-            beacons = findBeaconsBySpecs(username, projectId, regionId, beacon.getUuid(), beacon.getMajor(), beacon.getMinor());
+            beacons = findBeaconsBySpecs(username, projectId, regionId, beacon.getUuid(), beacon.getMajor(), beacon.getMinor(), null);
             return beacons.size() != 0;
         } catch (BeaconNotFoundException e) {
-            System.err.println("No such beacon has been found. Will return false;");
+            GlobalSettings.err("No such beacon has been found. Will return false;");
         }
         return false;
     }
@@ -105,26 +105,26 @@ public class BeaconService {
      *         The Major field constraint
      * @param minor
      *         The Minor field constraint
+     * @param designated
+     *         The designated field constraint
      *
      * @return The list of beacons conforming to given constraints
      */
     @Transactional(readOnly = true)
-    public Set<Beacon> findBeaconsBySpecs(String username, Long projectId, Long regionId, String uuid, Integer major, Integer minor)
+    public Set<Beacon> findBeaconsBySpecs(String username, Long projectId, Long regionId, String uuid, Integer major, Integer minor, Boolean designated)
             throws BeaconNotFoundException {
-        if (GlobalSettings.DEBUGGING) {
-            System.out.println("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\'");
-        }
-        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(username, projectId, regionId, uuid, major, minor));
-        if (beacons.size() == 0) {
-            throw new BeaconNotFoundException();
-        }
+        GlobalSettings.log("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\' designated = \'" + designated + "\'");
+        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(username, projectId, regionId, uuid, major, minor, designated));
+//        if (beacons.size() == 0) {
+//            throw new BeaconNotFoundException();
+//        }
         return beacons.stream().collect(Collectors.toSet());
     }
 
     @Transactional(readOnly = true)
     public Beacon queryForBeacon(String uuid, Integer major, Integer minor, String projectSecret)
     throws BeaconNotFoundException {
-        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(null, null, null, uuid, major, minor));
+        List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(null, null, null, uuid, major, minor, null));
         for (Beacon beacon : beacons) {
             if (passwordEncoder.matches(projectSecret, beacon.getRegion().getProject().getProjectSecret())) {
                 return beacon;
@@ -184,6 +184,11 @@ public class BeaconService {
     @Transactional(readOnly = true)
     public Set<Beacon> getBeaconsOfRegion(String username, Long projectId, Long regionId) {
         return regionService.getMembersOfRegion(username, projectId, regionId);
+    }
+
+    @Transactional(readOnly = true)
+    public Set<Beacon> getDesignatedBeaconsOfRegion(String username, Long projectId, Long regionId) {
+        return this.findBeaconsBySpecs(username, projectId, regionId, null, null, null, Boolean.TRUE);
     }
 
     public void setBeaconScenario(String username, Long projectId, Long regionId, Beacon beacon, Scenario scenario) {

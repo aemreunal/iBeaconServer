@@ -22,7 +22,6 @@ import com.aemreunal.domain.Region;
  **************************
  */
 
-// extends CrudRepository<Object type, Object ID type>
 @Repository
 public interface BeaconRepo extends CrudRepository<Beacon, Long>, JpaSpecificationExecutor {
     Beacon findByBeaconIdAndRegion(Long beaconId, Region region);
