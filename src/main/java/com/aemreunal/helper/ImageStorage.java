@@ -1,7 +1,7 @@
 package com.aemreunal.helper;
 
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -9,11 +9,11 @@ package com.aemreunal.helper;
  * @author Ahmet Emre Ünal *
  * S001974                 *
  *                         *
- * emre@aemreunal.com      *
+ * aemreunal@gmail.com     *
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
 
 import java.awt.image.BufferedImage;

@@ -1,8 +1,7 @@
 package com.aemreunal.controller.region;
 
-
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -14,8 +13,9 @@ package com.aemreunal.controller.region;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
+
 import net.minidev.json.JSONObject;
 
 import org.springframework.http.HttpStatus;
@@ -34,12 +34,12 @@ public class RegionControllerAdvice {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({MapImageSaveException.class, MapImageLoadException.class, MapImageDeleteException.class})
+    @ExceptionHandler({ MapImageSaveException.class, MapImageLoadException.class, MapImageDeleteException.class })
     public ResponseEntity<JSONObject> internalErrorExceptionHandler(Exception ex) {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({MultipartException.class, MultipartFileReadException.class})
+    @ExceptionHandler({ MultipartException.class, MultipartFileReadException.class })
     public ResponseEntity<JSONObject> multipartRequestExceptionHandler(MultipartException ex) {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.BAD_REQUEST);
     }

@@ -1,5 +1,21 @@
 package com.aemreunal.controller.beacon;
 
+/*
+ * *********************** *
+ * Copyright (c) 2015      *
+ *                         *
+ * This code belongs to:   *
+ *                         *
+ * @author Ahmet Emre Ünal *
+ * S001974                 *
+ *                         *
+ * aemreunal@gmail.com     *
+ * emre.unal@ozu.edu.tr    *
+ *                         *
+ * aemreunal.com           *
+ * *********************** *
+ */
+
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -20,22 +36,6 @@ import com.aemreunal.domain.Beacon;
 import com.aemreunal.service.BeaconService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
-/*
- **************************
- * Copyright (c) 2015     *
- *                        *
- * This code belongs to:  *
- *                        *
- * Ahmet Emre Ünal        *
- * S001974                *
- *                        *
- * aemreunal@gmail.com    *
- * emre.unal@ozu.edu.tr   *
- *                        *
- * aemreunal.com          *
- **************************
- */
 
 @Controller
 @RequestMapping(GlobalSettings.BEACON_PATH_MAPPING)

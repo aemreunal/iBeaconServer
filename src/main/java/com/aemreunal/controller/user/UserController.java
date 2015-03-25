@@ -1,5 +1,21 @@
 package com.aemreunal.controller.user;
 
+/*
+ * *********************** *
+ * Copyright (c) 2015      *
+ *                         *
+ * This code belongs to:   *
+ *                         *
+ * @author Ahmet Emre Ünal *
+ * S001974                 *
+ *                         *
+ * aemreunal@gmail.com     *
+ * emre.unal@ozu.edu.tr    *
+ *                         *
+ * aemreunal.com           *
+ * *********************** *
+ */
+
 import net.minidev.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,22 +30,6 @@ import com.aemreunal.domain.User;
 import com.aemreunal.exception.MalformedRequestException;
 import com.aemreunal.exception.user.UsernameClashException;
 import com.aemreunal.service.UserService;
-
-/*
- ***************************
- * Copyright (c) 2015      *
- *                         *
- * This code belongs to:   *
- *                         *
- * @author Ahmet Emre Ünal *
- * S001974                 *
- *                         *
- * aemreunal@gmail.com     *
- * emre.unal@ozu.edu.tr    *
- *                         *
- * aemreunal.com           *
- ***************************
- */
 
 @Controller
 public class UserController {

@@ -1,7 +1,7 @@
 package com.aemreunal.exception;
 
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -13,8 +13,9 @@ package com.aemreunal.exception;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
+
 public class MalformedRequestException /*extends Throwable*/ extends RuntimeException {
 
     // http://normanmaurer.me/blog/2013/11/09/The-hidden-performance-costs-of-instantiating-Throwables/

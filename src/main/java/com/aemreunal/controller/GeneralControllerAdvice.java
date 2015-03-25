@@ -1,7 +1,7 @@
 package com.aemreunal.controller;
 
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -13,7 +13,7 @@ package com.aemreunal.controller;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
 
 import net.minidev.json.JSONObject;

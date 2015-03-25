@@ -1,7 +1,7 @@
 package com.aemreunal.exception.user;
 
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -13,7 +13,7 @@ package com.aemreunal.exception.user;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
 
 public class InvalidUsernameException extends IllegalArgumentException {

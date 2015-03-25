@@ -1,5 +1,21 @@
 package com.aemreunal.domain;
 
+/*
+ * *********************** *
+ * Copyright (c) 2015      *
+ *                         *
+ * This code belongs to:   *
+ *                         *
+ * @author Ahmet Emre Ünal *
+ * S001974                 *
+ *                         *
+ * aemreunal@gmail.com     *
+ * emre.unal@ozu.edu.tr    *
+ *                         *
+ * aemreunal.com           *
+ * *********************** *
+ */
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -11,22 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.helper.ImageProperties;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-/*
- **************************
- * Copyright (c) 2015     *
- *                        *
- * This code belongs to:  *
- *                        *
- * Ahmet Emre Ünal        *
- * S001974                *
- *                        *
- * aemreunal@gmail.com    *
- * emre.unal@ozu.edu.tr   *
- *                        *
- * aemreunal.com          *
- **************************
- */
 
 @Entity
 @Table(name = "regions")

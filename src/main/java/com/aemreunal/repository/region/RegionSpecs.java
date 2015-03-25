@@ -1,13 +1,7 @@
 package com.aemreunal.repository.region;
 
-
-import java.util.ArrayList;
-import javax.persistence.criteria.Predicate;
-import org.springframework.data.jpa.domain.Specification;
-import com.aemreunal.domain.Region;
-
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -19,8 +13,14 @@ import com.aemreunal.domain.Region;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
+
+import java.util.ArrayList;
+import javax.persistence.criteria.Predicate;
+import org.springframework.data.jpa.domain.Specification;
+import com.aemreunal.domain.Region;
+
 public class RegionSpecs {
     public static Specification<Region> regionWithSpecification(final Long projectId, final String name) {
         return (root, query, builder) -> {

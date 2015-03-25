@@ -1,16 +1,7 @@
 package com.aemreunal.controller.api;
 
-import net.minidev.json.JSONObject;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import com.aemreunal.exception.scenario.NoScenarioForQueryException;
-import com.aemreunal.helper.JsonBuilder;
-
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -22,8 +13,17 @@ import com.aemreunal.helper.JsonBuilder;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
+
+import net.minidev.json.JSONObject;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.aemreunal.exception.scenario.NoScenarioForQueryException;
+import com.aemreunal.helper.JsonBuilder;
 
 @ControllerAdvice
 public class APIControllerAdvice {

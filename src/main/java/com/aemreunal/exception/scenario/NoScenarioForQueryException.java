@@ -1,7 +1,7 @@
 package com.aemreunal.exception.scenario;
 
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -13,7 +13,7 @@ package com.aemreunal.exception.scenario;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
 
 public class NoScenarioForQueryException extends NullPointerException {

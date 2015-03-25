@@ -1,7 +1,7 @@
 package com.aemreunal.exception.region;
 
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -13,7 +13,7 @@ package com.aemreunal.exception.region;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
 
 public class RegionNotFoundException extends NullPointerException {

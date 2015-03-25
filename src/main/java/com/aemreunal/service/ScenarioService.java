@@ -1,7 +1,7 @@
 package com.aemreunal.service;
 
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -13,7 +13,7 @@ package com.aemreunal.service;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
 
 import java.util.LinkedHashSet;

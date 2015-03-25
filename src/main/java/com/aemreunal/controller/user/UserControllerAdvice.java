@@ -1,18 +1,7 @@
 package com.aemreunal.controller.user;
 
-import net.minidev.json.JSONObject;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import com.aemreunal.exception.user.InvalidUsernameException;
-import com.aemreunal.exception.user.UserNotFoundException;
-import com.aemreunal.exception.user.UsernameClashException;
-import com.aemreunal.helper.JsonBuilder;
-
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -24,8 +13,19 @@ import com.aemreunal.helper.JsonBuilder;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
+
+import net.minidev.json.JSONObject;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.aemreunal.exception.user.InvalidUsernameException;
+import com.aemreunal.exception.user.UserNotFoundException;
+import com.aemreunal.exception.user.UsernameClashException;
+import com.aemreunal.helper.JsonBuilder;
 
 @ControllerAdvice
 public class UserControllerAdvice {

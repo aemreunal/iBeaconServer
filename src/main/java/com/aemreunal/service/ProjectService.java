@@ -1,5 +1,21 @@
 package com.aemreunal.service;
 
+/*
+ * *********************** *
+ * Copyright (c) 2015      *
+ *                         *
+ * This code belongs to:   *
+ *                         *
+ * @author Ahmet Emre Ünal *
+ * S001974                 *
+ *                         *
+ * aemreunal@gmail.com     *
+ * emre.unal@ozu.edu.tr    *
+ *                         *
+ * aemreunal.com           *
+ * *********************** *
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,22 +30,6 @@ import com.aemreunal.domain.User;
 import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.repository.project.ProjectRepo;
 import com.aemreunal.repository.project.ProjectSpecs;
-
-/*
- **************************
- * Copyright (c) 2015     *
- *                        *
- * This code belongs to:  *
- *                        *
- * Ahmet Emre Ünal        *
- * S001974                *
- *                        *
- * aemreunal@gmail.com    *
- * emre.unal@ozu.edu.tr   *
- *                        *
- * aemreunal.com          *
- **************************
- */
 
 @Transactional
 @Service

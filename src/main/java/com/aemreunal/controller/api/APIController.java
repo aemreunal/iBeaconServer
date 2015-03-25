@@ -1,5 +1,21 @@
 package com.aemreunal.controller.api;
 
+/*
+ * *********************** *
+ * Copyright (c) 2015      *
+ *                         *
+ * This code belongs to:   *
+ *                         *
+ * @author Ahmet Emre Ünal *
+ * S001974                 *
+ *                         *
+ * aemreunal@gmail.com     *
+ * emre.unal@ozu.edu.tr    *
+ *                         *
+ * aemreunal.com           *
+ * *********************** *
+ */
+
 import net.minidev.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,22 +32,6 @@ import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.MalformedRequestException;
 import com.aemreunal.service.ProjectService;
 import com.aemreunal.service.ScenarioService;
-
-/*
- ***************************
- * Copyright (c) 2015      *
- *                         *
- * This code belongs to:   *
- *                         *
- * @author Ahmet Emre Ünal *
- * S001974                 *
- *                         *
- * aemreunal@gmail.com     *
- * emre.unal@ozu.edu.tr    *
- *                         *
- * aemreunal.com           *
- ***************************
- */
 
 @Controller
 @RequestMapping(GlobalSettings.API_PATH_MAPPING)

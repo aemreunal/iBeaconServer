@@ -1,7 +1,7 @@
 package com.aemreunal.repository.scenario;
 
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -13,7 +13,7 @@ package com.aemreunal.repository.scenario;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

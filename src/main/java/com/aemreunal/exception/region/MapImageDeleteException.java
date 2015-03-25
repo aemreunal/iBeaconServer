@@ -1,7 +1,7 @@
 package com.aemreunal.exception.region;
 
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -9,11 +9,11 @@ package com.aemreunal.exception.region;
  * @author Ahmet Emre Ünal *
  * S001974                 *
  *                         *
- * emre@aemreunal.com      *
+ * aemreunal@gmail.com     *
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
 
 public class MapImageDeleteException extends Throwable {

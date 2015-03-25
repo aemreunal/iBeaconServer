@@ -1,5 +1,21 @@
 package com.aemreunal.service;
 
+/*
+ * *********************** *
+ * Copyright (c) 2015      *
+ *                         *
+ * This code belongs to:   *
+ *                         *
+ * @author Ahmet Emre Ünal *
+ * S001974                 *
+ *                         *
+ * aemreunal@gmail.com     *
+ * emre.unal@ozu.edu.tr    *
+ *                         *
+ * aemreunal.com           *
+ * *********************** *
+ */
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,22 +33,6 @@ import com.aemreunal.helper.ImageProperties;
 import com.aemreunal.helper.ImageStorage;
 import com.aemreunal.repository.region.RegionRepo;
 import com.aemreunal.repository.region.RegionSpecs;
-
-/*
- **************************
- * Copyright (c) 2015     *
- *                        *
- * This code belongs to:  *
- *                        *
- * Ahmet Emre Ünal        *
- * S001974                *
- *                        *
- * aemreunal@gmail.com    *
- * emre.unal@ozu.edu.tr   *
- *                        *
- * aemreunal.com          *
- **************************
- */
 
 @Transactional
 @Service

@@ -1,5 +1,21 @@
 package com.aemreunal.domain;
 
+/*
+ * *********************** *
+ * Copyright (c) 2015      *
+ *                         *
+ * This code belongs to:   *
+ *                         *
+ * @author Ahmet Emre Ünal *
+ * S001974                 *
+ *                         *
+ * aemreunal@gmail.com     *
+ * emre.unal@ozu.edu.tr    *
+ *                         *
+ * aemreunal.com           *
+ * *********************** *
+ */
+
 import net.minidev.json.JSONObject;
 
 import java.io.Serializable;
@@ -12,31 +28,6 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.helper.JsonBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-/*
- ***************************
- * Copyright (c) 2015      *
- *                         *
- * This code belongs to:   *
- *                         *
- * @author Ahmet Emre Ünal *
- * S001974                 *
- *                         *
- * aemreunal@gmail.com     *
- * emre.unal@ozu.edu.tr    *
- *                         *
- * aemreunal.com           *
- ***************************
- */
-
-/*
- * List bug:
- * https://hibernate.atlassian.net/browse/HHH-6776
- * https://hibernate.atlassian.net/browse/HHH-5855
- * http://vladmihalcea.com/2013/10/16/hibernate-facts-favoring-sets-vs-bags/
- * https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/4.3/html/Hibernate_Reference_Guide/Persistent_Classes-Implementing_equals_and_hashCode.html
- * http://stackoverflow.com/questions/7903800/hibernate-inserts-duplicates-into-a-onetomany-collection
- */
 
 @Entity
 @Table(name = "projects")

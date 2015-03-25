@@ -1,5 +1,21 @@
 package com.aemreunal.service;
 
+/*
+ * *********************** *
+ * Copyright (c) 2015      *
+ *                         *
+ * This code belongs to:   *
+ *                         *
+ * @author Ahmet Emre Ünal *
+ * S001974                 *
+ *                         *
+ * aemreunal@gmail.com     *
+ * emre.unal@ozu.edu.tr    *
+ *                         *
+ * aemreunal.com           *
+ * *********************** *
+ */
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,22 +35,6 @@ import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.exception.region.RegionNotFoundException;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
-
-/*
- **************************
- * Copyright (c) 2015     *
- *                        *
- * This code belongs to:  *
- *                        *
- * Ahmet Emre Ünal        *
- * S001974                *
- *                        *
- * aemreunal@gmail.com    *
- * emre.unal@ozu.edu.tr   *
- *                        *
- * aemreunal.com          *
- **************************
- */
 
 @Transactional
 @Service

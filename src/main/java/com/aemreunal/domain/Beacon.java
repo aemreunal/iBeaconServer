@@ -1,8 +1,7 @@
 package com.aemreunal.domain;
 
-
 /*
- * *************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -14,7 +13,7 @@ package com.aemreunal.domain;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- * *************************
+ * *********************** *
  */
 
 import java.io.Serializable;

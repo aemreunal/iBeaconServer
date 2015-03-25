@@ -1,19 +1,7 @@
 package com.aemreunal.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.domain.User;
-import com.aemreunal.exception.user.InvalidUsernameException;
-import com.aemreunal.exception.user.UserNotFoundException;
-import com.aemreunal.exception.user.UsernameClashException;
-import com.aemreunal.repository.user.UserRepo;
-import com.aemreunal.repository.user.UserSpecs;
-
 /*
- ***************************
+ * *********************** *
  * Copyright (c) 2015      *
  *                         *
  * This code belongs to:   *
@@ -25,8 +13,20 @@ import com.aemreunal.repository.user.UserSpecs;
  * emre.unal@ozu.edu.tr    *
  *                         *
  * aemreunal.com           *
- ***************************
+ * *********************** *
  */
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.domain.User;
+import com.aemreunal.exception.user.InvalidUsernameException;
+import com.aemreunal.exception.user.UserNotFoundException;
+import com.aemreunal.exception.user.UsernameClashException;
+import com.aemreunal.repository.user.UserRepo;
+import com.aemreunal.repository.user.UserSpecs;
 
 @Transactional
 @Service
