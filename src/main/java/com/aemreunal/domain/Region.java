@@ -26,7 +26,9 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.helper.ImageProperties;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+// To not mark getters & setters as unused, as they're being used by Spring & Hibernate
+@SuppressWarnings("UnusedDeclaration")
 
 @Entity
 @Table(name = "regions")
@@ -35,6 +37,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class Region extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
+    public static final int UUID_MAX_LENGTH        = 36; // UUID hex string (including dashes) is 36 characters long
 
     /*
      *------------------------------------------------------------
@@ -46,14 +49,6 @@ public class Region extends ResourceSupport implements Serializable {
     @OrderColumn
     @Access(AccessType.PROPERTY)
     private Long regionId;
-
-    public Long getRegionId() {
-        return regionId;
-    }
-
-    public void setRegionId(Long regionId) {
-        this.regionId = regionId;
-    }
     /*
      * END: Region 'ID' attribute
      *------------------------------------------------------------
@@ -67,14 +62,6 @@ public class Region extends ResourceSupport implements Serializable {
     @Size(min = 1, max = NAME_MAX_LENGTH)
     @Access(AccessType.PROPERTY)
     private String name = "";
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
     /*
      * END: Region 'name' attribute
      *------------------------------------------------------------
@@ -88,14 +75,6 @@ public class Region extends ResourceSupport implements Serializable {
     @Size(max = DESCRIPTION_MAX_LENGTH)
     @Access(AccessType.PROPERTY)
     private String description = "";
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
     /*
      * END: Region 'description' attribute
      *------------------------------------------------------------
@@ -104,23 +83,13 @@ public class Region extends ResourceSupport implements Serializable {
     /*
      *------------------------------------------------------------
      * BEGIN: Region 'Map image' attribute
+     *
+     * The length is UUID_MAX_LENGTH, because image names are set as UUIDs.
      */
-    @Column(name = "map_image_name", nullable = false)
+    @Column(name = "map_image_name", nullable = false, length = UUID_MAX_LENGTH)
+    @Size(min = UUID_MAX_LENGTH, max = UUID_MAX_LENGTH)
     @Access(AccessType.PROPERTY)
     private String mapImageFileName = "";
-
-    public String getMapImageFileName() {
-        return mapImageFileName;
-    }
-
-    public void setMapImageFileName(String mapImageFileName) {
-        this.mapImageFileName = mapImageFileName;
-    }
-
-    @JsonSerialize
-    public boolean mapImageIsSet() {
-        return getMapImageFileName() != null && !getMapImageFileName().isEmpty();
-    }
     /*
      * END: Region 'Map image' attribute
      *------------------------------------------------------------
@@ -135,14 +104,6 @@ public class Region extends ResourceSupport implements Serializable {
     @Column(name = "region_width", nullable = false)
     @Access(AccessType.PROPERTY)
     private Integer regionWidth = 0;
-
-    public Integer getRegionWidth() {
-        return regionWidth;
-    }
-
-    public void setRegionWidth(Integer regionWidth) {
-        this.regionWidth = regionWidth;
-    }
     /*
      * END: Region 'region width' attribute
      *------------------------------------------------------------
@@ -157,14 +118,6 @@ public class Region extends ResourceSupport implements Serializable {
     @Column(name = "region_height", nullable = false)
     @Access(AccessType.PROPERTY)
     private Integer regionHeight = 0;
-
-    public Integer getRegionHeight() {
-        return regionHeight;
-    }
-
-    public void setRegionHeight(Integer regionHeight) {
-        this.regionHeight = regionHeight;
-    }
     /*
      * END: Region 'region height' attribute
      *------------------------------------------------------------
@@ -173,9 +126,6 @@ public class Region extends ResourceSupport implements Serializable {
     /*
      *------------------------------------------------------------
      * BEGIN: Region 'beacons' attribute
-     */
-
-    /*
      *
      * Currently, Beacon is the owner of its relationship to Region.
      * ManyToOne are (almost) always the owner side of a bidirectional relationship in the JPA spec
@@ -185,11 +135,11 @@ public class Region extends ResourceSupport implements Serializable {
      * Correct mapping: 2.2.5.3.1.1. Bidirectional
      * http://docs.jboss.org/hibernate/stable/annotations/reference/en/html/entity.html
      *
-     @JoinTable(name="region_members",
-                joinColumns = @JoinColumn(name="region_id"),
-                inverseJoinColumns = @JoinColumn(name="beacon_id")
-     )
-     // TODO:XNYLXIWD determine who should own this relationship
+     * @JoinTable(name="region_members",
+     *            joinColumns = @JoinColumn(name="region_id"),
+     *            inverseJoinColumns = @JoinColumn(name="beacon_id"))
+     *
+     * TODO:XNYLXIWD determine who should own this relationship
      */
     @OneToMany(targetEntity = Beacon.class,
             mappedBy = "region",
@@ -198,14 +148,6 @@ public class Region extends ResourceSupport implements Serializable {
             cascade = CascadeType.REMOVE)
     @Access(AccessType.PROPERTY)
     private Set<Beacon> beacons = new LinkedHashSet<Beacon>();
-
-    public Set<Beacon> getBeacons() {
-        return beacons;
-    }
-
-    public void setBeacons(Set<Beacon> beacons) {
-        this.beacons = beacons;
-    }
     /*
      * END: Region 'beacons' attribute
      *------------------------------------------------------------
@@ -218,20 +160,11 @@ public class Region extends ResourceSupport implements Serializable {
     @ManyToOne(targetEntity = Project.class,
             optional = false,
             fetch = FetchType.LAZY)
-    // JoinTable & Lazy fetch-> 5.1.7: http://docs.jboss.org/hibernate/core/4.3/manual/en-US/html_single/
     @JoinTable(name = "projects_to_regions",
             joinColumns = @JoinColumn(name = "region_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id"))
     @Access(AccessType.PROPERTY)
     private Project project;
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
     /*
      * END: Region 'project' attribute
      *------------------------------------------------------------
@@ -245,14 +178,6 @@ public class Region extends ResourceSupport implements Serializable {
     @Access(AccessType.PROPERTY)
     private Date creationDate = null;
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
     /*
      * END: Region 'creationDate' attribute
      *------------------------------------------------------------
@@ -265,6 +190,101 @@ public class Region extends ResourceSupport implements Serializable {
     @Column(name = "last_update_date", nullable = false)
     @Access(AccessType.PROPERTY)
     private Date lastUpdatedDate = null;
+    /*
+     * END: Region 'lastUpdateDate' attribute
+     *------------------------------------------------------------
+     */
+
+//    @LastModifiedDate
+//    @CreatedDate
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Helpers
+     */
+    public void markAsUpdated() {
+        setLastUpdatedDate(new Date());
+    }
+    /*
+     * END: Helpers
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Getters & Setters
+     */
+    public Long getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(Long regionId) {
+        this.regionId = regionId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getMapImageFileName() {
+        return mapImageFileName;
+    }
+
+    public void setMapImageFileName(String mapImageFileName) {
+        this.mapImageFileName = mapImageFileName;
+    }
+
+    public Integer getRegionWidth() {
+        return regionWidth;
+    }
+
+    public void setRegionWidth(Integer regionWidth) {
+        this.regionWidth = regionWidth;
+    }
+
+    public Integer getRegionHeight() {
+        return regionHeight;
+    }
+
+    public void setRegionHeight(Integer regionHeight) {
+        this.regionHeight = regionHeight;
+    }
+
+    public Set<Beacon> getBeacons() {
+        return beacons;
+    }
+
+    public void setBeacons(Set<Beacon> beacons) {
+        this.beacons = beacons;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public Date getLastUpdatedDate() {
         return lastUpdatedDate;
@@ -273,17 +293,10 @@ public class Region extends ResourceSupport implements Serializable {
     public void setLastUpdatedDate(Date lastUpdatedDate) {
         this.lastUpdatedDate = lastUpdatedDate;
     }
-
-    public void markAsUpdated() {
-        setLastUpdatedDate(new Date());
-    }
     /*
-     * END: Region 'lastUpdateDate' attribute
+     * END: Getters & Setters
      *------------------------------------------------------------
      */
-
-//    @LastModifiedDate
-//    @CreatedDate
 
     @PrePersist
     private void setInitialProperties() {

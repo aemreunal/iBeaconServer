@@ -29,6 +29,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.helper.JsonBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+// To not mark getters & setters as unused, as they're being used by Spring & Hibernate
+@SuppressWarnings("UnusedDeclaration")
+
 @Entity
 @Table(name = "projects")
 @ResponseBody
@@ -51,14 +54,6 @@ public class Project extends ResourceSupport implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @OrderColumn
     private Long projectId;
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
     /*
      * END: Project 'ID' attribute
      *------------------------------------------------------------
@@ -71,14 +66,6 @@ public class Project extends ResourceSupport implements Serializable {
     @Column(name = "name", nullable = false, length = NAME_MAX_LENGTH)
     @Size(min = 1, max = NAME_MAX_LENGTH)
     private String name = "";
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
     /*
      * END: Project 'name' attribute
      *------------------------------------------------------------
@@ -91,14 +78,6 @@ public class Project extends ResourceSupport implements Serializable {
     @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
     @Size(max = DESCRIPTION_MAX_LENGTH)
     private String description = "";
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
     /*
      * END: Project 'description' attribute
      *------------------------------------------------------------
@@ -111,14 +90,6 @@ public class Project extends ResourceSupport implements Serializable {
     @Column(name = "creation_date", nullable = false)
     private Date creationDate = null;
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
     /*
      * END: Project 'creationDate' attribute
      *------------------------------------------------------------
@@ -129,20 +100,12 @@ public class Project extends ResourceSupport implements Serializable {
      * BEGIN: Project 'owner' attribute
      */
     @ManyToOne(targetEntity = User.class,
-               fetch = FetchType.LAZY,
-               optional = false)
+            fetch = FetchType.LAZY,
+            optional = false)
     @JoinTable(name = "users_to_projects",
-               joinColumns = @JoinColumn(name = "project_id"),
-               inverseJoinColumns = @JoinColumn(name = "user_id"))
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private User owner;
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
 
     // TODO other users
     /*
@@ -161,14 +124,6 @@ public class Project extends ResourceSupport implements Serializable {
             cascade = CascadeType.REMOVE)
     @OrderBy(value = "regionId")
     private Set<Region> regions = new LinkedHashSet<>();
-
-    public Set<Region> getRegions() {
-        return regions;
-    }
-
-    public void setRegions(Set<Region> regions) {
-        this.regions = regions;
-    }
     /*
      * END: Project 'region list' attribute
      *------------------------------------------------------------
@@ -185,14 +140,6 @@ public class Project extends ResourceSupport implements Serializable {
             cascade = CascadeType.REMOVE)
     @OrderBy(value = "scenarioId")
     private Set<Scenario> scenarios = new LinkedHashSet<>();
-
-    public Set<Scenario> getScenarios() {
-        return scenarios;
-    }
-
-    public void setScenarios(Set<Scenario> scenarios) {
-        this.scenarios = scenarios;
-    }
     /*
      * END: Project 'scenarios list' attribute
      *------------------------------------------------------------
@@ -208,6 +155,70 @@ public class Project extends ResourceSupport implements Serializable {
      * TODO add resetting secret
      */
     private String projectSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    /*
+     * END: Project 'secret' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Getters & Setters
+     */
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public Set<Region> getRegions() {
+        return regions;
+    }
+
+    public void setRegions(Set<Region> regions) {
+        this.regions = regions;
+    }
+
+    public Set<Scenario> getScenarios() {
+        return scenarios;
+    }
+
+    public void setScenarios(Set<Scenario> scenarios) {
+        this.scenarios = scenarios;
+    }
 
     public String getProjectSecret() {
         return projectSecret;
@@ -217,7 +228,7 @@ public class Project extends ResourceSupport implements Serializable {
         this.projectSecret = projectSecret;
     }
     /*
-     * END: Project 'secret' attribute
+     * END: Getters & Setters
      *------------------------------------------------------------
      */
 
