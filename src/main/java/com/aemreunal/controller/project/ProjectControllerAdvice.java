@@ -41,24 +41,4 @@ public class ProjectControllerAdvice {
                                                    .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
-
-    @ExceptionHandler(value = { ConstraintViolationException.class, TransactionSystemException.class })
-    public ResponseEntity<JSONObject> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "project")
-                                                   .addToObj("error", "Constraint violation error ocurred! Unable to save project.")
-                                                   .addToObj("violations", formatViolations(ex.getConstraintViolations()))
-                                                   .buildObj();
-        return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
-    }
-
-    private JSONArray formatViolations(Set<ConstraintViolation<?>> violations) {
-        JSONArray violationDescriptions = new JSONArray();
-        for (ConstraintViolation<?> violation : violations) {
-            Map<String, String> violationDescription = new HashMap<>();
-            violationDescription.put("property", violation.getPropertyPath().toString());
-            violationDescription.put("violation", violation.getMessage());
-            violationDescriptions.add(violationDescription);
-        }
-        return violationDescriptions;
-    }
 }

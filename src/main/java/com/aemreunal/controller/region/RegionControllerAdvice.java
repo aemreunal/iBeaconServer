@@ -51,7 +51,7 @@ public class RegionControllerAdvice {
 
     private JSONObject getErrorResponseBody(Exception ex) {
         return new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "region")
-                                .addToObj("error", ex.getLocalizedMessage())
-                                .buildObj();
+                                                  .addToObj("error", ex.getLocalizedMessage())
+                                                  .buildObj();
     }
 }
