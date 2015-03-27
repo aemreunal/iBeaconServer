@@ -34,7 +34,7 @@ public class RegionControllerAdvice {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({ MapImageSaveException.class, MapImageLoadException.class, MapImageDeleteException.class })
+    @ExceptionHandler({ MapImageSaveException.class, MapImageLoadException.class, ImageDeleteException.class })
     public ResponseEntity<JSONObject> internalErrorExceptionHandler(Exception ex) {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.INTERNAL_SERVER_ERROR);
     }

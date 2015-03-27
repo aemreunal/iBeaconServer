@@ -64,7 +64,7 @@ public class ImageStorage {
      * width</li> <li>Image height</li> </ul>
      */
     public ImageProperties saveImage(String username, Long projectId, Long regionId, MultipartFile imageMultipartFile)
-            throws MultipartFileReadException, MapImageDeleteException, MapImageSaveException, WrongFileTypeSubmittedException {
+            throws MultipartFileReadException, MapImageSaveException, WrongFileTypeSubmittedException {
         // Verify file is not empty or is not of a wrong type
         verifyImageType(projectId, regionId, imageMultipartFile);
 
@@ -214,7 +214,7 @@ public class ImageStorage {
      *         The name of the image file to be deleted. If a {@code null} value is
      *         provided, the method will do nothing and return.
      */
-    public void deleteImage(String username, Long projectId, Long regionId, String imageFileName) throws MapImageDeleteException {
+    public void deleteImage(String username, Long projectId, Long regionId, String imageFileName) throws ImageDeleteException {
         if (imageFileName == null || imageFileName.equals("")) {
             return;
         }
@@ -230,7 +230,7 @@ public class ImageStorage {
                                        + imageFileName + " does not exist, nothing to delete!");
         } catch (IOException e) {
             GlobalSettings.err("Unable to delete the image!");
-            throw new MapImageDeleteException(projectId, regionId);
+            throw new ImageDeleteException(projectId, regionId);
         }
     }
 

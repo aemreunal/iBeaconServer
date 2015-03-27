@@ -16,9 +16,9 @@ package com.aemreunal.exception.region;
  * *********************** *
  */
 
-public class MapImageDeleteException extends Throwable {
+public class ImageDeleteException extends Throwable {
 
-    public MapImageDeleteException(Long projectId, Long regionId) {
+    public ImageDeleteException(Long projectId, Long regionId) {
         super("Unable to read the Multipart file, uploaded as the map image of project " + projectId + ", region " + regionId + "!");
     }
 }

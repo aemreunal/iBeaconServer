@@ -32,7 +32,7 @@ import com.aemreunal.exception.MalformedRequestException;
 import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
-import com.aemreunal.exception.region.RegionNotFoundException;
+import com.aemreunal.exception.region.*;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
 
@@ -156,7 +156,8 @@ public class BeaconService {
      *         If the specified region does not exist.
      */
     @Transactional(readOnly = true)
-    public Beacon getBeacon(String username, Long projectId, Long regionId, Long beaconId) throws BeaconNotFoundException, ProjectNotFoundException, RegionNotFoundException {
+    public Beacon getBeacon(String username, Long projectId, Long regionId, Long beaconId)
+    throws BeaconNotFoundException, ProjectNotFoundException, RegionNotFoundException {
         GlobalSettings.log("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + projectId + "\' and in region = \'" + regionId + "\'");
         Region region = regionService.getRegion(username, projectId, regionId);
         Beacon beacon = beaconRepo.findByBeaconIdAndRegion(beaconId, region);

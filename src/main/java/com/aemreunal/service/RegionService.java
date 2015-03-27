@@ -91,12 +91,16 @@ public class RegionService {
      * @return The saved region.
      *
      * @throws WrongFileTypeSubmittedException
+     *         The file type of the {@link org.springframework.web.multipart.MultipartFile
+     *         MultipartFile} file submitted as the region map image is of some other type
+     *         than JPEG, GIF, or PNG.
      * @throws MapImageSaveException
-     * @throws MapImageDeleteException
+     *         If the server is unable to save the region map image.
      * @throws MultipartFileReadException
+     *         If the Multipart file couldn't be read.
      */
     public Region saveNewRegion(String username, Long projectId, Region region, MultipartFile imageMultipartFile)
-            throws WrongFileTypeSubmittedException, MapImageSaveException, MapImageDeleteException, MultipartFileReadException {
+            throws WrongFileTypeSubmittedException, MapImageSaveException, MultipartFileReadException {
         GlobalSettings.log("Creating new region for user = \'" + username + "\' and project = \'" + projectId + "\'");
         // Region must be saved prior to setting the map image, as the map
         // image storage in filesystem depends on region and project IDs.
@@ -122,12 +126,16 @@ public class RegionService {
      * @return The updated region object.
      *
      * @throws WrongFileTypeSubmittedException
+     *         The file type of the {@link org.springframework.web.multipart.MultipartFile
+     *         MultipartFile} file submitted as the region map image is of some other type
+     *         than JPEG, GIF, or PNG.
      * @throws MapImageSaveException
-     * @throws MapImageDeleteException
+     *         If the server is unable to save the region map image.
      * @throws MultipartFileReadException
+     *         If the Multipart file couldn't be read.
      */
     private Region setMapImage(String username, Long projectId, Region region, MultipartFile imageFile)
-            throws MapImageSaveException, MultipartFileReadException, MapImageDeleteException, WrongFileTypeSubmittedException {
+            throws MapImageSaveException, MultipartFileReadException, WrongFileTypeSubmittedException {
         GlobalSettings.log("Setting map image of region with ID = \'" + region.getRegionId() + "\'");
         ImageProperties savedImageProperties = imageStorage.saveImage(username, projectId, region.getRegionId(), imageFile);
         region.setImageProperties(savedImageProperties);
@@ -215,7 +223,7 @@ public class RegionService {
     private void removeRegionImage(String username, Long projectId, Region region) {
         try {
             imageStorage.deleteImage(username, projectId, region.getRegionId(), region.getMapImageFileName());
-        } catch (MapImageDeleteException e) {
+        } catch (ImageDeleteException e) {
             System.err.println("WARNING: Image file for user: " + username + ", project: "
                                        + projectId + ", region " + region.getRegionId() + ", file name: "
                                        + region.getMapImageFileName() + " could not be deleted! " +

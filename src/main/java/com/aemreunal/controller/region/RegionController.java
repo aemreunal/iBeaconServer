@@ -108,12 +108,10 @@ public class RegionController {
      *
      * @throws WrongFileTypeSubmittedException
      *         The file type of the {@link org.springframework.web.multipart.MultipartFile
-     *         MultipartFile} file, submitted as the region map image is of some other
-     *         type than
+     *         MultipartFile} file submitted as the region map image is of some other type
+     *         than JPEG, GIF, or PNG.
      * @throws MapImageSaveException
      *         If the server is unable to save the region map image.
-     * @throws MapImageDeleteException
-     *         If the region map image being replaced couldn't be deleted by the server.
      * @throws MultipartFileReadException
      *         If the Multipart file couldn't be read.
      */
@@ -123,11 +121,11 @@ public class RegionController {
                                                @RequestPart(value = "region") Region region,
                                                @RequestPart(value = "image") MultipartFile imageMultipartFile,
                                                UriComponentsBuilder builder)
-            throws WrongFileTypeSubmittedException, MapImageSaveException, MapImageDeleteException, MultipartFileReadException {
+            throws WrongFileTypeSubmittedException, MapImageSaveException, MultipartFileReadException {
         Region savedRegion = regionService.saveNewRegion(username, projectId, region, imageMultipartFile);
         GlobalSettings.log("Saved region with ID = \'" + savedRegion.getRegionId() +
-                               "\' name = \'" + savedRegion.getName() +
-                               "\' in project with ID = \'" + projectId + "\'");
+                                   "\' name = \'" + savedRegion.getName() +
+                                   "\' in project with ID = \'" + projectId + "\'");
 
         return buildCreateResponse(username, builder, savedRegion);
     }
