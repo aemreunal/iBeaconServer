@@ -25,7 +25,7 @@ import com.aemreunal.domain.User;
 
 @Repository
 public interface ProjectRepo extends CrudRepository<Project, Long>, JpaSpecificationExecutor {
-    public List<Project> findByOwner(User owner);
+    List<Project> findByOwner(User owner);
 
-    public Project findByOwnerAndProjectId(User owner, Long projectId);
+    Project findByOwnerAndProjectId(User owner, Long projectId);
 }

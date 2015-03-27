@@ -29,9 +29,9 @@ import com.aemreunal.helper.JsonBuilder;
 public class APIControllerAdvice {
     @ExceptionHandler(NoScenarioForQueryException.class)
     public ResponseEntity<JSONObject> beaconDoesntHaveScenarioExceptionHandler(NoScenarioForQueryException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "scenario")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 }

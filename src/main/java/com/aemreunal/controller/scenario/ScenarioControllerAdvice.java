@@ -35,35 +35,35 @@ import com.aemreunal.helper.JsonBuilder;
 public class ScenarioControllerAdvice {
     @ExceptionHandler(ScenarioNotFoundException.class)
     public ResponseEntity<JSONObject> scenarioNotFoundExceptionHandler(ScenarioNotFoundException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "scenario")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BeaconHasScenarioException.class)
     public ResponseEntity<JSONObject> beaconHasScenarioExceptionHandler(BeaconHasScenarioException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "scenario")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
 
     @ExceptionHandler(BeaconDoesNotHaveScenarioException.class)
     public ResponseEntity<JSONObject> beaconDoesNotHaveScenarioExceptionHandler(BeaconDoesNotHaveScenarioException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "scenario")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<JSONObject> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "scenario")
-                                                   .add("error", "Constraint violation error ocurred! Unable to save scenario.")
-                                                   .add("violations", formatViolations(ex.getConstraintViolations()))
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "scenario")
+                                                   .addToObj("error", "Constraint violation error ocurred! Unable to save scenario.")
+                                                   .addToObj("violations", formatViolations(ex.getConstraintViolations()))
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 

@@ -29,9 +29,9 @@ import com.aemreunal.helper.JsonBuilder;
 public class GeneralControllerAdvice {
     @ExceptionHandler(MalformedRequestException.class)
     public ResponseEntity<JSONObject> malformedRequestExceptionHandler(MalformedRequestException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "request")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "request")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 }

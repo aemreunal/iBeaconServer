@@ -255,17 +255,17 @@ public class Scenario extends ResourceSupport implements Serializable {
      */
 
     public JSONObject generateQueryResponse() {
-        JsonBuilder builder = new JsonBuilder();
+        JsonBuilder builder = new JsonBuilder(JsonBuilder.OBJECT);
         if (hasShortMessage()) {
-            builder = builder.add("short", getMessageShort());
+            builder = builder.addToObj("short", getMessageShort());
         }
         if (hasLongMessage()) {
-            builder = builder.add("long", getMessageLong());
+            builder = builder.addToObj("long", getMessageLong());
         }
         if (hasUrl()) {
-            builder = builder.add("url", getUrl());
+            builder = builder.addToObj("url", getUrl());
         }
-        return builder.build();
+        return builder.buildObj();
     }
 
     @PrePersist

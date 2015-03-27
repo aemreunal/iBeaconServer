@@ -31,25 +31,25 @@ import com.aemreunal.helper.JsonBuilder;
 public class UserControllerAdvice {
     @ExceptionHandler(UsernameClashException.class)
     public ResponseEntity<JSONObject> usernameClashExceptionHandler(UsernameClashException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "username")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "username")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidUsernameException.class)
     public ResponseEntity<JSONObject> invalidUsernameExceptionHandler(InvalidUsernameException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "username")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "username")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<JSONObject> userNotFoundExceptionHandler(UserNotFoundException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "username")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "username")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 }

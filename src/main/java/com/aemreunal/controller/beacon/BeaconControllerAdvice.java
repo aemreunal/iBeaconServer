@@ -36,26 +36,26 @@ import com.aemreunal.helper.JsonBuilder;
 public class BeaconControllerAdvice {
     @ExceptionHandler(BeaconNotFoundException.class)
     public ResponseEntity<JSONObject> beaconNotFoundExceptionHandler(BeaconNotFoundException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "beacon")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "beacon")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BeaconAlreadyExistsException.class)
     public ResponseEntity<JSONObject> beaconAlreadyExistsExceptionHandler(BeaconAlreadyExistsException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "beacon")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "beacon")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)
     public ResponseEntity<JSONObject> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "beacon")
-                                                   .add("error", "Constraint violation error ocurred! Unable to save beacon.")
-                                                   .add("violations", formatViolations(ex.getConstraintViolations()))
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "beacon")
+                                                   .addToObj("error", "Constraint violation error ocurred! Unable to save beacon.")
+                                                   .addToObj("violations", formatViolations(ex.getConstraintViolations()))
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 

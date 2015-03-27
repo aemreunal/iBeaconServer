@@ -16,20 +16,47 @@ package com.aemreunal.helper;
  * *********************** *
  */
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JsonBuilder {
-    private Map<String, Object> jsonMap = new HashMap<>();
+    public static final int OBJECT = 0;
+    public static final int ARRAY  = 1;
 
-    public JsonBuilder add(String key, Object value) {
+    private Map<String, Object> jsonMap;
+
+    private ArrayList<Object> jsonList;
+
+    public JsonBuilder(int jsonToCreate) {
+        switch (jsonToCreate) {
+            case OBJECT:
+                jsonMap = new HashMap<>();
+                break;
+            case ARRAY:
+                jsonList = new ArrayList<>();
+                break;
+        }
+    }
+
+    public JsonBuilder addToArr(Object value) {
+        jsonList.add(value);
+        return this;
+    }
+
+    public JsonBuilder addToObj(String key, Object value) {
         jsonMap.put(key, value);
         return this;
     }
 
-    public JSONObject build() {
+    public JSONObject buildObj() {
         return new JSONObject(jsonMap);
+    }
+
+    public JSONArray buildArr() {
+        JSONArray array = new JSONArray();
+        array.addAll(jsonList);
+        return array;
     }
 }

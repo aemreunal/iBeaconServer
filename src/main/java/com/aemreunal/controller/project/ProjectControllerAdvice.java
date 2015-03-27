@@ -36,18 +36,18 @@ import com.aemreunal.helper.JsonBuilder;
 public class ProjectControllerAdvice {
     @ExceptionHandler(ProjectNotFoundException.class)
     public ResponseEntity<JSONObject> projectNotFoundExceptionHandler(ProjectNotFoundException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "project")
-                                                   .add("error", ex.getLocalizedMessage())
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "project")
+                                                   .addToObj("error", ex.getLocalizedMessage())
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = { ConstraintViolationException.class, TransactionSystemException.class })
     public ResponseEntity<JSONObject> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        JSONObject responseBody = new JsonBuilder().add("reason", "project")
-                                                   .add("error", "Constraint violation error ocurred! Unable to save project.")
-                                                   .add("violations", formatViolations(ex.getConstraintViolations()))
-                                                   .build();
+        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "project")
+                                                   .addToObj("error", "Constraint violation error ocurred! Unable to save project.")
+                                                   .addToObj("violations", formatViolations(ex.getConstraintViolations()))
+                                                   .buildObj();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
