@@ -25,12 +25,10 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.UUID;
 import javax.imageio.ImageIO;
+import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.exception.region.MapImageDeleteException;
-import com.aemreunal.exception.region.MapImageLoadException;
-import com.aemreunal.exception.region.MapImageSaveException;
-import com.aemreunal.exception.region.MultipartFileReadException;
+import com.aemreunal.exception.region.*;
 
 public class ImageStorage {
 
@@ -66,7 +64,10 @@ public class ImageStorage {
      * width</li> <li>Image height</li> </ul>
      */
     public ImageProperties saveImage(String username, Long projectId, Long regionId, MultipartFile imageMultipartFile)
-            throws MultipartFileReadException, MapImageDeleteException, MapImageSaveException {
+            throws MultipartFileReadException, MapImageDeleteException, MapImageSaveException, WrongFileTypeSubmittedException {
+        // Verify file is not empty or is not of a wrong type
+        verifyImageType(projectId, regionId, imageMultipartFile);
+
         // Get the file path from the username, project ID, and region ID attributes
         String filePath = getFilePath(username, projectId, regionId);
 
@@ -85,6 +86,19 @@ public class ImageStorage {
 
         // Read the image properties to get dimensions
         return readImageProperties(projectId, regionId, imageFile);
+    }
+
+    private void verifyImageType(Long projectId, Long regionId, MultipartFile imageMultipartFile) throws WrongFileTypeSubmittedException {
+        if (imageMultipartFile.isEmpty() || !fileTypeIsImage(imageMultipartFile)) {
+            throw new WrongFileTypeSubmittedException(projectId, regionId);
+        }
+    }
+
+    private boolean fileTypeIsImage(MultipartFile file) {
+        String type = file.getContentType();
+        return type.equalsIgnoreCase(MediaType.IMAGE_JPEG_VALUE) ||
+                type.equalsIgnoreCase(MediaType.IMAGE_PNG_VALUE) ||
+                type.equalsIgnoreCase(MediaType.IMAGE_GIF_VALUE);
     }
 
     private File getUniqueFile(String filePath) {

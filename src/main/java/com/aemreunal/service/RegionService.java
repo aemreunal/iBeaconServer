@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,7 +62,7 @@ public class RegionService {
      *
      * @return The saved/updated region.
      */
-    public Region save(String username, Long projectId, Region region) {
+    private Region save(String username, Long projectId, Region region) {
         GlobalSettings.log("Saving region with ID = \'" + region.getRegionId() + "\'");
         Project project = projectService.getProject(username, projectId);
         if (region.getProject() == null) {
@@ -130,9 +129,6 @@ public class RegionService {
     private Region setMapImage(String username, Long projectId, Region region, MultipartFile imageFile)
             throws MapImageSaveException, MultipartFileReadException, MapImageDeleteException, WrongFileTypeSubmittedException {
         GlobalSettings.log("Setting map image of region with ID = \'" + region.getRegionId() + "\'");
-        if (imageFile.isEmpty() || !fileTypeIsImage(imageFile)) {
-            throw new WrongFileTypeSubmittedException(projectId, region.getRegionId());
-        }
         ImageProperties savedImageProperties = imageStorage.saveImage(username, projectId, region.getRegionId(), imageFile);
         region.setImageProperties(savedImageProperties);
         return this.save(username, projectId, region);
@@ -180,13 +176,6 @@ public class RegionService {
     public Set<Beacon> getMembersOfRegion(String username, Long projectId, Long regionId) {
         Region region = this.getRegion(username, projectId, regionId);
         return region.getBeacons().stream().collect(Collectors.toSet());
-    }
-
-    private boolean fileTypeIsImage(MultipartFile file) {
-        String type = file.getContentType();
-        return type.equalsIgnoreCase(MediaType.IMAGE_JPEG_VALUE) ||
-                type.equalsIgnoreCase(MediaType.IMAGE_PNG_VALUE) ||
-                type.equalsIgnoreCase(MediaType.IMAGE_GIF_VALUE);
     }
 
     @Transactional(readOnly = true)
