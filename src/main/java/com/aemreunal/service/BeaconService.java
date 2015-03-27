@@ -16,6 +16,8 @@ package com.aemreunal.service;
  * *********************** *
  */
 
+import net.minidev.json.JSONObject;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,8 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
+import com.aemreunal.domain.Connection;
 import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.MalformedRequestException;
@@ -33,6 +37,7 @@ import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.exception.region.*;
+import com.aemreunal.helper.JsonBuilder;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
 
@@ -41,6 +46,9 @@ import com.aemreunal.repository.beacon.BeaconSpecs;
 public class BeaconService {
     @Autowired
     private RegionService regionService;
+
+    @Autowired
+    private ConnectionService connectionService;
 
     @Autowired
     private BeaconRepo beaconRepo;
@@ -190,6 +198,23 @@ public class BeaconService {
     @Transactional(readOnly = true)
     public Set<Beacon> getDesignatedBeaconsOfRegion(String username, Long projectId, Long regionId) {
         return this.findBeaconsBySpecs(username, projectId, regionId, null, null, null, Boolean.TRUE);
+    }
+
+    public JSONObject createConnection(String username, Long projectId, Long regionOneId, Long beaconOneId, Long regionTwoId, Long beaconTwoId, MultipartFile imageMultipartFile) throws WrongFileTypeSubmittedException, MapImageSaveException, ImageDeleteException, MultipartFileReadException {
+        Connection connection = connectionService.createNewConnection(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId, imageMultipartFile);
+        return new JsonBuilder(JsonBuilder.OBJECT).addToObj("beacons", connection.getBeaconIdsAsJson()).buildObj();
+    }
+
+    public Beacon addConnection(String username, Long projectId, Long regionId, Long beaconId, Connection connection) {
+        Beacon beacon = this.getBeacon(username, projectId, regionId, beaconId);
+        beacon.addConnection(connection);
+        return this.save(username, projectId, regionId, beacon);
+    }
+
+    @Transactional(readOnly = true)
+    public Set<Connection> getConnectionsOfBeacon(String username, Long projectId, Long regionId, Long beaconId) {
+        Beacon beacon = this.getBeacon(username, projectId, regionId, beaconId);
+        return beacon.getConnections();
     }
 
     public void setBeaconScenario(String username, Long projectId, Long regionId, Beacon beacon, Scenario scenario) {

@@ -16,12 +16,18 @@ package com.aemreunal.domain;
  * *********************** *
  */
 
+import net.minidev.json.JSONArray;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.aemreunal.helper.JsonBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 // To not mark getters & setters as unused, as they're being used by Spring & Hibernate
@@ -30,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "beacons")
 @ResponseBody
-@JsonIgnoreProperties(value = { "project", "region" })
+@JsonIgnoreProperties(value = { "project", "region", "connections" })
 public class Beacon extends ResourceSupport implements Serializable {
     // UUID hex string (including dashes) is 36 characters long
     public static final int UUID_MAX_LENGTH        = 36;
@@ -176,15 +182,14 @@ public class Beacon extends ResourceSupport implements Serializable {
      *------------------------------------------------------------
      * BEGIN: Beacon 'connections' attribute
      */
-//    @ManyToMany(targetEntity = Beacon.class,
-//            mappedBy = "beaconId",
-//            fetch = FetchType.LAZY)
-////    @OrderBy("beaconId")
-//    @ElementCollection(fetch = FetchType.LAZY)
-//    @CollectionTable(name = "connections", joinColumns = @JoinColumn(name = "beacon_id"))
-//    @MapKeyColumn(name = "one_beacon_id")
-//    @Column(name = "connection_image")
-//    private Map<Beacon, String> connections = new LinkedHashMap<>();
+    @ManyToMany(targetEntity = Connection.class,
+            fetch = FetchType.LAZY)
+    @JoinTable(name = "beacons_to_connections",
+            joinColumns = @JoinColumn(name = "beacon_id"),
+            inverseJoinColumns = @JoinColumn(name = "connection_id"))
+    @OrderBy("connectionId")
+    @Access(AccessType.PROPERTY)
+    private Set<Connection> connections = new LinkedHashSet<Connection>();
     /*
      * END: Beacon 'connections' attribute
      *------------------------------------------------------------
@@ -199,6 +204,30 @@ public class Beacon extends ResourceSupport implements Serializable {
     private Date creationDate = null;
     /*
      * END: Beacon 'creationDate' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Helpers
+     */
+    public void addConnection(Connection connection) {
+        this.getConnections().add(connection);
+    }
+
+    // Weird stuff: when this method is named something like 'getConnectionsJson',
+    // 'getConnectionsList', 'getConnectionsAsList', Jackson tries to use it and
+    // causes a LazyInit exception.
+    @JsonIgnore
+    public JSONArray getConnsAsJson() {
+        JsonBuilder connArray = new JsonBuilder(JsonBuilder.ARRAY);
+        for (Connection connection : getConnections()) {
+            connArray.addToArr(connection.getBeaconIdsAsJson());
+        }
+        return connArray.buildArr();
+    }
+    /*
+     * END: Helpers
      *------------------------------------------------------------
      */
 
@@ -282,8 +311,20 @@ public class Beacon extends ResourceSupport implements Serializable {
         return designated;
     }
 
+    public Boolean isDesignated() {
+        return designated;
+    }
+
     public void setDesignated(Boolean designated) {
         this.designated = designated;
+    }
+
+    public Set<Connection> getConnections() {
+        return connections;
+    }
+
+    public void setConnections(Set<Connection> connections) {
+        this.connections = connections;
     }
 
     public Date getCreationDate() {
@@ -309,8 +350,15 @@ public class Beacon extends ResourceSupport implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Beacon) {
-            return ((Beacon) obj).getBeaconId() == this.getBeaconId();
+            return ((Beacon) obj).getBeaconId().equals(this.getBeaconId());
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "[Beacon: " + getBeaconId() + ", Region: "
+                + getRegion().getRegionId() + ", Project: "
+                + getRegion().getProject().getProjectId() + "]";
     }
 }

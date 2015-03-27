@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "projects")
 @ResponseBody
-@JsonIgnoreProperties(value = { "beacons", "regions", "scenarios", "projectSecret", "owner" })
+@JsonIgnoreProperties(value = { "beacons", "regions", "scenarios", "projectSecret", "owner", "connections" })
 public class Project extends ResourceSupport implements Serializable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -131,6 +131,22 @@ public class Project extends ResourceSupport implements Serializable {
 
     /*
      *------------------------------------------------------------
+     * BEGIN: Project 'connection list' attribute
+     */
+    @OneToMany(targetEntity = Connection.class,
+            mappedBy = "project",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
+    @OrderBy(value = "connectionId")
+    private Set<Connection> connections = new LinkedHashSet<>();
+    /*
+     * END: Project 'connection list' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
      * BEGIN: Project 'scenarios list' attribute
      */
     @OneToMany(targetEntity = Scenario.class,
@@ -210,6 +226,14 @@ public class Project extends ResourceSupport implements Serializable {
 
     public void setRegions(Set<Region> regions) {
         this.regions = regions;
+    }
+
+    public Set<Connection> getConnections() {
+        return connections;
+    }
+
+    public void setConnections(Set<Connection> connections) {
+        this.connections = connections;
     }
 
     public Set<Scenario> getScenarios() {

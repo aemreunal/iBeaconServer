@@ -16,6 +16,8 @@ package com.aemreunal.controller.beacon;
  * *********************** *
  */
 
+import net.minidev.json.JSONObject;
+
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -26,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.controller.project.ProjectController;
@@ -33,6 +36,10 @@ import com.aemreunal.controller.region.RegionController;
 import com.aemreunal.controller.scenario.ScenarioController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
+import com.aemreunal.exception.region.ImageDeleteException;
+import com.aemreunal.exception.region.MapImageSaveException;
+import com.aemreunal.exception.region.MultipartFileReadException;
+import com.aemreunal.exception.region.WrongFileTypeSubmittedException;
 import com.aemreunal.service.BeaconService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -78,12 +85,12 @@ public class BeaconController {
     @Transactional
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Beacon>> getBeaconsOfRegion(@PathVariable String username,
-                                                           @PathVariable Long projectId,
-                                                           @PathVariable Long regionId,
-                                                           @RequestParam(value = "uuid", required = false) String uuid,
-                                                           @RequestParam(value = "major", required = false) Integer major,
-                                                           @RequestParam(value = "minor", required = false) Integer minor,
-                                                           @RequestParam(value = "designated", required = false) Boolean designated) {
+                                                          @PathVariable Long projectId,
+                                                          @PathVariable Long regionId,
+                                                          @RequestParam(value = "uuid", required = false) String uuid,
+                                                          @RequestParam(value = "major", required = false) Integer major,
+                                                          @RequestParam(value = "minor", required = false) Integer minor,
+                                                          @RequestParam(value = "designated", required = false) Boolean designated) {
         if (uuid == null && major == null && minor == null && designated == null) {
             Set<Beacon> beaconSet = beaconService.getBeaconsOfRegion(username, projectId, regionId);
             return new ResponseEntity<Set<Beacon>>(beaconSet, HttpStatus.OK);
@@ -141,8 +148,12 @@ public class BeaconController {
      * }
      * </pre>
      *
+     * @param username
+     *         The username of the owner of the project
      * @param projectId
      *         The ID of the project to create the beacon in
+     * @param regionId
+     *         The ID of the region
      * @param beaconFromJson
      *         The beacon parsed from the JSON object
      * @param builder
@@ -158,9 +169,9 @@ public class BeaconController {
                                                UriComponentsBuilder builder) {
         Beacon savedBeacon = beaconService.save(username, projectId, regionId, beaconFromJson);
         GlobalSettings.log("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
-                               "\' major = \'" + savedBeacon.getMajor() +
-                               "\' minor = \'" + savedBeacon.getMinor() +
-                               "\' in project with ID = \'" + projectId + "\'");
+                                   "\' major = \'" + savedBeacon.getMajor() +
+                                   "\' minor = \'" + savedBeacon.getMinor() +
+                                   "\' in project with ID = \'" + projectId + "\'");
         addLinks(username, projectId, regionId, savedBeacon);
         return buildCreateResponse(username, builder, savedBeacon);
     }
@@ -175,6 +186,52 @@ public class BeaconController {
                                            savedBeacon.getBeaconId().toString())
                                    .toUri());
         return new ResponseEntity<Beacon>(savedBeacon, headers, HttpStatus.CREATED);
+    }
+
+    /**
+     * Create a connection between two beacons.
+     *
+     * @param username
+     *         The username of the owner of the project.
+     * @param projectId
+     *         The ID of the project.
+     * @param regionId
+     *         The ID of the region.
+     * @param beaconId
+     *         The ID of one of the two beacons.
+     * @param otherRegionId
+     *         The ID of the region the other of the two beacons' is in.
+     * @param otherBeaconId
+     *         The ID of the other of the two beacons.
+     * @param imageMultipartFile
+     *         The connection navigation image file as a {@link org.springframework.web.multipart.MultipartFile
+     *         MultipartFile}.
+     *
+     * @return The list of beacon IDs that were connected.
+     *
+     * @throws WrongFileTypeSubmittedException
+     *         The file type of the {@link org.springframework.web.multipart.MultipartFile
+     *         MultipartFile} file submitted as the connection image is of some other type
+     *         than JPEG, GIF, or PNG.
+     * @throws MapImageSaveException
+     *         If the server is unable to save the connection image.
+     * @throws ImageDeleteException
+     *         If the connection image being replaced couldn't be deleted by the server.
+     * @throws MultipartFileReadException
+     *         If the Multipart file couldn't be read.
+     */
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.BEACON_CONNECT_MAPPING, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JSONObject> connectToBeacon(@PathVariable String username,
+                                                      @PathVariable Long projectId,
+                                                      @PathVariable Long regionId,
+                                                      @PathVariable Long beaconId,
+                                                      @RequestParam("region2id") Long otherRegionId,
+                                                      @RequestParam("beacon2id") Long otherBeaconId,
+                                                      @RequestPart(value = "image") MultipartFile imageMultipartFile)
+            throws WrongFileTypeSubmittedException, MapImageSaveException, ImageDeleteException, MultipartFileReadException {
+        // TODO check if the same connection already exists
+        JSONObject connection = beaconService.createConnection(username, projectId, regionId, beaconId, otherRegionId, otherBeaconId, imageMultipartFile);
+        return new ResponseEntity<JSONObject>(connection, HttpStatus.CREATED);
     }
 
     /**
