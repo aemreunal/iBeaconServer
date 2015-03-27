@@ -23,15 +23,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.aemreunal.exception.scenario.NoScenarioForQueryException;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 
 @ControllerAdvice
 public class APIControllerAdvice {
     @ExceptionHandler(NoScenarioForQueryException.class)
     public ResponseEntity<JSONObject> beaconDoesntHaveScenarioExceptionHandler(NoScenarioForQueryException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "scenario")
-                                                   .addToObj("error", ex.getLocalizedMessage())
-                                                   .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 }

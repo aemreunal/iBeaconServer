@@ -16,29 +16,22 @@ package com.aemreunal.controller.project;
  * *********************** *
  */
 
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.aemreunal.exception.project.ProjectNotFoundException;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 
 @ControllerAdvice
 public class ProjectControllerAdvice {
     @ExceptionHandler(ProjectNotFoundException.class)
     public ResponseEntity<JSONObject> projectNotFoundExceptionHandler(ProjectNotFoundException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "project")
-                                                   .addToObj("error", ex.getLocalizedMessage())
-                                                   .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "project")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 }

@@ -26,7 +26,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
+import com.aemreunal.helper.json.JsonObjectBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -255,17 +256,17 @@ public class Scenario extends ResourceSupport implements Serializable {
      */
 
     public JSONObject generateQueryResponse() {
-        JsonBuilder builder = new JsonBuilder(JsonBuilder.OBJECT);
+        JsonObjectBuilder builder = JsonBuilderFactory.object();
         if (hasShortMessage()) {
-            builder = builder.addToObj("short", getMessageShort());
+            builder = builder.add("short", getMessageShort());
         }
         if (hasLongMessage()) {
-            builder = builder.addToObj("long", getMessageLong());
+            builder = builder.add("long", getMessageLong());
         }
         if (hasUrl()) {
-            builder = builder.addToObj("url", getUrl());
+            builder = builder.add("url", getUrl());
         }
-        return builder.buildObj();
+        return builder.build();
     }
 
     @PrePersist

@@ -24,23 +24,23 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 
 @ControllerAdvice
 public class BeaconControllerAdvice {
     @ExceptionHandler(BeaconNotFoundException.class)
     public ResponseEntity<JSONObject> beaconNotFoundExceptionHandler(BeaconNotFoundException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "beacon")
-                                                   .addToObj("error", ex.getLocalizedMessage())
-                                                   .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "beacon")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BeaconAlreadyExistsException.class)
     public ResponseEntity<JSONObject> beaconAlreadyExistsExceptionHandler(BeaconAlreadyExistsException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "beacon")
-                                                   .addToObj("error", ex.getLocalizedMessage())
-                                                   .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "beacon")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 }

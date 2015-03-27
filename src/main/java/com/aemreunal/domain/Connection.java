@@ -24,7 +24,8 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonArrayBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 
 // To not mark getters & setters as unused, as they're being used by Spring & Hibernate
 @SuppressWarnings("UnusedDeclaration")
@@ -106,11 +107,11 @@ public class Connection extends ResourceSupport implements Serializable {
     }
 
     public JSONArray getBeaconIdsAsJson() {
-        JsonBuilder beaconArray = new JsonBuilder(JsonBuilder.ARRAY);
+        JsonArrayBuilder beaconArray = JsonBuilderFactory.array();
         for (Beacon beacon : getBeacons()) {
-            beaconArray = beaconArray.addToArr(beacon.getBeaconId());
+            beaconArray = beaconArray.add(beacon.getBeaconId());
         }
-        return beaconArray.buildArr();
+        return beaconArray.build();
     }
     /*
      * END: Helpers

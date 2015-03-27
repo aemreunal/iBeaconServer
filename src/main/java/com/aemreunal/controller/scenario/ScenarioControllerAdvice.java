@@ -25,32 +25,32 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.aemreunal.exception.scenario.BeaconDoesNotHaveScenarioException;
 import com.aemreunal.exception.scenario.BeaconHasScenarioException;
 import com.aemreunal.exception.scenario.ScenarioNotFoundException;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 
 @ControllerAdvice
 public class ScenarioControllerAdvice {
     @ExceptionHandler(ScenarioNotFoundException.class)
     public ResponseEntity<JSONObject> scenarioNotFoundExceptionHandler(ScenarioNotFoundException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "scenario")
-                                                   .addToObj("error", ex.getLocalizedMessage())
-                                                   .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BeaconHasScenarioException.class)
     public ResponseEntity<JSONObject> beaconHasScenarioExceptionHandler(BeaconHasScenarioException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "scenario")
-                                                   .addToObj("error", ex.getLocalizedMessage())
-                                                   .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
 
     @ExceptionHandler(BeaconDoesNotHaveScenarioException.class)
     public ResponseEntity<JSONObject> beaconDoesNotHaveScenarioExceptionHandler(BeaconDoesNotHaveScenarioException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "scenario")
-                                                   .addToObj("error", ex.getLocalizedMessage())
-                                                   .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "scenario")
+                                                   .add("error", ex.getLocalizedMessage())
+                                                   .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 }

@@ -26,7 +26,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonArrayBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -220,11 +221,11 @@ public class Beacon extends ResourceSupport implements Serializable {
     // causes a LazyInit exception.
     @JsonIgnore
     public JSONArray getConnsAsJson() {
-        JsonBuilder connArray = new JsonBuilder(JsonBuilder.ARRAY);
+        JsonArrayBuilder connArray = JsonBuilderFactory.array();
         for (Connection connection : getConnections()) {
-            connArray.addToArr(connection.getBeaconIdsAsJson());
+            connArray.add(connection.getBeaconIdsAsJson());
         }
-        return connArray.buildArr();
+        return connArray.build();
     }
     /*
      * END: Helpers

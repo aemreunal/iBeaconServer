@@ -37,7 +37,7 @@ import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.exception.region.*;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
 
@@ -202,7 +202,7 @@ public class BeaconService {
 
     public JSONObject createConnection(String username, Long projectId, Long regionOneId, Long beaconOneId, Long regionTwoId, Long beaconTwoId, MultipartFile imageMultipartFile) throws WrongFileTypeSubmittedException, MapImageSaveException, ImageDeleteException, MultipartFileReadException {
         Connection connection = connectionService.createNewConnection(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId, imageMultipartFile);
-        return new JsonBuilder(JsonBuilder.OBJECT).addToObj("beacons", connection.getBeaconIdsAsJson()).buildObj();
+        return JsonBuilderFactory.object().add("beacons", connection.getBeaconIdsAsJson()).build();
     }
 
     public Beacon addConnection(String username, Long projectId, Long regionId, Long beaconId, Connection connection) {

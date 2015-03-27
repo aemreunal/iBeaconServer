@@ -25,31 +25,31 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.aemreunal.exception.user.InvalidUsernameException;
 import com.aemreunal.exception.user.UserNotFoundException;
 import com.aemreunal.exception.user.UsernameClashException;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 
 @ControllerAdvice
 public class UserControllerAdvice {
     @ExceptionHandler(UsernameClashException.class)
     public ResponseEntity<JSONObject> usernameClashExceptionHandler(UsernameClashException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "username")
-                                                                     .addToObj("error", ex.getLocalizedMessage())
-                                                                     .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "username")
+                                                                     .add("error", ex.getLocalizedMessage())
+                                                                     .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidUsernameException.class)
     public ResponseEntity<JSONObject> invalidUsernameExceptionHandler(InvalidUsernameException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "username")
-                                                                     .addToObj("error", ex.getLocalizedMessage())
-                                                                     .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "username")
+                                                                     .add("error", ex.getLocalizedMessage())
+                                                                     .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<JSONObject> userNotFoundExceptionHandler(UserNotFoundException ex) {
-        JSONObject responseBody = new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "username")
-                                                                     .addToObj("error", ex.getLocalizedMessage())
-                                                                     .buildObj();
+        JSONObject responseBody = JsonBuilderFactory.object().add("reason", "username")
+                                                                     .add("error", ex.getLocalizedMessage())
+                                                                     .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.NOT_FOUND);
     }
 }

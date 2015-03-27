@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MultipartException;
 import com.aemreunal.exception.region.*;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 
 @ControllerAdvice
 public class RegionControllerAdvice {
@@ -50,8 +50,8 @@ public class RegionControllerAdvice {
     }
 
     private JSONObject getErrorResponseBody(Exception ex) {
-        return new JsonBuilder(JsonBuilder.OBJECT).addToObj("reason", "region")
-                                                  .addToObj("error", ex.getLocalizedMessage())
-                                                  .buildObj();
+        return JsonBuilderFactory.object().add("reason", "region")
+                                                  .add("error", ex.getLocalizedMessage())
+                                                  .build();
     }
 }

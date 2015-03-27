@@ -26,7 +26,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.helper.JsonBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 // To not mark getters & setters as unused, as they're being used by Spring & Hibernate
@@ -274,12 +274,12 @@ public class Project extends ResourceSupport implements Serializable {
     }
 
     public JSONObject getCreateResponse(String projectSecret) {
-        return new JsonBuilder(JsonBuilder.OBJECT).addToObj("projectId", getProjectId())
-                                .addToObj("name", getName())
-                                .addToObj("description", getDescription())
-                                .addToObj("secret", projectSecret)
-                                .addToObj("links", getLinks())
-                                .buildObj();
+        return JsonBuilderFactory.object().add("projectId", getProjectId())
+                                .add("name", getName())
+                                .add("description", getDescription())
+                                .add("secret", projectSecret)
+                                .add("links", getLinks())
+                                .build();
     }
 }
 
