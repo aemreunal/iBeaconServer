@@ -221,7 +221,7 @@ public class BeaconController {
      * @throws MultipartFileReadException
      *         If the Multipart file couldn't be read.
      */
-    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.BEACON_CONNECT_MAPPING, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.BEACON_CONNECTION_MAPPING, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JSONObject> connectToBeacon(@PathVariable String username,
                                                       @PathVariable Long projectId,
                                                       @PathVariable Long regionId,

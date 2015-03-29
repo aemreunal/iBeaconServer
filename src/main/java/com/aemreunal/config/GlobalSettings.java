@@ -59,7 +59,7 @@ public class GlobalSettings {
     public static final String BEACON_PATH_MAPPING               = REGION_SPECIFIC_MAPPING + "/beacons";
     public static final String BEACON_ID_MAPPING                 = "/{beaconId}";
     public static final String BEACON_SPECIFIC_MAPPING           = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
-    public static final String BEACON_CONNECT_MAPPING            = BEACON_ID_MAPPING + "/connect";
+    public static final String BEACON_CONNECTION_MAPPING         = BEACON_ID_MAPPING + "/connection";
     // Scenario
     public static final String SCENARIO_PATH_MAPPING             = PROJECT_SPECIFIC_MAPPING + "/scenarios";
     public static final String SCENARIO_ID_MAPPING               = "/{scenarioId}";
