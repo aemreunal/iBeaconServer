@@ -37,10 +37,7 @@ import com.aemreunal.controller.scenario.ScenarioController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.exception.connection.ConnectionExistsException;
-import com.aemreunal.exception.region.ImageDeleteException;
-import com.aemreunal.exception.region.MapImageSaveException;
-import com.aemreunal.exception.region.MultipartFileReadException;
-import com.aemreunal.exception.region.WrongFileTypeSubmittedException;
+import com.aemreunal.exception.region.*;
 import com.aemreunal.service.BeaconService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -196,13 +193,13 @@ public class BeaconController {
      *         The username of the owner of the project.
      * @param projectId
      *         The ID of the project.
-     * @param regionId
+     * @param regionOneId
      *         The ID of the region.
-     * @param beaconId
+     * @param beaconOneId
      *         The ID of one of the two beacons.
-     * @param otherRegionId
+     * @param regionTwoId
      *         The ID of the region the other of the two beacons' is in.
-     * @param otherBeaconId
+     * @param beaconTwoId
      *         The ID of the other of the two beacons.
      * @param imageMultipartFile
      *         The connection navigation image file as a {@link org.springframework.web.multipart.MultipartFile
@@ -224,14 +221,14 @@ public class BeaconController {
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.BEACON_CONNECTION_MAPPING, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JSONObject> connectToBeacon(@PathVariable String username,
                                                       @PathVariable Long projectId,
-                                                      @PathVariable Long regionId,
-                                                      @PathVariable Long beaconId,
-                                                      @RequestParam("region2id") Long otherRegionId,
-                                                      @RequestParam("beacon2id") Long otherBeaconId,
+                                                      @PathVariable(value = "regionId") Long regionOneId,
+                                                      @PathVariable(value = "beaconId") Long beaconOneId,
+                                                      @RequestParam("region2id") Long regionTwoId,
+                                                      @RequestParam("beacon2id") Long beaconTwoId,
                                                       @RequestPart(value = "image") MultipartFile imageMultipartFile)
             throws WrongFileTypeSubmittedException, MapImageSaveException, ImageDeleteException, MultipartFileReadException, ConnectionExistsException {
         // TODO check if the same connection already exists
-        JSONObject connection = beaconService.createConnection(username, projectId, regionId, beaconId, otherRegionId, otherBeaconId, imageMultipartFile);
+        JSONObject connection = beaconService.createConnection(username, projectId, regionOneId, beaconOneId, regionTwoId, beaconTwoId, imageMultipartFile);
         return new ResponseEntity<JSONObject>(connection, HttpStatus.CREATED);
     }
 
