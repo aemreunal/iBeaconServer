@@ -23,6 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MultipartException;
+import com.aemreunal.exception.imageStorage.ImageDeleteException;
+import com.aemreunal.exception.imageStorage.ImageLoadException;
+import com.aemreunal.exception.imageStorage.ImageSaveException;
 import com.aemreunal.exception.region.*;
 import com.aemreunal.helper.json.JsonBuilderFactory;
 
@@ -34,7 +37,7 @@ public class RegionControllerAdvice {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({ MapImageSaveException.class, MapImageLoadException.class, ImageDeleteException.class })
+    @ExceptionHandler({ ImageSaveException.class, ImageLoadException.class, ImageDeleteException.class })
     public ResponseEntity<JSONObject> internalErrorExceptionHandler(Exception ex) {
         return new ResponseEntity<JSONObject>(getErrorResponseBody(ex), HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -1,4 +1,4 @@
-package com.aemreunal.exception.region;
+package com.aemreunal.exception.imageStorage;
 
 /*
  * *********************** *
@@ -16,8 +16,8 @@ package com.aemreunal.exception.region;
  * *********************** *
  */
 
-public class MapImageNotSetException extends Exception {
-    public MapImageNotSetException(Long projectId, Long regionId) {
-        super("Map image of region " + regionId + " in project " + projectId + " has not been set!");
+public class ImageLoadException extends Exception {
+    public ImageLoadException(Long projectId, Long regionId) {
+        super("Unable to load map image of project " + projectId + ", region " + regionId + "!");
     }
 }

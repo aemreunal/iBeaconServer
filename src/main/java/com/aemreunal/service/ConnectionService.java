@@ -26,10 +26,10 @@ import com.aemreunal.domain.Connection;
 import com.aemreunal.domain.Project;
 import com.aemreunal.exception.connection.ConnectionExistsException;
 import com.aemreunal.exception.connection.ConnectionNotFoundException;
-import com.aemreunal.exception.region.ImageDeleteException;
-import com.aemreunal.exception.region.MapImageSaveException;
-import com.aemreunal.exception.region.MultipartFileReadException;
-import com.aemreunal.exception.region.WrongFileTypeSubmittedException;
+import com.aemreunal.exception.imageStorage.ImageDeleteException;
+import com.aemreunal.exception.imageStorage.ImageLoadException;
+import com.aemreunal.exception.imageStorage.ImageSaveException;
+import com.aemreunal.exception.region.*;
 import com.aemreunal.helper.ImageProperties;
 import com.aemreunal.helper.ImageStorage;
 import com.aemreunal.repository.connection.ConnectionRepo;
@@ -55,7 +55,7 @@ public class ConnectionService {
     }
 
     public Connection createNewConnection(String username, Long projectId, Long beaconOneId, Long regionOneId, Long beaconTwoId, Long regionTwoId, MultipartFile imageMultipartFile)
-    throws ConnectionExistsException, WrongFileTypeSubmittedException, ImageDeleteException, MultipartFileReadException, MapImageSaveException {
+    throws ConnectionExistsException, WrongFileTypeSubmittedException, ImageDeleteException, MultipartFileReadException, ImageSaveException {
         // Check whether such a connection already exists
         checkConnectionExistence(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId);
         GlobalSettings.log("Creating new connection for user: \'" + username + "\' and project: \'" + projectId + "\', between beacons: \'" + beaconOneId + "\' & " + beaconTwoId);
@@ -79,7 +79,7 @@ public class ConnectionService {
     }
 
     private ImageProperties saveConnectionImage(String username, Long projectId, MultipartFile imageMultipartFile)
-    throws MultipartFileReadException, ImageDeleteException, MapImageSaveException, WrongFileTypeSubmittedException {
+    throws MultipartFileReadException, ImageDeleteException, ImageSaveException, WrongFileTypeSubmittedException {
         GlobalSettings.log("Setting connection image of newly-created connection.");
         return imageStorage.saveImage(username, projectId, null, imageMultipartFile);
     }
@@ -121,6 +121,15 @@ public class ConnectionService {
             throw new ConnectionNotFoundException();
         }
         return (Connection) connectionObj;
+    }
+
+    @Transactional(readOnly = true)
+    public byte[] getConnectionImage(String username, Long projectId, Long regionOneId, Long beaconOneId, Long regionTwoId, Long beaconTwoId)
+    throws ConnectionNotFoundException, ImageLoadException {
+        GlobalSettings.log("Getting connection image between beacons with ID = \'" + beaconOneId + "\' and \'" + beaconTwoId + "\'");
+        Connection connection = this.getConnectionBetween(username, projectId, regionOneId, beaconOneId, regionTwoId, beaconTwoId);
+        String connectionImageFileName = connection.getConnectionImageFileName();
+        return imageStorage.loadImage(username, projectId, null, connectionImageFileName);
     }
 
     public void deleteConnection(String username, Long projectId, Long connectionId)

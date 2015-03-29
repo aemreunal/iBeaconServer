@@ -27,6 +27,9 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Region;
+import com.aemreunal.exception.imageStorage.ImageDeleteException;
+import com.aemreunal.exception.imageStorage.ImageLoadException;
+import com.aemreunal.exception.imageStorage.ImageSaveException;
 import com.aemreunal.exception.region.*;
 import com.aemreunal.helper.ImageProperties;
 import com.aemreunal.helper.ImageStorage;
@@ -94,13 +97,13 @@ public class RegionService {
      *         The file type of the {@link org.springframework.web.multipart.MultipartFile
      *         MultipartFile} file submitted as the region map image is of some other type
      *         than JPEG, GIF, or PNG.
-     * @throws MapImageSaveException
+     * @throws ImageSaveException
      *         If the server is unable to save the region map image.
      * @throws MultipartFileReadException
      *         If the Multipart file couldn't be read.
      */
     public Region saveNewRegion(String username, Long projectId, Region region, MultipartFile imageMultipartFile)
-            throws WrongFileTypeSubmittedException, MapImageSaveException, MultipartFileReadException {
+            throws WrongFileTypeSubmittedException, ImageSaveException, MultipartFileReadException {
         GlobalSettings.log("Creating new region for user = \'" + username + "\' and project = \'" + projectId + "\'");
         // Region must be saved prior to setting the map image, as the map
         // image storage in filesystem depends on region and project IDs.
@@ -129,13 +132,13 @@ public class RegionService {
      *         The file type of the {@link org.springframework.web.multipart.MultipartFile
      *         MultipartFile} file submitted as the region map image is of some other type
      *         than JPEG, GIF, or PNG.
-     * @throws MapImageSaveException
+     * @throws ImageSaveException
      *         If the server is unable to save the region map image.
      * @throws MultipartFileReadException
      *         If the Multipart file couldn't be read.
      */
     private Region setMapImage(String username, Long projectId, Region region, MultipartFile imageFile)
-            throws MapImageSaveException, MultipartFileReadException, WrongFileTypeSubmittedException {
+            throws ImageSaveException, MultipartFileReadException, WrongFileTypeSubmittedException {
         GlobalSettings.log("Setting map image of region with ID = \'" + region.getRegionId() + "\'");
         ImageProperties savedImageProperties = imageStorage.saveImage(username, projectId, region.getRegionId(), imageFile);
         region.setImageProperties(savedImageProperties);
@@ -188,18 +191,11 @@ public class RegionService {
 
     @Transactional(readOnly = true)
     public byte[] getMapImage(String username, Long projectId, Long regionId)
-    throws MapImageLoadException, MapImageNotSetException {
+    throws ImageLoadException {
         GlobalSettings.log("Getting map image of region with ID = \'" + regionId + "\'");
         Region region = this.getRegion(username, projectId, regionId);
         String mapImageFileName = region.getMapImageFileName();
-        if (mapImageFileName == null) {
-            throw new MapImageNotSetException(projectId, regionId);
-        }
-        byte[] mapImage = imageStorage.loadImage(username, projectId, regionId, mapImageFileName);
-        if (mapImage == null) {
-            throw new MapImageLoadException(projectId, regionId);
-        }
-        return mapImage;
+        return imageStorage.loadImage(username, projectId, regionId, mapImageFileName);
     }
 
     /**

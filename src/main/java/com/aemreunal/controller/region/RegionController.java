@@ -28,7 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Region;
-import com.aemreunal.exception.region.*;
+import com.aemreunal.exception.imageStorage.ImageLoadException;
+import com.aemreunal.exception.imageStorage.ImageSaveException;
+import com.aemreunal.exception.region.MultipartFileReadException;
+import com.aemreunal.exception.region.WrongFileTypeSubmittedException;
 import com.aemreunal.service.RegionService;
 
 @Controller
@@ -110,7 +113,7 @@ public class RegionController {
      *         The file type of the {@link org.springframework.web.multipart.MultipartFile
      *         MultipartFile} file submitted as the region map image is of some other type
      *         than JPEG, GIF, or PNG.
-     * @throws MapImageSaveException
+     * @throws ImageSaveException
      *         If the server is unable to save the region map image.
      * @throws MultipartFileReadException
      *         If the Multipart file couldn't be read.
@@ -121,7 +124,7 @@ public class RegionController {
                                                @RequestPart(value = "region") Region region,
                                                @RequestPart(value = "image") MultipartFile imageMultipartFile,
                                                UriComponentsBuilder builder)
-            throws WrongFileTypeSubmittedException, MapImageSaveException, MultipartFileReadException {
+            throws WrongFileTypeSubmittedException, ImageSaveException, MultipartFileReadException {
         Region savedRegion = regionService.saveNewRegion(username, projectId, region, imageMultipartFile);
         GlobalSettings.log("Saved region with ID = \'" + savedRegion.getRegionId() +
                                    "\' name = \'" + savedRegion.getName() +
@@ -153,9 +156,7 @@ public class RegionController {
      *
      * @return The region map image as {@code byte[]}.
      *
-     * @throws MapImageNotSetException
-     *         If the map image is not set.
-     * @throws MapImageLoadException
+     * @throws ImageLoadException
      *         If the map image couldn't be loaded from the filesystem.
      */
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.REGION_MAP_IMAGE_MAPPING, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
@@ -165,7 +166,7 @@ public class RegionController {
     public ResponseEntity<byte[]> downloadRegionMapImage(@PathVariable String username,
                                                          @PathVariable Long projectId,
                                                          @PathVariable Long regionId)
-            throws MapImageNotSetException, MapImageLoadException {
+            throws ImageLoadException {
         return new ResponseEntity<byte[]>(regionService.getMapImage(username, projectId, regionId), HttpStatus.OK);
     }
 

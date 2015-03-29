@@ -1,4 +1,4 @@
-package com.aemreunal.exception.region;
+package com.aemreunal.exception.imageStorage;
 
 /*
  * *********************** *

@@ -28,6 +28,9 @@ import javax.imageio.ImageIO;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.exception.imageStorage.ImageDeleteException;
+import com.aemreunal.exception.imageStorage.ImageLoadException;
+import com.aemreunal.exception.imageStorage.ImageSaveException;
 import com.aemreunal.exception.region.*;
 
 public class ImageStorage {
@@ -64,7 +67,7 @@ public class ImageStorage {
      * width</li> <li>Image height</li> </ul>
      */
     public ImageProperties saveImage(String username, Long projectId, Long regionId, MultipartFile imageMultipartFile)
-            throws MultipartFileReadException, MapImageSaveException, WrongFileTypeSubmittedException {
+            throws MultipartFileReadException, ImageSaveException, WrongFileTypeSubmittedException {
         // Verify file is not empty or is not of a wrong type
         verifyImageType(projectId, regionId, imageMultipartFile);
 
@@ -110,45 +113,45 @@ public class ImageStorage {
         return imageFile;
     }
 
-    private void createParentFolder(Long projectId, Long regionId, File imageFile) throws MapImageSaveException {
+    private void createParentFolder(Long projectId, Long regionId, File imageFile) throws ImageSaveException {
         if (!imageFile.getParentFile().exists()) {
             // If it doesn't exist, create it
             if (!imageFile.getParentFile().mkdirs()) {
                 System.err.println("Unable to create parent folders!");
-                throw new MapImageSaveException(projectId, regionId);
+                throw new ImageSaveException(projectId, regionId);
             }
         }
     }
 
-    private void createFile(Long projectId, Long regionId, File imageFile) throws MapImageSaveException {
+    private void createFile(Long projectId, Long regionId, File imageFile) throws ImageSaveException {
         try {
             if (!imageFile.createNewFile()) {
                 System.err.println("Unable to createNewFile()!");
-                throw new MapImageSaveException(projectId, regionId);
+                throw new ImageSaveException(projectId, regionId);
             }
         } catch (IOException e) {
             System.err.println("Unable to create file!");
-            throw new MapImageSaveException(projectId, regionId);
+            throw new ImageSaveException(projectId, regionId);
         }
     }
 
-    private void writeImageToFile(Long projectId, Long regionId, MultipartFile imageMultipartFile, File imageFile) throws MapImageSaveException {
+    private void writeImageToFile(Long projectId, Long regionId, MultipartFile imageMultipartFile, File imageFile) throws ImageSaveException {
         try {
             imageMultipartFile.transferTo(imageFile);
         } catch (IOException e) {
             System.err.println("Unable to write image to file!");
-            throw new MapImageSaveException(projectId, regionId);
+            throw new ImageSaveException(projectId, regionId);
         }
     }
 
     private ImageProperties readImageProperties(Long projectId, Long regionId, File imageFile)
-    throws MapImageSaveException {
+    throws ImageSaveException {
         try {
             BufferedImage image = ImageIO.read(imageFile);
             return new ImageProperties(imageFile.getName(), image.getWidth(), image.getHeight());
         } catch (IOException e) {
             System.err.println("Unable to read image to get dimensions!");
-            throw new MapImageSaveException(projectId, regionId);
+            throw new ImageSaveException(projectId, regionId);
         }
     }
 
@@ -169,19 +172,19 @@ public class ImageStorage {
      * @return A <code>byte[]</code> if the image file has been successfully loaded and
      * read, <code>null</code> otherwise.
      */
-    public byte[] loadImage(String username, Long projectId, Long regionId, String imageFileName) throws MapImageLoadException {
+    public byte[] loadImage(String username, Long projectId, Long regionId, String imageFileName) throws ImageLoadException {
         // Get the file path from the username, project ID, and region ID attributes
         String filePath = getFilePath(username, projectId, regionId);
         // Get the image file
         File imageFile = new File(filePath + imageFileName);
         if (!imageFile.exists()) {
             System.err.println("Image file does not exist!");
-            throw new MapImageLoadException(projectId, regionId);
+            throw new ImageLoadException(projectId, regionId);
         }
         return loadImageFromFile(projectId, regionId, imageFile);
     }
 
-    private byte[] loadImageFromFile(Long projectId, Long regionId, File imageFile) throws MapImageLoadException {
+    private byte[] loadImageFromFile(Long projectId, Long regionId, File imageFile) throws ImageLoadException {
         // Can safely cast from long to int, as image file will never exceed
         // 2^32 bytes (which would've required the use of a 64 bit long).
         byte[] imageAsBytes = new byte[(int) imageFile.length()];
@@ -191,10 +194,10 @@ public class ImageStorage {
             stream.close();
         } catch (FileNotFoundException e) {
             System.err.println("File to read from is not found!");
-            throw new MapImageLoadException(projectId, regionId);
+            throw new ImageLoadException(projectId, regionId);
         } catch (IOException e) {
             System.err.println("Unable to read from file!");
-            throw new MapImageLoadException(projectId, regionId);
+            throw new ImageLoadException(projectId, regionId);
         }
         return imageAsBytes;
     }

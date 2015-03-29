@@ -1,4 +1,4 @@
-package com.aemreunal.exception.region;
+package com.aemreunal.exception.imageStorage;
 
 /*
  * *********************** *
@@ -16,8 +16,8 @@ package com.aemreunal.exception.region;
  * *********************** *
  */
 
-public class MapImageSaveException extends Throwable {
-    public MapImageSaveException(Long projectId, Long regionId) {
+public class ImageSaveException extends Throwable {
+    public ImageSaveException(Long projectId, Long regionId) {
         super(createCauseMessage(projectId, regionId), null, true, false);
     }
 

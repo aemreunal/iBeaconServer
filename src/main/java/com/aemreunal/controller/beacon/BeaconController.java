@@ -37,6 +37,9 @@ import com.aemreunal.controller.scenario.ScenarioController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.exception.connection.ConnectionExistsException;
+import com.aemreunal.exception.imageStorage.ImageDeleteException;
+import com.aemreunal.exception.imageStorage.ImageLoadException;
+import com.aemreunal.exception.imageStorage.ImageSaveException;
 import com.aemreunal.exception.region.*;
 import com.aemreunal.service.BeaconService;
 
@@ -211,7 +214,7 @@ public class BeaconController {
      *         The file type of the {@link org.springframework.web.multipart.MultipartFile
      *         MultipartFile} file submitted as the connection image is of some other type
      *         than JPEG, GIF, or PNG.
-     * @throws MapImageSaveException
+     * @throws ImageSaveException
      *         If the server is unable to save the connection image.
      * @throws ImageDeleteException
      *         If the connection image being replaced couldn't be deleted by the server.
@@ -226,7 +229,7 @@ public class BeaconController {
                                                       @RequestParam("region2id") Long regionTwoId,
                                                       @RequestParam("beacon2id") Long beaconTwoId,
                                                       @RequestPart(value = "image") MultipartFile imageMultipartFile)
-            throws WrongFileTypeSubmittedException, MapImageSaveException, ImageDeleteException, MultipartFileReadException, ConnectionExistsException {
+            throws WrongFileTypeSubmittedException, ImageSaveException, ImageDeleteException, MultipartFileReadException, ConnectionExistsException {
         // TODO check if the same connection already exists
         JSONObject connection = beaconService.createConnection(username, projectId, regionOneId, beaconOneId, regionTwoId, beaconTwoId, imageMultipartFile);
         return new ResponseEntity<JSONObject>(connection, HttpStatus.CREATED);
