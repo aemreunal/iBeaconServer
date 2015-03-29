@@ -36,12 +36,16 @@ import com.aemreunal.controller.region.RegionController;
 import com.aemreunal.controller.scenario.ScenarioController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
+import com.aemreunal.domain.Connection;
+import com.aemreunal.exception.connection.BeaconIsNotDesignatedException;
 import com.aemreunal.exception.connection.ConnectionExistsException;
 import com.aemreunal.exception.connection.ConnectionNotFoundException;
 import com.aemreunal.exception.imageStorage.ImageDeleteException;
 import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.exception.imageStorage.ImageSaveException;
-import com.aemreunal.exception.region.*;
+import com.aemreunal.exception.region.MultipartFileReadException;
+import com.aemreunal.exception.region.WrongFileTypeSubmittedException;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.aemreunal.service.BeaconService;
 import com.aemreunal.service.ConnectionService;
 
@@ -227,17 +231,17 @@ public class BeaconController {
      *         If the Multipart file couldn't be read.
      */
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.BEACON_CONNECTION_MAPPING, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JSONObject> connectToBeacon(@PathVariable String username,
-                                                      @PathVariable Long projectId,
-                                                      @PathVariable(value = "regionId") Long regionOneId,
-                                                      @PathVariable(value = "beaconId") Long beaconOneId,
-                                                      @RequestParam("region2id") Long regionTwoId,
-                                                      @RequestParam("beacon2id") Long beaconTwoId,
-                                                      @RequestPart(value = "image") MultipartFile imageMultipartFile)
-            throws WrongFileTypeSubmittedException, ImageSaveException, ImageDeleteException, MultipartFileReadException, ConnectionExistsException {
-        // TODO check if the same connection already exists
-        JSONObject connection = beaconService.createConnection(username, projectId, regionOneId, beaconOneId, regionTwoId, beaconTwoId, imageMultipartFile);
-        return new ResponseEntity<JSONObject>(connection, HttpStatus.CREATED);
+    public ResponseEntity<JSONObject> connectBeacons(@PathVariable String username,
+                                                     @PathVariable Long projectId,
+                                                     @PathVariable(value = "regionId") Long regionOneId,
+                                                     @PathVariable(value = "beaconId") Long beaconOneId,
+                                                     @RequestParam("region2id") Long regionTwoId,
+                                                     @RequestParam("beacon2id") Long beaconTwoId,
+                                                     @RequestPart(value = "image") MultipartFile imageMultipartFile)
+            throws WrongFileTypeSubmittedException, ImageSaveException, ImageDeleteException, MultipartFileReadException, ConnectionExistsException, BeaconIsNotDesignatedException {
+        Connection connection = connectionService.createNewConnection(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId, imageMultipartFile);
+        JSONObject connectionBeacons = JsonBuilderFactory.object().add("beacons", connection.getBeaconIdsAsJson()).build();
+        return new ResponseEntity<JSONObject>(connectionBeacons, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACON_CONNECTION_MAPPING, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
@@ -253,6 +257,19 @@ public class BeaconController {
     throws ConnectionNotFoundException, ImageLoadException {
         byte[] connectionImage = connectionService.getConnectionImage(username, projectId, regionOneId, beaconOneId, regionTwoId, beaconTwoId);
         return new ResponseEntity<byte[]>(connectionImage, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.BEACON_CONNECTION_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JSONObject> disconnectBeacons(@PathVariable String username,
+                                                        @PathVariable Long projectId,
+                                                        @PathVariable(value = "regionId") Long regionOneId,
+                                                        @PathVariable(value = "beaconId") Long beaconOneId,
+                                                        @RequestParam("region2id") Long regionTwoId,
+                                                        @RequestParam("beacon2id") Long beaconTwoId)
+    throws ImageDeleteException, ConnectionNotFoundException {
+        Connection connection = connectionService.deleteConnection(username, projectId, regionOneId, beaconOneId, regionTwoId, beaconTwoId);
+        JSONObject connectionBeacons = JsonBuilderFactory.object().add("beacons", connection.getBeaconIdsAsJson()).build();
+        return new ResponseEntity<JSONObject>(connectionBeacons, HttpStatus.OK);
     }
 
     /**

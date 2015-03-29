@@ -16,9 +16,9 @@ package com.aemreunal.exception.imageStorage;
  * *********************** *
  */
 
-public class ImageSaveException extends Throwable {
+public class ImageSaveException extends Exception {
     public ImageSaveException(Long projectId, Long regionId) {
-        super(createCauseMessage(projectId, regionId), null, true, false);
+        super(createCauseMessage(projectId, regionId));
     }
 
     public static String createCauseMessage(Long projectId, Long regionId) {

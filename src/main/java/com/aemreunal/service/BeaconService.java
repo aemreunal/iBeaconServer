@@ -16,8 +16,6 @@ package com.aemreunal.service;
  * *********************** *
  */
 
-import net.minidev.json.JSONObject;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Connection;
@@ -35,12 +32,9 @@ import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.MalformedRequestException;
 import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
-import com.aemreunal.exception.connection.ConnectionExistsException;
-import com.aemreunal.exception.imageStorage.ImageDeleteException;
-import com.aemreunal.exception.imageStorage.ImageSaveException;
+import com.aemreunal.exception.connection.BeaconIsNotDesignatedException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
-import com.aemreunal.exception.region.*;
-import com.aemreunal.helper.json.JsonBuilderFactory;
+import com.aemreunal.exception.region.RegionNotFoundException;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
 
@@ -203,15 +197,19 @@ public class BeaconService {
         return this.findBeaconsBySpecs(username, projectId, regionId, null, null, null, Boolean.TRUE);
     }
 
-    public JSONObject createConnection(String username, Long projectId, Long regionOneId, Long beaconOneId, Long regionTwoId, Long beaconTwoId, MultipartFile imageMultipartFile)
-    throws WrongFileTypeSubmittedException, ImageSaveException, ImageDeleteException, MultipartFileReadException, ConnectionExistsException {
-        Connection connection = connectionService.createNewConnection(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId, imageMultipartFile);
-        return JsonBuilderFactory.object().add("beacons", connection.getBeaconIdsAsJson()).build();
+    public Beacon addConnection(String username, Long projectId, Long regionId, Long beaconId, Connection connection)
+    throws BeaconIsNotDesignatedException {
+        Beacon beacon = this.getBeacon(username, projectId, regionId, beaconId);
+        if (!beacon.isDesignated()) {
+            throw new BeaconIsNotDesignatedException(beaconId);
+        }
+        beacon.addConnection(connection);
+        return this.save(username, projectId, regionId, beacon);
     }
 
-    public Beacon addConnection(String username, Long projectId, Long regionId, Long beaconId, Connection connection) {
+    public Beacon removeConnection(String username, Long projectId, Long regionId, Long beaconId, Connection connection) {
         Beacon beacon = this.getBeacon(username, projectId, regionId, beaconId);
-        beacon.addConnection(connection);
+        beacon.removeConnection(connection);
         return this.save(username, projectId, regionId, beacon);
     }
 

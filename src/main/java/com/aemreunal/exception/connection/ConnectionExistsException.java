@@ -16,7 +16,6 @@ package com.aemreunal.exception.connection;
  * *********************** *
  */
 
-
 public class ConnectionExistsException extends Exception {
     public ConnectionExistsException(Long beaconOneId, Long beaconTwoId) {
         super("There already is a connection between Beacon " + beaconOneId + " and Beacon " + beaconTwoId + "!");

@@ -216,6 +216,10 @@ public class Beacon extends ResourceSupport implements Serializable {
         this.getConnections().add(connection);
     }
 
+    public void removeConnection(Connection connection) {
+        this.getConnections().remove(connection);
+    }
+
     // Weird stuff: when this method is named something like 'getConnectionsJson',
     // 'getConnectionsList', 'getConnectionsAsList', Jackson tries to use it and
     // causes a LazyInit exception.

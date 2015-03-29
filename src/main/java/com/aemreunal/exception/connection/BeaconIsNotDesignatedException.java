@@ -16,8 +16,8 @@ package com.aemreunal.exception.connection;
  * *********************** *
  */
 
-public class ConnectionNotFoundException extends Exception {
-    public ConnectionNotFoundException() {
-        super("The requested connection can not be found.");
+public class BeaconIsNotDesignatedException extends Exception {
+    public BeaconIsNotDesignatedException(Long beaconId) {
+        super("Unable to create connection, Beacon " + beaconId + " is not a designated beacon!");
     }
 }

@@ -24,6 +24,7 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Connection;
 import com.aemreunal.domain.Project;
+import com.aemreunal.exception.connection.BeaconIsNotDesignatedException;
 import com.aemreunal.exception.connection.ConnectionExistsException;
 import com.aemreunal.exception.connection.ConnectionNotFoundException;
 import com.aemreunal.exception.imageStorage.ImageDeleteException;
@@ -55,7 +56,7 @@ public class ConnectionService {
     }
 
     public Connection createNewConnection(String username, Long projectId, Long beaconOneId, Long regionOneId, Long beaconTwoId, Long regionTwoId, MultipartFile imageMultipartFile)
-    throws ConnectionExistsException, WrongFileTypeSubmittedException, ImageDeleteException, MultipartFileReadException, ImageSaveException {
+    throws ConnectionExistsException, WrongFileTypeSubmittedException, ImageDeleteException, MultipartFileReadException, ImageSaveException, BeaconIsNotDesignatedException {
         // Check whether such a connection already exists
         checkConnectionExistence(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId);
         GlobalSettings.log("Creating new connection for user: \'" + username + "\' and project: \'" + projectId + "\', between beacons: \'" + beaconOneId + "\' & " + beaconTwoId);
@@ -91,7 +92,8 @@ public class ConnectionService {
         return this.save(connection);
     }
 
-    private Connection connectBeacons(String username, Long projectId, Long beaconOneId, Long regionOneId, Long beaconTwoId, Long regionTwoId, Connection connection) {
+    private Connection connectBeacons(String username, Long projectId, Long beaconOneId, Long regionOneId, Long beaconTwoId, Long regionTwoId, Connection connection)
+    throws BeaconIsNotDesignatedException {
         // Connect connection entity and its beacons
         Beacon beaconOne = beaconService.addConnection(username, projectId, regionOneId, beaconOneId, connection);
         connection.addBeacon(beaconOne);
@@ -132,11 +134,18 @@ public class ConnectionService {
         return imageStorage.loadImage(username, projectId, null, connectionImageFileName);
     }
 
-    public void deleteConnection(String username, Long projectId, Long connectionId)
-    throws ImageDeleteException {
-        Project project = projectService.getProject(username, projectId);
-        Connection connection = connectionRepo.findByConnectionIdAndProject(connectionId, project);
+    public Connection deleteConnection(String username, Long projectId, Long regionOneId, Long beaconOneId, Long regionTwoId, Long beaconTwoId)
+    throws ImageDeleteException, ConnectionNotFoundException {
+        Connection connection = this.getConnectionBetween(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId);
         imageStorage.deleteImage(username, projectId, null, connection.getConnectionImageFileName());
+        disconnectBeacons(username, projectId, connection);
         connectionRepo.delete(connection);
+        return connection;
+    }
+
+    private void disconnectBeacons(String username, Long projectId, Connection connection) {
+        for (Beacon beacon : connection.getBeacons()) {
+            beaconService.removeConnection(username, projectId, beacon.getRegion().getRegionId(), beacon.getBeaconId(), connection);
+        }
     }
 }

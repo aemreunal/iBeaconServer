@@ -16,7 +16,7 @@ package com.aemreunal.exception.imageStorage;
  * *********************** *
  */
 
-public class ImageDeleteException extends Throwable {
+public class ImageDeleteException extends Exception {
 
     public ImageDeleteException(Long projectId, Long regionId) {
         super("Unable to read the Multipart file, uploaded as the map image of project " + projectId + ", region " + regionId + "!");
