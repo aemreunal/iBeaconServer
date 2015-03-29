@@ -127,7 +127,7 @@ public class ConnectionService {
     public byte[] getConnectionImage(String username, Long projectId, Long regionOneId, Long beaconOneId, Long regionTwoId, Long beaconTwoId)
     throws ConnectionNotFoundException, ImageLoadException {
         GlobalSettings.log("Getting connection image between beacons with ID = \'" + beaconOneId + "\' and \'" + beaconTwoId + "\'");
-        Connection connection = this.getConnectionBetween(username, projectId, regionOneId, beaconOneId, regionTwoId, beaconTwoId);
+        Connection connection = this.getConnectionBetween(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId);
         String connectionImageFileName = connection.getConnectionImageFileName();
         return imageStorage.loadImage(username, projectId, null, connectionImageFileName);
     }

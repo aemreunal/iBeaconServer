@@ -37,11 +37,13 @@ import com.aemreunal.controller.scenario.ScenarioController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.exception.connection.ConnectionExistsException;
+import com.aemreunal.exception.connection.ConnectionNotFoundException;
 import com.aemreunal.exception.imageStorage.ImageDeleteException;
 import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.exception.imageStorage.ImageSaveException;
 import com.aemreunal.exception.region.*;
 import com.aemreunal.service.BeaconService;
+import com.aemreunal.service.ConnectionService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -50,6 +52,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class BeaconController {
     @Autowired
     private BeaconService beaconService;
+
+    @Autowired
+    private ConnectionService connectionService;
 
     /**
      * Get all the {@link com.aemreunal.domain.Beacon beacons} that belong to the
@@ -233,6 +238,21 @@ public class BeaconController {
         // TODO check if the same connection already exists
         JSONObject connection = beaconService.createConnection(username, projectId, regionOneId, beaconOneId, regionTwoId, beaconTwoId, imageMultipartFile);
         return new ResponseEntity<JSONObject>(connection, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.BEACON_CONNECTION_MAPPING, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    // When ConnectionNotFound is triggered as a result of this method, an HttpMediaTypeNotAcceptableException
+    // exception is raised. It's not raised if the exception handler also returns ResponseEntity<byte[]>.
+    // TODO Fix.
+    public ResponseEntity<byte[]> downloadConnectionImage(@PathVariable String username,
+                                                          @PathVariable Long projectId,
+                                                          @PathVariable(value = "regionId") Long regionOneId,
+                                                          @PathVariable(value = "beaconId") Long beaconOneId,
+                                                          @RequestParam("region2id") Long regionTwoId,
+                                                          @RequestParam("beacon2id") Long beaconTwoId)
+    throws ConnectionNotFoundException, ImageLoadException {
+        byte[] connectionImage = connectionService.getConnectionImage(username, projectId, regionOneId, beaconOneId, regionTwoId, beaconTwoId);
+        return new ResponseEntity<byte[]>(connectionImage, HttpStatus.OK);
     }
 
     /**
