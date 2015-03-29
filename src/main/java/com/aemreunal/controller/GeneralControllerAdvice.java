@@ -35,16 +35,16 @@ public class GeneralControllerAdvice {
     @ExceptionHandler(MalformedRequestException.class)
     public ResponseEntity<JSONObject> malformedRequestExceptionHandler(MalformedRequestException ex) {
         JSONObject responseBody = JsonBuilderFactory.object().add("reason", "request")
-                                                                     .add("error", ex.getLocalizedMessage())
-                                                                     .build();
+                                                    .add("error", ex.getLocalizedMessage())
+                                                    .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<JSONObject> constraintViolationExceptionHandler(ConstraintViolationException ex) {
         JSONObject responseBody = JsonBuilderFactory.object().add("error", "Constraint violation error occurred! Unable to save scenario.")
-                                                                     .add("violations", formatViolations(ex.getConstraintViolations()))
-                                                                     .build();
+                                                    .add("violations", formatViolations(ex.getConstraintViolations()))
+                                                    .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
@@ -52,8 +52,8 @@ public class GeneralControllerAdvice {
         JsonArrayBuilder arrayBuilder = JsonBuilderFactory.array();
         for (ConstraintViolation<?> violation : violations) {
             JSONObject jsonObject = JsonBuilderFactory.object().add("property", violation.getPropertyPath().toString())
-                                                                       .add("violation", violation.getMessage())
-                                                                       .build();
+                                                      .add("violation", violation.getMessage())
+                                                      .build();
             arrayBuilder.add(jsonObject);
         }
         return arrayBuilder.build();

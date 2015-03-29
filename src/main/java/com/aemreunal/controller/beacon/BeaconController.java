@@ -36,6 +36,7 @@ import com.aemreunal.controller.region.RegionController;
 import com.aemreunal.controller.scenario.ScenarioController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
+import com.aemreunal.exception.connection.ConnectionExistsException;
 import com.aemreunal.exception.region.ImageDeleteException;
 import com.aemreunal.exception.region.MapImageSaveException;
 import com.aemreunal.exception.region.MultipartFileReadException;
@@ -228,7 +229,7 @@ public class BeaconController {
                                                       @RequestParam("region2id") Long otherRegionId,
                                                       @RequestParam("beacon2id") Long otherBeaconId,
                                                       @RequestPart(value = "image") MultipartFile imageMultipartFile)
-            throws WrongFileTypeSubmittedException, MapImageSaveException, ImageDeleteException, MultipartFileReadException {
+            throws WrongFileTypeSubmittedException, MapImageSaveException, ImageDeleteException, MultipartFileReadException, ConnectionExistsException {
         // TODO check if the same connection already exists
         JSONObject connection = beaconService.createConnection(username, projectId, regionId, beaconId, otherRegionId, otherBeaconId, imageMultipartFile);
         return new ResponseEntity<JSONObject>(connection, HttpStatus.CREATED);
