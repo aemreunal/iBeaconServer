@@ -16,8 +16,8 @@ package com.aemreunal.service;
  * *********************** *
  */
 
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,9 @@ import com.aemreunal.domain.Region;
 import com.aemreunal.exception.imageStorage.ImageDeleteException;
 import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.exception.imageStorage.ImageSaveException;
-import com.aemreunal.exception.region.*;
+import com.aemreunal.exception.region.MultipartFileReadException;
+import com.aemreunal.exception.region.RegionNotFoundException;
+import com.aemreunal.exception.region.WrongFileTypeSubmittedException;
 import com.aemreunal.helper.ImageProperties;
 import com.aemreunal.helper.ImageStorage;
 import com.aemreunal.repository.region.RegionRepo;
@@ -184,9 +186,11 @@ public class RegionService {
     }
 
     @Transactional(readOnly = true)
-    public Set<Beacon> getMembersOfRegion(String username, Long projectId, Long regionId) {
+    public LinkedHashSet<Beacon> getMembersOfRegion(String username, Long projectId, Long regionId) {
         Region region = this.getRegion(username, projectId, regionId);
-        return region.getBeacons().stream().collect(Collectors.toSet());
+        return region.getBeacons().stream()
+                     .sorted()
+                     .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Transactional(readOnly = true)

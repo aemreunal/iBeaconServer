@@ -16,6 +16,7 @@ package com.aemreunal.service;
  * *********************** *
  */
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -116,14 +117,16 @@ public class BeaconService {
      * @return The list of beacons conforming to given constraints
      */
     @Transactional(readOnly = true)
-    public Set<Beacon> findBeaconsBySpecs(String username, Long projectId, Long regionId, String uuid, Integer major, Integer minor, Boolean designated)
+    public LinkedHashSet<Beacon> findBeaconsBySpecs(String username, Long projectId, Long regionId, String uuid, Integer major, Integer minor, Boolean designated)
             throws BeaconNotFoundException {
         GlobalSettings.log("Finding beacons with UUID = \'" + uuid + "\' major = \'" + major + "\' minor = \'" + minor + "\' designated = \'" + designated + "\'");
         List<Beacon> beacons = beaconRepo.findAll(BeaconSpecs.beaconWithSpecification(username, projectId, regionId, uuid, major, minor, designated));
 //        if (beacons.size() == 0) {
 //            throw new BeaconNotFoundException();
 //        }
-        return beacons.stream().collect(Collectors.toSet());
+        return beacons.stream()
+                      .sorted()
+                      .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Transactional(readOnly = true)
@@ -188,7 +191,7 @@ public class BeaconService {
      * region has no beacons.
      */
     @Transactional(readOnly = true)
-    public Set<Beacon> getBeaconsOfRegion(String username, Long projectId, Long regionId) {
+    public LinkedHashSet<Beacon> getBeaconsOfRegion(String username, Long projectId, Long regionId) {
         return regionService.getMembersOfRegion(username, projectId, regionId);
     }
 

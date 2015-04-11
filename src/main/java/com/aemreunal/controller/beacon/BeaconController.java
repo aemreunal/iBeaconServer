@@ -18,7 +18,7 @@ package com.aemreunal.controller.beacon;
 
 import net.minidev.json.JSONObject;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpHeaders;
@@ -94,7 +94,7 @@ public class BeaconController {
      */
     @Transactional
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Beacon>> getBeaconsOfRegion(@PathVariable String username,
+    public ResponseEntity<LinkedHashSet<Beacon>> getBeaconsOfRegion(@PathVariable String username,
                                                           @PathVariable Long projectId,
                                                           @PathVariable Long regionId,
                                                           @RequestParam(value = "uuid", required = false) String uuid,
@@ -102,11 +102,11 @@ public class BeaconController {
                                                           @RequestParam(value = "minor", required = false) Integer minor,
                                                           @RequestParam(value = "designated", required = false) Boolean designated) {
         if (uuid == null && major == null && minor == null && designated == null) {
-            Set<Beacon> beaconSet = beaconService.getBeaconsOfRegion(username, projectId, regionId);
-            return new ResponseEntity<Set<Beacon>>(beaconSet, HttpStatus.OK);
+            LinkedHashSet<Beacon> beaconSet = beaconService.getBeaconsOfRegion(username, projectId, regionId);
+            return new ResponseEntity<LinkedHashSet<Beacon>>(beaconSet, HttpStatus.OK);
         } else {
-            Set<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, regionId, uuid, major, minor, designated);
-            return new ResponseEntity<Set<Beacon>>(beacons, HttpStatus.OK);
+            LinkedHashSet<Beacon> beacons = beaconService.findBeaconsBySpecs(username, projectId, regionId, uuid, major, minor, designated);
+            return new ResponseEntity<LinkedHashSet<Beacon>>(beacons, HttpStatus.OK);
         }
     }
 
