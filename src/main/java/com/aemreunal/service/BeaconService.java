@@ -36,6 +36,8 @@ import com.aemreunal.exception.beacon.BeaconNotFoundException;
 import com.aemreunal.exception.connection.BeaconIsNotDesignatedException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.exception.region.RegionNotFoundException;
+import com.aemreunal.exception.textStorage.TextDeleteException;
+import com.aemreunal.helper.TextStorage;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
 
@@ -46,10 +48,10 @@ public class BeaconService {
     private RegionService regionService;
 
     @Autowired
-    private ConnectionService connectionService;
+    private BeaconRepo beaconRepo;
 
     @Autowired
-    private BeaconRepo beaconRepo;
+    private TextStorage textStorage;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -165,7 +167,7 @@ public class BeaconService {
      */
     @Transactional(readOnly = true)
     public Beacon getBeacon(String username, Long projectId, Long regionId, Long beaconId)
-    throws BeaconNotFoundException, ProjectNotFoundException, RegionNotFoundException {
+            throws BeaconNotFoundException, ProjectNotFoundException, RegionNotFoundException {
         GlobalSettings.log("Finding beacon with ID = \'" + beaconId + "\' in project = \'" + projectId + "\' and in region = \'" + regionId + "\'");
         Region region = regionService.getRegion(username, projectId, regionId);
         Beacon beacon = beaconRepo.findByBeaconIdAndRegion(beaconId, region);
@@ -233,7 +235,19 @@ public class BeaconService {
         GlobalSettings.log("Deleting beacon with ID = \'" + beaconId + "\'");
         // Retrieving beacon to ensure that beacon exists and is part of this user/project/region etc.
         Beacon beacon = getBeacon(username, projectId, regionId, beaconId);
-        beaconRepo.delete(beaconId);
+        deleteLocationTextFile(username, projectId, regionId, beaconId, beacon.getLocationInfoTextFileName());
+        beaconRepo.delete(beacon);
         return beacon;
+    }
+
+    private void deleteLocationTextFile(String username, Long projectId, Long regionId, Long beaconId, String locationInfoTextFileName) {
+        try {
+            textStorage.deleteText(username, projectId, regionId, beaconId, locationInfoTextFileName);
+        } catch (TextDeleteException e) {
+            GlobalSettings.err("WARNING: Location info text file for user: " + username + ", project: "
+                                   + projectId + ", region " + regionId + ", beacon " + beaconId + ", file name: "
+                                   + locationInfoTextFileName + " could not be deleted! " +
+                                   "May need to be deleted manually!");
+        }
     }
 }
