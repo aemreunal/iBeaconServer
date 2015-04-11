@@ -76,15 +76,18 @@ public class GlobalSettings {
 
 
     /**
-     * These strings provide the image storage locations.
+     * These strings provide the file storage locations.
      */
     public static final String USER_HOME_FOLDER_PATH               = System.getProperty("user.home");
-    public static final String ROOT_STORAGE_FOLDER_DIRECTORY_NAME  = "ibeacon_server_storage";
-    public static final String IMAGE_STORAGE_FOLDER_DIRECTORY_NAME = "map_images";
-
-    public static final String IMAGE_STORAGE_FOLDER_PATH = USER_HOME_FOLDER_PATH + "/" +
+    public static final String ROOT_STORAGE_FOLDER_DIRECTORY_NAME  = "ibeacon-server-storage";
+    public static final String IMAGE_STORAGE_FOLDER_DIRECTORY_NAME = "image";
+    public static final String IMAGE_STORAGE_FOLDER_PATH           = USER_HOME_FOLDER_PATH + "/" +
             ROOT_STORAGE_FOLDER_DIRECTORY_NAME + "/" +
             IMAGE_STORAGE_FOLDER_DIRECTORY_NAME + "/";
+    public static final String TEXT_STORAGE_FOLDER_DIRECTORY_NAME  = "text";
+    public static final String TEXT_STORAGE_FOLDER_PATH            = USER_HOME_FOLDER_PATH + "/" +
+            ROOT_STORAGE_FOLDER_DIRECTORY_NAME + "/" +
+            TEXT_STORAGE_FOLDER_DIRECTORY_NAME + "/";
 
     /**
      * These strings provide package names for annotation-based scanning.
