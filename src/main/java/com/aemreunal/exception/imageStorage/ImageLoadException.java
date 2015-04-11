@@ -18,6 +18,6 @@ package com.aemreunal.exception.imageStorage;
 
 public class ImageLoadException extends Exception {
     public ImageLoadException(Long projectId, Long regionId) {
-        super("Unable to load map image of project " + projectId + ", region " + regionId + "!");
+        super("Unable to load the image file of project " + projectId + ", region " + regionId + "!");
     }
 }

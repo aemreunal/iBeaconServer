@@ -31,7 +31,8 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.exception.imageStorage.ImageDeleteException;
 import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.exception.imageStorage.ImageSaveException;
-import com.aemreunal.exception.region.*;
+import com.aemreunal.exception.region.MultipartFileReadException;
+import com.aemreunal.exception.region.WrongFileTypeSubmittedException;
 
 public class ImageStorage {
 
@@ -65,6 +66,14 @@ public class ImageStorage {
      * @return The properties of the saved image file as an {@link ImageProperties
      * ImageProperties} object. These properties are: <ul> <li>Image name</li> <li>Image
      * width</li> <li>Image height</li> </ul>
+     *
+     * @throws MultipartFileReadException
+     *         If the {@link MultipartFile Multipart file} can't be read.
+     * @throws ImageSaveException
+     *         If the image can't be saved.
+     * @throws WrongFileTypeSubmittedException
+     *         If the submitted {@link MultipartFile Multipart file} is of a wrong type
+     *         (e.g. non-image file, unacceptable image type).
      */
     public ImageProperties saveImage(String username, Long projectId, Long regionId, MultipartFile imageMultipartFile)
             throws MultipartFileReadException, ImageSaveException, WrongFileTypeSubmittedException {
@@ -89,6 +98,78 @@ public class ImageStorage {
 
         // Read the image properties to get dimensions
         return readImageProperties(projectId, regionId, imageFile);
+    }
+
+    /**
+     * Loads the specified image file and returns the bytes of the image file in a
+     * <code>byte[]</code>.
+     *
+     * @param username
+     *         The username of whoever is loading the image.
+     * @param projectId
+     *         The ID of the project which the region (the image belongs to) is a part
+     *         of.
+     * @param regionId
+     *         The ID of the region of the image.
+     * @param imageFileName
+     *         The name of the image file to be loaded.
+     *
+     * @return A <code>byte[]</code> if the image file has been successfully loaded and
+     * read, <code>null</code> otherwise.
+     *
+     * @throws ImageLoadException
+     *         If the image can't be loaded.
+     */
+    public byte[] loadImage(String username, Long projectId, Long regionId, String imageFileName)
+            throws ImageLoadException {
+        // Get the file path from the username, project ID, and region ID attributes
+        String filePath = getFilePath(username, projectId, regionId);
+        // Get the image file
+        File imageFile = new File(filePath + imageFileName);
+        if (!imageFile.exists()) {
+            System.err.println("Image file does not exist!");
+            throw new ImageLoadException(projectId, regionId);
+        }
+        return loadImageFromFile(projectId, regionId, imageFile);
+    }
+
+    /**
+     * Deletes the specified image file. The method will do nothing if a {@code null}
+     * value is provided for {@code imageFileName} parameter.
+     *
+     * @param username
+     *         The username of whoever is deleting the image.
+     * @param projectId
+     *         The ID of the project which the region (the image belongs to) is a part
+     *         of.
+     * @param regionId
+     *         The ID of the region of the image.
+     * @param imageFileName
+     *         The name of the image file to be deleted. If a {@code null} value is
+     *         provided, the method will do nothing and return.
+     *
+     * @throws ImageDeleteException
+     *         If the image file can't be deleted.
+     */
+    public void deleteImage(String username, Long projectId, Long regionId, String imageFileName)
+            throws ImageDeleteException {
+        if (imageFileName == null || imageFileName.equals("")) {
+            return;
+        }
+        // Get the file path from the username, project ID, and region ID attributes
+        String filePath = getFilePath(username, projectId, regionId);
+        // Get the image file
+        File imageFile = new File(filePath + imageFileName);
+        try {
+            Files.delete(imageFile.toPath());
+        } catch (NoSuchFileException e) {
+            GlobalSettings.err("WARNING: Image file for user: " + username + ", project: "
+                                       + projectId + ", region " + regionId + ", file name: "
+                                       + imageFileName + " does not exist, nothing to delete!");
+        } catch (IOException e) {
+            GlobalSettings.err("Unable to delete the image!");
+            throw new ImageDeleteException(projectId, regionId);
+        }
     }
 
     private void verifyImageType(Long projectId, Long regionId, MultipartFile imageMultipartFile) throws WrongFileTypeSubmittedException {
@@ -155,35 +236,6 @@ public class ImageStorage {
         }
     }
 
-    /**
-     * Loads the specified image file and returns the bytes of the image file in a
-     * <code>byte[]</code>.
-     *
-     * @param username
-     *         The username of whoever is loading the image.
-     * @param projectId
-     *         The ID of the project which the region (the image belongs to) is a part
-     *         of.
-     * @param regionId
-     *         The ID of the region of the image.
-     * @param imageFileName
-     *         The name of the image file to be loaded.
-     *
-     * @return A <code>byte[]</code> if the image file has been successfully loaded and
-     * read, <code>null</code> otherwise.
-     */
-    public byte[] loadImage(String username, Long projectId, Long regionId, String imageFileName) throws ImageLoadException {
-        // Get the file path from the username, project ID, and region ID attributes
-        String filePath = getFilePath(username, projectId, regionId);
-        // Get the image file
-        File imageFile = new File(filePath + imageFileName);
-        if (!imageFile.exists()) {
-            System.err.println("Image file does not exist!");
-            throw new ImageLoadException(projectId, regionId);
-        }
-        return loadImageFromFile(projectId, regionId, imageFile);
-    }
-
     private byte[] loadImageFromFile(Long projectId, Long regionId, File imageFile) throws ImageLoadException {
         // Can safely cast from long to int, as image file will never exceed
         // 2^32 bytes (which would've required the use of a 64 bit long).
@@ -200,41 +252,6 @@ public class ImageStorage {
             throw new ImageLoadException(projectId, regionId);
         }
         return imageAsBytes;
-    }
-
-    /**
-     * Deletes the specified image file. The method will do nothing if a {@code null}
-     * value is provided for {@code imageFileName} parameter.
-     *
-     * @param username
-     *         The username of whoever is deleting the image.
-     * @param projectId
-     *         The ID of the project which the region (the image belongs to) is a part
-     *         of.
-     * @param regionId
-     *         The ID of the region of the image.
-     * @param imageFileName
-     *         The name of the image file to be deleted. If a {@code null} value is
-     *         provided, the method will do nothing and return.
-     */
-    public void deleteImage(String username, Long projectId, Long regionId, String imageFileName) throws ImageDeleteException {
-        if (imageFileName == null || imageFileName.equals("")) {
-            return;
-        }
-        // Get the file path from the username, project ID, and region ID attributes
-        String filePath = getFilePath(username, projectId, regionId);
-        // Get the image file
-        File imageFile = new File(filePath + imageFileName);
-        try {
-            Files.delete(imageFile.toPath());
-        } catch (NoSuchFileException e) {
-            GlobalSettings.err("WARNING: Image file for user: " + username + ", project: "
-                                       + projectId + ", region " + regionId + ", file name: "
-                                       + imageFileName + " does not exist, nothing to delete!");
-        } catch (IOException e) {
-            GlobalSettings.err("Unable to delete the image!");
-            throw new ImageDeleteException(projectId, regionId);
-        }
     }
 
     private String getFilePath(String username, Long projectId, Long regionId) {
