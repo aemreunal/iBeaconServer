@@ -30,6 +30,7 @@ import com.aemreunal.helper.json.JsonArrayBuilder;
 import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 // To not mark getters & setters as unused, as they're being used by Spring & Hibernate
 @SuppressWarnings("UnusedDeclaration")
@@ -37,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "beacons")
 @ResponseBody
-@JsonIgnoreProperties(value = { "project", "region", "connections" })
+@JsonIgnoreProperties(value = { "project", "region", "connections", "locationInfoTextFileName" })
 public class Beacon extends ResourceSupport implements Serializable, Comparable {
     // UUID hex string (including dashes) is 36 characters long
     public static final int UUID_MAX_LENGTH        = 36;
@@ -50,7 +51,6 @@ public class Beacon extends ResourceSupport implements Serializable, Comparable 
     @Id
     @Column(name = "beacon_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @OrderColumn
     @Access(AccessType.PROPERTY)
     private Long beaconId;
     /*
@@ -181,6 +181,21 @@ public class Beacon extends ResourceSupport implements Serializable, Comparable 
 
     /*
      *------------------------------------------------------------
+     * BEGIN: Beacon 'location info' attribute
+     *
+     * The length is UUID_MAX_LENGTH, because text file names are set as UUIDs.
+     */
+    @Column(name = "location_info_text_file_name", length = UUID_MAX_LENGTH)
+    @Size(min = UUID_MAX_LENGTH, max = UUID_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
+    private String locationInfoTextFileName = null;
+    /*
+     * END: Beacon 'location info' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
      * BEGIN: Beacon 'connections' attribute
      */
     @ManyToMany(targetEntity = Connection.class,
@@ -230,6 +245,11 @@ public class Beacon extends ResourceSupport implements Serializable, Comparable 
 
     public void removeConnection(Connection connection) {
         this.getConnections().remove(connection);
+    }
+
+    @JsonSerialize
+    public boolean hasLocationInfo() {
+        return getLocationInfoTextFileName() != null;
     }
 
     // Weird stuff: when this method is named something like 'getConnectionsJson',
@@ -334,6 +354,14 @@ public class Beacon extends ResourceSupport implements Serializable, Comparable 
 
     public void setDesignated(Boolean designated) {
         this.designated = designated;
+    }
+
+    public String getLocationInfoTextFileName() {
+        return locationInfoTextFileName;
+    }
+
+    public void setLocationInfoTextFileName(String locationInfoTextFileName) {
+        this.locationInfoTextFileName = locationInfoTextFileName;
     }
 
     public Set<Connection> getConnections() {
