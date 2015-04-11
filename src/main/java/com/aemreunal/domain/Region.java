@@ -34,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "regions")
 @ResponseBody
 @JsonIgnoreProperties(value = { "beacons", "project", "mapImageFileName", "designatedBeacons" })
-public class Region extends ResourceSupport implements Serializable {
+public class Region extends ResourceSupport implements Serializable, Comparable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
     public static final int UUID_MAX_LENGTH        = 36; // UUID hex string (including dashes) is 36 characters long
@@ -177,7 +177,7 @@ public class Region extends ResourceSupport implements Serializable {
     @Column(name = "creation_date", nullable = false)
     @Access(AccessType.PROPERTY)
     private Date creationDate = null;
-
+//    @CreatedDate
     /*
      * END: Region 'creationDate' attribute
      *------------------------------------------------------------
@@ -190,18 +190,42 @@ public class Region extends ResourceSupport implements Serializable {
     @Column(name = "last_update_date", nullable = false)
     @Access(AccessType.PROPERTY)
     private Date lastUpdatedDate = null;
+//    @LastModifiedDate
     /*
      * END: Region 'lastUpdateDate' attribute
      *------------------------------------------------------------
      */
 
-//    @LastModifiedDate
-//    @CreatedDate
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Constructors
+     */
+    public Region() {
+        // Empty constructor for Spring & Hibernate
+    }
+    /*
+     * END: Constructors
+     *------------------------------------------------------------
+     */
 
     /*
      *------------------------------------------------------------
      * BEGIN: Helpers
      */
+    public void setImageProperties(ImageProperties imageProperties) {
+        this.setMapImageFileName(imageProperties.getImageFileName());
+        this.setRegionWidth(imageProperties.getImageWidth());
+        this.setRegionHeight(imageProperties.getImageHeight());
+    }
+
+    public boolean beaconCoordsAreValid(Beacon beacon) {
+        Integer beaconX = beacon.getxCoordinate();
+        Integer beaconY = beacon.getyCoordinate();
+        boolean xIsValid = beaconX >= 0 && beaconX < this.getRegionWidth();
+        boolean yIsValid = beaconY >= 0 && beaconY < this.getRegionHeight();
+        return xIsValid && yIsValid;
+    }
+
     public void markAsUpdated() {
         setLastUpdatedDate(new Date());
     }
@@ -308,23 +332,25 @@ public class Region extends ResourceSupport implements Serializable {
         }
     }
 
-    public void setImageProperties(ImageProperties imageProperties) {
-        this.setMapImageFileName(imageProperties.getImageFileName());
-        this.setRegionWidth(imageProperties.getImageWidth());
-        this.setRegionHeight(imageProperties.getImageHeight());
-    }
-
-    public boolean beaconCoordsAreValid(Beacon beacon) {
-        Integer beaconX = beacon.getxCoordinate();
-        Integer beaconY = beacon.getyCoordinate();
-        boolean xIsValid = beaconX >= 0 && beaconX < this.getRegionWidth();
-        boolean yIsValid = beaconY >= 0 && beaconY < this.getRegionHeight();
-        return xIsValid && yIsValid;
+    @Override
+    public String toString() {
+        return "[Region: " + getRegionId() + ", Project: "
+                + getProject().getProjectId() + "]";
     }
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Region)
-                && ((Region) obj).getRegionId().equals(this.getRegionId());
+        if (obj instanceof Region) {
+            return ((Region) obj).getRegionId().equals(this.getRegionId());
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof Region) {
+            return this.getRegionId().compareTo(((Region) o).getRegionId());
+        }
+        return 0;
     }
 }

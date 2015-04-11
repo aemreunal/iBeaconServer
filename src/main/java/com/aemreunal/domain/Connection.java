@@ -27,12 +27,9 @@ import org.springframework.hateoas.ResourceSupport;
 import com.aemreunal.helper.json.JsonArrayBuilder;
 import com.aemreunal.helper.json.JsonBuilderFactory;
 
-// To not mark getters & setters as unused, as they're being used by Spring & Hibernate
-@SuppressWarnings("UnusedDeclaration")
-
 @Entity
 @Table(name = "connections")
-public class Connection extends ResourceSupport implements Serializable {
+public class Connection extends ResourceSupport implements Serializable, Comparable {
     // UUID hex string (including dashes) is 36 characters long
     public static final int UUID_MAX_LENGTH = 36;
 
@@ -123,6 +120,7 @@ public class Connection extends ResourceSupport implements Serializable {
      * BEGIN: Constructors
      */
     public Connection() {
+        // Empty constructor for Spring & Hibernate
     }
     /*
      * END: Constructors
@@ -170,6 +168,12 @@ public class Connection extends ResourceSupport implements Serializable {
      */
 
     @Override
+    public String toString() {
+        return "[Connection: " + getConnectionId() +
+                ", Project: " + getProject().getProjectId() + "]";
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj instanceof Connection) {
             return ((Connection) obj).getConnectionId().equals(this.getConnectionId());
@@ -178,10 +182,10 @@ public class Connection extends ResourceSupport implements Serializable {
     }
 
     @Override
-    public String toString() {
-        Set<Beacon> beaconSet = this.getBeacons();
-        Beacon[] beacons = beaconSet.toArray(new Beacon[beaconSet.size()]);
-        return "[Connection: " + getConnectionId() +
-                ", Project: " + getProject().getProjectId() + "]";
+    public int compareTo(Object o) {
+        if (o instanceof Connection) {
+            return this.getConnectionId().compareTo(((Connection) o).getConnectionId());
+        }
+        return 0;
     }
 }

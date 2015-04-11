@@ -36,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "projects")
 @ResponseBody
 @JsonIgnoreProperties(value = { "beacons", "regions", "scenarios", "projectSecret", "owner", "connections" })
-public class Project extends ResourceSupport implements Serializable {
+public class Project extends ResourceSupport implements Serializable, Comparable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
     // The BCrypt-hashed secret field length is assumed to be 60 with a
@@ -89,7 +89,6 @@ public class Project extends ResourceSupport implements Serializable {
      */
     @Column(name = "creation_date", nullable = false)
     private Date creationDate = null;
-
     /*
      * END: Project 'creationDate' attribute
      *------------------------------------------------------------
@@ -173,6 +172,35 @@ public class Project extends ResourceSupport implements Serializable {
     private String projectSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     /*
      * END: Project 'secret' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Constructors
+     */
+    public Project() {
+        // Empty constructor for Spring & Hibernate
+    }
+    /*
+     * END: Constructors
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Helpers
+     */
+    public JSONObject getCreateResponse(String projectSecret) {
+        return JsonBuilderFactory.object().add("projectId", getProjectId())
+                                 .add("name", getName())
+                                 .add("description", getDescription())
+                                 .add("secret", projectSecret)
+                                 .add("links", getLinks())
+                                 .build();
+    }
+    /*
+     * END: Helpers
      *------------------------------------------------------------
      */
 
@@ -265,21 +293,25 @@ public class Project extends ResourceSupport implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Project)) {
-            return false;
-        } else {
-            return ((Project) obj).getProjectId().equals(this.getProjectId());
-        }
+    public String toString() {
+        return "[Project: " + getProjectId() +
+                ", User: " + getOwner().getUsername() + "]";
     }
 
-    public JSONObject getCreateResponse(String projectSecret) {
-        return JsonBuilderFactory.object().add("projectId", getProjectId())
-                                .add("name", getName())
-                                .add("description", getDescription())
-                                .add("secret", projectSecret)
-                                .add("links", getLinks())
-                                .build();
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Project) {
+            return ((Project) obj).getProjectId().equals(this.getProjectId());
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof Project) {
+            return this.getProjectId().compareTo(((Project) o).getProjectId());
+        }
+        return 0;
     }
 }
 

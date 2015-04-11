@@ -34,12 +34,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "scenarios")
 @ResponseBody
 @JsonIgnoreProperties(value = { "beacons", "project" })
-public class Scenario extends ResourceSupport implements Serializable {
+public class Scenario extends ResourceSupport implements Serializable, Comparable {
     public static final int NAME_MAX_LENGTH          = 100;
     public static final int DESCRIPTION_MAX_LENGTH   = 1000;
     public static final int MESSAGE_SHORT_MAX_LENGTH = 100;
     public static final int MESSAGE_LONG_MAX_LENGTH  = 1000;
-    public static final int URL_MAX_LENGTH  = 500;
+    public static final int URL_MAX_LENGTH           = 500;
 
     /*
      *------------------------------------------------------------
@@ -51,14 +51,6 @@ public class Scenario extends ResourceSupport implements Serializable {
     @OrderColumn
     @Access(AccessType.PROPERTY)
     private Long scenarioId;
-
-    public Long getScenarioId() {
-        return scenarioId;
-    }
-
-    public void setScenarioId(Long scenarioId) {
-        this.scenarioId = scenarioId;
-    }
     /*
      * END: Scenario 'ID' attribute
      *------------------------------------------------------------
@@ -72,14 +64,6 @@ public class Scenario extends ResourceSupport implements Serializable {
     @Size(min = 1, max = NAME_MAX_LENGTH)
     @Access(AccessType.PROPERTY)
     private String name = "";
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
     /*
      * END: Scenario 'name' attribute
      *------------------------------------------------------------
@@ -93,14 +77,6 @@ public class Scenario extends ResourceSupport implements Serializable {
     @Size(max = DESCRIPTION_MAX_LENGTH)
     @Access(AccessType.PROPERTY)
     private String description = "";
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
     /*
      * END: Scenario 'description' attribute
      *------------------------------------------------------------
@@ -111,21 +87,13 @@ public class Scenario extends ResourceSupport implements Serializable {
      * BEGIN: Scenario 'project' attribute
      */
     @ManyToOne(targetEntity = Project.class,
-               optional = false,
-               fetch = FetchType.LAZY)
+            optional = false,
+            fetch = FetchType.LAZY)
     @JoinTable(name = "projects_to_scenarios",
-               joinColumns = @JoinColumn(name = "scenario_id"),
-               inverseJoinColumns = @JoinColumn(name = "project_id"))
+            joinColumns = @JoinColumn(name = "scenario_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
     @Access(AccessType.PROPERTY)
     private Project project;
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
     /*
      * END: Scenario 'project' attribute
      *------------------------------------------------------------
@@ -136,19 +104,11 @@ public class Scenario extends ResourceSupport implements Serializable {
      * BEGIN: Scenario 'beacons list' attribute
      */
     @OneToMany(targetEntity = Beacon.class,
-               mappedBy = "scenario",
-               fetch = FetchType.LAZY)
+            mappedBy = "scenario",
+            fetch = FetchType.LAZY)
     @Access(AccessType.PROPERTY)
     @OrderBy("beaconId")
     private Set<Beacon> beacons = new LinkedHashSet<>();
-
-    public Set<Beacon> getBeacons() {
-        return beacons;
-    }
-
-    public void setBeacons(Set<Beacon> beacons) {
-        this.beacons = beacons;
-    }
     /*
      * END: Scenario 'beacons list' attribute
      *------------------------------------------------------------
@@ -161,14 +121,6 @@ public class Scenario extends ResourceSupport implements Serializable {
     @Column(name = "creation_date", nullable = false)
     @Access(AccessType.PROPERTY)
     private Date creationDate = null;
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
     /*
      * END: Scenario 'creationDate' attribute
      *------------------------------------------------------------
@@ -184,18 +136,6 @@ public class Scenario extends ResourceSupport implements Serializable {
     @Size(min = 0, max = MESSAGE_SHORT_MAX_LENGTH)
     @Access(AccessType.PROPERTY)
     private String messageShort = "";
-
-    public String getMessageShort() {
-        return messageShort;
-    }
-
-    public void setMessageShort(String messageShort) {
-        this.messageShort = messageShort;
-    }
-
-    public boolean hasShortMessage() {
-        return !(messageShort.equals(""));
-    }
     /*
      * END: Scenario 'messageShort' attribute
      *------------------------------------------------------------
@@ -211,18 +151,6 @@ public class Scenario extends ResourceSupport implements Serializable {
     @Size(min = 0, max = MESSAGE_LONG_MAX_LENGTH)
     @Access(AccessType.PROPERTY)
     private String messageLong = "";
-
-    public String getMessageLong() {
-        return messageLong;
-    }
-
-    public void setMessageLong(String messageLong) {
-        this.messageLong = messageLong;
-    }
-
-    public boolean hasLongMessage() {
-        return !(messageLong.equals(""));
-    }
     /*
      * END: Scenario 'messageLong' attribute
      *------------------------------------------------------------
@@ -238,23 +166,27 @@ public class Scenario extends ResourceSupport implements Serializable {
     @Size(min = 0, max = URL_MAX_LENGTH)
     @Access(AccessType.PROPERTY)
     private String url = "";
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public boolean hasUrl() {
-        return !(url.equals(""));
-    }
     /*
      * END: Scenario 'url' attribute
      *------------------------------------------------------------
      */
 
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Constructors
+     */
+    public Scenario() {
+        // Empty constructor for Spring & Hibernate
+    }
+    /*
+     * END: Constructors
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Helpers
+     */
     public JSONObject generateQueryResponse() {
         JsonObjectBuilder builder = JsonBuilderFactory.object();
         if (hasShortMessage()) {
@@ -269,6 +201,102 @@ public class Scenario extends ResourceSupport implements Serializable {
         return builder.build();
     }
 
+    public boolean hasShortMessage() {
+        return !(messageShort.equals(""));
+    }
+
+    public boolean hasLongMessage() {
+        return !(messageLong.equals(""));
+    }
+
+    public boolean hasUrl() {
+        return !(url.equals(""));
+    }
+    /*
+     * END: Helpers
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Getters & Setters
+     */
+    public Long getScenarioId() {
+        return scenarioId;
+    }
+
+    public void setScenarioId(Long scenarioId) {
+        this.scenarioId = scenarioId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Set<Beacon> getBeacons() {
+        return beacons;
+    }
+
+    public void setBeacons(Set<Beacon> beacons) {
+        this.beacons = beacons;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getMessageShort() {
+        return messageShort;
+    }
+
+    public void setMessageShort(String messageShort) {
+        this.messageShort = messageShort;
+    }
+
+    public String getMessageLong() {
+        return messageLong;
+    }
+
+    public void setMessageLong(String messageLong) {
+        this.messageLong = messageLong;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    /*
+     * END: Getters & Setters
+     *------------------------------------------------------------
+     */
+
     @PrePersist
     private void setInitialProperties() {
         // Set scenario creation date
@@ -278,11 +306,24 @@ public class Scenario extends ResourceSupport implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "[Scenario: " + getScenarioId() +
+                ", Project: " + getProject().getProjectId() + "]";
+    }
+
+    @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Scenario)) {
-            return false;
-        } else {
+        if (obj instanceof Scenario) {
             return ((Scenario) obj).getScenarioId().equals(this.getScenarioId());
         }
+        return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof Scenario) {
+            return this.getScenarioId().compareTo(((Scenario) o).getScenarioId());
+        }
+        return 0;
     }
 }

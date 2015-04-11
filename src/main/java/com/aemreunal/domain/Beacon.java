@@ -210,6 +210,18 @@ public class Beacon extends ResourceSupport implements Serializable, Comparable 
 
     /*
      *------------------------------------------------------------
+     * BEGIN: Constructors
+     */
+    public Beacon() {
+        // Empty constructor for Spring & Hibernate
+    }
+    /*
+     * END: Constructors
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
      * BEGIN: Helpers
      */
     public void addConnection(Connection connection) {
@@ -353,18 +365,18 @@ public class Beacon extends ResourceSupport implements Serializable, Comparable 
     }
 
     @Override
+    public String toString() {
+        return "[Beacon: " + getBeaconId() + ", Region: "
+                + getRegion().getRegionId() + ", Project: "
+                + getRegion().getProject().getProjectId() + "]";
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj instanceof Beacon) {
             return ((Beacon) obj).getBeaconId().equals(this.getBeaconId());
         }
         return false;
-    }
-
-    @Override
-    public String toString() {
-        return "[Beacon: " + getBeaconId() + ", Region: "
-                + getRegion().getRegionId() + ", Project: "
-                + getRegion().getProject().getProjectId() + "]";
     }
 
     @Override
