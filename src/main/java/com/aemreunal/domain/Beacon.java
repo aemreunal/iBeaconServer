@@ -38,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "beacons")
 @ResponseBody
 @JsonIgnoreProperties(value = { "project", "region", "connections" })
-public class Beacon extends ResourceSupport implements Serializable {
+public class Beacon extends ResourceSupport implements Serializable, Comparable {
     // UUID hex string (including dashes) is 36 characters long
     public static final int UUID_MAX_LENGTH        = 36;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
@@ -365,5 +365,13 @@ public class Beacon extends ResourceSupport implements Serializable {
         return "[Beacon: " + getBeaconId() + ", Region: "
                 + getRegion().getRegionId() + ", Project: "
                 + getRegion().getProject().getProjectId() + "]";
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof Beacon) {
+            return this.getBeaconId().compareTo(((Beacon) o).getBeaconId());
+        }
+        return 0;
     }
 }
