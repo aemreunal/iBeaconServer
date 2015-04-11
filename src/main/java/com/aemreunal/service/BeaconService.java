@@ -204,12 +204,14 @@ public class BeaconService {
             throw new BeaconIsNotDesignatedException(beaconId);
         }
         beacon.addConnection(connection);
+        regionService.markRegionAsUpdated(username, projectId, regionId);
         return this.save(username, projectId, regionId, beacon);
     }
 
     public Beacon removeConnection(String username, Long projectId, Long regionId, Long beaconId, Connection connection) {
         Beacon beacon = this.getBeacon(username, projectId, regionId, beaconId);
         beacon.removeConnection(connection);
+        regionService.markRegionAsUpdated(username, projectId, regionId);
         return this.save(username, projectId, regionId, beacon);
     }
 

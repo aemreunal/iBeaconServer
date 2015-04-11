@@ -198,6 +198,12 @@ public class RegionService {
         return imageStorage.loadImage(username, projectId, regionId, mapImageFileName);
     }
 
+    public Region markRegionAsUpdated(String username, Long projectId, Long regionId) {
+        Region region = this.getRegion(username, projectId, regionId);
+        region.markAsUpdated();
+        return regionRepo.save(region);
+    }
+
     /**
      * Deletes the region with the given ID and updates the beacons in the region.
      *
