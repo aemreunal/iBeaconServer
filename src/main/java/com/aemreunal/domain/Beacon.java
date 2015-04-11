@@ -41,8 +41,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonIgnoreProperties(value = { "project", "region", "connections", "locationInfoTextFileName" })
 public class Beacon extends ResourceSupport implements Serializable, Comparable {
     // UUID hex string (including dashes) is 36 characters long
-    public static final int UUID_MAX_LENGTH        = 36;
-    public static final int DESCRIPTION_MAX_LENGTH = 200;
+    public static final int UUID_MAX_LENGTH         = 36;
+    public static final int DISPLAY_NAME_MAX_LENGTH = 50;
+    public static final int DESCRIPTION_MAX_LENGTH  = 200;
 
     /*
      *------------------------------------------------------------
@@ -105,6 +106,25 @@ public class Beacon extends ResourceSupport implements Serializable, Comparable 
     private String description = "";
     /*
      * END: Beacon 'description' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Beacon 'display name' attribute
+     *
+     * A 'display name' is a user-friendly text that can be displayed on a client as
+     * the name of this beacon/location. For example, the beacon description may be
+     * "beacon 5, under northwest light switch", which isn't a user-friendly way to
+     * describe a location. This text can be "Room 353", which can be displayed to a
+     * user to describe the area this beacon represents.
+     */
+    @Column(name = "display_name", nullable = false, length = DISPLAY_NAME_MAX_LENGTH)
+    @Size(max = DISPLAY_NAME_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
+    private String displayName = "";
+    /*
+     * END: Beacon 'display name' attribute
      *------------------------------------------------------------
      */
 
@@ -310,6 +330,14 @@ public class Beacon extends ResourceSupport implements Serializable, Comparable 
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public Region getRegion() {

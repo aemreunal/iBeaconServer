@@ -27,9 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.helper.ImageProperties;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-// To not mark getters & setters as unused, as they're being used by Spring & Hibernate
-@SuppressWarnings("UnusedDeclaration")
-
 @Entity
 @Table(name = "regions")
 @ResponseBody
@@ -37,6 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Region extends ResourceSupport implements Serializable, Comparable {
     public static final int NAME_MAX_LENGTH        = 50;
     public static final int DESCRIPTION_MAX_LENGTH = 200;
+    public static final int DISPLAY_NAME_MAX_LENGTH = 50;
     public static final int UUID_MAX_LENGTH        = 36; // UUID hex string (including dashes) is 36 characters long
 
     /*
@@ -76,6 +74,25 @@ public class Region extends ResourceSupport implements Serializable, Comparable 
     private String description = "";
     /*
      * END: Region 'description' attribute
+     *------------------------------------------------------------
+     */
+
+    /*
+     *------------------------------------------------------------
+     * BEGIN: Beacon 'display name' attribute
+     *
+     * A 'display name' is a user-friendly text that can be displayed on a client as
+     * the name of this region/location. For example, the region description may be
+     * "AB2, Floor 4, North", which isn't a user-friendly way to describe a location.
+     * This text can be "Student Center, 4th floor", which can be displayed to a user
+     * to describe the area this region represents.
+     */
+    @Column(name = "display_name", nullable = false, length = DISPLAY_NAME_MAX_LENGTH)
+    @Size(max = DISPLAY_NAME_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
+    private String displayName = "";
+    /*
+     * END: Beacon 'display name' attribute
      *------------------------------------------------------------
      */
 
@@ -259,6 +276,14 @@ public class Region extends ResourceSupport implements Serializable, Comparable 
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getMapImageFileName() {
