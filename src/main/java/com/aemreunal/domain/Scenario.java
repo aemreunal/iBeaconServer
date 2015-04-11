@@ -48,7 +48,6 @@ public class Scenario extends ResourceSupport implements Serializable, Comparabl
     @Id
     @Column(name = "scenario_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @OrderColumn
     @Access(AccessType.PROPERTY)
     private Long scenarioId;
     /*

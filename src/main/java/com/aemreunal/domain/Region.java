@@ -46,7 +46,6 @@ public class Region extends ResourceSupport implements Serializable, Comparable 
     @Id
     @Column(name = "region_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @OrderColumn
     @Access(AccessType.PROPERTY)
     private Long regionId;
     /*

@@ -40,7 +40,6 @@ public class Connection extends ResourceSupport implements Serializable, Compara
     @Id
     @Column(name = "connection_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @OrderColumn
     @Access(AccessType.PROPERTY)
     private Long connectionId;
     /*

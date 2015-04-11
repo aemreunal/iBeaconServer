@@ -52,7 +52,7 @@ public class Project extends ResourceSupport implements Serializable, Comparable
     @Id
     @Column(name = "project_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @OrderColumn
+    @Access(AccessType.PROPERTY)
     private Long projectId;
     /*
      * END: Project 'ID' attribute
@@ -65,6 +65,7 @@ public class Project extends ResourceSupport implements Serializable, Comparable
      */
     @Column(name = "name", nullable = false, length = NAME_MAX_LENGTH)
     @Size(min = 1, max = NAME_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String name = "";
     /*
      * END: Project 'name' attribute
@@ -77,6 +78,7 @@ public class Project extends ResourceSupport implements Serializable, Comparable
      */
     @Column(name = "description", nullable = false, length = DESCRIPTION_MAX_LENGTH)
     @Size(max = DESCRIPTION_MAX_LENGTH)
+    @Access(AccessType.PROPERTY)
     private String description = "";
     /*
      * END: Project 'description' attribute
@@ -88,6 +90,7 @@ public class Project extends ResourceSupport implements Serializable, Comparable
      * BEGIN: Project 'creationDate' attribute
      */
     @Column(name = "creation_date", nullable = false)
+    @Access(AccessType.PROPERTY)
     private Date creationDate = null;
     /*
      * END: Project 'creationDate' attribute
@@ -104,6 +107,7 @@ public class Project extends ResourceSupport implements Serializable, Comparable
     @JoinTable(name = "users_to_projects",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @Access(AccessType.PROPERTY)
     private User owner;
 
     // TODO other users
@@ -122,6 +126,7 @@ public class Project extends ResourceSupport implements Serializable, Comparable
             fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE)
     @OrderBy(value = "regionId")
+    @Access(AccessType.PROPERTY)
     private Set<Region> regions = new LinkedHashSet<>();
     /*
      * END: Project 'region list' attribute
@@ -138,6 +143,7 @@ public class Project extends ResourceSupport implements Serializable, Comparable
             fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE)
     @OrderBy(value = "connectionId")
+    @Access(AccessType.PROPERTY)
     private Set<Connection> connections = new LinkedHashSet<>();
     /*
      * END: Project 'connection list' attribute
@@ -154,6 +160,7 @@ public class Project extends ResourceSupport implements Serializable, Comparable
             fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE)
     @OrderBy(value = "scenarioId")
+    @Access(AccessType.PROPERTY)
     private Set<Scenario> scenarios = new LinkedHashSet<>();
     /*
      * END: Project 'scenarios list' attribute
@@ -163,12 +170,12 @@ public class Project extends ResourceSupport implements Serializable, Comparable
     /*
      *------------------------------------------------------------
      * BEGIN: Project 'secret' attribute
+     *
+     * TODO add resetting secret
      */
     @Column(name = "project_secret", nullable = false, unique = false)
     @Size(min = BCRYPT_HASH_LENGTH, max = BCRYPT_HASH_LENGTH)
-    /*
-     * TODO add resetting secret
-     */
+    @Access(AccessType.PROPERTY)
     private String projectSecret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     /*
      * END: Project 'secret' attribute
