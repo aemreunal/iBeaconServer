@@ -221,16 +221,16 @@ public class RegionService {
     public Region delete(String username, Long projectId, Long regionId) {
         GlobalSettings.log("Deleting region with ID = \'" + regionId + "\'");
         Region region = this.getRegion(username, projectId, regionId);
-        removeRegionImage(username, projectId, region);
+        deleteRegionImageFile(username, projectId, region);
         regionRepo.delete(region);
         return region;
     }
 
-    private void removeRegionImage(String username, Long projectId, Region region) {
+    private void deleteRegionImageFile(String username, Long projectId, Region region) {
         try {
             imageStorage.deleteImage(username, projectId, region.getRegionId(), region.getMapImageFileName());
         } catch (ImageDeleteException e) {
-            System.err.println("WARNING: Image file for user: " + username + ", project: "
+            GlobalSettings.err("WARNING: Image file for user: " + username + ", project: "
                                        + projectId + ", region " + region.getRegionId() + ", file name: "
                                        + region.getMapImageFileName() + " could not be deleted! " +
                                        "May need to be deleted manually!");
