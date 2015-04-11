@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import com.aemreunal.helper.ImageStorage;
+import com.aemreunal.helper.TextStorage;
 
 @Configuration
 @EnableJpaRepositories(GlobalSettings.REPOSITORY_PACKAGE_NAME)
@@ -86,6 +87,12 @@ public class CoreConfig {
     @Bean
     public ImageStorage imageStorage() {
         return new ImageStorage();
+    }
+
+    // Used for storing texts in the filesystem.
+    @Bean
+    public TextStorage textStorage() {
+        return new TextStorage();
     }
 
     // Used for encrypting passwords.
