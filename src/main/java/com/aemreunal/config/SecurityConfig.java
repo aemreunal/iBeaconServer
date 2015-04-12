@@ -51,25 +51,59 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-            .antMatchers(GlobalSettings.USER_CREATE_MAPPING).permitAll()
-                // TODO is the * necessary?
-                .antMatchers(GlobalSettings.API_PATH_MAPPING + "/*").permitAll()
-                .anyRequest().authenticated()
+        // TODO is the * necessary?
+        // @formatter:off
+        if (!allowUnsecured()) {
+            http.authorizeRequests()
+                    .antMatchers(GlobalSettings.USER_CREATE_MAPPING).permitAll()
+                    .antMatchers(GlobalSettings.API_PATH_MAPPING + "/*").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .requiresChannel().antMatchers("**").requiresSecure()
+                    .requiresChannel().antMatchers("**").requiresSecure()
                 .and()
-                .httpBasic()
+                    .httpBasic()
                 .and()
-                .requestCache().disable()
-                .rememberMe().disable()
-                .headers().httpStrictTransportSecurity()
+                    .requestCache().disable()
+                    .rememberMe().disable()
+                    .portMapper().disable()
+                    .headers()
+                        .httpStrictTransportSecurity()
+                        .cacheControl()
                 .and()
-                .csrf().disable();
+                    .csrf().disable();
+        }else {
+            showUnsecureAllowedMessage();
+            http.authorizeRequests()
+                    .antMatchers(GlobalSettings.USER_CREATE_MAPPING).permitAll()
+                    .antMatchers(GlobalSettings.API_PATH_MAPPING + "/*").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                    .httpBasic()
+                .and()
+                    .requestCache().disable()
+                    .rememberMe().disable()
+                    .portMapper().disable()
+                    .headers()
+                        .cacheControl()
+                .and()
+                    .csrf().disable();
+
+        }
+        // @formatter:on
     }
 
     private boolean allowUnsecured() {
         String envFlag = System.getenv(GlobalSettings.IBEACON_HTTP_ALLOW_KEY);
         return envFlag != null && envFlag.equalsIgnoreCase("true");
+    }
+
+    private void showUnsecureAllowedMessage() {
+        System.err.println("-------------------------------------------------------------------");
+        System.err.println("-------------------------------------------------------------------");
+        System.err.println("-------------------------------------------------------------------");
+        System.err.println("---------------- WARNING: HTTP TRAFFIC IS ALLOWED! ----------------");
+        System.err.println("-------------------------------------------------------------------");
+        System.err.println("-------------------------------------------------------------------");
+        System.err.println("-------------------------------------------------------------------");
     }
 }
