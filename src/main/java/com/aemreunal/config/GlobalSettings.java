@@ -158,6 +158,10 @@ public class GlobalSettings {
     public static final String USERS_FOR_AUTH_QUERY    = "SELECT username, password, '1' FROM users WHERE username = ?";
     public static final String AUTHORITY_OF_USER_QUERY = "SELECT username, 'ADMIN' FROM users WHERE username = ?";
 
+    /**
+     * System flag for whether to allow HTTP traffic
+     */
+    public static final String IBEACON_HTTP_ALLOW_KEY = "IBEACON_HTTP_ALLOW";
 
     public static void log(String log) {
         if (GlobalSettings.DEBUGGING) {

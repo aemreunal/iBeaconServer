@@ -67,4 +67,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable();
     }
+
+    private boolean allowUnsecured() {
+        String envFlag = System.getenv(GlobalSettings.IBEACON_HTTP_ALLOW_KEY);
+        return envFlag != null && envFlag.equalsIgnoreCase("true");
+    }
 }
