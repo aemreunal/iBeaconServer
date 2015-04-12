@@ -129,7 +129,6 @@ public class RegionController {
         GlobalSettings.log("Saved region with ID = \'" + savedRegion.getRegionId() +
                                    "\' name = \'" + savedRegion.getName() +
                                    "\' in project with ID = \'" + projectId + "\'");
-
         return buildCreateResponse(username, builder, savedRegion);
     }
 

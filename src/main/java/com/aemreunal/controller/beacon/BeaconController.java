@@ -45,6 +45,7 @@ import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.exception.imageStorage.ImageSaveException;
 import com.aemreunal.exception.region.MultipartFileReadException;
 import com.aemreunal.exception.region.WrongFileTypeSubmittedException;
+import com.aemreunal.exception.textStorage.TextSaveException;
 import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.aemreunal.service.BeaconService;
 import com.aemreunal.service.ConnectionService;
@@ -95,12 +96,12 @@ public class BeaconController {
     @Transactional
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LinkedHashSet<Beacon>> getBeaconsOfRegion(@PathVariable String username,
-                                                          @PathVariable Long projectId,
-                                                          @PathVariable Long regionId,
-                                                          @RequestParam(value = "uuid", required = false) String uuid,
-                                                          @RequestParam(value = "major", required = false) Integer major,
-                                                          @RequestParam(value = "minor", required = false) Integer minor,
-                                                          @RequestParam(value = "designated", required = false) Boolean designated) {
+                                                                    @PathVariable Long projectId,
+                                                                    @PathVariable Long regionId,
+                                                                    @RequestParam(value = "uuid", required = false) String uuid,
+                                                                    @RequestParam(value = "major", required = false) Integer major,
+                                                                    @RequestParam(value = "minor", required = false) Integer minor,
+                                                                    @RequestParam(value = "designated", required = false) Boolean designated) {
         if (uuid == null && major == null && minor == null && designated == null) {
             LinkedHashSet<Beacon> beaconSet = beaconService.getBeaconsOfRegion(username, projectId, regionId);
             return new ResponseEntity<LinkedHashSet<Beacon>>(beaconSet, HttpStatus.OK);
@@ -154,6 +155,7 @@ public class BeaconController {
      *   "xCoordinate":"150"
      *   "yCoordinate":"120"
      *   "designated":"true"
+     *   "displayName":"Room 237"
      *   "description":"Beacon description"
      * }
      * </pre>
@@ -164,8 +166,10 @@ public class BeaconController {
      *         The ID of the project to create the beacon in
      * @param regionId
      *         The ID of the region
-     * @param beaconFromJson
+     * @param beacon
      *         The beacon parsed from the JSON object
+     * @param locationInfoText
+     *         The [optional] location info text as a {@link MultipartFile}.
      * @param builder
      *         The URI builder for post-creation redirect
      *
@@ -175,9 +179,11 @@ public class BeaconController {
     public ResponseEntity<Beacon> createBeacon(@PathVariable String username,
                                                @PathVariable Long projectId,
                                                @PathVariable Long regionId,
-                                               @RequestBody Beacon beaconFromJson,
-                                               UriComponentsBuilder builder) {
-        Beacon savedBeacon = beaconService.save(username, projectId, regionId, beaconFromJson);
+                                               @RequestPart(value = "beacon") Beacon beacon,
+                                               @RequestPart(value = "info", required = false) MultipartFile locationInfoText,
+                                               UriComponentsBuilder builder)
+            throws TextSaveException {
+        Beacon savedBeacon = beaconService.saveNewBeacon(username, projectId, regionId, beacon, locationInfoText);
         GlobalSettings.log("Saved beacon with UUID = \'" + savedBeacon.getUuid() +
                                    "\' major = \'" + savedBeacon.getMajor() +
                                    "\' minor = \'" + savedBeacon.getMinor() +

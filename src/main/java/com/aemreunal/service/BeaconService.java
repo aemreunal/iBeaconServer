@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Connection;
@@ -37,6 +38,7 @@ import com.aemreunal.exception.connection.BeaconIsNotDesignatedException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.exception.region.RegionNotFoundException;
 import com.aemreunal.exception.textStorage.TextDeleteException;
+import com.aemreunal.exception.textStorage.TextSaveException;
 import com.aemreunal.helper.TextStorage;
 import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.beacon.BeaconSpecs;
@@ -56,6 +58,23 @@ public class BeaconService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    public Beacon saveNewBeacon(String username, Long projectId, Long regionId, Beacon beacon, MultipartFile locationInfoText)
+    throws TextSaveException {
+        beacon = this.save(username, projectId, regionId, beacon);
+        if (locationInfoText != null) {
+            beacon = setLocationInfoText(username, projectId, regionId, beacon, locationInfoText);
+        }
+        return beacon;
+    }
+
+    private Beacon setLocationInfoText(String username, Long projectId, Long regionId, Beacon beacon, MultipartFile locationInfoText)
+    throws TextSaveException {
+        GlobalSettings.log("Setting location info text of beacon with ID = \'" + beacon.getBeaconId() + "\'");
+        String textFileName = textStorage.saveText(username, projectId, regionId, beacon.getBeaconId(), locationInfoText);
+        beacon.setLocationInfoTextFileName(textFileName);
+        return this.save(username, projectId, regionId, beacon);
+    }
+
     /**
      * Saves/updates the given beacon
      *
@@ -64,7 +83,7 @@ public class BeaconService {
      *
      * @return The saved/updated beacon
      */
-    public Beacon save(String username, Long projectId, Long regionId, Beacon beacon)
+    private Beacon save(String username, Long projectId, Long regionId, Beacon beacon)
             throws ConstraintViolationException, BeaconAlreadyExistsException, MalformedRequestException {
         GlobalSettings.log("Saving beacon with ID = \'" + beacon.getBeaconId() + "\'");
         Region region = regionService.getRegion(username, projectId, regionId);
@@ -245,9 +264,9 @@ public class BeaconService {
             textStorage.deleteText(username, projectId, regionId, beaconId, locationInfoTextFileName);
         } catch (TextDeleteException e) {
             GlobalSettings.err("WARNING: Location info text file for user: " + username + ", project: "
-                                   + projectId + ", region " + regionId + ", beacon " + beaconId + ", file name: "
-                                   + locationInfoTextFileName + " could not be deleted! " +
-                                   "May need to be deleted manually!");
+                                       + projectId + ", region " + regionId + ", beacon " + beaconId + ", file name: "
+                                       + locationInfoTextFileName + " could not be deleted! " +
+                                       "May need to be deleted manually!");
         }
     }
 }

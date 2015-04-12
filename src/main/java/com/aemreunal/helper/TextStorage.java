@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.exception.textStorage.TextDeleteException;
 import com.aemreunal.exception.textStorage.TextLoadException;
@@ -50,15 +51,15 @@ public class TextStorage {
      *         The ID of the region (the beacon belongs to) of the text.
      * @param beaconId
      *         The ID of the beacon of the text.
-     * @param text
-     *         The text as a {@link String}.
+     * @param locationInfoTextFile
+     *         The text as a {@link MultipartFile}.
      *
      * @return The name of the saved text file as a {@link String}.
      *
      * @throws TextSaveException
      *         If the text file can't be saved.
      */
-    public String saveText(String username, Long projectId, Long regionId, Long beaconId, String text)
+    public String saveText(String username, Long projectId, Long regionId, Long beaconId, MultipartFile locationInfoTextFile)
             throws TextSaveException {
         // Get the file path from the username, project ID, and region ID attributes
         String filePath = getFilePath(username, projectId, regionId, beaconId);
@@ -74,7 +75,7 @@ public class TextStorage {
         createFile(projectId, regionId, beaconId, textFile);
 
         // Write the text bytes to the new file
-        writeTextToFile(projectId, regionId, beaconId, text, textFile);
+        writeTextToFile(projectId, regionId, beaconId, locationInfoTextFile, textFile);
 
         // Read the text properties to get dimensions
         return textFile.getName();
@@ -157,7 +158,7 @@ public class TextStorage {
     }
 
     private String getFilePath(String username, Long projectId, Long regionId, Long beaconId) {
-        return GlobalSettings.TEXT_STORAGE_FOLDER_PATH + username + "/" + projectId + "/" + regionId + "/" + regionId + "/" + beaconId + "/";
+        return GlobalSettings.TEXT_STORAGE_FOLDER_PATH + username + "/" + projectId + "/" + regionId + "/" + beaconId + "/";
     }
 
     private File getUniqueFile(String filePath) {
@@ -193,23 +194,6 @@ public class TextStorage {
         }
     }
 
-    private void writeTextToFile(Long projectId, Long regionId, Long beaconId, String text, File textFile)
-    throws TextSaveException {
-        try {
-//            FileWriter writer = new FileWriter(textFile);
-//            writer.write(text);
-//            writer.close();
-
-            Files.write(textFile.toPath(), text.getBytes());
-
-//            FileOutputStream stream = new FileOutputStream(textFile);
-//            IOUtils.write(text, stream);
-        } catch (IOException e) {
-            System.err.println("Unable to write text to file!");
-            throw new TextSaveException(projectId, regionId, beaconId);
-        }
-    }
-
     private String loadTextFromFile(Long projectId, Long regionId, Long beaconId, File textFile)
     throws TextLoadException {
         StringBuilder builder = new StringBuilder();
@@ -223,5 +207,15 @@ public class TextStorage {
             throw new TextLoadException(projectId, regionId, beaconId);
         }
         return builder.toString();
+    }
+
+    private void writeTextToFile(Long projectId, Long regionId, Long beaconId, MultipartFile locationInfoMultipartFile, File textFile)
+    throws TextSaveException {
+        try {
+            locationInfoMultipartFile.transferTo(textFile);
+        } catch (IOException e) {
+            System.err.println("Unable to write text to file!");
+            throw new TextSaveException(projectId, regionId, beaconId);
+        }
     }
 }
