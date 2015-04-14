@@ -66,7 +66,7 @@ RUN cd ~/ \
     && git clone https://github.com/aemreunal/iBeaconServer.git
 
 # Add required database settings property file to project
-COPY db.properties /root/iBeaconServer/src/main/java/com/aemreunal/config/db.properties
+COPY db.properties /root/iBeaconServer/db.properties
 # Create WAR file
 RUN cd ~/iBeaconServer/ \
     && ./gradlew war
