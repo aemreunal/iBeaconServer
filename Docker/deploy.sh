@@ -59,7 +59,13 @@ fi
 docker build --no-cache=$SKIP_CACHED -t $CONTAINER_NAME .
 
 # Stop the pre-running container, if it is running.
-docker stop $(docker ps | grep $CONTAINER_NAME | awk '{print $1}')
+if [[ -n $(docker ps | grep $CONTAINER_NAME) ]]; then
+    docker stop $(docker ps | grep $CONTAINER_NAME | awk '{print $1}')
+else
+    echo "No running containers of name $CONTAINER_NAME found, nothing will be stopped"
+fi
 
 # Run the newly-created Docker container.
 docker run --restart=always -d -p 8443:8443 -v $HOME/ibeacon_server_storage:/root/ibeacon_server_storage $CONTAINER_NAME
+
+echo "----- End of script -----"
