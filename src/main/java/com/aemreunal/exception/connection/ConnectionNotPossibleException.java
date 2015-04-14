@@ -16,8 +16,12 @@ package com.aemreunal.exception.connection;
  * *********************** *
  */
 
-public class BeaconIsNotDesignatedException extends Exception {
-    public BeaconIsNotDesignatedException(Long beaconId) {
-        super("Unable to create connection, Beacon " + beaconId + " is not a designated beacon!");
+public class ConnectionNotPossibleException extends Exception {
+    public ConnectionNotPossibleException(Long beaconId) {
+        super("Unable to create connection, beacon " + beaconId + " is not a designated beacon!");
+    }
+
+    public ConnectionNotPossibleException() {
+        super("Unable to create connection, a beacon can't be connected to itself!");
     }
 }

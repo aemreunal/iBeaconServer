@@ -49,6 +49,8 @@ public class GlobalSettings {
     // Project
     public static final String PROJECT_PATH_MAPPING              = USER_SPECIFIC_MAPPING + "/projects";
     public static final String PROJECT_ID_MAPPING                = "/{projectId}";
+    public static final String PROJECT_CONNECTIONS_MAPPING       = PROJECT_ID_MAPPING + "/connections";
+    public static final String PROJECT_REGIONS_MAPPING           = PROJECT_ID_MAPPING + "/regions";
     public static final String PROJECT_SPECIFIC_MAPPING          = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
     // Region
     public static final String REGION_PATH_MAPPING               = PROJECT_SPECIFIC_MAPPING + "/regions";

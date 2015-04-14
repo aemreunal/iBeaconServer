@@ -37,7 +37,7 @@ import com.aemreunal.controller.scenario.ScenarioController;
 import com.aemreunal.controller.user.UserController;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Connection;
-import com.aemreunal.exception.connection.BeaconIsNotDesignatedException;
+import com.aemreunal.exception.connection.ConnectionNotPossibleException;
 import com.aemreunal.exception.connection.ConnectionExistsException;
 import com.aemreunal.exception.connection.ConnectionNotFoundException;
 import com.aemreunal.exception.imageStorage.ImageDeleteException;
@@ -236,7 +236,10 @@ public class BeaconController {
      * @throws MultipartFileReadException
      *         If the Multipart file couldn't be read.
      */
-    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.BEACON_CONNECTION_MAPPING, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST,
+            value = GlobalSettings.BEACON_CONNECTION_MAPPING,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JSONObject> connectBeacons(@PathVariable String username,
                                                      @PathVariable Long projectId,
                                                      @PathVariable(value = "regionId") Long regionOneId,
@@ -244,7 +247,12 @@ public class BeaconController {
                                                      @RequestParam("region2id") Long regionTwoId,
                                                      @RequestParam("beacon2id") Long beaconTwoId,
                                                      @RequestPart(value = "image") MultipartFile imageMultipartFile)
-            throws WrongFileTypeSubmittedException, ImageSaveException, ImageDeleteException, MultipartFileReadException, ConnectionExistsException, BeaconIsNotDesignatedException {
+    throws WrongFileTypeSubmittedException,
+           ImageSaveException,
+           ImageDeleteException,
+           MultipartFileReadException,
+           ConnectionExistsException,
+           ConnectionNotPossibleException {
         Connection connection = connectionService.createNewConnection(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId, imageMultipartFile);
         JSONObject connectionBeacons = JsonBuilderFactory.object().add("beacons", connection.getBeaconIdsAsJson()).build();
         return new ResponseEntity<JSONObject>(connectionBeacons, HttpStatus.CREATED);

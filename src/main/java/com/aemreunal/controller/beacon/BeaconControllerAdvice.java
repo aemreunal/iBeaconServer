@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
-import com.aemreunal.exception.connection.BeaconIsNotDesignatedException;
+import com.aemreunal.exception.connection.ConnectionNotPossibleException;
 import com.aemreunal.exception.connection.ConnectionExistsException;
 import com.aemreunal.exception.connection.ConnectionNotFoundException;
 import com.aemreunal.helper.json.JsonBuilderFactory;
@@ -51,8 +51,8 @@ public class BeaconControllerAdvice {
         return getResponse(ex, "connection", HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(BeaconIsNotDesignatedException.class)
-    public ResponseEntity<JSONObject> beaconIsNotDesignatedExceptionHandler(BeaconIsNotDesignatedException ex) {
+    @ExceptionHandler(ConnectionNotPossibleException.class)
+    public ResponseEntity<JSONObject> beaconIsNotDesignatedExceptionHandler(ConnectionNotPossibleException ex) {
         return getResponse(ex, "connection", HttpStatus.BAD_REQUEST);
     }
 

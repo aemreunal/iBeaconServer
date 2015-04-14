@@ -24,11 +24,15 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
+import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.helper.json.JsonArrayBuilder;
 import com.aemreunal.helper.json.JsonBuilderFactory;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "connections")
+@ResponseBody
+@JsonIgnoreProperties(value = { "project", "beacons", "connectionImageFileName" })
 public class Connection extends ResourceSupport implements Serializable, Comparable {
     // UUID hex string (including dashes) is 36 characters long
     public static final int UUID_MAX_LENGTH = 36;

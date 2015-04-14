@@ -16,14 +16,15 @@ package com.aemreunal.controller.project;
  * *********************** *
  */
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import java.util.List;
-import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +55,7 @@ public class ProjectController {
      *
      * @return All existing projects (Optionally, all that match the given criteria)
      */
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Project>> getAllProjectsOfUser(@PathVariable String username,
                                                               @RequestParam(value = "name", required = false, defaultValue = "") String projectName) {
         if (projectName.equals("")) {
@@ -87,11 +88,18 @@ public class ProjectController {
      *
      * @return The project
      */
-    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.PROJECT_ID_MAPPING, produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.PROJECT_ID_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Project> getProjectById(@PathVariable String username,
                                                   @PathVariable Long projectId) {
         Project project = projectService.getProject(username, projectId);
         return new ResponseEntity<Project>(addLinks(project), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = GlobalSettings.PROJECT_CONNECTIONS_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JSONArray> getAllConnectionsOfProject(@PathVariable String username,
+                                                                @PathVariable Long projectId) {
+        JSONArray connections = projectService.getConnectionsOfProject(username, projectId);
+        return new ResponseEntity<JSONArray>(connections, HttpStatus.OK);
     }
 
     /**
@@ -102,10 +110,12 @@ public class ProjectController {
      * com.aemreunal.service.ProjectService#save(String, com.aemreunal.domain.Project)
      * save()} method of {@link com.aemreunal.service.ProjectService}, propagated to this
      * method and then thrown from this one. This exception will be caught by the {@link
-     * com.aemreunal.controller.project.ProjectControllerAdvice#constraintViolationExceptionHandler(javax.validation.ConstraintViolationException)
-     * constraintViolationExceptionHandler()} of the {@link com.aemreunal.controller.project.ProjectControllerAdvice
-     * ProjectControllerAdvice} class.
+     * com.aemreunal.controller.GeneralControllerAdvice#constraintViolationExceptionHandler(javax.validation.ConstraintViolationException)
+     * constraintViolationExceptionHandler()} of the {@link com.aemreunal.controller.GeneralControllerAdvice
+     * GeneralControllerAdvice} class.
      *
+     * @param username
+     *         The username of the owner of the project
      * @param projectFromJson
      *         The project as JSON object
      * @param builder
@@ -113,8 +123,7 @@ public class ProjectController {
      *
      * @return The created project
      */
-    @Transactional
-    @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JSONObject> createProject(@PathVariable String username,
                                                     @RequestBody Project projectFromJson,
                                                     UriComponentsBuilder builder) {
@@ -183,7 +192,7 @@ public class ProjectController {
      * @param confirmation
      *         The confirmation parameter
      *
-     * @return
+     * @return The deleted project
      */
     @RequestMapping(method = RequestMethod.DELETE, value = GlobalSettings.PROJECT_ID_MAPPING)
     public ResponseEntity<Project> deleteProject(@PathVariable String username,

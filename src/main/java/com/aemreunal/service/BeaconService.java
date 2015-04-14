@@ -34,7 +34,7 @@ import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.MalformedRequestException;
 import com.aemreunal.exception.beacon.BeaconAlreadyExistsException;
 import com.aemreunal.exception.beacon.BeaconNotFoundException;
-import com.aemreunal.exception.connection.BeaconIsNotDesignatedException;
+import com.aemreunal.exception.connection.ConnectionNotPossibleException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.exception.region.RegionNotFoundException;
 import com.aemreunal.exception.textStorage.TextDeleteException;
@@ -222,10 +222,10 @@ public class BeaconService {
     }
 
     public Beacon addConnection(String username, Long projectId, Long regionId, Long beaconId, Connection connection)
-    throws BeaconIsNotDesignatedException {
+    throws ConnectionNotPossibleException {
         Beacon beacon = this.getBeacon(username, projectId, regionId, beaconId);
         if (!beacon.isDesignated()) {
-            throw new BeaconIsNotDesignatedException(beaconId);
+            throw new ConnectionNotPossibleException(beaconId);
         }
         beacon.addConnection(connection);
         regionService.markRegionAsUpdated(username, projectId, regionId);

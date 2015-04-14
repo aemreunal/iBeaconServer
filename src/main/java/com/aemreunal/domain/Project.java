@@ -29,9 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-// To not mark getters & setters as unused, as they're being used by Spring & Hibernate
-@SuppressWarnings("UnusedDeclaration")
-
 @Entity
 @Table(name = "projects")
 @ResponseBody

@@ -16,6 +16,9 @@ package com.aemreunal.service;
  * *********************** *
  */
 
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,9 +28,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
+import com.aemreunal.domain.Connection;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.User;
 import com.aemreunal.exception.project.ProjectNotFoundException;
+import com.aemreunal.helper.json.JsonArrayBuilder;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.aemreunal.repository.project.ProjectRepo;
 import com.aemreunal.repository.project.ProjectSpecs;
 
@@ -143,6 +149,20 @@ public class ProjectService {
             throw new ProjectNotFoundException();
         }
         return project;
+    }
+
+    @Transactional(readOnly = true)
+    public JSONArray getConnectionsOfProject(String username, Long projectId) {
+        Project project = this.getProject(username, projectId);
+        JsonArrayBuilder connections = JsonBuilderFactory.array();
+        for (Connection connection : project.getConnections()) {
+            JSONObject connectionJson = JsonBuilderFactory.object()
+                                                          .add("connectionId", connection.getConnectionId())
+                                                          .add("beacons", connection.getBeaconIdsAsJson())
+                                                          .build();
+            connections.add(connectionJson);
+        }
+        return connections.build();
     }
 
     @Transactional(readOnly = true)

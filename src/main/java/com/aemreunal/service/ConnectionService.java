@@ -16,6 +16,7 @@ package com.aemreunal.service;
  * *********************** *
  */
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +25,14 @@ import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Beacon;
 import com.aemreunal.domain.Connection;
 import com.aemreunal.domain.Project;
-import com.aemreunal.exception.connection.BeaconIsNotDesignatedException;
 import com.aemreunal.exception.connection.ConnectionExistsException;
 import com.aemreunal.exception.connection.ConnectionNotFoundException;
+import com.aemreunal.exception.connection.ConnectionNotPossibleException;
 import com.aemreunal.exception.imageStorage.ImageDeleteException;
 import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.exception.imageStorage.ImageSaveException;
-import com.aemreunal.exception.region.*;
+import com.aemreunal.exception.region.MultipartFileReadException;
+import com.aemreunal.exception.region.WrongFileTypeSubmittedException;
 import com.aemreunal.helper.ImageProperties;
 import com.aemreunal.helper.ImageStorage;
 import com.aemreunal.repository.connection.ConnectionRepo;
@@ -56,7 +58,10 @@ public class ConnectionService {
     }
 
     public Connection createNewConnection(String username, Long projectId, Long beaconOneId, Long regionOneId, Long beaconTwoId, Long regionTwoId, MultipartFile imageMultipartFile)
-    throws ConnectionExistsException, WrongFileTypeSubmittedException, ImageDeleteException, MultipartFileReadException, ImageSaveException, BeaconIsNotDesignatedException {
+    throws ConnectionExistsException, WrongFileTypeSubmittedException, ImageDeleteException, MultipartFileReadException, ImageSaveException, ConnectionNotPossibleException {
+        if (beaconOneId.equals(beaconTwoId)) {
+            throw new ConnectionNotPossibleException();
+        }
         // Check whether such a connection already exists
         checkConnectionExistence(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId);
         GlobalSettings.log("Creating new connection for user: \'" + username + "\' and project: \'" + projectId + "\', between beacons: \'" + beaconOneId + "\' & " + beaconTwoId);
@@ -93,7 +98,7 @@ public class ConnectionService {
     }
 
     private Connection connectBeacons(String username, Long projectId, Long beaconOneId, Long regionOneId, Long beaconTwoId, Long regionTwoId, Connection connection)
-    throws BeaconIsNotDesignatedException {
+    throws ConnectionNotPossibleException {
         // Connect connection entity and its beacons
         Beacon beaconOne = beaconService.addConnection(username, projectId, regionOneId, beaconOneId, connection);
         connection.addBeacon(beaconOne);
@@ -118,11 +123,11 @@ public class ConnectionService {
     throws ConnectionNotFoundException {
         Beacon beaconOne = beaconService.getBeacon(username, projectId, regionOneId, beaconOneId);
         Beacon beaconTwo = beaconService.getBeacon(username, projectId, regionTwoId, beaconTwoId);
-        Object connectionObj = connectionRepo.findOne(ConnectionSpecs.connectionWithSpecification(projectId, beaconOne, beaconTwo));
-        if (connectionObj == null) {
+        List allConnections = connectionRepo.findAll(ConnectionSpecs.connectionWithSpecification(projectId, beaconOne, beaconTwo));
+        if (allConnections == null || allConnections.size() != 1) {
             throw new ConnectionNotFoundException();
         }
-        return (Connection) connectionObj;
+        return (Connection) allConnections.get(0);
     }
 
     @Transactional(readOnly = true)
