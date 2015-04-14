@@ -79,6 +79,6 @@ RUN cd ~/iBeaconServer/ \
 # Add non-secure random gen. env. option setter
 COPY setenv.sh $CATALINA_HOME/bin/setenv.sh
 
-EXPOSE 8080
+EXPOSE 8443
 
 CMD ["catalina.sh", "run"]
