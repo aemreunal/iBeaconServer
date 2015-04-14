@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -31,6 +32,10 @@ import com.mysql.jdbc.Driver;
 @Configuration
 //@PropertySource("file:db.properties")
 @PropertySource("file:src/main/java/com/aemreunal/config/db.properties")
+@PropertySources(value = {
+        @PropertySource(value = "file:db.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "file:/root/iBeaconServer/db.properties", ignoreResourceNotFound = true)
+})
 public class DatabaseSettings {
     @Value("${db.username}")
     private String dbUsername;
