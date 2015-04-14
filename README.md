@@ -36,4 +36,4 @@ To use iBeacon server inside a Docker container:
 
 2. Fill the database server information in the ```db.properties``` file.
 
-3. Run the `deploy.sh` script, which will create the necessary folders and the keystore used by the Tomcat instance inside the container, build the Docker container, and run it. The default settings are not really secure (like the keystore settings) but it will provide a good starting point. These settings should be changed by the user for proper security.
+3. Run the `deploy.sh` script, which will create the necessary folders and the keystore used by the Tomcat instance inside the container, build the Docker container, and run it. The default settings are not really secure (like the keystore settings) but it will provide a good starting point. These settings should be changed by the administrator for proper security.
