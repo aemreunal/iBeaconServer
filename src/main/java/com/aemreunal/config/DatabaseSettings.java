@@ -31,7 +31,6 @@ import com.mysql.jdbc.Driver;
 
 @Configuration
 //@PropertySource("file:db.properties")
-@PropertySource("file:src/main/java/com/aemreunal/config/db.properties")
 @PropertySources(value = {
         @PropertySource(value = "file:db.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:/root/iBeaconServer/db.properties", ignoreResourceNotFound = true)
