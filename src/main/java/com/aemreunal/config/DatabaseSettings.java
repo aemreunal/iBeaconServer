@@ -29,7 +29,8 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.mysql.jdbc.Driver;
 
 @Configuration
-@PropertySource("file:db.properties")
+//@PropertySource("file:db.properties")
+@PropertySource("file:src/main/java/com/aemreunal/config/db.properties")
 public class DatabaseSettings {
     @Value("${db.username}")
     private String dbUsername;
