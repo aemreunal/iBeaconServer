@@ -108,7 +108,7 @@ public class Region extends ResourceSupport implements Serializable, Comparable 
     @Column(name = "map_image_name", nullable = false, length = UUID_MAX_LENGTH)
     @Size(min = UUID_MAX_LENGTH, max = UUID_MAX_LENGTH)
     @Access(AccessType.PROPERTY)
-    private String mapImageFileName = "";
+    private String mapImageFileName = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     /*
      * END: Region 'Map image' attribute
      *------------------------------------------------------------
