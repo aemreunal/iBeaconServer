@@ -196,10 +196,18 @@ public class Project extends ResourceSupport implements Serializable, Comparable
      * BEGIN: Helpers
      */
     public JSONObject getCreateResponse(String projectSecret) {
-        return JsonBuilderFactory.object().add("projectId", getProjectId())
+        return JsonBuilderFactory.object()
+                                 .add("projectId", getProjectId())
                                  .add("name", getName())
                                  .add("description", getDescription())
                                  .add("secret", projectSecret)
+                                 .add("links", getLinks())
+                                 .build();
+    }
+
+    public JSONObject getQueryResponse() {
+        return JsonBuilderFactory.object()
+                                 .add("projectId", getProjectId())
                                  .add("links", getLinks())
                                  .build();
     }

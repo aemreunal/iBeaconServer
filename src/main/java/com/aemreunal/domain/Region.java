@@ -16,6 +16,8 @@ package com.aemreunal.domain;
  * *********************** *
  */
 
+import net.minidev.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -25,6 +27,7 @@ import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aemreunal.helper.ImageProperties;
+import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -32,10 +35,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @ResponseBody
 @JsonIgnoreProperties(value = { "beacons", "project", "mapImageFileName", "designatedBeacons" })
 public class Region extends ResourceSupport implements Serializable, Comparable {
-    public static final int NAME_MAX_LENGTH        = 50;
-    public static final int DESCRIPTION_MAX_LENGTH = 200;
+    public static final int NAME_MAX_LENGTH         = 50;
+    public static final int DESCRIPTION_MAX_LENGTH  = 200;
     public static final int DISPLAY_NAME_MAX_LENGTH = 50;
-    public static final int UUID_MAX_LENGTH        = 36; // UUID hex string (including dashes) is 36 characters long
+    public static final int UUID_MAX_LENGTH         = 36; // UUID hex string (including dashes) is 36 characters long
 
     /*
      *------------------------------------------------------------
@@ -244,6 +247,17 @@ public class Region extends ResourceSupport implements Serializable, Comparable 
 
     public void markAsUpdated() {
         setLastUpdatedDate(new Date());
+    }
+
+    public JSONObject getQueryResponse() {
+        return JsonBuilderFactory.object()
+                                 .add("regionId", getRegionId())
+                                 .add("displayName", getDisplayName())
+                                 .add("regionWidth", getRegionWidth())
+                                 .add("regionHeight", getRegionHeight())
+                                 .add("lastUpdatedDate", getLastUpdatedDate())
+                                 .add("links", getLinks())
+                                 .build();
     }
     /*
      * END: Helpers
