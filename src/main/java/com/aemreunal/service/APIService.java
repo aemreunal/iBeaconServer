@@ -16,7 +16,9 @@ package com.aemreunal.service;
  * *********************** *
  */
 
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,7 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Region;
+import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
+import com.aemreunal.helper.ImageStorage;
 import com.aemreunal.repository.project.ProjectRepo;
 
 @Transactional(readOnly = true)
@@ -33,6 +37,9 @@ import com.aemreunal.repository.project.ProjectRepo;
 public class APIService {
     @Autowired
     private ProjectRepo projectRepo;
+
+    @Autowired
+    private ImageStorage imageStorage;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -55,6 +62,20 @@ public class APIService {
         Set<Region> regions = project.getRegions();
         initLazily(regions);
         return regions;
+    }
+
+    public byte[] queryForRegionImage(Long projectId, String projectSecret, Long regionId)
+    throws ImageLoadException {
+        Set<Region> regions = queryForRegionsOfProject(projectId, projectSecret);
+        ArrayList<String> regionImageNameSet = regions.stream()
+                                                      .filter(region -> region.getRegionId().equals(regionId))
+                                                      .map(Region::getMapImageFileName)
+                                                      .collect(Collectors.toCollection(ArrayList::new));
+        if (regionImageNameSet.size() != 1) {
+            return null;
+        }
+        String regionImageName = regionImageNameSet.get(0);
+        return imageStorage.loadImage(projectId, regionId, regionImageName);
     }
 
     private static void initLazily(Object proxy) {

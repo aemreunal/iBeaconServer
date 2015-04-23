@@ -29,11 +29,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.MalformedRequestException;
+import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.service.APIService;
 import com.aemreunal.service.ScenarioService;
 
@@ -54,25 +56,38 @@ public class APIController {
     // 2.1) If updates are found, download them (like 1.1).
 
     /*
-     * Project query JSON example:
+     * Project ID JSON structure:
      * {
      *      "projectId": <project ID>,
      *      "secret":    <project Secret>
      * }
      */
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_PROJECT_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JSONObject> queryForProject(@RequestBody JSONObject projectQueryJson) {
-        verifyProjectQueryRequest(projectQueryJson);
-        JSONObject project = getProject(projectQueryJson);
+    public ResponseEntity<JSONObject> queryForProject(@RequestBody JSONObject idJson) {
+        verifyProjectQueryRequest(idJson);
+        JSONObject project = getProject(idJson);
         return new ResponseEntity<JSONObject>(project, HttpStatus.OK);
     }
 
 
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_REGION_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LinkedHashSet<JSONObject>> queryForRegions(@RequestBody JSONObject projectQueryJson) {
-        verifyProjectQueryRequest(projectQueryJson);
-        LinkedHashSet<JSONObject> regions = getRegionsOfProject(projectQueryJson);
+    public ResponseEntity<LinkedHashSet<JSONObject>> queryForRegions(@RequestBody JSONObject idJson) {
+        verifyProjectQueryRequest(idJson);
+        LinkedHashSet<JSONObject> regions = getRegionsOfProject(idJson);
         return new ResponseEntity<LinkedHashSet<JSONObject>>(regions, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_REGION_IMG_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> queryForRegionImage(@RequestBody JSONObject idJson,
+                                                      @RequestParam Long regionId)
+    throws ImageLoadException {
+        verifyProjectQueryRequest(idJson);
+        byte[] regionImage = getRegionImage(idJson, regionId);
+        if (regionImage == null) {
+            return new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<byte[]>(regionImage, HttpStatus.OK);
     }
 
     /*
@@ -91,21 +106,28 @@ public class APIController {
         return new ResponseEntity<JSONObject>(scenario.generateQueryResponse(), HttpStatus.OK);
     }
 
-    private JSONObject getProject(JSONObject projectQueryJson) {
-        Long projectId = Long.valueOf(projectQueryJson.get("projectId").toString());
-        String secret = projectQueryJson.get("secret").toString().toUpperCase();
+    private JSONObject getProject(JSONObject idJson) {
+        Long projectId = Long.valueOf(idJson.get("projectId").toString());
+        String secret = idJson.get("secret").toString().toUpperCase();
         Project project = apiService.queryForProject(projectId, secret);
         return project.getQueryResponse();
     }
 
-    private LinkedHashSet<JSONObject> getRegionsOfProject(JSONObject projectQueryJson) {
-        Long projectId = Long.valueOf(projectQueryJson.get("projectId").toString());
-        String secret = projectQueryJson.get("secret").toString().toUpperCase();
+    private LinkedHashSet<JSONObject> getRegionsOfProject(JSONObject idJson) {
+        Long projectId = Long.valueOf(idJson.get("projectId").toString());
+        String secret = idJson.get("secret").toString().toUpperCase();
         Set<Region> regions = apiService.queryForRegionsOfProject(projectId, secret);
         return regions.stream()
                       .sorted()
                       .map(Region::getQueryResponse)
                       .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private byte[] getRegionImage(JSONObject idJson, Long regionId)
+    throws ImageLoadException {
+        Long projectId = Long.valueOf(idJson.get("projectId").toString());
+        String secret = idJson.get("secret").toString().toUpperCase();
+        return apiService.queryForRegionImage(projectId, secret, regionId);
     }
 
     private Scenario getScenario(JSONObject beaconQueryJson) {
