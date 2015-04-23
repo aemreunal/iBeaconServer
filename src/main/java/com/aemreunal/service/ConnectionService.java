@@ -66,7 +66,7 @@ public class ConnectionService {
         checkConnectionExistence(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId);
         GlobalSettings.log("Creating new connection for user: \'" + username + "\' and project: \'" + projectId + "\', between beacons: \'" + beaconOneId + "\' & " + beaconTwoId);
         // Save image
-        ImageProperties imageProperties = saveConnectionImage(username, projectId, imageMultipartFile);
+        ImageProperties imageProperties = saveConnectionImage(projectId, imageMultipartFile);
         // Create connection
         Project project = projectService.getProject(username, projectId);
         Connection connection = createConnection(project, imageProperties);
@@ -84,10 +84,10 @@ public class ConnectionService {
         throw new ConnectionExistsException(beaconOneId, beaconTwoId);
     }
 
-    private ImageProperties saveConnectionImage(String username, Long projectId, MultipartFile imageMultipartFile)
+    private ImageProperties saveConnectionImage(Long projectId, MultipartFile imageMultipartFile)
     throws MultipartFileReadException, ImageDeleteException, ImageSaveException, WrongFileTypeSubmittedException {
         GlobalSettings.log("Setting connection image of newly-created connection.");
-        return imageStorage.saveImage(username, projectId, null, imageMultipartFile);
+        return imageStorage.saveImage(projectId, null, imageMultipartFile);
     }
 
     private Connection createConnection(Project project, ImageProperties imageProperties) {
@@ -136,13 +136,13 @@ public class ConnectionService {
         GlobalSettings.log("Getting connection image between beacons with ID = \'" + beaconOneId + "\' and \'" + beaconTwoId + "\'");
         Connection connection = this.getConnectionBetween(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId);
         String connectionImageFileName = connection.getConnectionImageFileName();
-        return imageStorage.loadImage(username, projectId, null, connectionImageFileName);
+        return imageStorage.loadImage(projectId, null, connectionImageFileName);
     }
 
     public Connection deleteConnection(String username, Long projectId, Long regionOneId, Long beaconOneId, Long regionTwoId, Long beaconTwoId)
     throws ImageDeleteException, ConnectionNotFoundException {
         Connection connection = this.getConnectionBetween(username, projectId, beaconOneId, regionOneId, beaconTwoId, regionTwoId);
-        imageStorage.deleteImage(username, projectId, null, connection.getConnectionImageFileName());
+        imageStorage.deleteImage(projectId, null, connection.getConnectionImageFileName());
         disconnectBeacons(username, projectId, connection);
         connectionRepo.delete(connection);
         return connection;

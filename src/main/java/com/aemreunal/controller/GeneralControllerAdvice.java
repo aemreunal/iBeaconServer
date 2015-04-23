@@ -42,7 +42,7 @@ public class GeneralControllerAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<JSONObject> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        JSONObject responseBody = JsonBuilderFactory.object().add("error", "Constraint violation error occurred! Unable to save scenario.")
+        JSONObject responseBody = JsonBuilderFactory.object().add("error", "Constraint violation error occurred! Unable to save entity.")
                                                     .add("violations", formatViolations(ex.getConstraintViolations()))
                                                     .build();
         return new ResponseEntity<JSONObject>(responseBody, HttpStatus.BAD_REQUEST);

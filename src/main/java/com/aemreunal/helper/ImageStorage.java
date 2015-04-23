@@ -44,7 +44,7 @@ public class ImageStorage {
      * ~/{@value com.aemreunal.config.GlobalSettings#ROOT_STORAGE_FOLDER_DIRECTORY_NAME}/{@value
      * com.aemreunal.config.GlobalSettings#IMAGE_STORAGE_FOLDER_DIRECTORY_NAME}/</pre>
      * folder. The regular region images will be put in a sub-folder structure like:<pre>
-     * &lt;user name&gt;/&lt;project ID&gt;/&lt;region ID&gt;/</pre> under the main
+     * &lt;project ID&gt;/&lt;region ID&gt;/</pre> under the main
      * storage folder. Inter-region navigation images will be put directly under
      * the:<pre>
      * &lt;user name&gt;/&lt;project ID&gt;/</pre> folder, without any region-specific
@@ -52,8 +52,6 @@ public class ImageStorage {
      * <p>
      * If any of the folders above do not exist, they will be created.
      *
-     * @param username
-     *         The username of whoever is saving the image.
      * @param projectId
      *         The ID of the project which the region (the image belongs to) is a part
      *         of.
@@ -75,13 +73,13 @@ public class ImageStorage {
      *         If the submitted {@link MultipartFile Multipart file} is of a wrong type
      *         (e.g. non-image file, unacceptable image type).
      */
-    public ImageProperties saveImage(String username, Long projectId, Long regionId, MultipartFile imageMultipartFile)
+    public ImageProperties saveImage(Long projectId, Long regionId, MultipartFile imageMultipartFile)
             throws MultipartFileReadException, ImageSaveException, WrongFileTypeSubmittedException {
         // Verify file is not empty or is not of a wrong type
         verifyImageType(projectId, regionId, imageMultipartFile);
 
-        // Get the file path from the username, project ID, and region ID attributes
-        String filePath = getFilePath(username, projectId, regionId);
+        // Get the file path from the project ID and region ID attributes
+        String filePath = getFilePath(projectId, regionId);
 
         // Ensure unique file name
         File imageFile = getUniqueFile(filePath);
@@ -104,8 +102,6 @@ public class ImageStorage {
      * Loads the specified image file and returns the bytes of the image file in a
      * <code>byte[]</code>.
      *
-     * @param username
-     *         The username of whoever is loading the image.
      * @param projectId
      *         The ID of the project which the region (the image belongs to) is a part
      *         of.
@@ -120,10 +116,10 @@ public class ImageStorage {
      * @throws ImageLoadException
      *         If the image can't be loaded.
      */
-    public byte[] loadImage(String username, Long projectId, Long regionId, String imageFileName)
+    public byte[] loadImage(Long projectId, Long regionId, String imageFileName)
             throws ImageLoadException {
-        // Get the file path from the username, project ID, and region ID attributes
-        String filePath = getFilePath(username, projectId, regionId);
+        // Get the file path from the project ID and region ID attributes
+        String filePath = getFilePath(projectId, regionId);
         // Get the image file
         File imageFile = new File(filePath + imageFileName);
         if (!imageFile.exists()) {
@@ -137,8 +133,6 @@ public class ImageStorage {
      * Deletes the specified image file. The method will do nothing if a {@code null}
      * value is provided for {@code imageFileName} parameter.
      *
-     * @param username
-     *         The username of whoever is deleting the image.
      * @param projectId
      *         The ID of the project which the region (the image belongs to) is a part
      *         of.
@@ -151,19 +145,19 @@ public class ImageStorage {
      * @throws ImageDeleteException
      *         If the image file can't be deleted.
      */
-    public void deleteImage(String username, Long projectId, Long regionId, String imageFileName)
+    public void deleteImage(Long projectId, Long regionId, String imageFileName)
             throws ImageDeleteException {
         if (imageFileName == null || imageFileName.equals("")) {
             return;
         }
-        // Get the file path from the username, project ID, and region ID attributes
-        String filePath = getFilePath(username, projectId, regionId);
+        // Get the file path from the project ID and region ID attributes
+        String filePath = getFilePath(projectId, regionId);
         // Get the image file
         File imageFile = new File(filePath + imageFileName);
         try {
             Files.delete(imageFile.toPath());
         } catch (NoSuchFileException e) {
-            GlobalSettings.err("WARNING: Image file for user: " + username + ", project: "
+            GlobalSettings.err("WARNING: Image file for project: "
                                        + projectId + ", region " + regionId + ", file name: "
                                        + imageFileName + " does not exist, nothing to delete!");
         } catch (IOException e) {
@@ -254,11 +248,11 @@ public class ImageStorage {
         return imageAsBytes;
     }
 
-    private String getFilePath(String username, Long projectId, Long regionId) {
+    private String getFilePath(Long projectId, Long regionId) {
         if (regionId != null) {
-            return GlobalSettings.IMAGE_STORAGE_FOLDER_PATH + username + "/" + projectId.toString() + "/" + regionId.toString() + "/";
+            return GlobalSettings.IMAGE_STORAGE_FOLDER_PATH + projectId.toString() + "/" + regionId.toString() + "/";
         } else {
-            return GlobalSettings.IMAGE_STORAGE_FOLDER_PATH + username + "/" + projectId.toString() + "/";
+            return GlobalSettings.IMAGE_STORAGE_FOLDER_PATH + projectId.toString() + "/";
         }
     }
 }

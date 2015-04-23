@@ -142,7 +142,7 @@ public class RegionService {
     private Region setMapImage(String username, Long projectId, Region region, MultipartFile imageFile)
             throws ImageSaveException, MultipartFileReadException, WrongFileTypeSubmittedException {
         GlobalSettings.log("Setting map image of region with ID = \'" + region.getRegionId() + "\'");
-        ImageProperties savedImageProperties = imageStorage.saveImage(username, projectId, region.getRegionId(), imageFile);
+        ImageProperties savedImageProperties = imageStorage.saveImage(projectId, region.getRegionId(), imageFile);
         region.setImageProperties(savedImageProperties);
         return this.save(username, projectId, region);
     }
@@ -199,7 +199,7 @@ public class RegionService {
         GlobalSettings.log("Getting map image of region with ID = \'" + regionId + "\'");
         Region region = this.getRegion(username, projectId, regionId);
         String mapImageFileName = region.getMapImageFileName();
-        return imageStorage.loadImage(username, projectId, regionId, mapImageFileName);
+        return imageStorage.loadImage(projectId, regionId, mapImageFileName);
     }
 
     public Region markRegionAsUpdated(String username, Long projectId, Long regionId) {
@@ -228,7 +228,7 @@ public class RegionService {
 
     private void deleteRegionImageFile(String username, Long projectId, Region region) {
         try {
-            imageStorage.deleteImage(username, projectId, region.getRegionId(), region.getMapImageFileName());
+            imageStorage.deleteImage(projectId, region.getRegionId(), region.getMapImageFileName());
         } catch (ImageDeleteException e) {
             GlobalSettings.err("WARNING: Image file for user: " + username + ", project: "
                                        + projectId + ", region " + region.getRegionId() + ", file name: "
