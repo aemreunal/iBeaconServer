@@ -165,19 +165,6 @@ public class ProjectService {
         return connections.build();
     }
 
-    @Transactional(readOnly = true)
-    public Project queryForProject(Long projectId, String projectSecret)
-    throws ProjectNotFoundException {
-        GlobalSettings.log("Querying for project with ID = \'" + projectId + "\'");
-        Project project = projectRepo.findOne(projectId);
-        if (project != null) {
-            if (passwordEncoder.matches(projectSecret, project.getProjectSecret())) {
-                return project;
-            }
-        }
-        throw new ProjectNotFoundException();
-    }
-
     /**
      * Deletes the {@link com.aemreunal.domain.Project project} with the given ID and
      * deletes the {@link com.aemreunal.domain.Beacon beacons} and {@link

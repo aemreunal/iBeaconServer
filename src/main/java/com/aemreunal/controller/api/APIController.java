@@ -18,6 +18,9 @@ package com.aemreunal.controller.api;
 
 import net.minidev.json.JSONObject;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,16 +31,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.aemreunal.config.GlobalSettings;
 import com.aemreunal.domain.Project;
+import com.aemreunal.domain.Region;
 import com.aemreunal.domain.Scenario;
 import com.aemreunal.exception.MalformedRequestException;
-import com.aemreunal.service.ProjectService;
+import com.aemreunal.service.APIService;
 import com.aemreunal.service.ScenarioService;
 
 @Controller
 @RequestMapping(GlobalSettings.API_PATH_MAPPING)
 public class APIController {
     @Autowired
-    private ProjectService projectService;
+    private APIService apiService;
 
     @Autowired
     private ScenarioService scenarioService;
@@ -52,28 +56,23 @@ public class APIController {
     /*
      * Project query JSON example:
      * {
-     *      "projectId": <project ID>
+     *      "projectId": <project ID>,
      *      "secret":    <project Secret>
      * }
      */
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_PROJECT_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Project> queryForProject(@RequestBody JSONObject projectQueryJson) {
+    public ResponseEntity<JSONObject> queryForProject(@RequestBody JSONObject projectQueryJson) {
         verifyProjectQueryRequest(projectQueryJson);
-        Project project = getProject(projectQueryJson);
-        return new ResponseEntity<Project>(project, HttpStatus.OK);
+        JSONObject project = getProject(projectQueryJson);
+        return new ResponseEntity<JSONObject>(project, HttpStatus.OK);
     }
 
-    private void verifyProjectQueryRequest(JSONObject projectQueryJson) {
-        if (!projectQueryJson.containsKey("projectId") ||
-                !projectQueryJson.containsKey("secret")) {
-            throw new MalformedRequestException();
-        }
-    }
 
-    private Project getProject(JSONObject projectQueryJson) {
-        Long projectId = Long.valueOf(projectQueryJson.get("projectId").toString());
-        String secret = projectQueryJson.get("secret").toString().toUpperCase();
-        return projectService.queryForProject(projectId, secret);
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_REGION_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LinkedHashSet<JSONObject>> queryForRegions(@RequestBody JSONObject projectQueryJson) {
+        verifyProjectQueryRequest(projectQueryJson);
+        LinkedHashSet<JSONObject> regions = getRegionsOfProject(projectQueryJson);
+        return new ResponseEntity<LinkedHashSet<JSONObject>>(regions, HttpStatus.OK);
     }
 
     /*
@@ -92,13 +91,21 @@ public class APIController {
         return new ResponseEntity<JSONObject>(scenario.generateQueryResponse(), HttpStatus.OK);
     }
 
-    private void verifyBeaconQueryRequest(JSONObject beaconQueryJson) {
-        if (!beaconQueryJson.containsKey("uuid") ||
-                !beaconQueryJson.containsKey("major") ||
-                !beaconQueryJson.containsKey("minor") ||
-                !beaconQueryJson.containsKey("secret")) {
-            throw new MalformedRequestException();
-        }
+    private JSONObject getProject(JSONObject projectQueryJson) {
+        Long projectId = Long.valueOf(projectQueryJson.get("projectId").toString());
+        String secret = projectQueryJson.get("secret").toString().toUpperCase();
+        Project project = apiService.queryForProject(projectId, secret);
+        return project.getQueryResponse();
+    }
+
+    private LinkedHashSet<JSONObject> getRegionsOfProject(JSONObject projectQueryJson) {
+        Long projectId = Long.valueOf(projectQueryJson.get("projectId").toString());
+        String secret = projectQueryJson.get("secret").toString().toUpperCase();
+        Set<Region> regions = apiService.queryForRegionsOfProject(projectId, secret);
+        return regions.stream()
+                      .sorted()
+                      .map(Region::getQueryResponse)
+                      .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private Scenario getScenario(JSONObject beaconQueryJson) {
@@ -107,5 +114,21 @@ public class APIController {
         Integer minor = Integer.valueOf(beaconQueryJson.get("minor").toString());
         String secret = beaconQueryJson.get("secret").toString().toUpperCase();
         return scenarioService.queryForScenario(uuid, major, minor, secret);
+    }
+
+    private void verifyProjectQueryRequest(JSONObject projectQueryJson) {
+        if (!projectQueryJson.containsKey("projectId") ||
+                !projectQueryJson.containsKey("secret")) {
+            throw new MalformedRequestException();
+        }
+    }
+
+    private void verifyBeaconQueryRequest(JSONObject beaconQueryJson) {
+        if (!beaconQueryJson.containsKey("uuid") ||
+                !beaconQueryJson.containsKey("major") ||
+                !beaconQueryJson.containsKey("minor") ||
+                !beaconQueryJson.containsKey("secret")) {
+            throw new MalformedRequestException();
+        }
     }
 }
