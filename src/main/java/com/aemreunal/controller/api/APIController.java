@@ -78,7 +78,7 @@ public class APIController {
     }
 
 
-    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_REGION_IMG_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_REGION_IMG_QUERY_PATH_MAPPING, produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> queryForRegionImage(@RequestBody JSONObject idJson,
                                                       @RequestParam Long regionId)
     throws ImageLoadException {
