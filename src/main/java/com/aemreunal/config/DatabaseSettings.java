@@ -30,7 +30,6 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.mysql.jdbc.Driver;
 
 @Configuration
-//@PropertySource("file:db.properties")
 @PropertySources(value = {
         @PropertySource(value = "file:db.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:/root/iBeaconServer/db.properties", ignoreResourceNotFound = true)
@@ -58,7 +57,6 @@ public class DatabaseSettings {
         vendorAdapter.setGenerateDdl(true);
         return vendorAdapter;
     }
-
 
     // TODO better configure data source:
     // http://www.mchange.com/projects/c3p0/#configuration
