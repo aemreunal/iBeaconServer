@@ -51,12 +51,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // TODO is the * necessary?
         // @formatter:off
         if (!allowUnsecured()) {
             http.authorizeRequests()
                     .antMatchers(GlobalSettings.USER_CREATE_MAPPING).permitAll()
-                    .antMatchers(GlobalSettings.API_PATH_MAPPING + "/*").permitAll()
+                    .antMatchers(GlobalSettings.API_PATH_MAPPING + "/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .requiresChannel().antMatchers("**").requiresSecure()
@@ -75,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             showUnsecureAllowedMessage();
             http.authorizeRequests()
                     .antMatchers(GlobalSettings.USER_CREATE_MAPPING).permitAll()
-                    .antMatchers(GlobalSettings.API_PATH_MAPPING + "/*").permitAll()
+                    .antMatchers(GlobalSettings.API_PATH_MAPPING + "/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .httpBasic()
