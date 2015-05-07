@@ -18,6 +18,14 @@ package com.aemreunal.exception.imageStorage;
 
 public class ImageLoadException extends Exception {
     public ImageLoadException(Long projectId, Long regionId) {
-        super("Unable to load the image file of project " + projectId + ", region " + regionId + "!");
+        super(getExceptionMessage(projectId, regionId));
+    }
+
+    private static String getExceptionMessage(Long projectId, Long regionId) {
+        if (regionId == null) {
+            return "Unable to load the image file of project " + projectId + "!";
+        } else {
+            return "Unable to load the image file of project " + projectId + ", region " + regionId + "!";
+        }
     }
 }
