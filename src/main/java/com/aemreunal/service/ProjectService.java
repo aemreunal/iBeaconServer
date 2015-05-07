@@ -17,11 +17,11 @@ package com.aemreunal.service;
  */
 
 import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,7 +32,6 @@ import com.aemreunal.domain.Connection;
 import com.aemreunal.domain.Project;
 import com.aemreunal.domain.User;
 import com.aemreunal.exception.project.ProjectNotFoundException;
-import com.aemreunal.helper.json.JsonArrayBuilder;
 import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.aemreunal.repository.project.ProjectRepo;
 import com.aemreunal.repository.project.ProjectSpecs;
@@ -154,15 +153,13 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public JSONArray getConnectionsOfProject(String username, Long projectId) {
         Project project = this.getProject(username, projectId);
-        JsonArrayBuilder connections = JsonBuilderFactory.array();
-        for (Connection connection : project.getConnections()) {
-            JSONObject connectionJson = JsonBuilderFactory.object()
-                                                          .add("connectionId", connection.getConnectionId())
-                                                          .add("beacons", connection.getBeaconIdsAsJson())
-                                                          .build();
-            connections.add(connectionJson);
-        }
-        return connections.build();
+        return JsonBuilderFactory.array()
+                                 .addAll(project.getConnections()
+                                                .stream()
+                                                .sorted()
+                                                .map(Connection::getQueryResponse)
+                                                .collect(Collectors.toSet()))
+                                 .build();
     }
 
     /**
