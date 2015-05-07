@@ -46,9 +46,6 @@ public class RegionService {
     private RegionRepo regionRepo;
 
     @Autowired
-    private BeaconService beaconService;
-
-    @Autowired
     private ProjectService projectService;
 
     @Autowired
