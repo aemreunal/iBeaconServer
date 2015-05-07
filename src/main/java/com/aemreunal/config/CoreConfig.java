@@ -83,6 +83,14 @@ public class CoreConfig {
         return resolver;
     }
 
+//    @Bean
+//    public AnnotationSessionFactoryBean sessionFactory() {
+//        AnnotationSessionFactoryBean sessionFactoryBean = new AnnotationSessionFactoryBean();
+//        sessionFactoryBean.setPackagesToScan("com.aemreunal");
+//        sessionFactoryBean.setDataSource(dataSource);
+//        return sessionFactoryBean;
+//    }
+
     // Used for storing images in the filesystem.
     @Bean
     public ImageStorage imageStorage() {

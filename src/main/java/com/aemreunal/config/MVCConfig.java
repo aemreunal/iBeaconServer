@@ -43,6 +43,9 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Autowired
     public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter;
 
+//    @Autowired
+//    private SessionFactory sessionFactory;
+
     @Bean
     public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
         MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
@@ -65,4 +68,12 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         converters.add(byteArrayHttpMessageConverter);
         super.configureMessageConverters(converters);
     }
+
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        super.addInterceptors(registry);
+//        OpenSessionInViewInterceptor osiv = new OpenSessionInViewInterceptor();
+//        osiv.setSessionFactory(sessionFactory);
+//        registry.addWebRequestInterceptor(osiv);
+//    }
 }

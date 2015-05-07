@@ -20,6 +20,7 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
+import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
@@ -48,6 +49,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
 
         addSecurityFilterToChain(servletContext, webAppContext);
         addUserUrlFilterToChain(servletContext);
+//        addOpenSessionInViewFilterToChain(servletContext, webAppContext);
     }
 
     private void addSecurityFilterToChain(ServletContext servletContext, WebApplicationContext webAppContext) {
@@ -58,5 +60,10 @@ public class WebAppInitializer implements WebApplicationInitializer {
     private void addUserUrlFilterToChain(ServletContext servletContext) {
         FilterRegistration.Dynamic userURLFilter = servletContext.addFilter("userUrlFilterChain", UserUrlFilter.class);
         userURLFilter.addMappingForUrlPatterns(null, false, "/human/*");
+    }
+
+    private void addOpenSessionInViewFilterToChain(ServletContext servletContext) {
+        FilterRegistration.Dynamic sessionFilter = servletContext.addFilter("hibernateFilter", new OpenSessionInViewFilter());
+        sessionFilter.addMappingForUrlPatterns(null, true, "/*");
     }
 }
