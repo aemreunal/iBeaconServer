@@ -57,7 +57,7 @@ public class ImageStorage {
      *         of.
      * @param regionId
      *         The ID of the region of the image. When saving an inter-region navigation
-     *         image, this value should be {@code null}.
+     *         connection image, this value should be {@code null}.
      * @param imageMultipartFile
      *         The image as a {@link MultipartFile MultipartFile}.
      *
@@ -106,7 +106,8 @@ public class ImageStorage {
      *         The ID of the project which the region (the image belongs to) is a part
      *         of.
      * @param regionId
-     *         The ID of the region of the image.
+     *         The ID of the region of the image. When saving an inter-region navigation
+     *         connection image, this value should be {@code null}.
      * @param imageFileName
      *         The name of the image file to be loaded.
      *
