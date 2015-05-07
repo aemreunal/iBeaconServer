@@ -26,15 +26,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.aemreunal.config.GlobalSettings;
-import com.aemreunal.domain.Project;
-import com.aemreunal.domain.Region;
-import com.aemreunal.domain.Scenario;
+import com.aemreunal.domain.*;
 import com.aemreunal.exception.MalformedRequestException;
+import com.aemreunal.exception.connection.ConnectionNotFoundException;
 import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.service.APIService;
 import com.aemreunal.service.ScenarioService;
@@ -78,9 +77,24 @@ public class APIController {
     }
 
 
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_CONNECTION_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LinkedHashSet<JSONObject>> queryForConnections(@RequestBody JSONObject idJson) {
+        verifyProjectQueryRequest(idJson);
+        LinkedHashSet<JSONObject> regions = getConnectionsOfProject(idJson);
+        return new ResponseEntity<LinkedHashSet<JSONObject>>(regions, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LinkedHashSet<JSONObject>> queryForBeacons(@RequestBody JSONObject idJson,
+                                                                     @PathVariable Long regionId) {
+        verifyProjectQueryRequest(idJson);
+        LinkedHashSet<JSONObject> beacons = getBeaconsOfRegion(idJson, regionId);
+        return new ResponseEntity<LinkedHashSet<JSONObject>>(beacons, HttpStatus.OK);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_REGION_IMG_QUERY_PATH_MAPPING, produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> queryForRegionImage(@RequestBody JSONObject idJson,
-                                                      @RequestParam Long regionId)
+                                                      @PathVariable Long regionId)
     throws ImageLoadException {
         verifyProjectQueryRequest(idJson);
         byte[] regionImage = getRegionImage(idJson, regionId);
@@ -88,6 +102,18 @@ public class APIController {
             return new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<byte[]>(regionImage, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_CONNECTION_IMG_QUERY_PATH_MAPPING, produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> queryForConnectionImage(@RequestBody JSONObject idJson,
+                                                          @PathVariable Long connectionId)
+    throws ImageLoadException, ConnectionNotFoundException {
+        verifyProjectQueryRequest(idJson);
+        byte[] connectionImage = getConnectionImage(idJson, connectionId);
+        if (connectionImage == null) {
+            return new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<byte[]>(connectionImage, HttpStatus.OK);
     }
 
     /*
@@ -99,12 +125,12 @@ public class APIController {
      *      "secret": <project Secret>
      * }
      */
-    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JSONObject> queryForScenario(@RequestBody JSONObject beaconQueryJson) {
-        verifyBeaconQueryRequest(beaconQueryJson);
-        Scenario scenario = getScenario(beaconQueryJson);
-        return new ResponseEntity<JSONObject>(scenario.generateQueryResponse(), HttpStatus.OK);
-    }
+//    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_QUERY_PATH_MAPPING, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<JSONObject> queryForScenario(@RequestBody JSONObject beaconQueryJson) {
+//        verifyBeaconQueryRequest(beaconQueryJson);
+//        Scenario scenario = getScenario(beaconQueryJson);
+//        return new ResponseEntity<JSONObject>(scenario.generateQueryResponse(), HttpStatus.OK);
+//    }
 
     private JSONObject getProject(JSONObject idJson) {
         Long projectId = Long.valueOf(idJson.get("projectId").toString());
@@ -123,11 +149,46 @@ public class APIController {
                       .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    private LinkedHashSet<JSONObject> getBeaconsOfRegion(JSONObject idJson, Long regionId) {
+        Long projectId = Long.valueOf(idJson.get("projectId").toString());
+        String secret = idJson.get("secret").toString().toUpperCase();
+
+        // Getting LazyInitException
+//        Region region = apiService.queryForRegionOfProject(projectId, secret, regionId);
+
+//        Set<Region> regions = apiService.queryForRegionsOfProject(projectId, secret);
+//        Region region = regions.stream()
+//                               .filter(regionVar -> regionVar.getRegionId().equals(regionId))
+//                               .findFirst()
+//                               .get();
+        return apiService.queryForBeaconsOfRegion(projectId, secret, regionId)
+                         .stream()
+                         .sorted()
+                         .map(Beacon::getQueryResponse)
+                         .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private LinkedHashSet<JSONObject> getConnectionsOfProject(JSONObject idJson) {
+        Long projectId = Long.valueOf(idJson.get("projectId").toString());
+        String secret = idJson.get("secret").toString().toUpperCase();
+        Set<Connection> connections = apiService.queryForConnections(projectId, secret);
+        return connections.stream()
+                          .map(Connection::getQueryResponse)
+                          .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
     private byte[] getRegionImage(JSONObject idJson, Long regionId)
     throws ImageLoadException {
         Long projectId = Long.valueOf(idJson.get("projectId").toString());
         String secret = idJson.get("secret").toString().toUpperCase();
-        return apiService.queryForRegionImage(projectId, secret, regionId);
+        return apiService.queryForImageOfRegion(projectId, secret, regionId);
+    }
+
+    private byte[] getConnectionImage(JSONObject idJson, Long connectionId)
+    throws ImageLoadException, ConnectionNotFoundException {
+        Long projectId = Long.valueOf(idJson.get("projectId").toString());
+        String secret = idJson.get("secret").toString().toUpperCase();
+        return apiService.queryForImageOfConnection(projectId, secret, connectionId);
     }
 
     private Scenario getScenario(JSONObject beaconQueryJson) {

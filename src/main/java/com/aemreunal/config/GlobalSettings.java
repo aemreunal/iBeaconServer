@@ -42,39 +42,43 @@ public class GlobalSettings {
      * These strings provide the URIs of the controllers.
      */
     // User
-    public static final String USER_PATH_MAPPING                 = "/human";
-    public static final String USER_CREATE_MAPPING               = "/register";
-    public static final String USER_USERNAME_MAPPING             = USER_PATH_MAPPING + "/{username}";
-    public static final String USER_SPECIFIC_MAPPING             = USER_USERNAME_MAPPING;
+    public static final String USER_PATH_MAPPING               = "/human";
+    public static final String USER_CREATE_MAPPING             = "/register";
+    public static final String USER_USERNAME_MAPPING           = USER_PATH_MAPPING + "/{username}";
+    public static final String USER_SPECIFIC_MAPPING           = USER_USERNAME_MAPPING;
     // Project
-    public static final String PROJECT_PATH_MAPPING              = USER_SPECIFIC_MAPPING + "/projects";
-    public static final String PROJECT_ID_MAPPING                = "/{projectId}";
-    public static final String PROJECT_CONNECTIONS_MAPPING       = PROJECT_ID_MAPPING + "/connections";
-    public static final String PROJECT_REGIONS_MAPPING           = PROJECT_ID_MAPPING + "/regions";
-    public static final String PROJECT_SPECIFIC_MAPPING          = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
+    public static final String PROJECT_PATH_MAPPING            = USER_SPECIFIC_MAPPING + "/projects";
+    public static final String PROJECT_ID_MAPPING              = "/{projectId}";
+    public static final String PROJECT_CONNECTIONS_MAPPING     = PROJECT_ID_MAPPING + "/connections";
+    public static final String PROJECT_REGIONS_MAPPING         = PROJECT_ID_MAPPING + "/regions";
+    public static final String PROJECT_SPECIFIC_MAPPING        = PROJECT_PATH_MAPPING + PROJECT_ID_MAPPING;
     // Region
-    public static final String REGION_PATH_MAPPING               = PROJECT_SPECIFIC_MAPPING + "/regions";
-    public static final String REGION_ID_MAPPING                 = "/{regionId}";
-    public static final String REGION_SPECIFIC_MAPPING           = REGION_PATH_MAPPING + REGION_ID_MAPPING;
-    public static final String REGION_MAP_IMAGE_MAPPING          = REGION_ID_MAPPING + "/mapimage";
+    public static final String REGION_PATH_MAPPING             = PROJECT_SPECIFIC_MAPPING + "/regions";
+    public static final String REGION_ID_MAPPING               = "/{regionId}";
+    public static final String REGION_SPECIFIC_MAPPING         = REGION_PATH_MAPPING + REGION_ID_MAPPING;
+    public static final String REGION_MAP_IMAGE_MAPPING        = REGION_ID_MAPPING + "/mapimage";
     // Beacon
-    public static final String BEACON_PATH_MAPPING               = REGION_SPECIFIC_MAPPING + "/beacons";
-    public static final String BEACON_ID_MAPPING                 = "/{beaconId}";
-    public static final String BEACON_SPECIFIC_MAPPING           = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
-    public static final String BEACON_CONNECTION_MAPPING         = BEACON_ID_MAPPING + "/connection";
+    public static final String BEACON_PATH_MAPPING             = REGION_SPECIFIC_MAPPING + "/beacons";
+    public static final String BEACON_ID_MAPPING               = "/{beaconId}";
+    public static final String BEACON_SPECIFIC_MAPPING         = BEACON_PATH_MAPPING + BEACON_ID_MAPPING;
+    public static final String BEACON_CONNECTION_MAPPING       = BEACON_ID_MAPPING + "/connection";
     // Scenario
-    public static final String SCENARIO_PATH_MAPPING             = PROJECT_SPECIFIC_MAPPING + "/scenarios";
-    public static final String SCENARIO_ID_MAPPING               = "/{scenarioId}";
-    public static final String SCENARIO_SPECIFIC_MAPPING         = SCENARIO_PATH_MAPPING + SCENARIO_ID_MAPPING;
-    public static final String SCENARIO_MEMBER_BEACONS_MAPPING   = SCENARIO_ID_MAPPING + "/beacons";
-    public static final String SCENARIO_ADD_BEACON_MAPPING       = SCENARIO_ID_MAPPING + "/addbeacon";
-    public static final String SCENARIO_REMOVE_BEACON_MAPPING    = SCENARIO_ID_MAPPING + "/removebeacon";
-    // API
-    public static final String API_PATH_MAPPING                  = "/robot";
-    public static final String API_PROJECT_QUERY_PATH_MAPPING    = "/project";
-    public static final String API_REGION_QUERY_PATH_MAPPING     = "/region";
-    public static final String API_REGION_IMG_QUERY_PATH_MAPPING = "/regionimage";
-    public static final String API_BEACON_QUERY_PATH_MAPPING     = "/beacon";
+    public static final String SCENARIO_PATH_MAPPING           = PROJECT_SPECIFIC_MAPPING + "/scenarios";
+    public static final String SCENARIO_ID_MAPPING             = "/{scenarioId}";
+    public static final String SCENARIO_SPECIFIC_MAPPING       = SCENARIO_PATH_MAPPING + SCENARIO_ID_MAPPING;
+    public static final String SCENARIO_MEMBER_BEACONS_MAPPING = SCENARIO_ID_MAPPING + "/beacons";
+    public static final String SCENARIO_ADD_BEACON_MAPPING     = SCENARIO_ID_MAPPING + "/addbeacon";
+    public static final String SCENARIO_REMOVE_BEACON_MAPPING  = SCENARIO_ID_MAPPING + "/removebeacon";
+
+    // API Root
+    public static final String API_PATH_MAPPING                      = "/robot";
+    // API Sub
+    public static final String API_PROJECT_QUERY_PATH_MAPPING        = "/project";
+    public static final String API_REGION_QUERY_PATH_MAPPING         = "/regions";
+    public static final String API_CONNECTION_QUERY_PATH_MAPPING     = "/connections";
+    public static final String API_REGION_IMG_QUERY_PATH_MAPPING     = API_REGION_QUERY_PATH_MAPPING + "/{regionId}/image";
+    public static final String API_CONNECTION_IMG_QUERY_PATH_MAPPING = API_CONNECTION_QUERY_PATH_MAPPING + "/{connectionId}/image";
+    public static final String API_BEACON_QUERY_PATH_MAPPING         = API_REGION_QUERY_PATH_MAPPING + "/{regionId}/beacons";
 
 
     /**
