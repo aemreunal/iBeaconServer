@@ -19,6 +19,7 @@ package com.aemreunal.helper.json;
 import net.minidev.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class JsonArrayBuilder {
     private ArrayList<Object> jsonList = new ArrayList<>();
@@ -26,8 +27,13 @@ public class JsonArrayBuilder {
     JsonArrayBuilder() {
     }
 
-    public JsonArrayBuilder add(Object value) {
-        jsonList.add(value);
+    public JsonArrayBuilder add(Object item) {
+        jsonList.add(item);
+        return this;
+    }
+
+    public JsonArrayBuilder addAll(Collection items) {
+        jsonList.addAll(items);
         return this;
     }
 
