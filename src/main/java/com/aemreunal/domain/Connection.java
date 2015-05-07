@@ -17,15 +17,16 @@ package com.aemreunal.domain;
  */
 
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.aemreunal.helper.json.JsonArrayBuilder;
 import com.aemreunal.helper.json.JsonBuilderFactory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -107,11 +108,18 @@ public class Connection extends ResourceSupport implements Serializable, Compara
     }
 
     public JSONArray getBeaconIdsAsJson() {
-        JsonArrayBuilder beaconArray = JsonBuilderFactory.array();
-        for (Beacon beacon : getBeacons()) {
-            beaconArray = beaconArray.add(beacon.getBeaconId());
-        }
-        return beaconArray.build();
+        return JsonBuilderFactory.array()
+                                 .addAll(getBeacons().stream()
+                                                     .map(Beacon::getBeaconId)
+                                                     .collect(Collectors.toList()))
+                                 .build();
+    }
+
+    public JSONObject getQueryResponse() {
+        return JsonBuilderFactory.object()
+                                 .add("connectionId", getConnectionId())
+                                 .add("beacons", getBeaconIdsAsJson())
+                                 .build();
     }
     /*
      * END: Helpers

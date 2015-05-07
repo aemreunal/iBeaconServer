@@ -17,6 +17,7 @@ package com.aemreunal.domain;
  */
 
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -282,6 +283,20 @@ public class Beacon extends ResourceSupport implements Serializable, Comparable 
             connArray.add(connection.getBeaconIdsAsJson());
         }
         return connArray.build();
+    }
+
+    public JSONObject getQueryResponse() {
+        return JsonBuilderFactory.object()
+                                 .add("beaconId", getBeaconId())
+                                 .add("uuid", getUuid())
+                                 .add("major", getMajor())
+                                 .add("minor", getMinor())
+                                 .add("designated", getDesignated())
+                                 .add("xCoordinate", getxCoordinate())
+                                 .add("yCoordinate", getyCoordinate())
+                                 .add("hasLocationInfo", hasLocationInfo())
+                                 .add("displayName", getDisplayName())
+                                 .build();
     }
     /*
      * END: Helpers
