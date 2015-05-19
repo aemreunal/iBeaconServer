@@ -175,9 +175,7 @@ public class ImageStorage {
 
     private boolean fileTypeIsImage(MultipartFile file) {
         String type = file.getContentType();
-        return type.equalsIgnoreCase(MediaType.IMAGE_JPEG_VALUE) ||
-                type.equalsIgnoreCase(MediaType.IMAGE_PNG_VALUE) ||
-                type.equalsIgnoreCase(MediaType.IMAGE_GIF_VALUE);
+        return type.equalsIgnoreCase(MediaType.IMAGE_JPEG_VALUE);
     }
 
     private File getUniqueFile(String filePath) {
