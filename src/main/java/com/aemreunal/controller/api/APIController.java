@@ -35,6 +35,7 @@ import com.aemreunal.domain.*;
 import com.aemreunal.exception.MalformedRequestException;
 import com.aemreunal.exception.connection.ConnectionNotFoundException;
 import com.aemreunal.exception.imageStorage.ImageLoadException;
+import com.aemreunal.exception.textStorage.TextLoadException;
 import com.aemreunal.service.APIService;
 import com.aemreunal.service.ScenarioService;
 
@@ -116,6 +117,18 @@ public class APIController {
         return new ResponseEntity<byte[]>(connectionImage, HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = GlobalSettings.API_BEACON_INFO_QUERY_PATH_MAPPING, produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity<String> queryForBeaconLocationInfo(@RequestBody JSONObject idJson,
+                                                             @PathVariable Long regionId,
+                                                             @PathVariable Long beaconId) {
+        verifyProjectQueryRequest(idJson);
+        String locationInfo = getBeaconLocationInfo(idJson, regionId, beaconId);
+        if (locationInfo == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<String>(locationInfo, HttpStatus.OK);
+    }
+
     /*
      * Beacon query JSON example:
      * {
@@ -189,6 +202,17 @@ public class APIController {
         Long projectId = Long.valueOf(idJson.get("projectId").toString());
         String secret = idJson.get("secret").toString().toUpperCase();
         return apiService.queryForImageOfConnection(projectId, secret, connectionId);
+    }
+
+    private String getBeaconLocationInfo(JSONObject idJson, Long regionId, Long beaconId) {
+        Long projectId = Long.valueOf(idJson.get("projectId").toString());
+        String secret = idJson.get("secret").toString().toUpperCase();
+        try {
+            return apiService.queryForLocationInfoOfBeacon(projectId, secret, regionId, beaconId);
+        } catch (TextLoadException e) {
+            // Text can't be loaded or there is no text
+            return null;
+        }
     }
 
     private Scenario getScenario(JSONObject beaconQueryJson) {

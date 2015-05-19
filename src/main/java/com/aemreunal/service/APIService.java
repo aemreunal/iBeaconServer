@@ -31,7 +31,10 @@ import com.aemreunal.exception.connection.ConnectionNotFoundException;
 import com.aemreunal.exception.imageStorage.ImageLoadException;
 import com.aemreunal.exception.project.ProjectNotFoundException;
 import com.aemreunal.exception.region.RegionNotFoundException;
+import com.aemreunal.exception.textStorage.TextLoadException;
 import com.aemreunal.helper.ImageStorage;
+import com.aemreunal.helper.TextStorage;
+import com.aemreunal.repository.beacon.BeaconRepo;
 import com.aemreunal.repository.connection.ConnectionRepo;
 import com.aemreunal.repository.project.ProjectRepo;
 import com.aemreunal.repository.region.RegionRepo;
@@ -46,10 +49,16 @@ public class APIService {
     private RegionRepo regionRepo;
 
     @Autowired
+    private BeaconRepo beaconRepo;
+
+    @Autowired
     private ConnectionRepo connectionRepo;
 
     @Autowired
     private ImageStorage imageStorage;
+
+    @Autowired
+    private TextStorage textStorage;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -130,5 +139,13 @@ public class APIService {
         if (!Hibernate.isInitialized(proxy)) {
             Hibernate.initialize(proxy);
         }
+    }
+
+    public String queryForLocationInfoOfBeacon(Long projectId, String secret, Long regionId, Long beaconId)
+    throws TextLoadException {
+        Region region = queryForRegionOfProject(projectId, secret, regionId);
+        Beacon beacon = beaconRepo.findByBeaconIdAndRegion(beaconId, region);
+        String text = textStorage.loadText(projectId, regionId, beaconId, beacon.getLocationInfoTextFileName());
+        return text;
     }
 }

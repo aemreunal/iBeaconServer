@@ -79,6 +79,7 @@ public class GlobalSettings {
     public static final String API_REGION_IMG_QUERY_PATH_MAPPING     = API_REGION_QUERY_PATH_MAPPING + "/{regionId}/image";
     public static final String API_CONNECTION_IMG_QUERY_PATH_MAPPING = API_CONNECTION_QUERY_PATH_MAPPING + "/{connectionId}/image";
     public static final String API_BEACON_QUERY_PATH_MAPPING         = API_REGION_QUERY_PATH_MAPPING + "/{regionId}/beacons";
+    public static final String API_BEACON_INFO_QUERY_PATH_MAPPING    = API_BEACON_QUERY_PATH_MAPPING + "/{beaconId}/info";
 
 
     /**
