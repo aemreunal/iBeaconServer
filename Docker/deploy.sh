@@ -2,7 +2,9 @@
 
 # Server address MUST BE CHANGED to the appropriate address,
 # otherwise the SSL certificate will be invalid!
-SERVER_ADDRESS=127.0.0.1
+# The curl command is a workaround to quickly get the
+# external address
+SERVER_ADDRESS=$(curl --silent http://icanhazip.com)
 
 # iBeacon storage location, DON'T CHANGE!
 STORAGE_DIR_NAME=ibeacon-server-storage
