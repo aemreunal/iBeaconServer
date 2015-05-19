@@ -5,7 +5,8 @@
 SERVER_ADDRESS=127.0.0.1
 
 # iBeacon storage location, DON'T CHANGE!
-STORAGE_DIR=$HOME/ibeacon_server_storage
+STORAGE_DIR_NAME=ibeacon-server-storage
+STORAGE_DIR_PATH=$HOME/$STORAGE_DIR_NAME
 
 # Environment variables for Docker
 SKIP_CACHED=true
@@ -18,15 +19,15 @@ CREATE_NEW_KEYSTORE=false
 # If you want to change the keystore location, you must also
 # update the server.xml configuration file with the correct
 # location.
-KEYSTORE_LOCATION=~/ibeacon_server_storage/keystore
+KEYSTORE_LOCATION=$STORAGE_DIR_PATH/keystore
 # If you want to change the keystore password, you must also
 # update the server.xml configuration file with the correct
 # password.
 KEYSTORE_PASSWORD=password
 
 # Create the server storage directory (if it doesn't exist).
-if [ ! -d "$STORAGE_DIR" ]; then
-    mkdir $STORAGE_DIR
+if [ ! -d "$STORAGE_DIR_PATH" ]; then
+    mkdir $STORAGE_DIR_PATH
 fi
 
 # Delete the existing keystore if $CREATE_NEW_KEYSTORE flag
@@ -66,6 +67,6 @@ else
 fi
 
 # Run the newly-created Docker container.
-docker run --restart=always -d -p 8443:8443 -v $HOME/ibeacon-server-storage:/root/ibeacon-server-storage $CONTAINER_NAME
+docker run --restart=always -d -p 8443:8443 -v $STORAGE_DIR_PATH:/root/$STORAGE_DIR_NAME $CONTAINER_NAME
 
 echo "----- End of script -----"
