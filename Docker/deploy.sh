@@ -66,6 +66,6 @@ else
 fi
 
 # Run the newly-created Docker container.
-docker run --restart=always -d -p 8443:8443 -v $HOME/ibeacon_server_storage:/root/ibeacon_server_storage $CONTAINER_NAME
+docker run --restart=always -d -p 8443:8443 -v $HOME/ibeacon-server-storage:/root/ibeacon-server-storage $CONTAINER_NAME
 
 echo "----- End of script -----"
