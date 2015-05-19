@@ -90,7 +90,7 @@
                maxThreads="50" SSLEnabled="true" scheme="https" secure="true"
                clientAuth="false" sslProtocol="TLS"
                acceptCount="100" disableUploadTimeout="true" enableLookups="false"
-               keystoreFile="/root/ibeacon_server_storage/keystore" keystorePass="password" />
+               keystoreFile="/root/ibeacon-server-storage/keystore" keystorePass="password" />
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
 
