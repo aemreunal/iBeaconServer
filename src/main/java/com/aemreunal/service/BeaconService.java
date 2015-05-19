@@ -70,7 +70,7 @@ public class BeaconService {
     private Beacon setLocationInfoText(String username, Long projectId, Long regionId, Beacon beacon, MultipartFile locationInfoText)
     throws TextSaveException {
         GlobalSettings.log("Setting location info text of beacon with ID = \'" + beacon.getBeaconId() + "\'");
-        String textFileName = textStorage.saveText(username, projectId, regionId, beacon.getBeaconId(), locationInfoText);
+        String textFileName = textStorage.saveText(projectId, regionId, beacon.getBeaconId(), locationInfoText);
         beacon.setLocationInfoTextFileName(textFileName);
         return this.save(username, projectId, regionId, beacon);
     }
@@ -254,16 +254,16 @@ public class BeaconService {
         GlobalSettings.log("Deleting beacon with ID = \'" + beaconId + "\'");
         // Retrieving beacon to ensure that beacon exists and is part of this user/project/region etc.
         Beacon beacon = getBeacon(username, projectId, regionId, beaconId);
-        deleteLocationTextFile(username, projectId, regionId, beaconId, beacon.getLocationInfoTextFileName());
+        deleteLocationTextFile(projectId, regionId, beaconId, beacon.getLocationInfoTextFileName());
         beaconRepo.delete(beacon);
         return beacon;
     }
 
-    private void deleteLocationTextFile(String username, Long projectId, Long regionId, Long beaconId, String locationInfoTextFileName) {
+    private void deleteLocationTextFile(Long projectId, Long regionId, Long beaconId, String locationInfoTextFileName) {
         try {
-            textStorage.deleteText(username, projectId, regionId, beaconId, locationInfoTextFileName);
+            textStorage.deleteText(projectId, regionId, beaconId, locationInfoTextFileName);
         } catch (TextDeleteException e) {
-            GlobalSettings.err("WARNING: Location info text file for user: " + username + ", project: "
+            GlobalSettings.err("WARNING: Location info text file for project: "
                                        + projectId + ", region " + regionId + ", beacon " + beaconId + ", file name: "
                                        + locationInfoTextFileName + " could not be deleted! " +
                                        "May need to be deleted manually!");

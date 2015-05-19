@@ -43,8 +43,6 @@ public class TextStorage {
      * <p>
      * If any of the folders above do not exist, they will be created.
      *
-     * @param username
-     *         The username of whoever is saving the text.
      * @param projectId
      *         The ID of the project which the region (the text belongs to) is a part of.
      * @param regionId
@@ -59,10 +57,10 @@ public class TextStorage {
      * @throws TextSaveException
      *         If the text file can't be saved.
      */
-    public String saveText(String username, Long projectId, Long regionId, Long beaconId, MultipartFile locationInfoTextFile)
+    public String saveText(Long projectId, Long regionId, Long beaconId, MultipartFile locationInfoTextFile)
             throws TextSaveException {
-        // Get the file path from the username, project ID, and region ID attributes
-        String filePath = getFilePath(username, projectId, regionId, beaconId);
+        // Get the file path from the project ID, and region ID attributes
+        String filePath = getFilePath(projectId, regionId, beaconId);
 
         // Ensure unique file name
         File textFile = getUniqueFile(filePath);
@@ -85,8 +83,6 @@ public class TextStorage {
      * Loads the specified text file and returns the contents of the text file as a {@link
      * String}.
      *
-     * @param username
-     *         The username of whoever is loading the text.
      * @param projectId
      *         The ID of the project which the region (the text belongs to) is a part of.
      * @param regionId
@@ -102,10 +98,10 @@ public class TextStorage {
      * @throws TextLoadException
      *         If the text file can't be loaded or read.
      */
-    public String loadText(String username, Long projectId, Long regionId, Long beaconId, String textFileName)
+    public String loadText(Long projectId, Long regionId, Long beaconId, String textFileName)
             throws TextLoadException {
-        // Get the file path from the username, project ID, region ID, and beacon ID attributes
-        String filePath = getFilePath(username, projectId, regionId, beaconId);
+        // Get the file path from the project ID, region ID, and beacon ID attributes
+        String filePath = getFilePath(projectId, regionId, beaconId);
         // Get the text file
         File textFile = new File(filePath + textFileName);
         if (!textFile.exists()) {
@@ -120,8 +116,6 @@ public class TextStorage {
      * Deletes the specified text file. The method will do nothing if a {@code null} value
      * or empty string is provided for the {@code textFileName} parameter.
      *
-     * @param username
-     *         The username of whoever is deleting the text.
      * @param projectId
      *         The ID of the project which the region (the beacon belongs to) is a part
      *         of.
@@ -136,19 +130,19 @@ public class TextStorage {
      * @throws TextDeleteException
      *         If the text file can't be deleted.
      */
-    public void deleteText(String username, Long projectId, Long regionId, Long beaconId, String textFileName)
+    public void deleteText(Long projectId, Long regionId, Long beaconId, String textFileName)
             throws TextDeleteException {
         if (textFileName == null || textFileName.equals("")) {
             return;
         }
         // Get the file path from the username, project ID, region ID, and beacon ID attributes
-        String filePath = getFilePath(username, projectId, regionId, beaconId);
+        String filePath = getFilePath(projectId, regionId, beaconId);
         // Get the text file
         File textFile = new File(filePath + textFileName);
         try {
             Files.delete(textFile.toPath());
         } catch (NoSuchFileException e) {
-            GlobalSettings.err("WARNING: Text file for user: " + username + ", project: " + projectId +
+            GlobalSettings.err("WARNING: Text file for project: " + projectId +
                                        ", region: " + regionId + ", beacon: " + beaconId + ", file name: "
                                        + textFileName + " does not exist, nothing to delete!");
         } catch (IOException e) {
@@ -157,8 +151,8 @@ public class TextStorage {
         }
     }
 
-    private String getFilePath(String username, Long projectId, Long regionId, Long beaconId) {
-        return GlobalSettings.TEXT_STORAGE_FOLDER_PATH + username + "/" + projectId + "/" + regionId + "/" + beaconId + "/";
+    private String getFilePath(Long projectId, Long regionId, Long beaconId) {
+        return GlobalSettings.TEXT_STORAGE_FOLDER_PATH + "/" + projectId + "/" + regionId + "/" + beaconId + "/";
     }
 
     private File getUniqueFile(String filePath) {
