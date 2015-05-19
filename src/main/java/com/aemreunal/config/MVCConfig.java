@@ -23,6 +23,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -43,6 +44,9 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Autowired
     public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter;
 
+    @Autowired
+    public StringHttpMessageConverter stringHttpMessageConverter;
+
 //    @Autowired
 //    private SessionFactory sessionFactory;
 
@@ -61,11 +65,17 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         return new ByteArrayHttpMessageConverter();
     }
 
+    @Bean
+    public StringHttpMessageConverter stringHttpMessageConverter() {
+        return new StringHttpMessageConverter();
+    }
+
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         // Add our custom-configured HttpMessageConverters
         converters.add(jacksonMessageConverter);
         converters.add(byteArrayHttpMessageConverter);
+        converters.add(stringHttpMessageConverter);
         super.configureMessageConverters(converters);
     }
 
